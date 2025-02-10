@@ -118,3 +118,188 @@
 /*--------------------------------------------------------------------------------------------*/
 
 
+
+
+
+
+
+
+
+
+
+/* kiosk-main.html에만 적용되는 헤더 스타일 ----------------------------------------------------------*/
+/* 전체 화면을 채우는 스타일 */
+body.kiosk-main body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* 지점명 (오른쪽 상단) */
+body.kiosk-main .store-name {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 24px;
+    color: yellowgreen;
+    font-weight: bold;
+}
+
+/* 버튼 스타일 */
+body.kiosk-main .start-button {
+    position: absolute;
+    bottom: 50px;
+    padding: 15px 40px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+body.kiosk-main .start-button:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* kiosk-products.html에만 적용되는 헤더 스타일 --------------------------------------------------------*/
+body.kiosk-products header {
+    position: fixed; /* 화면에 고정 */
+    top: 20px;
+    left: 20px;
+    height: 60px;
+}
+
+/* 브랜드 로고 이미지 스타일 */
+body.kiosk-products .brand-logo {
+    width: 150px; /* 로고 크기 조정 */
+    height: auto; /* 비율 유지 */
+}
+
+/* 지점명 (오른쪽 상단) */
+body.kiosk-products .store-name {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 24px;
+    color: yellowgreen;
+    font-weight: bold;
+}
+/* 전체 페이지 스타일 */
+body.kiosk-products body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f8f8;
+}
+
+/* 메인 컨테이너 (이미지 영역 + 주문 목록) */
+body.kiosk-products .container {
+    display: flex;
+    justify-content: space-between;
+    width: 85%;
+    margin-top: 120px;
+}
+
+/* 왼쪽: 이미지 영역 */
+body.kiosk-products .image-area {
+    width: 50%;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/*.image-area img {*/
+/*    width: 90%;*/
+/*    height: auto;*/
+/*}*/
+body.kiosk-products #file-input {
+    display: block;
+    margin-bottom: 20px;
+}
+body.kiosk-products #preview {
+    max-width: 100%;
+    max-height: 300px;
+    display: none; /* 처음에는 숨겨두기 */
+}
+body.kiosk-products #reset-btn {
+    display: none; /* 처음에는 숨겨두기 */
+}
+
+
+/* 오른쪽: 주문 목록 */
+body.kiosk-products .order-list {
+    width: 40%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    text-align: center;
+}
+
+body.kiosk-products .order-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+body.kiosk-products .order-list th, .order-list td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+body.kiosk-products .order-list th {
+    background-color: #ffeb99;
+}
+
+body.kiosk-products .total {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+/* 버튼 스타일 */
+body.kiosk-products .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+body.kiosk-products button {
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* 버튼 색상 */
+body.kiosk-products .yellow-button {
+    background-color: #ffcc00;
+    color: black;
+}
+
+body.kiosk-products .blue-button {
+    background-color: #5c9aff;
+    color: white;
+}
+
+body.kiosk-products .black-button {
+    background-color: black;
+    color: white;
+}
