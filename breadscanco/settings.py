@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',  # template의 intcomma 활성화
-
 ]
 
 MIDDLEWARE = [
