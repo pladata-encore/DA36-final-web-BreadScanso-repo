@@ -3,27 +3,51 @@
     text-align: center;  /* 텍스트 가운데 정렬 */
 }
 
-/* 슬라이드 설정 */
-/* static/css/styles.css */
-/*.carousel-item {*/
-/*    height: 500px;  !* 슬라이드 높이 설정 *!*/
-/*}*/
+/*-------------------------------------------------------------------*/
 
+/* 최상단 텍스트 로고 이미지 설정 */
+.logo-container {
+    display: flex;         /* 플렉스박스로 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center;     /* 세로 중앙 정렬 */
+    height: 200px;          /* 컨테이너 높이 (필요시 조정) */
+}
+
+.logo-img {
+    width: 200px;  /* 로고 크기 조정 (원하는 크기로 변경) */
+    height: auto;  /* 원본 비율 유지 */
+}
+
+/*-------------------------------------------------------------------*/
+
+/* 슬라이드 설정 */
 .carousel-item {
+    /*position: relative; !* 기본값 유지 *!*/
     display: flex;
     justify-content: center;   /* 가로 중앙 정렬 */
     align-items: center;       /* 세로 중앙 정렬 */
     height: 500px;             /* 슬라이드 높이 */
+    width: 100% ;              /* 슬라이드 너비 */
 }
 
+/* 이미지 크기 설정 */
 .custom-img {
     width: 100%; /* 부모 요소의 너비에 맞게 */
     height: 100%; /* 부모 요소의 높이에 맞게 */
-    object-fit: contain; /* 비율을 유지하면서 잘리지 않게 */
+    object-fit: cover; /* 비율을 유지하면서 잘리지 않게 */
 }
+
+/* 캐러셀 컨데이너 */
+.carousel-inner {
+    overflow: hidden;
+}
+/*-------------------------------------------------------------------*/
 
 /* 배경색 설정 */
 /* static/css/styles.css */
 .bg-custom {
     background-color: #F2D0A9;  /* 원하는 배경색 */
 }
+
+/*-------------------------------------------------------------------*/
+
