@@ -6,3 +6,6 @@ def kiosk_main(request):
 def products(request):
     return render(request, '../templates/kiosk/kiosk_products.html')  # kiosk_상품안내화면 템플릿 파일 경로 지정
 
+def member(request):
+    return render(request, '../templates/kiosk/kiosk_member.html')  # kiosk_회원확인 템플릿 파일 경로 지정
+
