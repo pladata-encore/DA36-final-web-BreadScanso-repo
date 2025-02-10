@@ -40,6 +40,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',  # template의 intcomma 활성화,
     'kiosk',
+    'brand',
+    'event',
+    'member',
+    'menu',
+    'notice',
+    'pay',
+    'qna',
+    'sales',
+    'stock',
+    'store',
+    'store_info',
 ]
 
 MIDDLEWARE = [
