@@ -1,3 +1,4 @@
+/*--정아 start--*/
 /* 상단 텍스트 정렬 */
 .center-text {
     text-align: center;  /* 텍스트 가운데 정렬 */
@@ -124,9 +125,9 @@
 
 
 
+/*--정아 end--*/
 
-
-
+/*--예진 start--*/
 /* kiosk-main.html에만 적용되는 헤더 스타일 ----------------------------------------------------------*/
 .kiosk-main {
     background: url('/static/images/kiosk_main.png') no-repeat center center/cover;
@@ -310,3 +311,35 @@ body.kiosk-products .black-button {
     background-color: black;
     color: white;
 }
+
+
+
+
+
+
+
+
+/*--예진 end--*/
+
+/*--정석 start--*/
+
+
+
+
+
+
+
+
+/*--정석 end--*/
+
+/*--은비 start--*/
+
+
+
+
+
+
+
+
+
+/*--은비 end--*/
