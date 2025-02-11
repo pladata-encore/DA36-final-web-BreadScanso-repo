@@ -397,9 +397,85 @@ body.kiosk-point .black-button {
 /*--예진 end--*/
 
 /*--정석 start--*/
+/* ----------------------------------------------------------------------- */
+body.menu-page .best-carousel-item {
+    flex: 0 0 20%; /* 5개씩 보이도록 설정 */
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    justify-content: center;
+    align-items: center;
+}
+
+.best-carousel-container {
+    position: relative;
+    max-width: 1000px;
+    margin: auto;
+    overflow: visible;  /* 버튼이 잘리지 않도록 변경 */
+}
+
+.best-carousel-wrapper {
+    display: flex;
+    width: 100%;
+    overflow: hidden;  /* 캐러셀 이미지 부분만 잘리도록 유지 */
+    position: relative;  /* 버튼 위치 기준 */
+}
+
+.best-carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.best-carousel-item {
+    flex: 0 0 20%; /* 한 번에 5개만 보이도록 설정 */
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    justify-content: center;
+    align-items: center;
+}
+
+.best-carousel-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.product-name {
+    margin-top: 10px; /* 이미지와 이름 사이에 여백 추가 */
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center; /* 이름 가운데 정렬 */
+}
+
+.best-carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-70%); /* 수직 중앙 정렬 */
+    color: black;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 24px; /* 버튼 크기 조정 */
+}
+
+.best-carousel-btn.left {
+    left: -50px; /* 왼쪽 버튼을 캐러셀 바깥으로 이동 */
+}
+
+.best-carousel-btn.right {
+    right: -50px; /* 오른쪽 버튼을 캐러셀 바깥으로 이동 */
+}
 
 
 
+
+
+
+/* ----------------------------------------------------------------------- */
 
 
 
