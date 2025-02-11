@@ -303,7 +303,7 @@ body.kiosk-products .black-button {
 }
 
 /* 회원 확인 페이지 전체 화면 구성 */
-body.kiosk-member body {
+body.kiosk-member {
     display: flex;
     flex-direction: column; /* 세로 방향 정렬 */
     justify-content: center; /* 수직 중앙 정렬 */
@@ -311,6 +311,7 @@ body.kiosk-member body {
     height: 100vh; /* 화면 전체 높이 */
     text-align: center; /* 텍스트 가운데 정렬 */
 }
+
 
 /* 버튼 스타일 */
 body.kiosk-member .button-container {
@@ -335,7 +336,60 @@ body.kiosk-member .black-button {
     color: white;
 }
 
+/* 포인트 적립 페이지 구성 --------------------------------------*/
+body.kiosk-point .keypad-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
 
+body.kiosk-point .phone-display {
+  font-size: 24px;
+  text-align: center;
+  width: 250px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #f8f9fa;
+}
+
+
+body.kiosk-point .btn-lg {
+  width: 80px;
+  height: 80px;
+  font-size: 24px;
+}
+
+
+/* 버튼 스타일 */
+body.kiosk-point .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+body.kiosk-point button {
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+body.kiosk-point .blue-button {
+    background-color: #5c9aff;
+    color: white;
+}
+
+body.kiosk-point .black-button {
+    background-color: black;
+    color: white;
+}
 
 
 
