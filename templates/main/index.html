@@ -9,36 +9,43 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS, Popper.js, and jQuery (필수) -->
+<!--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body class="main-index">
     <div class="logo-container">
-        <button type="button" class="btn btn-outline-success">브랜드소개</button>
-        <button type="button" class="btn btn-outline-success">매장안내</button>
-        <button type="button" class="btn btn-outline-success">메뉴정보</button>
+        <a href="/brand" class="btn btn-outline-success">브랜드소개</a>
+        <a href="/store" class="btn btn-outline-success">매장안내</a>
+        <a href="/menu" class="btn btn-outline-success">메뉴정보</a>
         <img src="{% static 'images/text_logo.png' %}" alt="text" class="logo-img">
-        <button type="button" class="btn btn-outline-success">이벤트</button>
+        <a href="/event" class="btn btn-outline-success">이벤트</a>
         <div class="btn-group">
-          <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티</button>
-          <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">공지사항</a></li>
-          <li><a class="dropdown-item" href="#">Q&A</a></li>
-          </ul>
+            <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티</button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/notice">공지사항</a></li>
+                <li><a class="dropdown-item" href="/qna">Q&A</a></li>
+            </ul>
         </div>
-        <button type="button" class="btn btn-outline-success">Log in</button>
-        <button type="button" class="btn btn-outline-success">회원가입</button>
-    </div>
+        <a href="/login" class="btn btn-outline-success">Log in</a>
+        <a href="/signup" class="btn btn-outline-success">회원가입</a>
+    </div>`
+
     <!--  메인 슬라이드 이미지 위 소개글 -->
     <p class="center-text" style="font-size: {{ font_size }};">따뜻한 빵의 향기로 가득한 브레드 스캔소에 오신 것을 환영합니다!</p>
 
     <!-- 슬라이드 코드(캐러셀) -->
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div id="carouselExampleIndicators" class="carousel slide">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
         <div class="carousel-inner">
-            <div class="carousel-item active d-flex justify-content-center">
+<!--            <div class="carousel-item active d-flex justify-content-center">-->
+            <div class="carousel-item active">
                 <img src="{% static 'images/bs_main.png' %}" class="d-block custom-img" alt="메인1">
             </div>
             <div class="carousel-item">
@@ -70,7 +77,7 @@
     </div>
 
     <div class="main-container">
-        <!-- 이벤트 이미지 왼쪽 정렬 -->
+        <!-- evnet 이미지 왼쪽 정렬 -->
         <div class="event-container">
             <div class="event-item">
                 <img src="{% static 'images/event1.png' %}" class="event-img" alt="이벤트1">
@@ -83,7 +90,7 @@
             </div>
         </div>
 
-        <!-- 제품 이미지 오른쪽 정렬 -->
+        <!-- product 이미지 오른쪽 정렬 -->
         <div class="product-container">
             <div class="product-item">
                 <img src="{% static 'images/product1.jpg' %}" class="product-img" alt="제품1">
@@ -96,13 +103,10 @@
             </div>
         </div>
     </div>
+
     <footer class="bg-dark text-white text-center py-3">
         <p>&copy; 2025 BreadScanco. All rights reserved.</p>
     </footer>
-
-    <!-- Bootstrap JS, Popper.js, and jQuery (필수) -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
 </body>
 </html>
