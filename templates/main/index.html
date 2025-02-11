@@ -4,76 +4,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <meta charset="UTF-8">
     <title>BreadScanco | index</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<div class="logo-container">
-    <button type="button" class="btn btn-outline-success">브랜드소개</button>
-    <button type="button" class="btn btn-outline-success">매장안내</button>
-    <button type="button" class="btn btn-outline-success">메뉴정보</button>
-    <img src="{% static 'images/text_logo.png' %}" alt="text" class="logo-img">
-    <button type="button" class="btn btn-outline-success">이벤트</button>
-    <div class="btn-group">
-      <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티</button>
-    <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="#">공지사항</a></li>
-    <li><a class="dropdown-item" href="#">Q&A</a></li>
-  </ul>
-</div>
-    <button type="button" class="btn btn-outline-success">Log in</button>
-    <button type="button" class="btn btn-outline-success">회원가입</button>
-</div>
-</body>
+<body class="main-index">
+    <div class="logo-container">
+        <button type="button" class="btn btn-outline-success">브랜드소개</button>
+        <button type="button" class="btn btn-outline-success">매장안내</button>
+        <button type="button" class="btn btn-outline-success">메뉴정보</button>
+        <img src="{% static 'images/text_logo.png' %}" alt="text" class="logo-img">
+        <button type="button" class="btn btn-outline-success">이벤트</button>
+        <div class="btn-group">
+          <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티</button>
+          <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">공지사항</a></li>
+          <li><a class="dropdown-item" href="#">Q&A</a></li>
+          </ul>
+        </div>
+        <button type="button" class="btn btn-outline-success">Log in</button>
+        <button type="button" class="btn btn-outline-success">회원가입</button>
+    </div>
     <!--  메인 슬라이드 이미지 위 소개글 -->
     <p class="center-text" style="font-size: {{ font_size }};">따뜻한 빵의 향기로 가득한 브레드 스캔소에 오신 것을 환영합니다!</p>
 
-    <body class="bg-custom">
-
-    <!-- 슬라이드 방식 -->
-    <head>
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
-        <!-- 슬라이드 코드(캐러셀) -->
-        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active d-flex justify-content-center">
-                    <img src="{% static 'images/bs_main.png' %}" class="d-block custom-img" alt="메인1">
-                </div>
-                <div class="carousel-item">
-                    <img src="{% static 'images/kiki.jpg' %}" class="d-block custom-img" alt="메인2">
-                </div>
-                <div class="carousel-item">
-                    <img src="{% static 'images/cake.jpg' %}" class="d-block custom-img" alt="메인3">
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+    <!-- 슬라이드 코드(캐러셀) -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
-
-        <!-- Bootstrap JS, Popper.js, and jQuery (필수) -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-    </body>
+        <div class="carousel-inner">
+            <div class="carousel-item active d-flex justify-content-center">
+                <img src="{% static 'images/bs_main.png' %}" class="d-block custom-img" alt="메인1">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/kiki.jpg' %}" class="d-block custom-img" alt="메인2">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/cake.jpg' %}" class="d-block custom-img" alt="메인3">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 
     <!-- 메인 브랜드 인사말 -->
     <p class="center-text" style="font-size: {{ font_size }};">언제나 신선한 재료와 정성으로 만든 감동의 빵을 맛 보세요. <br>
- 매일 아침, 갓 구운 빵의 향기로 여러분을 맞이하겠습니다 ( • ᴗ - ) ✧</p>
-
+    매일 아침, 갓 구운 빵의 향기로 여러분을 맞이하겠습니다 ( • ᴗ - ) ✧</p>
     <br><br>
 
     <!-- event & product 텍스트 정렬(홈(본문)) -->
@@ -109,12 +96,13 @@
             </div>
         </div>
     </div>
-
     <footer class="bg-dark text-white text-center py-3">
-    <p>&copy; 2025 BreadScanco. All rights reserved.</p>
-</footer>
+        <p>&copy; 2025 BreadScanco. All rights reserved.</p>
+    </footer>
 
+    <!-- Bootstrap JS, Popper.js, and jQuery (필수) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
-    </body>
 </body>
 </html>

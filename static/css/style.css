@@ -1,28 +1,29 @@
 /*--정아 start--*/
-/* 상단 텍스트 정렬 */
-.center-text {
-    text-align: center;  /* 텍스트 가운데 정렬 */
+/* 전체 배경색 설정 */
+body.main-index {
+    background-color: #F2D0A9;  /* 원하는 배경색 */
 }
 
-/*--------------------------------------------------------------------------------------------*/
-
 /* 최상단 텍스트 로고 이미지 설정 */
-.logo-container {
+body.main-index .logo-container {
     display: flex;         /* 플렉스박스로 정렬 */
     justify-content: center; /* 가로 중앙 정렬 */
     align-items: center;     /* 세로 중앙 정렬 */
     height: 200px;          /* 컨테이너 높이 (필요시 조정) */
 }
 
-.logo-img {
+body.main-index .logo-img {
     width: 200px;  /* 로고 크기 조정 (원하는 크기로 변경) */
     height: auto;  /* 원본 비율 유지 */
 }
 
-/*--------------------------------------------------------------------------------------------*/
+/* 상단 텍스트 정렬 */
+body.main-index .center-text {
+    text-align: center;  /* 텍스트 가운데 정렬 */
+}
 
 /* 슬라이드 설정 */
-.carousel-item {
+body.main-index .carousel-item {
     /*position: relative; !* 기본값 유지 *!*/
     display: flex;
     justify-content: center;   /* 가로 중앙 정렬 */
@@ -32,40 +33,38 @@
 }
 
 /* 이미지 크기 설정 */
-.custom-img {
+body.main-index .custom-img {
     width: 100%; /* 부모 요소의 너비에 맞게 */
     height: 100%; /* 부모 요소의 높이에 맞게 */
     object-fit: cover; /* 비율을 유지하면서 잘리지 않게 */
 }
 
 /* 캐러셀 컨데이너 */
-.carousel-inner {
+body.main-index .carousel-inner {
     overflow: hidden;
 }
-/*--------------------------------------------------------------------------------------------*/
 
 /* event & product 텍스트 정렬 */
-.main-header {
+body.main-index .main-header {
     display: flex;  /* 가로 정렬 */
     justify-content: space-between;  /* 요소를 양 끝으로 배치 */
     align-items: center;  /* 세로 중앙 정렬 */
     width: 100%;  /* 부모 요소 너비 전체 사용 */
     font-weight: bold; /* 볼드 처리 */
 }
-/*--------------------------------------------------------------------------------------------*/
+
 
 /* event & product 이미지 정렬 */
-.main_image-header {
+body.main-index .main_image-header {
     display: flex;  /* 가로 정렬 */
     justify-content: space-between;  /* 요소를 양 끝으로 배치 */
     align-items: center;  /* 세로 중앙 정렬 */
     width: 100%;  /* 부모 요소 너비 전체 사용 */
 }
 
-/*--------------------------------------------------------------------------------------------*/
 
 /* main-container */
-.main-container {
+body.main-index .main-container {
     display: flex;  /* 내부 요소를 가로로 배치 */
     justify-content: space-between;  /* 요소를 양 끝으로 배치 */
     gap: 20px; /* 요소 사이 간격 */
@@ -73,7 +72,7 @@
 }
 
 /* 이벤트 컨테이너 설정 */
-.event-container {
+body.main-index .event-container {
     display: flex; /* 내부 요소를 가로로 배치 */
     gap: 20px; /* 요소 사이 간격 */
     flex-wrap: wrap; /* 화면이 작아지면 다음 줄로 넘어감 */
@@ -81,7 +80,7 @@
 }
 
 /* product 컨테이너 설정 */
-.product-container {
+body.main-index .product-container {
     display: flex;  /* 내부 요소를 가로로 배치 */
     gap: 20px; /* 요소 사이 간격 */
     flex-wrap: wrap; /* 화면이 작아지면 다음 줄로 넘어감 */
@@ -89,7 +88,7 @@
 }
 
 /* 이벤트 설정 */
-.event-item {
+body.main-index .event-item {
     display: flex;
     align-items: center;  /* 세로 중앙 정렬 */
     height: 250px; /* 동일한 높이 */
@@ -97,7 +96,7 @@
 }
 
 /* product 설정 */
-.product-item {
+body.main-index .product-item {
     display: flex;
     align-items: center;  /* 세로 중앙 정렬 */
     height: 250px; /* 동일한 높이 */
@@ -105,18 +104,11 @@
 }
 
 /* 이미지 크기 설정 */
-.event-img, .product-img {
+body.main-index .event-img, body.main-index .product-img {
     width: 100%;
     height: 100%;
     object-fit: cover; /* 이미지 비율 유지 + 꽉 채우기 (잘릴 수도 있음) */
 }
-/*--------------------------------------------------------------------------------------------*/
-
-/* 배경색 설정 */
-.bg-custom {
-    background-color: #F2D0A9;  /* 원하는 배경색 */
-}
-/*--------------------------------------------------------------------------------------------*/
 
 
 
@@ -312,7 +304,38 @@ body.kiosk-products .black-button {
     color: white;
 }
 
+/* 회원 확인 페이지 전체 화면 구성 */
+body.kiosk-member body {
+    display: flex;
+    flex-direction: column; /* 세로 방향 정렬 */
+    justify-content: center; /* 수직 중앙 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    height: 100vh; /* 화면 전체 높이 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+}
 
+/* 버튼 스타일 */
+body.kiosk-member .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+body.kiosk-member button {
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* 버튼 색상 */
+body.kiosk-member .black-button {
+    background-color: black;
+    color: white;
+}
 
 
 
