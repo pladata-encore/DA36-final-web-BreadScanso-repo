@@ -1,5 +1,6 @@
 from django.urls import path, include
 from main import views
+from django.contrib.auth import views as auth_views
 
 # namespace 지정
 app_name = 'main'
@@ -18,5 +19,7 @@ urlpatterns = [
     path('stock/', include('stock.urls')),  # stock 앱의 urls.py를 포함
     path('store/', include('store.urls')),  # store 앱의 urls.py를 포함
     path('store_info/', include('store_info.urls')),  # store_info 앱의 urls.py를 포함
-
+    path("login/", auth_views.LoginView.as_view(template_name="main/login.html"), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
+    path("signup/", views.signup, name="signup"),
 ]
