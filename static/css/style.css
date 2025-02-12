@@ -302,7 +302,7 @@ body.kiosk-products .black-button {
     color: white;
 }
 
-/* 회원 확인 페이지 전체 화면 구성 */
+/* 회원 확인 페이지 전체 화면 구성------------------------------------------------ */
 body.kiosk-member {
     display: flex;
     flex-direction: column; /* 세로 방향 정렬 */
@@ -402,25 +402,39 @@ body.kiosk-point .black-button {
 }
 
 /* 포인트 사용 페이지 구성--------------------------------------------------*/
-body.kiosk-usepoint .point-container {
+body.kiosk-usepoint .keypad-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    width: 100vw;
 }
 
-body.kiosk-usepoint .phone-display {
-  font-size: 24px;
-  text-align: center;
-  width: 250px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 15px;
-  background-color: #f8f9fa;
-}
 
+body.kiosk-usepoint .keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 250px;
+    margin: 20px auto;
+}
+body.kiosk-usepoint .keypad button {
+    height: 60px;
+    font-size: 1.5rem;
+}
+body.kiosk-usepoint .input-box {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 2px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+}
 
 body.kiosk-usepoint .btn-lg {
   width: 80px;
@@ -455,6 +469,154 @@ body.kiosk-usepoint .black-button {
     background-color: black;
     color: white;
 }
+
+/* 결제 수단 선정------------------------------------------------------------ */
+body.kiosk-payment-method header {
+    position: fixed; /* 화면에 고정 */
+    top: 20px;
+    left: 20px;
+    height: 40px;
+}
+
+/* 브랜드 로고 이미지 스타일 */
+body.kiosk-payment-method .brand-logo {
+    width: 150px; /* 로고 크기 조정 */
+    height: auto; /* 비율 유지 */
+}
+
+/* 지점명 (오른쪽 상단)*/
+body.kiosk-payment-method .store-name {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    font-size: 24px;
+    color: yellowgreen;
+    font-weight: bold;
+}
+/* 전체 페이지 스타일 */
+body.kiosk-payment-method body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f8f8;
+}
+
+/* 메인 컨테이너 (주문 목록) */
+body.kiosk-payment-method .container {
+    display: flex;
+    justify-content: center;
+    width: 85%;
+    margin: 120px auto 0 auto; /* 위쪽 여백 120px, 좌우 자동 정렬 */
+    align-items: center;
+}
+
+/* 결제 내역 */
+body.kiosk-payment-method .payment-history {
+    width: 60%;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    text-align: center;
+}
+
+body.kiosk-payment-method .payment-history table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+body.kiosk-payment-method .payment-history th, .payment-history td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+body.kiosk-payment-method .payment-history th {
+    background-color: #ffeb99;
+}
+
+body.kiosk-payment-method .total {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+/* 버튼 스타일 */
+body.kiosk-payment-method .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 20px;
+    align-items: center; /* 버튼 높이 맞추기 */
+}
+
+body.kiosk-payment-method button {
+    width: 300px;
+    height: 85px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+body.kiosk-payment-method .blue-button {
+    background-color: #5c9aff;
+    color: white;
+}
+
+body.kiosk-payment-method .black-button {
+    background-color: black;
+    color: white;
+}
+
+/* 결제 완료 / 영수증 페이지--------------------------------------------------- */
+body.kiosk-payment-completed body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f8f8;
+}
+
+/* 버튼 스타일 */
+body.kiosk-payment-completed .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+body.kiosk-payment-completed button {
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+body.kiosk-payment-completed .blue-button {
+    background-color: #5c9aff;
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
