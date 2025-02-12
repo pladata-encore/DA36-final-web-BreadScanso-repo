@@ -94,25 +94,19 @@
                 </div>
               </li>
               <li class="mb-1">
-                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#menu-collapse" aria-expanded="false">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" aria-expanded="false" onclick="location.href='{% url '#' %}'">
                   메뉴관리
                 </button>
-                <div class="collapse" id="menu-collapse">
-                </div>
               </li>
               <li class="mb-1">
-                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#payment-collapse" aria-expanded="false">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" aria-expanded="false" onclick="location.href='{% url 'pay_main' %}'">
                   결제관리
                 </button>
-                <div class="collapse" id="payment-collapse">
-                </div>
               </li>
                 <li class="mb-1">
-                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#member-collapse" aria-expanded="false">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" aria-expanded="false" onclick="location.href='{% url '#' %}'">
                   회원관리
                 </button>
-                <div class="collapse show" id="member-collapse">
-                </div>
                 <li class="mb-1">
             <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                 data-bs-toggle="collapse" data-bs-target="#system-collapse" aria-expanded="false">
@@ -132,7 +126,7 @@
                                 <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Q&A</a></li>
                             </ul>
                         </ul>
-                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">매장 정보</a></li>
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">▪️ 매장 정보</a></li>
                     </ul>
                 </div>
             </li>
@@ -141,7 +135,7 @@
     </div>
 
         <div class="col-md-9 d-flex flex-column justify-content-center align-items-center text-center" style="min-height: 80vh;">
-            <h1>결제관리 화면 입니다.</h1>
+            <h1>구매/취소내역</h1>
             <p>여기부터 본문을 써주시면 됩니다.</p>
             <button class="btn btn-primary mt-3">결제 내역 확인</button>
         </div>
