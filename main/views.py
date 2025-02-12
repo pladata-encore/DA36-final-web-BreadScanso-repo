@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -13,18 +14,23 @@ def index(request):
 
 def signup(request):
     if request.method == "POST":
-        username = request.POST['username']
+        user_id = request.POST['user_id']
         password1 = request.POST['password1']
         password2 = request.POST['password2']
+        username = request.POST['username']
+        cellphone = request.POST['cellphone']
         email = request.POST['email']
 
         if password1 != password2:
             return render(request, 'main/signup.html', {'error': '비밀번호가 일치하지 않습니다.'})
 
-        if User.objects.filter(username=username).exists():
+        if User.objects.filter(user_id=user_id).exists():
             return render(request, "main/signup.html", {'error': '이미 존재하는 아이디입니다.'})
 
-        user = User.objects.create_user(username=username, password=password1)
+        else:
+            return JsonResponse({"exists": False}) # 사용 가능한 아이디
+
+        user = User.objects.create_user(user_id=user_id, password=password1)
         login(request, user)  # 자동 로그인
         return redirect("/")  # 메인 페이지로 이동
 
@@ -32,9 +38,9 @@ def signup(request):
 
 def login(request):
     if request.method == "POST":
-        username = request.POST['username']
+        user_id = request.POST['user_id']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, user_id=user_id, password=password)
 
         if user is not None:
             login(request, user)

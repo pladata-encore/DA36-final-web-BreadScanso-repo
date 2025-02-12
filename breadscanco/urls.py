@@ -19,7 +19,8 @@ urlpatterns = [
     path('stock/', include('stock.urls')),  # stock 앱의 urls.py를 포함
     path('store/', include('store.urls')),  # store 앱의 urls.py를 포함
     path('store_info/', include('store_info.urls')),  # store_info 앱의 urls.py를 포함
-    path("login/", auth_views.LoginView.as_view(template_name="main/login.html"), name="login"),
-    path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),
-    path("signup/", views.signup, name="signup"),
+    path("login/", auth_views.LoginView.as_view(template_name="main/login.html"), name="login"),  # 로그인 경로
+    path("logout/", auth_views.LogoutView.as_view(next_page="/"), name="logout"),  # 로그아웃 경로
+    path("signup/", views.signup, name="signup"),  # 회원가입 경로
+    path("signup/", views.signup, name="user_id"),
 ]
