@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BreadScanco | menu_page</title>
+    <title>BreadScanco | menu_main</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,7 +13,7 @@
 <!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <!-- JavaScript 파일 불러오기 -->
-    <script src="{% static 'js/menu_main_best10.js' %}"></script>
+    <script src="{% static 'js/menu_main.js' %}"></script>
 </head>
 
 <!-- 메인 헤더 -->
@@ -38,8 +38,27 @@
     </header>
 </body>
 
-<!-- 전체 best 상품 -->
-<body class="menu-page">
+<!-- 카테고리 전부, 빵, 디저트 변환하는 버튼 ) -->
+{#<div class="d-grid gap-2 col-6 mx-auto">#}
+{#<button type="button" class="btn btn-info">All</button>#}
+{#<button type="button" class="btn btn-info">Bread</button>#}
+{#<button type="button" class="btn btn-info">Dessert</button>#}
+{#</div>#}
+<!-- 토글 버튼 -->
+{#<p class="d-inline-flex gap-1">#}
+{#  <button type="button" class="btn" data-bs-toggle="button">All</button>#}
+{#  <button type="button" class="btn active" data-bs-toggle="button" aria-pressed="true">Bread</button>#}
+{#  <button type="button" class="btn active" data-bs-toggle="button" aria-pressed="true">Dessert</button>#}
+{#</p>#}
+
+<!-- 전체 best10 표시 -->
+<body class="menu-main">
+    <div class="d-flex justify-content-center gap-3 my-3">
+        <button type="button" class="btn btn-info" onclick="location.href='/menu'">All</button>
+        <button type="button" class="btn btn-info" onclick="location.href='/menu/bread'">Bread</button>
+        <button type="button" class="btn btn-info" onclick="location.href='/menu/dessert'">Dessert</button>
+    </div>
+
     <div class="product-body">
         <div class="container">
             <div class="category-block">
@@ -53,43 +72,43 @@
                 <div class="best-carousel-track">
                     <div class="best-carousel-item">
                         <img src="{% static 'images/bagel.jpg' %}" alt="Best 1">
-                        <div class="product-name">bagel</div>
+                        <div class="product-name">Bagel</div>
                     </div>
                     <div class="best-carousel-item">
                         <img src="{% static 'images/croissant.jpg' %}" alt="Best 2">
-                        <div class="product-name">croissant</div>
+                        <div class="product-name">Croissant</div>
                     </div>
                     <div class="best-carousel-item">
                         <img src="{% static 'images/custardcreambread.png' %}" alt="Best 3">
-                    <div class="product-name">custard cream bread</div>
+                    <div class="product-name">Custard Cream Bread</div>
                     </div>
                     <div class="best-carousel-item">
                         <img src="{% static 'images/loafbread.jpg' %}" alt="Best 4">
-                        <div class="product-name">loaf bread</div>
+                        <div class="product-name">Loaf Bread</div>
                     </div>
                     <div class="best-carousel-item">
                         <img src="{% static 'images/whitebread.jpg' %}" alt="Best 5">
-                        <div class="product-name">white bread</div>
+                        <div class="product-name">White Bread</div>
                     </div>         
                     <div class="best-carousel-item">
                         <img src="{% static 'images/pizzabread.jpg' %}" alt="Best 6">
-                        <div class="product-name">pizza bread</div>
+                        <div class="product-name">Pizza Bread</div>
                     </div>
                     <div class="best-carousel-item">
                         <img src="{% static 'images/redbeanbread.jpg' %}" alt="Best 7">
-                        <div class="product-name">red bean bread</div>
+                        <div class="product-name">Red Bean Bread</div>
                     </div>
                     <div class="best-carousel-item">
                         <img src="{% static 'images/saltbread.jpg' %}" alt="Best 8">
-                        <div class="product-name">salt bread</div>
+                        <div class="product-name">Salt Bread</div>
                     </div>
                     <div class="best-carousel-item">
                         <img src="{% static 'images/soboro.jpg' %}" alt="Best 9">
-                        <div class="product-name">soboro</div>
+                        <div class="product-name">Soboro</div>
                     </div>
                     <div class="best-carousel-item">
                         <img src="{% static 'images/product1.jpg' %}" alt="Best 10">
-                        <div class="product-name">macaron</div>
+                        <div class="product-name">Macaron</div>
                     </div>
                 </div>
             </div>
@@ -97,5 +116,22 @@
             </div>
         </div>
     </div>
+
+<!-- 전체 제품 표시 -->
+    <div class="container mt-5">
+            <div class="category-block">
+                <h2 class="category-title">전체 메뉴</h2>
+            </div>
+    
+            <div id="productGrid" class="product-grid"></div>
+            <div class="d-flex justify-content-center my-3">
+                <button id="loadMoreBtn" class="btn btn-primary load-more">더보기</button>
+            </div>
+    </div>
 </body>
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2025 BreadScanco. All rights reserved.</p>
+    </footer>
+
 </html>

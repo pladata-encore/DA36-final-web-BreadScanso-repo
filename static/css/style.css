@@ -627,7 +627,8 @@ body.kiosk-payment-completed .blue-button {
 
 /*--정석 start--*/
 /* ----------------------------------------------------------------------- */
-body.menu-page .best-carousel-item {
+/*--정석 start--*/
+body.menu-main.best-carousel-item {
     flex: 0 0 20%; /* 5개씩 보이도록 설정 */
     padding: 10px;
     text-align: center;
@@ -672,8 +673,12 @@ body.menu-page .best-carousel-item {
     border-radius: 10px;
 }
 
+.best-carousel-item img:hover {
+    transform: scale(1.1);
+}
+
 .product-name {
-    margin-top: 10px; /* 이미지와 이름 사이에 여백 추가 */
+    margin-top: 12px; /* 이미지와 이름 사이에 여백 추가 */
     font-size: 16px;
     font-weight: bold;
     text-align: center; /* 이름 가운데 정렬 */
@@ -698,7 +703,132 @@ body.menu-page .best-carousel-item {
 .best-carousel-btn.right {
     right: -50px; /* 오른쪽 버튼을 캐러셀 바깥으로 이동 */
 }
+/* ----------------------------------------------------------------------- */
+/* 전체 제품 grid styling */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
 
+.product-item {
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    flex-direction: column; /* 세로로 정렬 */
+    justify-content: center;
+    align-items: center;
+}
+
+.product-item img {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.product-item img:hover {
+    transform: scale(1.1);
+}
+
+.product-name {
+    margin-top: 12px; /* 이미지와 이름 사이에 여백 추가 */
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center; /* 이름 가운데 정렬 */
+}
+
+/* Tag Styling */
+.tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ff6347;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+}
+/* ----------------------------------------------------------------------- */
+/* 제품 상세 페이지 */
+/* 전체 컨테이너 중앙 정렬 */
+.product-detail-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* 이미지와 정보 나란히 정렬 */
+.product-content {
+    display: flex;
+    gap: 50px;  /* 사진과 정보 사이 간격 넓히기 */
+    align-items: flex-start;
+}
+
+/* 이미지 스타일 */
+.product-image {
+    position: relative;  /* 버튼을 이미지 안에서 절대 위치로 설정하기 위해 필요 */
+}
+
+.product-image img {
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 목록으로 돌아가는 버튼: 이미지 상단 왼쪽에 위치 */
+.back-button {
+    position: absolute;  /* 이미지 기준으로 위치 고정 */
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.6);  /* 반투명 배경 */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);  /* 호버 시 더 진한 색 */
+}
+
+/* 제품 정보 스타일 */
+.product-info {
+    max-width: 400px;
+}
+
+.product-tag {
+    display: inline-block;
+    background-color: #ff6347;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.product-meta hr {
+    margin: 15px 0;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #e63946;
+}
+
+
+
+/* ----------------------------------------------------------------------- */
 
 
 
