@@ -343,6 +343,21 @@ body.kiosk-point .keypad-container {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    width: 100vw;
+}
+
+body.kiosk-point .keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 250px;
+    margin: 20px auto;
+    justify-content: center;
+}
+body.kiosk-point .keypad button {
+    height: 60px;
+    font-size: 1.5rem;
 }
 
 body.kiosk-point .phone-display {
@@ -357,19 +372,14 @@ body.kiosk-point .phone-display {
 }
 
 
-body.kiosk-point .btn-lg {
-  width: 80px;
-  height: 80px;
-  font-size: 24px;
-}
-
-
 /* 버튼 스타일 */
 body.kiosk-point .button-container {
     display: flex;
     justify-content: center;
     margin-top: 20px;
     gap: 15px;
+    /*flex-direction: column; !* 버튼을 세로 정렬 *!*/
+    align-items: center;
 }
 
 body.kiosk-point button {
@@ -390,6 +400,63 @@ body.kiosk-point .black-button {
     background-color: black;
     color: white;
 }
+
+/* 포인트 사용 페이지 구성--------------------------------------------------*/
+body.kiosk-usepoint .point-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+body.kiosk-usepoint .phone-display {
+  font-size: 24px;
+  text-align: center;
+  width: 250px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #f8f9fa;
+}
+
+
+body.kiosk-usepoint .btn-lg {
+  width: 80px;
+  height: 80px;
+  font-size: 24px;
+}
+
+
+/* 버튼 스타일 */
+body.kiosk-usepoint .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+body.kiosk-usepoint button {
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+body.kiosk-usepoint .blue-button {
+    background-color: #5c9aff;
+    color: white;
+}
+
+body.kiosk-usepoint .black-button {
+    background-color: black;
+    color: white;
+}
+
+
 
 
 

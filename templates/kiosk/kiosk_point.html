@@ -16,60 +16,27 @@
         <!-- 전화번호 표시 -->
         <div class="phone-display" id="phone-number">010-____-____</div>
 
-        <div class="row">
-            <div class="col-4">
-                <button class="btn btn-dark btn-lg" onclick="addNumber(1)">1</button>
-            </div>
-            <div class="col-4">
-                <button class="btn btn-dark btn-lg" onclick="addNumber(2)">2</button>
-            </div>
-            <div class="col-4">
-                <button class="btn btn-dark btn-lg" onclick="addNumber(3)">3</button>
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-4">
-                <button class="btn btn-dark btn-lg" onclick="addNumber(4)">4</button>
-            </div>
-            <div class="col-4">
-                <button class="btn btn-dark btn-lg" onclick="addNumber(5)">5</button>
-            </div>
-            <div class="col-4">
-                <button class="btn btn-dark btn-lg" onclick="addNumber(6)">6</button>
-            </div>
+        <div class="keypad">
+            <button class="btn btn-light" onclick="addNumber(1)">1</button>
+            <button class="btn btn-light" onclick="addNumber(2)">2</button>
+            <button class="btn btn-light" onclick="addNumber(3)">3</button>
+            <button class="btn btn-light" onclick="addNumber(4)">4</button>
+            <button class="btn btn-light" onclick="addNumber(5)">5</button>
+            <button class="btn btn-light" onclick="addNumber(6)">6</button>
+            <button class="btn btn-light" onclick="addNumber(7)">7</button>
+            <button class="btn btn-light" onclick="addNumber(8)">8</button>
+            <button class="btn btn-light" onclick="addNumber(9)">9</button>
+            <button class="btn btn-secondary" onclick="clearInput()">C</button>
+            <button class="btn btn-light" onclick="addNumber(0)">0</button>
+            <button class="btn btn-secondary" onclick="deleteLast()">X</button>
         </div>
 
-        <div class="row mt-2">
-            <div class="col-4">
-                <button class="btn btn-dark btn-lg" onclick="addNumber(7)">7</button>
-            </div>
-            <div class="col-4">
-                <button class="btn btn-dark btn-lg" onclick="addNumber(8)">8</button>
-            </div>
-            <div class="col-4">
-                <button class="btn btn-dark btn-lg" onclick="addNumber(9)">9</button>
-            </div>
-        </div>
-
-        <div class="row mt-2">
-            <div class="col-4">
-                <button class="btn btn-warning btn-lg" onclick="clearNumber()">C</button>
-            </div>
-            <div class="col-4">
-                <button class="btn btn-dark btn-lg" onclick="addNumber(0)">0</button>
-            </div>
-            <div class="col-4">
-                <button class="btn btn-warning btn-lg" onclick="deleteLast()">X</button>
-            </div>
-        </div>
         <!-- 하단 버튼 -->
         <div class="button-container">
             <a href="{% url 'payment_method' %}">
                 <button class="black-button">적립 안 함</button>
             </a>
-            <a href="{% url 'usepoint' %}">
-                <button class="blue-button" onclick="confirm()">확인</button>
-            </a>
+            <button class="blue-button" onclick="confirm()">확인</button>
         </div>
     </div>
 

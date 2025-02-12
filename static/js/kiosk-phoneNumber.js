@@ -30,12 +30,16 @@ function clearNumber() {
 
 
 function confirm() {
-      if (phoneDigits.length < 8) {
-          alert("번호를 완성해주세요.");
-          return;
-      }
-      alert("입력한 번호 : 010-" + phoneDigits.slice(0, 4).join("") + "-" + phoneDigits.slice(4, 8).join("") + " 로 포인트가 적립됩니다.");
-      // 여기에 실제 데이터 전송 로직 추가 가능
+    if (phoneDigits.length < 8) {
+        alert("번호를 완성해주세요.");
+        return;
+    }
+    else {
+        alert("입력한 번호 : 010-" + phoneDigits.slice(0, 4).join("") + "-" + phoneDigits.slice(4, 8).join("") + " 로 포인트가 적립됩니다.");
+        // 페이지 이동 추가
+        window.location.href = "/kiosk/usepoint";
+    }
 }
+
 
 
