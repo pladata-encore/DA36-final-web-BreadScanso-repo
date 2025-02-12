@@ -1,11 +1,10 @@
-<header class="store_header d-flex justify-content-between">
-    <span id="logo">
-        <a href="/templates/main/index.html"><img src="{% static 'images/text_logo.png' %}" class="logo-img" alt="브래드스캔소 로고"></a>
-    </span>
-    <span class="d-flex align-items-end flex-column mb-3" style="height: 100px;">
-        <span class="mt-auto p-2">{% block store_id%}store_id{% endblock %}</span>
-        <button type="button" class="logout-btn" onclick="location.href='.html'">로그아웃</button>
-    </span>
-</header>
-
+    <header class="store_header d-flex justify-content-between">
+        <span id="logo">
+            <a href="/templates/main/index.html"><img src="{% static 'images/brand_logo.png' %}" class="logo-img" alt="브래드스캔소 로고"></a>
+        </span>
+        <span class="d-flex align-items-end flex-column mb-3" style="height: 100px;">
+            <span class="mt-auto p-2">{% block store_id%}store_id{% endblock %}</span>
+            <button type="button" class="logout-btn" onclick="location.href='.html'">로그아웃</button>
+        </span>
+    </header>
 <hr>
