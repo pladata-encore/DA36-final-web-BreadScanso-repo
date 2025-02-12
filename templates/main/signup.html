@@ -6,6 +6,12 @@
     <meta charset="UTF-8">
     <title>회원가입</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS (필수) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JavaScript (필수) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
     <div class="container">
@@ -13,40 +19,139 @@
         <form method="post">
             {% csrf_token %}
             <div class="mb-3">
-                <label for="username">아이디</label>
-                <input type="text" name="username" id="username" class="form-control" required>
+                <label for="user_id">* 아이디</label>
+                <input type="text" name="user_id" id="user_id" class="form-control" placeholder="아이디 입력(4~12자)" required>
+                <button type="button" onclick="checkUser_id()">중복 확인</button>
+                <p id="user_id-result"></p>
+
+                <script>
+function checkUsername() {
+    var user_id = document.getElementById("user_id").value;
+    var resultElement = document.getElementById("user_id-result");
+
+    fetch("/check-user_id/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": getCSRFToken()
+        },
+        body: "user_id=" + encodeURIComponent(user_id)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.exists) {
+            resultElement.innerText = "이미 사용 중인 아이디입니다.";
+            resultElement.style.color = "red";
+        } else {
+            resultElement.innerText = "사용 가능한 아이디입니다!";
+            resultElement.style.color = "green";
+        }
+    });
+}
+
+// CSRF 토큰 가져오기 (Django 보안 정책 대응)
+function getCSRFToken() {
+    return document.cookie.split("; ")
+        .find(row => row.startsWith("csrftoken="))
+        ?.split("=")[1];
+}
+</script>
             </div>
             <div class="mb-3">
-                <label for="password1">비밀번호</label>
-                <input type="password" name="password1" id="password1" class="form-control" required>
+                <label for="password1">* 비밀번호</label>
+                <input type="password" name="password1" id="password1" class="form-control" placeholder="비밀번호 입력(영문자, 숫자 포함 4~12자리)" required>
             </div>
             <div class="mb-3">
-                <label for="password2">비밀번호 확인</label>
-                <input type="password" name="password2" id="password2" class="form-control" required>
+                <label for="password2">* 비밀번호 확인</label>
+                <input type="password" name="password2" id="password2" class="form-control" placeholder="비밀번호 재입력" required>
             </div>
             <div class="mb-3">
-                <label for="email">이메일</label>
+                <label for="username">* 이름</label>
+                <input type="username" name="username" id="username" class="form-control" placeholder="이름" required>
+            </div>
+            <div class="mb-3">
+                <label for="cellphone">* 휴대폰 번호</label>
+                <input type="cellphone" name="cellphone" id="cellphone" class="form-control" placeholder="(-)제외한 숫자만 입력해주세요." required>
+            </div>
+            <div class="mb-3">
+                <label for="profile" class="form-label">프로필</label>
+                <input class="form-control" type="file" id="profile" name="profile">
+            </div>
+            <div class="mb-3">
+                <label for="email">* 이메일</label>
                 <div class="d-flex">
-            <input type="text" id="email_id" class="form-control" placeholder="이메일 아이디" required>
-            <span class="mx-2">@</span>
-            <select id="email_domain" class="form-control">
-                <option value="naver.com">naver.com</option>
-                <option value="gmail.com">gmail.com</option>
-                <option value="daum.net">daum.net</option>
-                <option value="직접입력">직접입력</option>
-            </select>
-            <input type="text" id="email_custom" class="form-control d-none" placeholder="직접입력">
+                    <input type="text" id="email_id" class="form-control" placeholder="이메일 아이디" required>
+                    <span class="mx-2">@</span>
+                    <select id="email_domain" class="form-control">
+                        <option value="naver.com">naver.com</option>
+                        <option value="gmail.com">gmail.com</option>
+                        <option value="daum.net">daum.net</option>
+                        <option value="직접입력">직접입력</option>
+                    </select>
+                    <input type="text" id="email_custom" class="form-control d-none" placeholder="직접입력">
+                </div>
+                <input type="hidden" name="email" id="email_full">
+            </div>
+
+            <br>
+
+            <div class="d-flex">
+            <!-- 연령대 드롭다운 버튼  -->
+                <div class="dropdown me-1">
+                    <button id="ageDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">연령대</button>
+                    <!-- 연령대 드롭다운 메뉴 -->
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#" onclick="setAge('10대')">10대</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="setAge('20대')">20대</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="setAge('30대')">30대</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="setAge('40대')">40대</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="setAge('50대')">50대</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="setAge('60대 이상')">60대 이상</a></li>
+                </ul>
+            </div>
+
+
+            <!-- 연령대 JavaScript 코드 -->
+            <script>
+                function setAge(age) {
+                    document.getElementById("ageDropdownBtn").textContent = age;
+                }
+            </script>
+
+            <div class="btn-group">
+            <!-- 성별 드롭다운 버튼  -->
+              <button id="genderDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">성별</button>
+            <!-- 성별 드롭다운 메뉴 -->
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#" onclick="setGender('남성')">남성</a></li>
+              <li><a class="dropdown-item" href="#" onclick="setGender('여성')">여성</a></li>
+            </ul>
+          </div>
+            <!-- 성별 JavaScript 코드 -->
+            <script>
+                function setGender(gender) {
+                    document.getElementById("genderDropdownBtn").textContent = gender;
+                }
+            </script>
         </div>
-        <input type="hidden" name="email" id="email_full">
+
+        <br>
+
+    <!-- 이용약관, 개인정보동의서 설정 -->
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">이용약관동의(필수)</label>
     </div>
-<!--                <input type="text" class="form-control" placeholder="Username" aria-label="Username">-->
-<!--                <span class="input-group-text">@</span>-->
-<!--                <input type="text" class="form-control" placeholder="Server" aria-label="Server">-->
-<!--            </div>-->
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+        <label class="form-check-label" for="flexCheckChecked">개인정보처리방침(필수)</label>
+    </div>
+    <br>
+
             {% if error %}
                 <div class="alert alert-danger">{{ error }}</div>
             {% endif %}
-            <button type="submit" class="btn btn-primary">회원가입</button>
+            <button type="submit" class="btn btn-primary">가입하기</button>
         </form>
         <a href="{% url 'login' %}">이미 계정이 있으신가요? 로그인</a>
 
@@ -85,25 +190,3 @@
 </body>
 </html>
 
-
-
-<!--{% load static %}-->
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>회원가입</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--    <img src="{% static 'images/signup_text.png' %}" alt="text" class="logo-container">-->
-<!--&lt;!&ndash;    <h2>회원가입</h2>&ndash;&gt;-->
-<!--    <form method="post">-->
-<!--        {% csrf_token %}-->
-<!--        {{ form.as_p }}-->
-<!--        <button type="submit">회원가입</button>-->
-<!--    </form>-->
-<!--  &lt;!&ndash; 로그인 링크로 이동 &ndash;&gt;-->
-<!--    <a href="{% url 'login' %}">로그인</a>-->
-<!--</body>-->
-<!--</html>-->
