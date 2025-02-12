@@ -1,30 +1,135 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Menu | Bread</title>
+    <title>BreadScanco | Bread </title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS, Popper.js, and jQuery (필수) -->
+<!--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- JavaScript 파일 불러오기 -->
+    <script src="{% static 'js/menu_main.js' %}"></script>
 </head>
+
+<!-- 메인 헤더 -->
 <body class="main-index">
-    <div class="logo-container">
-        <button type="button" class="btn btn-outline-success">브랜드소개</button>
-        <button type="button" class="btn btn-outline-success">매장안내</button>
-        <button type="button" class="btn btn-outline-success">메뉴정보</button>
-        <img src="{% static 'images/text_logo.png' %}" alt="text" class="logo-img">
-        <button type="button" class="btn btn-outline-success">이벤트</button>
-        <div class="btn-group">
-          <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티</button>
-          <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">공지사항</a></li>
-          <li><a class="dropdown-item" href="#">Q&A</a></li>
-          </ul>
+    <header>
+        <div class="logo-container">
+            <a href="/brand" class="btn btn-outline-success">브랜드소개</a>
+            <a href="/store" class="btn btn-outline-success">매장안내</a>
+            <a href="/menu" class="btn btn-outline-success">메뉴정보</a>
+            <img src="{% static 'images/text_logo.png' %}" alt="text" class="logo-img">
+            <a href="/event" class="btn btn-outline-success">이벤트</a>
+            <div class="btn-group">
+                <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티</button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/notice">공지사항</a></li>
+                    <li><a class="dropdown-item" href="/qna">Q&A</a></li>
+                </ul>
+            </div>
+            <a href="/login" class="btn btn-outline-success">Log in</a>
+            <a href="/signup" class="btn btn-outline-success">회원가입</a>
         </div>
-        <button type="button" class="btn btn-outline-success">Log in</button>
-        <button type="button" class="btn btn-outline-success">회원가입</button>
+    </header>
+</body>
+
+<!-- 카테고리 전부, 빵, 디저트 변환하는 버튼 ) -->
+{#<div class="d-grid gap-2 col-6 mx-auto">#}
+{#<button type="button" class="btn btn-info">All</button>#}
+{#<button type="button" class="btn btn-info">Bread</button>#}
+{#<button type="button" class="btn btn-info">Dessert</button>#}
+{#</div>#}
+<!-- 토글 버튼 -->
+{#<p class="d-inline-flex gap-1">#}
+{#  <button type="button" class="btn" data-bs-toggle="button">All</button>#}
+{#  <button type="button" class="btn active" data-bs-toggle="button" aria-pressed="true">Bread</button>#}
+{#  <button type="button" class="btn active" data-bs-toggle="button" aria-pressed="true">Dessert</button>#}
+{#</p>#}
+
+<!-- 전체 best10 표시 -->
+<body class="menu-main">
+    <div class="d-flex justify-content-center gap-3 my-3">
+        <button type="button" class="btn btn-info" onclick="location.href='/menu'">All</button>
+        <button type="button" class="btn btn-info" onclick="location.href='/menu/bread'">Bread</button>
+        <button type="button" class="btn btn-info" onclick="location.href='/menu/dessert'">Dessert</button>
+    </div>
+
+    <div class="product-body">
+        <div class="container">
+            <div class="category-block">
+                <h2 class="category-title">BEST 10</h2>
+            </div>
+
+            <!-- 캐러셀 추가 -->
+            <div class="best-carousel-container">
+            <button class="best-carousel-btn left" onclick="moveBestCarousel(-1)">❮</button>
+            <div class="best-carousel-wrapper">
+                <div class="best-carousel-track">
+                    <div class="best-carousel-item">
+                        <img src="{% static 'images/bagel.jpg' %}" alt="Best 1">
+                        <div class="product-name">Bagel</div>
+                    </div>
+                    <div class="best-carousel-item">
+                        <img src="{% static 'images/croissant.jpg' %}" alt="Best 2">
+                        <div class="product-name">Croissant</div>
+                    </div>
+                    <div class="best-carousel-item">
+                        <img src="{% static 'images/custardcreambread.png' %}" alt="Best 3">
+                    <div class="product-name">Custard Cream Bread</div>
+                    </div>
+                    <div class="best-carousel-item">
+                        <img src="{% static 'images/loafbread.jpg' %}" alt="Best 4">
+                        <div class="product-name">Loaf Bread</div>
+                    </div>
+                    <div class="best-carousel-item">
+                        <img src="{% static 'images/whitebread.jpg' %}" alt="Best 5">
+                        <div class="product-name">White Bread</div>
+                    </div>         
+                    <div class="best-carousel-item">
+                        <img src="{% static 'images/pizzabread.jpg' %}" alt="Best 6">
+                        <div class="product-name">Pizza Bread</div>
+                    </div>
+                    <div class="best-carousel-item">
+                        <img src="{% static 'images/redbeanbread.jpg' %}" alt="Best 7">
+                        <div class="product-name">Red Bean Bread</div>
+                    </div>
+                    <div class="best-carousel-item">
+                        <img src="{% static 'images/saltbread.jpg' %}" alt="Best 8">
+                        <div class="product-name">Salt Bread</div>
+                    </div>
+                    <div class="best-carousel-item">
+                        <img src="{% static 'images/soboro.jpg' %}" alt="Best 9">
+                        <div class="product-name">Soboro</div>
+                    </div>
+                    <div class="best-carousel-item">
+                        <img src="{% static 'images/product1.jpg' %}" alt="Best 10">
+                        <div class="product-name">Macaron</div>
+                    </div>
+                </div>
+            </div>
+            <button class="best-carousel-btn right" onclick="moveBestCarousel(1)">❯</button>
+            </div>
+        </div>
+    </div>
+
+<!-- 전체 제품 표시 -->
+    <div class="container mt-5">
+            <div class="category-block">
+                <h2 class="category-title">전체 메뉴</h2>
+            </div>
+    
+            <div id="productGrid" class="product-grid"></div>
+            <button id="loadMoreBtn" class="btn btn-primary load-more">더보기</button>
     </div>
 </body>
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2025 BreadScanco. All rights reserved.</p>
+    </footer>
+
+</html>
