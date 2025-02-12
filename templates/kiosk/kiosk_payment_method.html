@@ -1,3 +1,4 @@
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -5,14 +6,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiosk | Payment Method</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body class="kiosk-payment-method">
-    <h2>결제 방식을 선택해 주세요.</h2>
-    <h2>......결제 내역 목록.....</h2>
-    <h2>1. 간편 결제</h2>
-    <h2>2. 카드 결제</h2>
+    <!-- 헤더 추가 (로고 포함) -->
+    <header>
+        <img src="{% static '/images/brand_logo.png' %}" alt="브랜드 로고" class="brand-logo">
+    </header>
+    <!-- 지점명 -->
+    <div class="store-name">서초동점</div>
 
-
+    <div class="container">
+        <div class="payment-history">
+            <h3>결제 내역</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>메뉴이름</th>
+                        <th>단가</th>
+                        <th>수량</th>
+                        <th>금액</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>소금빵</td>
+                        <td>3800</td>
+                        <td>2</td>
+                        <td>7600</td>
+                    </tr>
+                    <tr>
+                        <td>에멘탈소금빵</td>
+                        <td>4500</td>
+                        <td>1</td>
+                        <td>4500</td>
+                    </tr>
+                    <tr>
+                        <td>빠다코코넛꽈베기</td>
+                        <td>4500</td>
+                        <td>1</td>
+                        <td>4500</td>
+                    </tr>
+                    <tr>
+                        <td>먹물소금빵</td>
+                        <td>4200</td>
+                        <td>1</td>
+                        <td>4200</td>
+                    </tr>
+                    <tr>
+                        <td>후추소금빵</td>
+                        <td>4200</td>
+                        <td>1</td>
+                        <td>4200</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="total">
+                <p>총 수량: <strong>6개</strong></p>
+                <p>총 금액: <strong>25,000원</strong></p>
+                <p>포인트 사용: <strong>1,000원</strong></p>
+                <p>총 결제 금액: <strong>24,000원</strong></p>
+            </div>
+        </div>
+    </div>
+    <!-- 버튼 영역 -->
+    <div class="button-container">
+        <a href="{% url 'payment_completed' %}">
+            <button class="blue-button">카드 결제</button>
+        </a>
+        <a href="{% url 'payment_completed' %}">
+            <button class="blue-button">간편 결제<br>(삼성페이, 애플페이 등)</button>
+        </a>
+    </div>
 
 
 </body>

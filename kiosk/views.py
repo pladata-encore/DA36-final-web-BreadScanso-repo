@@ -18,4 +18,7 @@ def usepoint(request):
 def payment_method(request):
     return render(request, 'kiosk/kiosk_payment_method.html')  # kiosk_결제방식 템플릿 파일 경로 지정
 
+def payment_completed(request):
+    return render(request, 'kiosk/kiosk_payment_completed.html')  # kiosk_결제완료/영수증 템플릿 파일 경로 지정
+
 
