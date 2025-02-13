@@ -71,7 +71,7 @@
     </div>
     <div class="mb-3">
         <label for="phone_num">* 휴대폰 번호</label>
-        <input type="number" name="phone_num" id="phone_num" class="form-control" placeholder="(-)제외한 숫자만 입력해주세요." required>
+        <input type="number" name="phone_num" id="phone_num" class="form-control" placeholder="(-)제외한 숫자만 입력해주세요" required>
     </div>
     <div class="mb-3">
         <label for="profile" class="form-label">프로필</label>
@@ -80,7 +80,7 @@
     <div class="mb-3">
         <label for="email">* 이메일</label>
         <div class="d-flex">
-            <input type="email" id="email_id" class="form-control" placeholder="이메일 아이디" required>
+            <input type="text" id="email_id" class="form-control" placeholder="이메일 아이디" required>
             <span class="mx-2">@</span>
             <select id="email_domain" class="form-control">
                 <option value="naver.com">naver.com</option>
@@ -92,6 +92,38 @@
         </div>
         <input type="hidden" name="email" id="email_full">
     </div>
+    <!-- 이메일 선택란 설정 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        let emailIdInput = document.getElementById("email_id");
+        let emailDomainSelect = document.getElementById("email_domain");
+        let emailCustomInput = document.getElementById("email_custom");
+        let emailFullInput = document.getElementById("email_full");
+
+        function updateEmail() {
+        let emailId = emailIdInput.value.trim();
+        let domain = emailDomainSelect.value;
+
+        if (domain === "직접입력") {
+        domain = emailCustomInput.value.trim();
+    }
+
+        emailFullInput.value = emailId && domain ? `${emailId}@${domain}` : "";
+    }
+
+        emailIdInput.addEventListener("input", updateEmail);
+        emailDomainSelect.addEventListener("change", function() {
+        if (this.value === "직접입력") {
+        emailCustomInput.classList.remove("d-none");
+    } else {
+        emailCustomInput.classList.add("d-none");
+        emailCustomInput.value = "";
+    }
+        updateEmail();
+    });
+        emailCustomInput.addEventListener("input", updateEmail);
+    });
+</script>
 
             <br>
 
@@ -181,37 +213,6 @@
     </form>
     <a href="{% url 'login' %}">이미 계정이 있으신가요? 로그인</a>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-        let emailIdInput = document.getElementById("email_id");
-        let emailDomainSelect = document.getElementById("email_domain");
-        let emailCustomInput = document.getElementById("email_custom");
-        let emailFullInput = document.getElementById("email_full");
-
-        function updateEmail() {
-        let emailId = emailIdInput.value.trim();
-        let domain = emailDomainSelect.value;
-
-        if (domain === "직접입력") {
-        domain = emailCustomInput.value.trim();
-    }
-
-        emailFullInput.value = emailId && domain ? `${emailId}@${domain}` : "";
-    }
-
-        emailIdInput.addEventListener("input", updateEmail);
-        emailDomainSelect.addEventListener("change", function() {
-        if (this.value === "직접입력") {
-        emailCustomInput.classList.remove("d-none");
-    } else {
-        emailCustomInput.classList.add("d-none");
-        emailCustomInput.value = "";
-    }
-        updateEmail();
-    });
-        emailCustomInput.addEventListener("input", updateEmail);
-    });
-</script>
     </div>
 </body>
 </html>
