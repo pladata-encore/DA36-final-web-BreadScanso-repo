@@ -1,0 +1,46 @@
+{% extends 'layout/store/base_store.html' %}
+{% load static %}
+
+{% block title %}Store | Menu Info {% endblock %}
+{% block store_id %}store_id{% endblock %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block content %}
+<!-- best, new, 노출 표시 -->
+<button type="button" class="btn btn-warning">Best</button>
+<button type="button" class="btn btn-info">New</button>
+<button type="button" class="btn btn-outline-danger">노출중</button>
+    
+<!-- 이미지 영역 -->
+<div class="image-area">
+    <img src="{% static 'images/saltbread.jpg' %}" alt="image">
+</div>
+    
+    
+<!-- 제품 정보 -->
+<div class="product-info">
+    <div class="product-meta">
+        <hr>
+        <p><strong>영양정보:</strong> <span id="detailNutrition"></span></p>
+        <p><strong>알레르기 정보:</strong> <span id="detailAllergy"></span></p>
+        <hr>
+        <p class="product-price" id="detailPrice">판매가: </p>
+        <p class="product-cost" id="cost">원가: </p>
+    </div>
+</div>
+
+<!-- 목록 버튼 -->
+<button type="button" class="btn btn-success">목록</button>    
+    
+<!-- 수정 버튼 -->
+<button type="button" class="btn btn-primary">수정</button>
+
+<!-- 삭제 버튼 -->
+<button type="button" class="btn btn-danger">삭제</button>
+    
+{% endblock content%}
+
+{% block script %}
+{{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
+<script src="{% static 'js/menu_new_menu.js' %}"></script>
+{% endblock script %}

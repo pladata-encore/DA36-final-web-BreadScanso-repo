@@ -1,0 +1,77 @@
+{% extends 'layout/store/base_store.html' %}
+{% load static %}
+
+{% block title %}Store | New Menu{% endblock %}
+{% block store_id %}store_id{% endblock %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block content %}
+<!-- best, new, 노출 여부 체크박스 -->
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+    <label class="form-check-label" for="flexCheckDefault">Best</label>
+</div>
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+    <label class="form-check-label" for="flexCheckDefault">New</label>
+</div>
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+    <label class="form-check-label" for="flexCheckDefault">노출중</label>
+</div> 
+    
+<!-- 왼쪽: 이미지 업로드 영역 -->
+<div class="image-area">
+    <label for="item_image">제품사진</label>
+    <input type="file" id="file-input" accept="image/*">
+    <img id="preview" src="" alt="Uploaded image preview">
+</div>
+    
+    
+<!-- 제품 정보 입력 -->
+<div class="mb-3">
+    <label for="item_name">제품명</label>
+    <input type="text" name="item_name" id="item_name" class="form-control" placeholder="제품명을 입력해주세요" required>
+</div>
+<div class="mb-3">
+    <label for="category">카테고리</label>
+    <div class="d-flex">
+        <select id="category" class="form-control">
+            <option value="빵">빵</option>
+            <option value="디저트">디저트</option>
+        </select>
+    </div>
+</div>
+    <div class="mb-3">
+    <label for="item_info">제품설명</label>
+    <input type="text" name="item_info" id="item_info" class="form-control" placeholder="제품설명을 입력해주세요" required>
+</div>
+    <div class="mb-3">
+    <label for="nutrition_info">영양정보</label>
+    <input type="text" name="nutrition_info" id="nutrition_info" class="form-control" placeholder="영양정보" required>
+</div>
+    <div class="mb-3">
+    <label for="allergy_info">알레르기정보</label>
+    <input type="text" name="allergy_info" id="allergy_info" class="form-control" placeholder="알레르기 정보" required>
+</div>
+<div class="mb-3">
+    <label for="cost">원가</label>
+    <input type="text" name="cost" id="cost" class="form-control" placeholder="￦원가">
+</div>
+<div class="mb-3">
+    <label for="price">판매가</label>
+    <input type="text" name="price" id="price" class="form-control" placeholder="￦판매가">
+</div>
+
+<!-- 저장 버튼 -->
+<button type="button" class="btn btn-success">저장</button>
+
+<!-- 취소 버튼 -->
+<button type="button" class="btn btn-warning">취소</button>
+    
+{% endblock content%}
+
+{% block script %}
+{{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
+<script src="{% static 'js/menu_new_menu.js' %}"></script>
+{% endblock script %}

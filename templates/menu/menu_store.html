@@ -1,11 +1,163 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu | Store</title>
-</head>
-<body>
-    <h1>점주 메뉴관리 화면 입니다.</h1>
+{% extends 'layout/store/base_store.html' %}
+{% load static %}
+
+{% block title %}Store | Menu{% endblock %}
+{% block store_id %}store_id{% endblock %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block content %}
+<style>
+body.menu_store_table table {
+    border-collapse: collapse;
+    width: 100%;
+}
+body.menu_store_table th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+body.menu_store_table thead {
+    border-bottom: 3px solid black;
+}
+body.menu_store_table .checkbox-column {
+    width: 50px;
+}
+body.menu_store_table .selected {
+    background-color: lightgray;
+}
+
+/* 삭제 버튼을 페이지네비게이션 왼쪽으로 이동 */
+body.delete_menu_popup #delete-btn {
+    margin-right: auto;
+    margin-left: 10px; /* 왼쪽 여백 추가 */
+}
+
+/* 신규 등록 버튼을 페이지네비게이션 오른쪽으로 이동 */
+body.delete_menu_popup .btn-info {
+    margin-left: auto;
+    margin-right: 10px; /* 오른쪽 여백 추가 */
+}
+</style>
+
+<!-- 검색바 -->
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <form class="d-flex" role="search" id="search-form">
+      <input class="form-control me-2" type="search" id="search-input" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
+<!-- 테이블 -->
+<body class="menu_store_table">
+<table class="table store-menu-table">
+  <thead>
+    <tr>
+      <th class="checkbox-column"><input type="checkbox" id="select-all"></th>
+      <th scope="col">번호</th>
+      <th scope="col">제품 아이디</th>
+      <th scope="col">제품명</th>
+      <th scope="col">매장</th>
+      <th scope="col">판매가</th>
+      <th scope="col">원가</th>
+      <th scope="col">제품 설명</th>
+      <th scope="col">카테고리</th>
+      <th scope="col">인기상품</th>
+      <th scope="col">신상품</th>
+      <th scope="col">노출여부</th>
+      <th scope="col">재고수량</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+      <th scope="row">1</th>
+      <td>A0001</td>
+      <td>베이글</td>
+      <td>서초점</td>
+      <td>￦3000원</td>
+      <td>￦1000원</td>
+      <td>쫄깃한 베이글</td>
+      <td>빵</td>
+      <td>O</td>
+      <td>X</td>
+      <td>O</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+      <th scope="row">2</th>
+      <td>A0002</td>
+      <td>단팥빵</td>
+      <td>서초점</td>
+      <td>￦3500원</td>
+      <td>￦1200원</td>
+      <td>달콤한 단팥빵</td>
+      <td>빵</td>
+      <td>O</td>
+      <td>X</td>
+      <td>O</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+      <th scope="row">3</th>
+      <td>A0003</td>
+      <td>피자빵</td>
+      <td>서초점</td>
+      <td>￦4000원</td>
+      <td>￦1500원</td>
+      <td>단짠단짠 피자빵</td>
+      <td>빵</td>
+      <td>O</td>
+      <td>X</td>
+      <td>O</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
 </body>
-</html>
+    
+<!-- 삭제 팝업 -->
+<body class="delete_menu_popup">
+    <div id="delete-popup" class="alert alert-warning d-flex align-items-center" role="alert" style="display: none;">
+        <div>
+            제품을 삭제하시겠습니까?
+        </div>
+        <button id="confirm-delete" class="btn btn-danger ms-3">예</button>
+        <button id="cancel-delete" class="btn btn-secondary ms-2">아니오</button>
+    </div>
+</body>
+    
+<!-- 삭제 버튼 -->
+<button type="button" class="btn btn-danger d-block" style="max-width: 200px; margin-right: auto;" id="delete-btn" >삭제</button>
+
+<!-- 페이지 네비게이션 -->
+<nav aria-label="Page navigation example" class="mt-3">
+  <ul class="pagination mb-0">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo; 이전</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">다음 &raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- 신규등록 버튼 -->
+<button type="button" class="btn btn-info ms-auto d-block" style="max-width: 200px;">신규등록</button>
+    
+{% endblock content %}
+
+{% block script %}
+{{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
+<script src="{% static 'js/menu_store.js' %}"></script>
+{% endblock script %}
