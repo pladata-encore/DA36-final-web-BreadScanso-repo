@@ -844,6 +844,43 @@ h1 {
 
 /*--은비 start--*/
 
+/*pay - 상세 페이지 */
+.receipt-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+}
+.left-section {
+    text-align: left;
+}
+
+.left-section, .right-section {
+    width: 48%;
+}
+.receipt-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+.receipt-table th, .receipt-table td {
+    text-align: right;
+}
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    width: 100%;
+}
+.btn-success {
+    width: 100px;
+}
 
 
 

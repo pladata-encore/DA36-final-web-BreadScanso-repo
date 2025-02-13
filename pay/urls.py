@@ -5,5 +5,6 @@ urlpatterns = [
     path('', views.pay_main, name='pay_main'),  # /pay/
 
     path('details/', views.pay_details, name='pay_details'),
-    path('cancel/', views.pay_cancel, name='pay_cancel' ),
+    # path('details/<int:payment_id>/', views.pay_details, name='pay_details'),
+    path('cancel/', views.pay_cancel, name='pay_cancel'),
 ]
