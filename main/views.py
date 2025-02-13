@@ -17,10 +17,10 @@ def index(request):
     return render(request, "main/index.html")
 
 # 아이디 중복 체크 - 나중에 기능 추가로 사용할 예정
-# def check_user_id(request):
-#     user_id = request.GET.get('user_id', '')
-#     exists = User.objects.filter(username=user_id).exists()
-#     return JsonResponse({"exists": exists})
+def check_user_id(request):
+    user_id = request.GET.get('user_id', '')
+    exists = User.objects.filter(username=user_id).exists()
+    return JsonResponse({"exists": exists})
 
 # 회원가입 설정
 def signup(request):
@@ -29,7 +29,7 @@ def signup(request):
         password1 = request.POST['password1']
         password2 = request.POST['password2']
         username = request.POST['username']
-        cellphone = request.POST['cellphone']
+        phone_num = request.POST['phone_num']
         email = request.POST['email']
 
         # 비밀번호 확인
@@ -39,10 +39,6 @@ def signup(request):
         # 아이디 중복 확인
         if User.objects.filter(username=user_id).exists():
             return render(request, "main/signup.html", {'error': '이미 존재하는 아이디입니다.'})
-
-        # 잠시 주석
-        # else:
-        #     return JsonResponse({"exists": False}) # 사용 가능한 아이디
 
         # 회원 생성
         user = User.objects.create_user(user_id=user_id, password=password1, email=email)
@@ -70,7 +66,22 @@ def login(request):
 
     return render(request, "main/login.html")
 
+# ID/PW 찾기 설정
+def login_find(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        phone_num = request.POST['phone_num']
+        email = request.POST['email']
+        user = authenticate(request, username=username, phone_num=phone_num, email=email)
+
+    return render(request, "main/login_find.html")
+
 # 잠시 주석 처리
+
+# 회원가입 설정
+# else:
+#     return JsonResponse({"exists": False}) # 사용 가능한 아이디
+
 # def signup(request):
 #     if request.method == "POST":
 #         form = UserCreationForm(request.POST)
