@@ -38,26 +38,28 @@
     </header>
 </body>
 
-<!-- 카테고리 전부, 빵, 디저트 변환하는 버튼 ) -->
-{#<div class="d-grid gap-2 col-6 mx-auto">#}
-{#<button type="button" class="btn btn-info">All</button>#}
-{#<button type="button" class="btn btn-info">Bread</button>#}
-{#<button type="button" class="btn btn-info">Dessert</button>#}
-{#</div>#}
-<!-- 토글 버튼 -->
-{#<p class="d-inline-flex gap-1">#}
-{#  <button type="button" class="btn" data-bs-toggle="button">All</button>#}
-{#  <button type="button" class="btn active" data-bs-toggle="button" aria-pressed="true">Bread</button>#}
-{#  <button type="button" class="btn active" data-bs-toggle="button" aria-pressed="true">Dessert</button>#}
-{#</p>#}
+
 
 <!-- 전체 best10 표시 -->
 <body class="menu-main">
-    <div class="d-flex justify-content-center gap-3 my-3">
+<div class="d-flex justify-content-center align-items-center my-3" style="gap: 750px;">
+    <!-- 왼쪽: 카테고리 버튼 -->
+    <div class="d-flex gap-3">
         <button type="button" class="btn btn-info" onclick="location.href='/menu'">All</button>
         <button type="button" class="btn btn-info" onclick="location.href='/menu/bread'">Bread</button>
         <button type="button" class="btn btn-info" onclick="location.href='/menu/dessert'">Dessert</button>
     </div>
+
+    <!-- 오른쪽: 검색창 -->
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+</div>
 
     <div class="product-body">
         <div class="container">
