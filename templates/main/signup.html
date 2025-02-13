@@ -67,11 +67,11 @@
     </div>
     <div class="mb-3">
         <label for="username">* 이름</label>
-        <input type="username" name="username" id="username" class="form-control" placeholder="이름" required>
+        <input type="text" name="username" id="username" class="form-control" placeholder="이름" required>
     </div>
     <div class="mb-3">
-        <label for="cellphone">* 휴대폰 번호</label>
-        <input type="cellphone" name="cellphone" id="cellphone" class="form-control" placeholder="(-)제외한 숫자만 입력해주세요." required>
+        <label for="phone_num">* 휴대폰 번호</label>
+        <input type="number" name="phone_num" id="phone_num" class="form-control" placeholder="(-)제외한 숫자만 입력해주세요." required>
     </div>
     <div class="mb-3">
         <label for="profile" class="form-label">프로필</label>
@@ -80,7 +80,7 @@
     <div class="mb-3">
         <label for="email">* 이메일</label>
         <div class="d-flex">
-            <input type="text" id="email_id" class="form-control" placeholder="이메일 아이디" required>
+            <input type="email" id="email_id" class="form-control" placeholder="이메일 아이디" required>
             <span class="mx-2">@</span>
             <select id="email_domain" class="form-control">
                 <option value="naver.com">naver.com</option>
@@ -110,28 +110,15 @@
         </ul>
     </div>
 
-    <!-- 연령대 JavaScript 코드 -->
-    <script>
-        function setAge(age) {
-            document.getElementById("ageDropdownBtn").textContent = age;
-        }
-    </script>
-
     <div class="btn-group">
         <!-- 성별 드롭다운 버튼  -->
           <button id="genderDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">성별</button>
         <!-- 성별 드롭다운 메뉴 -->
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#" onclick="setGender('남성')">남성</a></li>
-          <li><a class="dropdown-item" href="#" onclick="setGender('여성')">여성</a></li>
+          <li><a class="dropdown-item" href="#" onclick="setSex('남성')">남성</a></li>
+          <li><a class="dropdown-item" href="#" onclick="setSex('여성')">여성</a></li>
         </ul>
     </div>
-        <!-- 성별 JavaScript 코드 -->
-        <script>
-            function setGender(gender) {
-                document.getElementById("genderDropdownBtn").textContent = gender;
-            }
-        </script>
     </div>
 
         <br>
@@ -150,42 +137,81 @@
             {% if error %}
                 <div class="alert alert-danger">{{ error }}</div>
             {% endif %}
-            <button type="submit" class="btn btn-primary" onclick="location.href='/'">가입하기</button>
-        </form>
-        <a href="{% url 'login' %}">이미 계정이 있으신가요? 로그인</a>
+            <!-- 가입하기 버튼 -->
+            <button type="submit" id="signupButton" class="btn btn-primary">가입하기</button>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let emailIdInput = document.getElementById("email_id");
-                let emailDomainSelect = document.getElementById("email_domain");
-                let emailCustomInput = document.getElementById("email_custom");
-                let emailFullInput = document.getElementById("email_full");
+            <!-- 회원가입 완료 팝업창 -->
+            <div class="modal fade" id="signupSuccessModal" tabindex="-1" aria-labelledby="signupSuccessLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="signupSuccessLabel">회원가입 완료</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            가입이 완료되었습니다.<br>저희 브레드 스캔소의 회원이 되어주셔서 감사합니다🧡
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="confirmButton">확인</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    let signupForm = document.querySelector("form");  // 폼 선택
+                    let confirmButton = document.getElementById("confirmButton"); // 확인 버튼
 
-            function updateEmail() {
-                let emailId = emailIdInput.value.trim();
-                let domain = emailDomainSelect.value;
+                    signupForm.addEventListener("submit", function (event) {
+                        event.preventDefault(); // 기본 폼 제출 방지
 
-                if (domain === "직접입력") {
-                    domain = emailCustomInput.value.trim();
-                }
+                        // 가입 완료 팝업창 표시
+                        let modal = new bootstrap.Modal(document.getElementById("signupSuccessModal"));
+                        modal.show();
 
-                emailFullInput.value = emailId && domain ? `${emailId}@${domain}` : "";
-            }
+                        // 확인 버튼 클릭 시 홈 화면으로 이동
+                        confirmButton.addEventListener("click", function () {
+                            window.location.href = "/";  // 홈 페이지로 이동
+                        });
+                    });
+                });
+            </script>
 
-            emailIdInput.addEventListener("input", updateEmail);
-            emailDomainSelect.addEventListener("change", function() {
-                if (this.value === "직접입력") {
-                    emailCustomInput.classList.remove("d-none");
-                } else {
-                    emailCustomInput.classList.add("d-none");
-                    emailCustomInput.value = "";
-                }
-                updateEmail();
-            });
-            emailCustomInput.addEventListener("input", updateEmail);
-        });
-    </script>
+
+    </form>
+    <a href="{% url 'login' %}">이미 계정이 있으신가요? 로그인</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        let emailIdInput = document.getElementById("email_id");
+        let emailDomainSelect = document.getElementById("email_domain");
+        let emailCustomInput = document.getElementById("email_custom");
+        let emailFullInput = document.getElementById("email_full");
+
+        function updateEmail() {
+        let emailId = emailIdInput.value.trim();
+        let domain = emailDomainSelect.value;
+
+        if (domain === "직접입력") {
+        domain = emailCustomInput.value.trim();
+    }
+
+        emailFullInput.value = emailId && domain ? `${emailId}@${domain}` : "";
+    }
+
+        emailIdInput.addEventListener("input", updateEmail);
+        emailDomainSelect.addEventListener("change", function() {
+        if (this.value === "직접입력") {
+        emailCustomInput.classList.remove("d-none");
+    } else {
+        emailCustomInput.classList.add("d-none");
+        emailCustomInput.value = "";
+    }
+        updateEmail();
+    });
+        emailCustomInput.addEventListener("input", updateEmail);
+    });
+</script>
     </div>
 </body>
 </html>
-

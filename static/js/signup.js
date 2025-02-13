@@ -1,7 +1,13 @@
+// 연령대
 function setAge(age) {
     document.getElementById("ageDropdownBtn").textContent = age;
 }
 
-function setGender(gender) {
-    document.getElementById("genderDropdownBtn").textContent = gender;
+// 성별
+function setSex(sex) {
+    document.getElementById("sexDropdownBtn").textContent = sex;
 }
+
+// 회원가입 완료 팝업창
+
+
