@@ -14,11 +14,11 @@
             {% csrf_token %}
             <div class="mb-3">
                 <label for="username">이름</label>
-                <input type="text" name="username" id="username" class="form-control" placeholder="이름을 입력해주세요." required>
+                <input type="text" name="username" id="username" class="form-control" placeholder="이름을 입력해주세요" required>
             </div>
             <div class="mb-3">
                 <label for="phone_num">연락처</label>
-                <input type="text" name="phone_num" id="phone_num" class="form-control" placeholder="(-)제외한 숫자만 입력해주세요." required>
+                <input type="text" name="phone_num" id="phone_num" class="form-control" placeholder="(-)제외한 숫자만 입력해주세요" required>
             </div>
             <div class="mb-3">
                 <label for="email">이메일</label>
@@ -35,7 +35,38 @@
             </div>
         <input type="hidden" name="email" id="email_full">
     </div>
+    <!-- 이메일 선택란 설정 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        let emailIdInput = document.getElementById("email_id");
+        let emailDomainSelect = document.getElementById("email_domain");
+        let emailCustomInput = document.getElementById("email_custom");
+        let emailFullInput = document.getElementById("email_full");
 
+        function updateEmail() {
+        let emailId = emailIdInput.value.trim();
+        let domain = emailDomainSelect.value;
+
+        if (domain === "직접입력") {
+        domain = emailCustomInput.value.trim();
+    }
+
+        emailFullInput.value = emailId && domain ? `${emailId}@${domain}` : "";
+    }
+
+        emailIdInput.addEventListener("input", updateEmail);
+        emailDomainSelect.addEventListener("change", function() {
+        if (this.value === "직접입력") {
+        emailCustomInput.classList.remove("d-none");
+    } else {
+        emailCustomInput.classList.add("d-none");
+        emailCustomInput.value = "";
+    }
+        updateEmail();
+    });
+        emailCustomInput.addEventListener("input", updateEmail);
+    });
+    </script>
              <br>
 
             {% if error %}
