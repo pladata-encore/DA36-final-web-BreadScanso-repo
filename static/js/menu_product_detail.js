@@ -44,8 +44,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 const tagElement = document.getElementById('productTag');
                 tagElement.innerText = product.tag;
                 tagElement.style.display = "inline-block";
-                tagElement.style.backgroundColor = product.tag === "Best" ? "#ff6347" : "#ff6347";
-                tagElement.style.color = "#fff";
+                tagElement.style.backgroundColor = product.tag === "Best" ? "#00FFFF" : "#FFEE8C";
+                tagElement.style.color = "#000";
                 tagElement.style.padding = "5px 10px";
                 tagElement.style.borderRadius = "15px";
                 tagElement.style.marginBottom = "10px";

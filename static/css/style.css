@@ -802,7 +802,7 @@ body.menu-main.best-carousel-item {
 
 .product-tag {
     display: inline-block;
-    background-color: #ff6347;
+    background-color: #00FFFF;
     color: white;
     padding: 5px 10px;
     border-radius: 20px;
@@ -825,10 +825,8 @@ h1 {
     font-weight: bold;
     color: #e63946;
 }
-
-
-
 /* ----------------------------------------------------------------------- */
+/* 메뉴 등록 페이지 */
 
 
 
