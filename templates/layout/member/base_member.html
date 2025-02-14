@@ -71,9 +71,9 @@
                     <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#member_info" aria-expanded="false">
                         회원정보
                     </button>
-                    <div class="collapse show" id="member_info">
+                    <div class="collapse" id="member_info">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회원정보수정</a></li>
+                            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded" onclick="location.href='{% url 'member_edit' %}'">회원정보수정</a></li>
                             <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">비밀번호변경</a></li>
                         </ul>
                     </div>
@@ -94,7 +94,7 @@
                     </button>
                 </li>
                 <li class="mb-1">
-                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" aria-expanded="false" onclick="location.href='#'">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" aria-expanded="false" onclick="location.href='{% url 'member_delect' %}'">
                         회원탈퇴
                     </button>
                 </li>
