@@ -57,7 +57,7 @@
         </span>
         <span class="d-flex align-items-end flex-column mb-3" style="height: 100px;">
             <span class="mt-auto p-2">{% block store_id%}{% endblock store_id %}</span>
-            <button type="button" class="logout-btn" onclick="location.href='#'">로그아웃</button>
+            <button type="button" class="logout-btn" onclick="location.href='/'">로그아웃</button>
         </span>
     </header>
 <hr>
@@ -74,7 +74,7 @@
                 <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#sale_info" aria-expanded="false">
                   매출정보
                 </button>
-                <div class="collapse show" id="sale_info">
+                <div class="collapse" id="sale_info">
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                     <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">그래프</a></li>
                     <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">매출</a></li>
@@ -104,7 +104,7 @@
                 </button>
               </li>
                 <li class="mb-1">
-                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" aria-expanded="false" onclick="location.href='#'">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" aria-expanded="false" onclick="location.href='{% url 'member_store' %}'">
                   회원관리
                 </button>
                 <li class="mb-1">
