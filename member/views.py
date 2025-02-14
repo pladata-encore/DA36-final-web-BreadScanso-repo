@@ -1,4 +1,8 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+
 
 # member 메인
 def member_main(request):
@@ -24,11 +28,19 @@ def member_edit(request):
         if User.objects.filter(username=user_id).exists():
             return render(request, "member/member_edit.html", {'error': '이미 존재하는 아이디입니다.'})
 
-    return JsonResponse({"success": True})  # 성공 응답
+            return JsonResponse({"success": True})  # 성공 응답
 
-    # 메인 페이지로 이동
+    # 회원정보수정 페이지로 이동
     return render(request, 'member/member_edit.html')
 
+# 비밀번호변경
+def member_pw(request):
+    return render(request, 'member/member_pw.html')
+
 # 회원탈퇴
-def member_delect(request):
-    return render(request, 'member/member_delect.html')
+def member_delete(request):
+    return render(request, 'member/member_delete.html')
+
+# 회원탈퇴
+def member_delete_detail(request):
+    return render(request, 'member/member_delete_detail.html')

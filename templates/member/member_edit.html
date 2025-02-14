@@ -10,7 +10,7 @@
 <html lang="en>
 <head>
     <meta charset="UTF-8">
-    <title>회원가입</title>
+    <title>회원정보수정</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap CSS (필수) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,7 +20,7 @@
 
 </head>
 <body>
-<!--    <div class="container">-->
+    <div class="container">
         <form method="post">
             {% csrf_token %}
             <div class="mb-3">
@@ -62,14 +62,6 @@
                 }
             </script>
         </div>
-    <div class="mb-3">
-        <label for="password1">* 비밀번호</label>
-        <input type="password" name="password1" id="password1" class="form-control" placeholder="비밀번호 입력(영문자, 숫자 포함 4~12자리)" required>
-    </div>
-    <div class="mb-3">
-        <label for="password2">* 비밀번호 확인</label>
-        <input type="password" name="password2" id="password2" class="form-control" placeholder="비밀번호 재입력" required>
-    </div>
     <div class="mb-3">
         <label for="username">* 이름</label>
         <input type="text" name="username" id="username" class="form-control" placeholder="이름" required>
@@ -206,7 +198,7 @@
                         let modal = new bootstrap.Modal(document.getElementById("signupSuccessModal"));
                         modal.show();
 
-                        // 확인 버튼 클릭 시 홈 화면으로 이동
+                        // 확인 버튼 클릭 시 회원정보수정페이지 화면으로 이동
                         confirmButton.addEventListener("click", function () {
                             onclick="location.href='{% url 'member_edit' %}'";  // 회원정보수정페이지로 이동
                         });

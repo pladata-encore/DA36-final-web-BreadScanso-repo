@@ -5,6 +5,8 @@ urlpatterns = [
     path('', views.member_main, name='member_main'),  # /member/
     path('store/', views.member_store, name='member_store'), # 점주 회원관리
     path('page/', views.member_page, name='member_page'), # 회원 마이페이지
-    path('member_edit/', views.member_edit, name='member_edit'), # 회원정보수정
-    path('member_delect/', views.member_delect, name='member_delect'), # 회원탈퇴
+    path('member_edit/', views.member_edit, name='member_edit'), # 회원정보수정 페이지
+    path('member_pw/', views.member_pw, name='member_pw'), # 회원정보수정 페이지
+    path('member_delete/', views.member_delete, name='member_delete'), # 회원탈퇴 페이지
+    path('member_delete_detail/', views.member_delete_detail, name='member_delete_detail'), # 회원탈퇴 사유입력 페이지
 ]

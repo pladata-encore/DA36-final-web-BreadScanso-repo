@@ -4,38 +4,63 @@
 {% block title %}Mypage | Delect {% endblock title %}
 {% block user_id%}user_id{% endblock user_id %}
 {% block content %}
-            <h3 style="margin-bottom: 50px;" class="text-center">회원탈퇴</h3>
+<h3 style="margin-bottom: 50px;" class="text-center">회원탈퇴 사유</h3>
 
-            <form class="row g-3">
-              <div class="col-auto">
-                <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="비밀번호">
-              </div>
-              <div class="col-auto">
-                <input type="password" class="form-control" id="inputPassword2" placeholder="비밀번호를 입력해주세요">
-              </div>
-              <div class="col-auto">
-                <button type="submit" id="delectButton" class="btn btn-primary">확인</button>
+<div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+  <label class="form-check-label" for="flexCheckChecked">
+    매장을 더이상 이용할 수가 없어요
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+  <label class="form-check-label" for="flexCheckDefault">
+    고객 응대가 불만족스러워요
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+  <label class="form-check-label" for="flexCheckChecked">
+    서비스 이용 방법이 불편해요
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+  <label class="form-check-label" for="flexCheckChecked">
+    서비스가 마음에 들지 않아요
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+  <label class="form-check-label" for="flexCheckChecked">
+    서비스가 마음에 들지 않아요
+  </label>
+</div>
+<div class="col-auto">
+  <button type="submit" id="confirmButton" class="btn btn-primary" onclick="location.href='{% url 'member_delect' %}'">탈퇴</button>
+</div>
+
 
            <!-- 회원탈퇴 팝업창 -->
-            <div class="modal fade" id="delectSuccessModal" tabindex="-1" aria-labelledby="delectSuccessLabel" aria-hidden="true">
+            <div class="modal fade" id="confirmSuccessModal" tabindex="-1" aria-labelledby="confirmSuccessLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="delectSuccessLabel">회원탈퇴 안내</h5>
+                            <h5 class="modal-title" id="confirmSuccessLabel">회원탈퇴 안내</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             정말로 탈퇴하시겠습니까?
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" id="confirmButton">확인</button>
+                            <button type="button" class="btn btn-secondary" id="confirmButton" onclick="location.href='{% url 'member_delect' %}'">확인</button>
                             <!-- 취소누르면 회원탈퇴 화면으로 return-->
                             <button type="button" class="btn btn-secondary" id="cancelButton" onclick="location.href='{% url 'member_delect' %}'">취소</button>
                         </div>
                     </div>
                 </div>
             </div>
-<
+
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
                     let delectForm = document.querySelector("form");  // 폼 선택
@@ -45,7 +70,7 @@
                         event.preventDefault(); // 기본 폼 제출 방지
 
                         // 회원탈퇴 완료 팝업창 표시
-                        let modal = new bootstrap.Modal(document.getElementById("delectSuccessModal"));
+                        let modal = new bootstrap.Modal(document.getElementById("confirmSuccessModal"));
                         modal.show();
 
                         // 확인 버튼 클릭 시 홈 화면으로 이동
@@ -59,6 +84,4 @@
               </div>
             </form>
 
-
 {% endblock content %}
-
