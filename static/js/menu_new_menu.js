@@ -15,15 +15,3 @@ fileInput.addEventListener('change', function(event) {
         reader.readAsDataURL(file);  // 파일을 URL로 읽음
     }
 });
-
-// 취소 버튼 누르면 목록 화면으로 이동
-document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("cancel-btn").addEventListener("click", function () {
-        window.location.href = "/menu/store/";  // 취소 시 이전 화면으로 이동
-    });
-});
-
-// 저장 버튼 누르면 메뉴관리 상세 페이지로 이동
-document.getElementById("confirm-save-btn").addEventListener("click", function () {
-    window.location.href = "/menu/store/menu_info";  // 확인을 누르면 menu_info 페이지로 이동
-});
