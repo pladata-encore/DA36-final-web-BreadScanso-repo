@@ -22,7 +22,7 @@
 <body>
     <div class="container">
         <form method="post">
-        </div>
+    </div>
     <div class="mb-3">
         <label for="password1">현재 비밀번호</label>
         <input type="password" name="password1" id="password1" class="form-control" placeholder="비밀번호 입력(영문자, 숫자 포함 4~12자리)" required>
@@ -35,8 +35,8 @@
         <input type="password" name="password2" id="password2" class="form-control" placeholder="비밀번호 입력(영문자, 숫자 포함 4~12자리)" required>
     </div>
     <div class="mb-3">
-        <label for="password2">새 비밀번호 확인</label>
-        <input type="password" name="password2" id="password2" class="form-control" placeholder="비밀번호 재입력" required>
+        <label for="password3">새 비밀번호 확인</label>
+        <input type="password" name="password3" id="password3" class="form-control" placeholder="비밀번호 재입력" required>
     </div>
         <br>
 
@@ -58,7 +58,7 @@
                             비밀번호변경이 완료되었습니다.
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" id="confirmButton">확인</button>
+                            <button type="button" class="btn btn-secondary" id="confirmButton" onclick="location.href='{% url 'member_edit' %}'">확인</button>
                         </div>
                     </div>
                 </div>

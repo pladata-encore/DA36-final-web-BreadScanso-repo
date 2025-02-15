@@ -5,18 +5,18 @@
 {% block store_id%}store_id{% endblock store_id %}
 {% block content %}
             <h3 style="margin-bottom: 50px;" class="text-center">회원관리</h3>
+            <!-- 회원명 검색 -->
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                <input type="search" id="searchMember" placeholder="회원명을 입력하세요" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
 
-            <div style="display: flex; gap:30px; margin-bottom: 20px;">
-            <input type="datetime-local" name="startDate" id="startDate">
-                <p>-</p>
-            <input type="datetime-local" name="endDate" id="endDate">
-                <div style="margin-left: 30px;">
-                    <button id="date_button" type="button" name="date_button" style="background-color:lightgoldenrodyellow;">조회</button>
-                </div>
+                <button id="search_button" type="button" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
+                    검색
+                </button>
             </div>
             <table class="table">
               <thead>
                 <tr>
+                  <th scope="col"></th>
                   <th scope="col">번호</th>
                   <th scope="col">회원명</th>
                   <th scope="col">아이디</th>
@@ -30,10 +30,12 @@
                   <th scope="col">마지막 방문일</th>
                   <th scope="col">포인트</th>
                   <th scope="col">프로필사진</th>
+                  <th scope="col">수정/삭제</th>
                 </tr>
               </thead>
               <tbody class="table-group-divider">
                 <tr>
+                  <td><input type="checkbox" class="member-checkbox" value="1"></td>
                   <th scope="row">1</th>
                   <td>홍길동</td>
                   <td>hong</td>
@@ -47,8 +49,24 @@
                   <td>2025-02-14</td>
                   <td>9,000</td>
                   <td>null</td>
+                  <td><button type="button" class="btn btn-light" onclick="toggleButton(this)">수정</button></td>
+                    <script>
+                      function toggleButton(button) {
+                        // 버튼 텍스트와 클래스 변경
+                        if (button.innerText === "수정") {
+                          button.innerText = "삭제";
+                          button.classList.remove("btn-light");
+                          button.classList.add("btn-danger");
+                        } else {
+                          button.innerText = "수정";
+                          button.classList.remove("btn-danger");
+                          button.classList.add("btn-light");
+                        }
+                      }
+                    </script>
                 </tr>
                 <tr>
+                  <td><input type="checkbox" class="member-checkbox" value="2"></td>
                   <th scope="row">2</th>
                   <td>고길동</td>
                   <td>dong</td>
@@ -64,6 +82,7 @@
                   <td><img src="{% static 'images/dong.png' %}" width="30"></td>
                 </tr>
                 <tr>
+                  <td><input type="checkbox" class="member-checkbox" value="3"></td>
                   <th scope="row">3</th>
                   <td>하니</td>
                   <td>hani</td>
@@ -79,6 +98,7 @@
                   <td>null</td>
                 </tr>
                 <tr>
+                  <td><input type="checkbox" class="member-checkbox" value="4"></td>
                   <th scope="row">4</th>
                   <td></td>
                   <td></td>
@@ -94,6 +114,7 @@
                   <td></td>
                 </tr>
                 <tr>
+                  <td><input type="checkbox" class="member-checkbox" value="5"></td>
                   <th scope="row">5</th>
                   <td></td>
                   <td></td>
@@ -109,6 +130,7 @@
                   <td></td>
                 </tr>
               <tr>
+                 <td><input type="checkbox" class="member-checkbox" value="6"></td>
                   <th scope="row">6</th>
                   <td></td>
                   <td></td>
@@ -126,6 +148,60 @@
               </tr>
               </tbody>
             </table>
+
+            <!-- 삭제 버튼 -->
+            <div class="member-container">
+                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">삭제</a>
+                <a type="button" class="btn btn-success signup-btn" onclick="location.href='{% url 'signup' %}'">신규등록</a>
+            </div>
+
+
+            <!-- 회원 삭제 팝업창 -->
+            <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="confirmSuccessLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmSuccessLabel">회원삭제 안내</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            정말로 삭제하시겠습니까?
+                        </div>
+                        <div class="modal-footer">
+                            <!-- 확인 버튼 -->
+                            <button type="button" class="btn btn-danger" id="finalConfirmButton">확인</button>
+                            <!-- 취소누르면 회원탈퇴 화면으로 return-->
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.href='{% url 'member_store' %}'">취소</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 회원삭제 두번째 팝업창 -->
+            <div class="modal fade" id="finalModal" tabindex="-1" aria-labelledby="finalModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="finalModalLabel">탈퇴 완료</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            회원 삭제가 완료되었습니다.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="goHomeButton" onclick="location.href='{% url 'member_store' %}'">확인</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.getElementById("finalConfirmButton").addEventListener("click", function () {
+                    // 실제 삭제 요청을 서버에 보낼 수 있도록 수정 필요
+                    alert("삭제가 완료되었습니다.");
+                    window.location.href = "{% url 'member_store' %}"; // 삭제 후 이동할 페이지 설정
+                });
+            </script>
+
 
     {#  하단 페이지 넘김 버튼  #}
     <nav aria-label="..." style="margin-top:10%;">
@@ -146,46 +222,34 @@
 {% endblock content %}
 
 {% block script %}
-<script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let form = document.querySelector("form");
+            let confirmButton = document.getElementById("confirmButton"); // 첫번째 팝업창 띄우는 버튼
+            let finalConfirmButton = document.getElementById("finalConfirmButton"); // 두번째 팝업창 띄우는 버튼
+            let goHomeButton = document.getElementById("goHomeButton"); // 홈으로 이동 버튼
 
-// 설정한 기간 내의 결제 내역이 검색되도록 설정
-    document.getElementById("date_button").addEventListener("click", function() {
-        // 시작일자, 종료일자 가져오기
-        let startDate = new Date(document.getElementById("startDate").value);
-        let endDate = new Date(document.getElementById("endDate").value);
+            form.addEventListener("submit", function (event) {
+                event.preventDefault(); // 기본 폼 제출 방지
 
-        // 테이블 가져오기
-        let rows = document.querySelectorAll(".table tbody tr");
+                // 회원탈퇴 첫번째 표시
+                let firstModal = new bootstrap.Modal(document.getElementById("confirmSuccessModal"));
+                firstModal.show();
+            });
 
-        // 결제일자 불러오기
-        rows.forEach(row => {
-            let dateCell = row.querySelector("td:first-child");
-            if (dateCell) {
-                let purchaseDate = new Date(dateCell.innerText);
+            finalConfirmButton.addEventListener("click", function () {
+                // 첫번째 팝업창 닫기
+                let firstModal = bootstrap.Modal.getInstance(document.getElementById("confirmSuccessModal"));
+                firstModal.hide();
 
-                // purchaseDate가 startDate와 endDate 사이인지 확인
-                if (purchaseDate >= startDate && purchaseDate <= endDate) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            }
+                // 두번째 팝업창 표시
+                let secondModal = new bootstrap.Modal(document.getElementById("finalModal"));
+                secondModal.show();
+            });
+
+            goHomeButton.addEventListener("click", function () {
+                window.location.href = "/";  // 홈 페이지로 이동
+            });
         });
-    });
-
-    // 결제일자 누르면 상세 페이지 - 새탭으로
-    document.querySelectorAll(".clickable").forEach(cell => {
-        cell.addEventListener("click", function () {
-            let paymentRow = this.parentElement;
-            let paymentId = paymentRow.getAttribute('data-payment-id');
-
-            if (paymentId) {
-                let detailPageUrl = `/details/${paymentId}/`;
-                window.open(detailPageUrl, "_blank");
-            }
-        })
-        }
-    )
-</script>
-
+    </script>
 {% endblock script %}
