@@ -3,10 +3,63 @@
 
 {% block title %}Pay | Cancel {% endblock title %}
 {% block store_id %}store_id{% endblock store_id %}
+
 {% block content %}
-    
+    <h3 class="text-center">취소 내역</h3>
+
+    <div style="display: flex; gap:30px; margin-bottom: 20px;">
+        <input type="datetime-local" name="startDate" id="startDate">
+        <p>-</p>
+        <input type="datetime-local" name="endDate" id="endDate">
+        <button id="date_button" style="background-color:lightgoldenrodyellow;">검색</button>
+    </div>
+
+    <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>결제일시</th>
+                <th>매장명</th>
+                <th>제품명</th>
+                <th>총금액</th>
+                <th>결제수단</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cancel in cancels %}
+            <tr style="color: red;">
+                <td>{{ cancel.date|date:"Y-m-d H:i" }}</td>
+                <td>{{ cancel.store_name }}</td>
+                <td>{{ cancel.product_name }}</td>
+                <td>{{ cancel.total_price }}</td>
+                <td>{{ cancel.payment_method }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">취소 내역이 없습니다.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock content %}
 
 {% block script %}
-    
+<script>
+    document.getElementById("date_button").addEventListener("click", function() {
+        let startDate = new Date(document.getElementById("startDate").value);
+        let endDate = new Date(document.getElementById("endDate").value);
+        let rows = document.querySelectorAll(".table tbody tr");
+
+        rows.forEach(row => {
+            let dateCell = row.querySelector("td:first-child");
+            if (dateCell) {
+                let purchaseDate = new Date(dateCell.innerText);
+                if (purchaseDate >= startDate && purchaseDate <= endDate) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        });
+    });
+</script>
 {% endblock script %}
