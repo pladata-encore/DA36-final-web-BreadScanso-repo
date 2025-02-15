@@ -6,41 +6,130 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% block content %}
-<!-- best, new, 노출 표시 -->
-<button type="button" class="btn btn-warning">Best</button>
-<button type="button" class="btn btn-info">New</button>
-<button type="button" class="btn btn-outline-danger">노출중</button>
-    
-<!-- 이미지 영역 -->
-<div class="image-area">
+<style>
+  /* 상태 표시 컨테이너 */
+  .status-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .status-left {
+    display: flex;
+    gap: 10px;
+  }
+
+  .status-right {
+    margin-left: auto;
+  }
+
+  .custom-box {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+    min-width: 80px;
+  }
+
+  .best {
+    background-color: #00FFFF;
+  }
+
+  .new {
+    background-color: #FFEE8C;
+  }
+
+  .exposed {
+    border: 1px solid red;
+    background-color: transparent;
+  }
+
+  /* 전체 레이아웃 */
+  .container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .image-area img {
+    max-width: 300px;
+    height: auto;
+    display: block;
+  }
+
+  /* 제품 정보 영역 */
+  .product-info {
+    flex-grow: 1;
+  }
+
+  .product-info h2 {
+    margin: 5px 0;
+  }
+
+  /* 버튼 정렬 */
+  .button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  /* 목록 버튼을 왼쪽 하단에 배치 */
+  .list-button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 20px;
+  }
+</style>
+
+<!-- 상태 표시 -->
+<div class="status-container">
+  <div class="status-left">
+    <div class="custom-box best">Best</div>
+    <div class="custom-box new">New</div>
+  </div>
+  <div class="status-right">
+    <div class="custom-box exposed">노출중</div>
+  </div>
+</div>
+
+<!-- 메인 컨테이너 -->
+<div class="container">
+  <!-- 이미지 영역 -->
+  <div class="image-area">
     <img src="{% static 'images/saltbread.jpg' %}" alt="image">
-</div>
+  </div>
+
+  <!-- 제품 정보 -->
+  <div class="product-info">
+    <h2>소금빵</h2>
+    <p>속은 촉촉, 빵 밑면은 바삭 두 가지 식감과 고소한 풍미를 느낄 수 있는 소금빵</p>
     
-    
-<!-- 제품 정보 -->
-<div class="product-info">
     <div class="product-meta">
-        <hr>
-        <p><strong>영양정보:</strong> <span id="detailNutrition"></span></p>
-        <p><strong>알레르기 정보:</strong> <span id="detailAllergy"></span></p>
-        <hr>
-        <p class="product-price" id="detailPrice">판매가: </p>
-        <p class="product-cost" id="cost">원가: </p>
+      <hr>
+      <p><strong>영양정보:</strong> <span id="detailNutrition"></span></p>
+      <p><strong>알레르기 정보:</strong> <span id="detailAllergy"></span></p>
+      <hr>
+      <p class="product-price" id="detailPrice">판매가: </p>
+      <p class="product-cost" id="cost">원가: </p>
     </div>
+
+    <!-- 수정 & 삭제 버튼 -->
+    <div class="button-container">
+      <button type="button" class="btn btn-primary">수정</button>
+      <button type="button" class="btn btn-danger" id="cancel-btn">삭제</button>
+    </div>
+  </div>
 </div>
 
-<!-- 목록 버튼 -->
-<button type="button" class="btn btn-success">목록</button>    
-    
-<!-- 수정 버튼 -->
-<button type="button" class="btn btn-primary">수정</button>
-
-<!-- 삭제 버튼 -->
-<button type="button" class="btn btn-danger">삭제</button>
+<!-- 목록 버튼 (이미지 영역 밖, 왼쪽 하단) -->
+<div class="list-button-container">
+  <button type="button" class="btn btn-success">목록</button>
+</div>
     
 {% endblock content%}
 
 {% block script %}
 {{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
-<script src="{% static 'js/menu_new_menu.js' %}"></script>
+<script src="{% static 'js/menu_menu_info.js' %}"></script>
 {% endblock script %}
