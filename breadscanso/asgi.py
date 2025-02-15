@@ -1,5 +1,5 @@
 """
-ASGI config for breadscanco project.
+ASGI config for breadscanso project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'breadscanco.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'breadscanso.settings')
 
 application = get_asgi_application()
