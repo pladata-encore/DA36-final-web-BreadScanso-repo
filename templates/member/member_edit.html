@@ -1,0 +1,213 @@
+{% extends 'layout/member/base_member.html' %}
+{% load static %}
+
+{% block title %}Mypage | Ediet {% endblock title %}
+{% block user_id%}user_id{% endblock user_id %}
+{% block content %}
+<h3 style="margin-bottom: 50px;" class="text-center">회원정보수정</h3>
+
+<!DOCTYPE html>
+<html lang="en>
+<head>
+    <meta charset="UTF-8">
+    <title>회원정보수정</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS (필수) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JavaScript (필수) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="user_id">* 아이디</label>
+                <input type="text" name="user_id" id="user_id" class="form-control" placeholder="아이디 입력(4~12자)" required>
+                <button type="button" class="btn btn-secondary" onclick="checkUser_id()">중복 확인</button>
+                <p id="user_id-result"></p>
+
+            <script>
+                function checkUsername() {
+                    var user_id = document.getElementById("user_id").value;
+                    var resultElement = document.getElementById("user_id-result");
+
+                    fetch("/check-user_id/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "X-CSRFToken": getCSRFToken()
+                        },
+                        body: "user_id=" + encodeURIComponent(user_id)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            resultElement.innerText = "이미 사용 중인 아이디입니다.";
+                            resultElement.style.color = "red";
+                        } else {
+                            resultElement.innerText = "사용 가능한 아이디입니다!";
+                            resultElement.style.color = "green";
+                        }
+                    });
+                }
+
+                // CSRF 토큰 가져오기 (Django 보안 정책 대응)
+                function getCSRFToken() {
+                    return document.cookie.split("; ")
+                        .find(row => row.startsWith("csrftoken="))
+                        ?.split("=")[1];
+                }
+            </script>
+        </div>
+    <div class="mb-3">
+        <label for="username">* 이름</label>
+        <input type="text" name="username" id="username" class="form-control" placeholder="이름" required>
+    </div>
+    <div class="mb-3">
+        <label for="phone_num">* 휴대폰 번호</label>
+        <input type="number" name="phone_num" id="phone_num" class="form-control" placeholder="(-)제외한 숫자만 입력해주세요" required>
+    </div>
+    <div class="mb-3">
+        <label for="profile" class="form-label">프로필</label>
+        <input class="form-control" type="file" id="profile" name="profile">
+    </div>
+    <div class="mb-3">
+        <label for="email">* 이메일</label>
+        <div class="d-flex">
+            <input type="text" id="email_id" class="form-control" placeholder="이메일 아이디" required>
+            <span class="mx-2">@</span>
+            <select id="email_domain" class="form-control">
+                <option value="naver.com">naver.com</option>
+                <option value="gmail.com">gmail.com</option>
+                <option value="daum.net">daum.net</option>
+                <option value="직접입력">직접입력</option>
+            </select>
+            <input type="text" id="email_custom" class="form-control d-none" placeholder="직접입력">
+        </div>
+        <input type="hidden" name="email" id="email_full">
+    </div>
+
+    <!-- 이메일 선택란 설정 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        let emailIdInput = document.getElementById("email_id");
+        let emailDomainSelect = document.getElementById("email_domain");
+        let emailCustomInput = document.getElementById("email_custom");
+        let emailFullInput = document.getElementById("email_full");
+
+        function updateEmail() {
+        let emailId = emailIdInput.value.trim();
+        let domain = emailDomainSelect.value;
+
+        if (domain === "직접입력") {
+        domain = emailCustomInput.value.trim();
+    }
+
+        emailFullInput.value = emailId && domain ? `${emailId}@${domain}` : "";
+    }
+
+        emailIdInput.addEventListener("input", updateEmail);
+        emailDomainSelect.addEventListener("change", function() {
+        if (this.value === "직접입력") {
+        emailCustomInput.classList.remove("d-none");
+    } else {
+        emailCustomInput.classList.add("d-none");
+        emailCustomInput.value = "";
+    }
+        updateEmail();
+    });
+        emailCustomInput.addEventListener("input", updateEmail);
+    });
+    </script>
+
+    <br>
+
+    <div class="d-flex">
+        <!-- 연령대 드롭다운 버튼  -->
+        <div class="dropdown me-1">
+            <button id="ageDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">연령대</button>
+            <!-- 연령대 드롭다운 메뉴 -->
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#" onclick="setAge('10대')">10대</a></li>
+              <li><a class="dropdown-item" href="#" onclick="setAge('20대')">20대</a></li>
+              <li><a class="dropdown-item" href="#" onclick="setAge('30대')">30대</a></li>
+              <li><a class="dropdown-item" href="#" onclick="setAge('40대')">40대</a></li>
+              <li><a class="dropdown-item" href="#" onclick="setAge('50대')">50대</a></li>
+              <li><a class="dropdown-item" href="#" onclick="setAge('60대 이상')">60대 이상</a></li>
+            </ul>
+        </div>
+
+        <div class="btn-group">
+            <!-- 성별 드롭다운 버튼  -->
+            <button id="genderDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">성별</button>
+            <!-- 성별 드롭다운 메뉴 -->
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#" onclick="setSex('남성')">남성</a></li>
+              <li><a class="dropdown-item" href="#" onclick="setSex('여성')">여성</a></li>
+            </ul>
+        </div>
+    </div>
+
+        <br>
+
+    <!-- 이용약관, 개인정보동의서 설정 -->
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">이용약관동의(필수)</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+        <label class="form-check-label" for="flexCheckChecked">개인정보처리방침(필수)</label>
+    </div>
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <br>
+
+            <!-- 수정하기 버튼 -->
+            <button type="submit" id="signupButton" class="btn btn-primary">수정하기</button>
+
+            <!-- 회원가입 완료 팝업창 -->
+            <div class="modal fade" id="signupSuccessModal" tabindex="-1" aria-labelledby="signupSuccessLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="signupSuccessLabel">회원정보수정 완료</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            수정이 완료되었습니다.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="confirmButton" onclick="location.href='{% url 'member_page' %}'">확인</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let signupForm = document.querySelector("form");  // 폼 선택
+            let confirmButton = document.getElementById("confirmButton"); // 확인 버튼
+
+            signupForm.addEventListener("submit", function (event) {
+                event.preventDefault(); // 기본 폼 제출 방지
+
+                // 회원정보수정 완료 팝업창 표시
+                let modal = new bootstrap.Modal(document.getElementById("signupSuccessModal"));
+                modal.show();
+
+                // 확인 버튼 클릭 시 회원정보수정페이지 화면으로 이동
+                confirmButton.addEventListener("click", function () {
+                    onclick="location.href='{% url 'member_edit' %}'";  // 회원정보수정페이지로 이동
+                });
+            });
+        });
+    </script>
+
+{% endblock content %}

@@ -1,0 +1,94 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosk | Products</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="kiosk-products">
+    <!-- 헤더 추가 (로고 포함) -->
+    <header>
+        <img src="{% static '/images/brand_logo.png' %}" alt="브랜드 로고" class="brand-logo">
+    </header>
+
+    <!-- 지점명 -->
+    <div class="store-name">서초동점</div>
+
+    <div class="container">
+        <!-- 왼쪽: 이미지 업로드 영역 -->
+        <div class="image-area">
+            <input type="file" id="file-input" accept="image/*">
+            <img id="preview" src="" alt="Uploaded image preview">
+        </div>
+
+        <!-- 오른쪽: 주문 목록 -->
+        <div class="order-list">
+            <h3>메뉴 목록</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>메뉴이름</th>
+                        <th>단가</th>
+                        <th>수량</th>
+                        <th>금액</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>소금빵</td>
+                        <td>3800</td>
+                        <td>2</td>
+                        <td>7600</td>
+                    </tr>
+                    <tr>
+                        <td>에멘탈소금빵</td>
+                        <td>4500</td>
+                        <td>1</td>
+                        <td>4500</td>
+                    </tr>
+                    <tr>
+                        <td>빠다코코넛꽈베기</td>
+                        <td>4500</td>
+                        <td>1</td>
+                        <td>4500</td>
+                    </tr>
+                    <tr>
+                        <td>먹물소금빵</td>
+                        <td>4200</td>
+                        <td>1</td>
+                        <td>4200</td>
+                    </tr>
+                    <tr>
+                        <td>후추소금빵</td>
+                        <td>4200</td>
+                        <td>1</td>
+                        <td>4200</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="total">
+                <p>총 수량: <strong>6개</strong></p>
+                <p>총 금액: <strong>25,000원</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 버튼 영역 -->
+    <div class="button-container">
+        <button class="yellow-button" id="reset-btn">다시 스캔</button>
+        <button class="blue-button">직원 호출</button>
+        <a href="{% url 'member' %}">
+            <button class="black-button">결제</button>
+        </a>
+    </div>
+
+
+    <!-- JavaScript 파일 불러오기 -->
+    <script src="{% static 'js/kiosk-imageUpload.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosk | Point</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="kiosk-point">
+
+    <div class="keypad-container">
+        <h3 class="mb-3">포인트를 적립하시겠습니까?</h3>
+        <!-- 전화번호 표시 -->
+        <div class="phone-display" id="phone-number">010-____-____</div>
+
+        <div class="keypad">
+            <button class="btn btn-light" onclick="addNumber(1)">1</button>
+            <button class="btn btn-light" onclick="addNumber(2)">2</button>
+            <button class="btn btn-light" onclick="addNumber(3)">3</button>
+            <button class="btn btn-light" onclick="addNumber(4)">4</button>
+            <button class="btn btn-light" onclick="addNumber(5)">5</button>
+            <button class="btn btn-light" onclick="addNumber(6)">6</button>
+            <button class="btn btn-light" onclick="addNumber(7)">7</button>
+            <button class="btn btn-light" onclick="addNumber(8)">8</button>
+            <button class="btn btn-light" onclick="addNumber(9)">9</button>
+            <button class="btn btn-secondary" onclick="clearInput()">C</button>
+            <button class="btn btn-light" onclick="addNumber(0)">0</button>
+            <button class="btn btn-secondary" onclick="deleteLast()">X</button>
+        </div>
+
+        <!-- 하단 버튼 -->
+        <div class="button-container">
+            <a href="{% url 'payment_method' %}">
+                <button class="black-button">적립 안 함</button>
+            </a>
+            <button class="blue-button" onclick="confirm()">확인</button>
+        </div>
+    </div>
+
+    <!-- JavaScript 파일 불러오기 -->
+    <script src="{% static 'js/kiosk-phoneNumber.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

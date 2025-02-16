@@ -1,0 +1,24 @@
+<header>
+    <div class="logo-container">
+        <a href="/brand" class="btn btn-outline-success">브랜드소개</a>
+        <a href="/store" class="btn btn-outline-success">매장안내</a>
+        <a href="/menu" class="btn btn-outline-success">메뉴정보</a>
+        <a href="{% url 'index' %}"><img src="{% static 'images/text_logo.png' %}" alt="로고이미지" class="logo-img"></a>
+        <a href="/event" class="btn btn-outline-success">이벤트</a>
+        <div class="btn-group">
+            <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티</button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/notice">공지사항</a></li>
+                <li><a class="dropdown-item" href="/qna">Q&A</a></li>
+            </ul>
+        </div>
+<!--            <a href="/login" class="btn btn-outline-success">Log in</a>-->
+<!--            <a href="/signup" class="btn btn-outline-success">회원가입</a>-->
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger">Log out</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline-success">Log in</a>
+            <a href="{% url 'signup' %}" class="btn btn-outline-success">회원가입</a>
+        {% endif %}
+    </div>
+</header>

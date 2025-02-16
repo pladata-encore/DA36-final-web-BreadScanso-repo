@@ -1,0 +1,905 @@
+/*--정아 start--*/
+/* 전체 배경색 설정 */
+body.main-index {
+    background-color: #F2D0A9;  /* 원하는 배경색 */
+}
+/* ----------------------------------------------------------------------- */
+/* 최상단 텍스트 로고 이미지 설정 */
+body.main-index .logo-container {
+    display: flex;         /* 플렉스박스로 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center;     /* 세로 중앙 정렬 */
+    height: 200px;          /* 컨테이너 높이 (필요시 조정) */
+}
+
+body.main-index .logo-img {
+    width: 200px;  /* 로고 크기 조정 (원하는 크기로 변경) */
+    height: auto;  /* 원본 비율 유지 */
+}
+/* ----------------------------------------------------------------------- */
+/* 상단 텍스트 정렬 */
+body.main-index .center-text {
+    text-align: center;  /* 텍스트 가운데 정렬 */
+}
+/* ----------------------------------------------------------------------- */
+/* 슬라이드 설정 */
+.carousel-item {
+    /*position: relative; !* 기본값 유지 *!*/
+    display: flex;
+    justify-content: center;   /* 가로 중앙 정렬 */
+    align-items: center;       /* 세로 중앙 정렬 */
+    height: 500px;             /* 슬라이드 높이 */
+    width: 100% ;              /* 슬라이드 너비 */
+}
+
+/* 이미지 크기 설정 */
+.custom-img {
+    width: 100%; /* 부모 요소의 너비에 맞게 */
+    height: 100%; /* 부모 요소의 높이에 맞게 */
+    object-fit: cover; /* 비율을 유지하면서 잘리지 않게 */
+}
+
+/* 캐러셀 컨데이너 */
+.carousel-inner {
+    overflow: hidden;
+}
+/* ----------------------------------------------------------------------- */
+/* event & product 텍스트 정렬 */
+body.main-index .main-header {
+    display: flex;  /* 가로 정렬 */
+    justify-content: space-between;  /* 요소를 양 끝으로 배치 */
+    align-items: center;  /* 세로 중앙 정렬 */
+    width: 100%;  /* 부모 요소 너비 전체 사용 */
+    font-weight: bold; /* 볼드 처리 */
+}
+
+/* event & product 이미지 정렬 */
+body.main-index .main_image-header {
+    display: flex;  /* 가로 정렬 */
+    justify-content: space-between;  /* 요소를 양 끝으로 배치 */
+    align-items: center;  /* 세로 중앙 정렬 */
+    width: 100%;  /* 부모 요소 너비 전체 사용 */
+}
+/* ----------------------------------------------------------------------- */
+/* main-container */
+body.main-index .main-container {
+    display: flex;  /* 내부 요소를 가로로 배치 */
+    justify-content: space-between;  /* 요소를 양 끝으로 배치 */
+    gap: 20px; /* 요소 사이 간격 */
+    flex-wrap: wrap; /* 화면이 작아지면 다음 줄로 넘어감 */
+}
+/* ----------------------------------------------------------------------- */
+/* 이벤트 컨테이너 설정 */
+body.main-index .event-container {
+    display: flex; /* 내부 요소를 가로로 배치 */
+    gap: 20px; /* 요소 사이 간격 */
+    flex-wrap: wrap; /* 화면이 작아지면 다음 줄로 넘어감 */
+    justify-content: flex-start; /* 제품 이미지 왼쪽 정렬 */
+}
+
+/* product 컨테이너 설정 */
+body.main-index .product-container {
+    display: flex;  /* 내부 요소를 가로로 배치 */
+    gap: 20px; /* 요소 사이 간격 */
+    flex-wrap: wrap; /* 화면이 작아지면 다음 줄로 넘어감 */
+    justify-content: flex-end; /* 전체 요소를 오른쪽 정렬 */
+}
+
+/* 이벤트 설정 */
+body.main-index .event-item {
+    display: flex;
+    align-items: center;  /* 세로 중앙 정렬 */
+    height: 200px; /* 동일한 높이 */
+    width: 200px;  /* 동일한 너비 */
+}
+
+/* product 설정 */
+body.main-index .product-item {
+    display: flex;
+    align-items: center;  /* 세로 중앙 정렬 */
+    height: 200px; /* 동일한 높이 */
+    width: 200px;  /* 동일한 너비 */
+}
+
+/* 이미지 크기 설정 */
+body.main-index .event-img, body.main-index .product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지 비율 유지 + 꽉 채우기 (잘릴 수도 있음) */
+}
+/* ----------------------------------------------------------------------- */
+/* 회원관리 내 삭제/신규등록 버튼 설정 */
+.member-container {
+    display: flex;
+    justify-content: space-between; /* 양쪽 정렬 */
+    align-items: center; /* 세로 정렬 */
+    width: 100%; /* 부모 요소 너비 지정 */
+    padding: 10px 0; /* 위아래 여백 */
+}
+
+.delete-btn {
+    margin-left: 10px; /* 왼쪽 여백 추가 */
+}
+
+.signup-btn {
+    margin-right: 10px; /* 오른쪽 여백 추가 */
+}
+/* ----------------------------------------------------------------------- */
+
+
+
+
+
+/*--정아 end--*/
+
+/*--예진 start--*/
+/* kiosk-main.html에만 적용되는 헤더 스타일 ----------------------------------------------------------*/
+.kiosk-main {
+    background: url('/static/images/kiosk_main.png') no-repeat center center/cover;
+    height: 100vh;
+}
+
+/* 전체 화면을 채우는 스타일 */
+body.kiosk-main body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* 지점명 (오른쪽 상단) */
+body.kiosk-main .store-name {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 24px;
+    color: yellowgreen;
+    font-weight: bold;
+}
+
+/* 버튼 스타일 */
+body.kiosk-main .start-button {
+    position: absolute;
+    bottom: 50px;
+    left: 50%; /* 가로 중앙 정렬 */
+    transform: translateX(-50%); /* 정확히 중앙에 배치 */
+    padding: 15px 40px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+body.kiosk-main .start-button:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* kiosk-products.html에만 적용되는 헤더 스타일 --------------------------------------------------------*/
+body.kiosk-products header {
+    position: fixed; /* 화면에 고정 */
+    top: 20px;
+    left: 20px;
+    height: 60px;
+}
+
+/* 브랜드 로고 이미지 스타일 */
+body.kiosk-products .brand-logo {
+    width: 150px; /* 로고 크기 조정 */
+    height: auto; /* 비율 유지 */
+}
+
+/* 지점명 (오른쪽 상단) */
+body.kiosk-products .store-name {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 24px;
+    color: yellowgreen;
+    font-weight: bold;
+}
+/* 전체 페이지 스타일 */
+body.kiosk-products body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f8f8;
+}
+
+/* 메인 컨테이너 (이미지 영역 + 주문 목록) */
+body.kiosk-products .container {
+    display: flex;
+    justify-content: space-between;
+    width: 85%;
+    margin: 120px auto 0 auto; /* 위쪽 여백 120px, 좌우 자동 정렬 */
+}
+
+/* 왼쪽: 이미지 영역 */
+body.kiosk-products .image-area {
+    width: 50%;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/*.image-area img {*/
+/*    width: 90%;*/
+/*    height: auto;*/
+/*}*/
+body.kiosk-products #file-input {
+    display: block;
+    margin-bottom: 20px;
+}
+body.kiosk-products #preview {
+    max-width: 100%;
+    max-height: 300px;
+    display: none; /* 처음에는 숨겨두기 */
+}
+body.kiosk-products #reset-btn {
+    display: none; /* 처음에는 숨겨두기 */
+}
+
+
+/* 오른쪽: 주문 목록 */
+body.kiosk-products .order-list {
+    width: 40%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    text-align: center;
+}
+
+body.kiosk-products .order-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+body.kiosk-products .order-list th, .order-list td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+body.kiosk-products .order-list th {
+    background-color: #ffeb99;
+}
+
+body.kiosk-products .total {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+/* 버튼 스타일 */
+body.kiosk-products .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+body.kiosk-products button {
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* 버튼 색상 */
+body.kiosk-products .yellow-button {
+    background-color: #ffcc00;
+    color: black;
+}
+
+body.kiosk-products .blue-button {
+    background-color: #5c9aff;
+    color: white;
+}
+
+body.kiosk-products .black-button {
+    background-color: black;
+    color: white;
+}
+
+/* 회원 확인 페이지 전체 화면 구성------------------------------------------------ */
+body.kiosk-member {
+    display: flex;
+    flex-direction: column; /* 세로 방향 정렬 */
+    justify-content: center; /* 수직 중앙 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    height: 100vh; /* 화면 전체 높이 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+}
+
+
+/* 버튼 스타일 */
+body.kiosk-member .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+body.kiosk-member button {
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* 버튼 색상 */
+body.kiosk-member .black-button {
+    background-color: black;
+    color: white;
+}
+
+/* 포인트 적립 페이지 구성 --------------------------------------*/
+body.kiosk-point .keypad-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+body.kiosk-point .keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 250px;
+    margin: 20px auto;
+    justify-content: center;
+}
+body.kiosk-point .keypad button {
+    height: 60px;
+    font-size: 1.5rem;
+}
+
+body.kiosk-point .phone-display {
+  font-size: 24px;
+  text-align: center;
+  width: 250px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #f8f9fa;
+}
+
+
+/* 버튼 스타일 */
+body.kiosk-point .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+    /*flex-direction: column; !* 버튼을 세로 정렬 *!*/
+    align-items: center;
+}
+
+body.kiosk-point button {
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+body.kiosk-point .blue-button {
+    background-color: #5c9aff;
+    color: white;
+}
+
+body.kiosk-point .black-button {
+    background-color: black;
+    color: white;
+}
+
+/* 포인트 사용 페이지 구성--------------------------------------------------*/
+body.kiosk-usepoint .keypad-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+
+body.kiosk-usepoint .keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 250px;
+    margin: 20px auto;
+}
+body.kiosk-usepoint .keypad button {
+    height: 60px;
+    font-size: 1.5rem;
+}
+body.kiosk-usepoint .input-box {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 2px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+body.kiosk-usepoint .btn-lg {
+  width: 80px;
+  height: 80px;
+  font-size: 24px;
+}
+
+
+/* 버튼 스타일 */
+body.kiosk-usepoint .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+body.kiosk-usepoint button {
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+body.kiosk-usepoint .blue-button {
+    background-color: #5c9aff;
+    color: white;
+}
+
+body.kiosk-usepoint .black-button {
+    background-color: black;
+    color: white;
+}
+
+/* 결제 수단 선정------------------------------------------------------------ */
+body.kiosk-payment-method header {
+    position: fixed; /* 화면에 고정 */
+    top: 20px;
+    left: 20px;
+    height: 40px;
+}
+
+/* 브랜드 로고 이미지 스타일 */
+body.kiosk-payment-method .brand-logo {
+    width: 150px; /* 로고 크기 조정 */
+    height: auto; /* 비율 유지 */
+}
+
+/* 지점명 (오른쪽 상단)*/
+body.kiosk-payment-method .store-name {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    font-size: 24px;
+    color: yellowgreen;
+    font-weight: bold;
+}
+/* 전체 페이지 스타일 */
+body.kiosk-payment-method body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f8f8;
+}
+
+/* 메인 컨테이너 (주문 목록) */
+body.kiosk-payment-method .container {
+    display: flex;
+    justify-content: center;
+    width: 85%;
+    margin: 120px auto 0 auto; /* 위쪽 여백 120px, 좌우 자동 정렬 */
+    align-items: center;
+}
+
+/* 결제 내역 */
+body.kiosk-payment-method .payment-history {
+    width: 60%;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    text-align: center;
+}
+
+body.kiosk-payment-method .payment-history table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+body.kiosk-payment-method .payment-history th, .payment-history td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+body.kiosk-payment-method .payment-history th {
+    background-color: #ffeb99;
+}
+
+body.kiosk-payment-method .total {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+/* 버튼 스타일 */
+body.kiosk-payment-method .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 20px;
+    align-items: center; /* 버튼 높이 맞추기 */
+}
+
+body.kiosk-payment-method button {
+    width: 300px;
+    height: 85px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+body.kiosk-payment-method .blue-button {
+    background-color: #5c9aff;
+    color: white;
+}
+
+body.kiosk-payment-method .black-button {
+    background-color: black;
+    color: white;
+}
+
+/* 결제 완료 / 영수증 페이지--------------------------------------------------- */
+body.kiosk-payment-completed body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f8f8;
+}
+
+/* 버튼 스타일 */
+body.kiosk-payment-completed .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+body.kiosk-payment-completed button {
+    width: 120px;
+    height: 50px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+body.kiosk-payment-completed .blue-button {
+    background-color: #5c9aff;
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*--예진 end--*/
+
+/*--정석 start--*/
+/* ----------------------------------------------------------------------- */
+/*--정석 start--*/
+body.menu-main.best-carousel-item {
+    flex: 0 0 20%; /* 5개씩 보이도록 설정 */
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    justify-content: center;
+    align-items: center;
+}
+
+.best-carousel-container {
+    position: relative;
+    max-width: 1000px;
+    margin: auto;
+    overflow: visible;  /* 버튼이 잘리지 않도록 변경 */
+}
+
+.best-carousel-wrapper {
+    display: flex;
+    width: 100%;
+    overflow: hidden;  /* 캐러셀 이미지 부분만 잘리도록 유지 */
+    position: relative;  /* 버튼 위치 기준 */
+}
+
+.best-carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.best-carousel-item {
+    flex: 0 0 20%; /* 한 번에 5개만 보이도록 설정 */
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    justify-content: center;
+    align-items: center;
+}
+
+.best-carousel-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.best-carousel-item img:hover {
+    transform: scale(1.1);
+}
+
+.product-name {
+    margin-top: 12px; /* 이미지와 이름 사이에 여백 추가 */
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center; /* 이름 가운데 정렬 */
+}
+
+.best-carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-70%); /* 수직 중앙 정렬 */
+    color: black;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 24px; /* 버튼 크기 조정 */
+}
+
+.best-carousel-btn.left {
+    left: -50px; /* 왼쪽 버튼을 캐러셀 바깥으로 이동 */
+}
+
+.best-carousel-btn.right {
+    right: -50px; /* 오른쪽 버튼을 캐러셀 바깥으로 이동 */
+}
+/* ----------------------------------------------------------------------- */
+/* 전체 제품 grid styling */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+.product-item {
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    flex-direction: column; /* 세로로 정렬 */
+    justify-content: center;
+    align-items: center;
+}
+
+.product-item img {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.product-item img:hover {
+    transform: scale(1.1);
+}
+
+.product-name {
+    margin-top: 12px; /* 이미지와 이름 사이에 여백 추가 */
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center; /* 이름 가운데 정렬 */
+}
+
+/* Tag Styling */
+.tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ff6347;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+}
+/* ----------------------------------------------------------------------- */
+/* 제품 상세 페이지 */
+/* 전체 컨테이너 중앙 정렬 */
+.product-detail-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* 이미지와 정보 나란히 정렬 */
+.product-content {
+    display: flex;
+    gap: 50px;  /* 사진과 정보 사이 간격 넓히기 */
+    align-items: flex-start;
+}
+
+/* 이미지 스타일 */
+.product-image {
+    position: relative;  /* 버튼을 이미지 안에서 절대 위치로 설정하기 위해 필요 */
+}
+
+.product-image img {
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 목록으로 돌아가는 버튼: 이미지 상단 왼쪽에 위치 */
+.back-button {
+    position: absolute;  /* 이미지 기준으로 위치 고정 */
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.6);  /* 반투명 배경 */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);  /* 호버 시 더 진한 색 */
+}
+
+/* 제품 정보 스타일 */
+.product-info {
+    max-width: 400px;
+}
+
+.product-tag {
+    display: inline-block;
+    background-color: #00FFFF;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.product-meta hr {
+    margin: 15px 0;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #e63946;
+}
+/* ----------------------------------------------------------------------- */
+/* 메뉴 등록 페이지 */
+
+
+
+
+
+/* ----------------------------------------------------------------------- */
+
+
+
+
+
+/*--정석 end--*/
+
+/*--은비 start--*/
+
+/*pay - 상세 페이지 */
+.receipt-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+}
+.left-section {
+    text-align: left;
+}
+
+.left-section, .right-section {
+    width: 48%;
+}
+.receipt-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+.receipt-table th, .receipt-table td {
+    text-align: right;
+}
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    width: 100%;
+}
+.btn-success {
+    width: 100px;
+}
+
+
+
+
+
+
+
+
+/*--은비 end--*/

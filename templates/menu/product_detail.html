@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BreadScanco | Product_detail</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS, Popper.js, and jQuery (필수) -->
+<!--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- JavaScript 파일 불러오기 -->
+    <script src="{% static 'js/menu_product_detail.js' %}"></script>
+</head>
+
+<!-- 메인 헤더 -->
+<body class="main-index">
+    <header>
+        <div class="logo-container">
+            <a href="/brand" class="btn btn-outline-success">브랜드소개</a>
+            <a href="/store" class="btn btn-outline-success">매장안내</a>
+            <a href="/menu" class="btn btn-outline-success">메뉴정보</a>
+            <img src="{% static 'images/text_logo.png' %}" alt="text" class="logo-img">
+            <a href="/event" class="btn btn-outline-success">이벤트</a>
+            <div class="btn-group">
+                <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티</button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/notice">공지사항</a></li>
+                    <li><a class="dropdown-item" href="/qna">Q&A</a></li>
+                </ul>
+            </div>
+            <a href="/login" class="btn btn-outline-success">Log in</a>
+            <a href="/signup" class="btn btn-outline-success">회원가입</a>
+        </div>
+    </header>
+</body>
+
+<!-- 제품 상세 정보 -->
+<body class="product_detail">
+    <div class="product-detail-container">
+        <div class="product-content">
+            <div class="product-image">
+                <!-- 버튼을 이미지 상단 왼쪽에 위치 -->
+                <button class="back-button" onclick="goBackToList()">◀ 목록으로</button>
+                <img id="detailImage" src="" alt="제품 이미지">
+            </div>
+    
+            <div class="product-info">
+                <div class="product-tag" id="productTag"></div>
+                <h1 id="detailName"></h1>
+                <p id="detailDescription"></p>
+    
+                <div class="product-meta">
+                    <hr>
+                    <p><strong>영양정보:</strong> <span id="detailNutrition"></span></p>
+                    <p><strong>알레르기 정보:</strong> <span id="detailAllergy"></span></p>
+                    <hr>
+                    <p class="product-price" id="detailPrice">판매가: </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

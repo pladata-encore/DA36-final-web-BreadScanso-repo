@@ -1,0 +1,21 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosk | Main</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="kiosk-main">
+    <!-- 지점명 -->
+    <div class="store-name">서초동점</div>
+
+    <!-- 시작하기 버튼 -->
+    <a href="{% url 'products' %}">
+        <button class="start-button">시작하기</button>
+    </a>
+</body>
+
+</html>

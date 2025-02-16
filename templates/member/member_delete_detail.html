@@ -1,0 +1,140 @@
+{% extends 'layout/member/base_member.html' %}
+{% load static %}
+
+{% block title %}Mypage | Delete {% endblock title %}
+{% block user_id%}user_id{% endblock user_id %}
+{% block content %}
+<h3 style="margin-bottom: 50px;" class="text-center">회원탈퇴 사유</h3>
+<h6 style="margin-bottom: 50px;" class="text-center fw-bold">회원탈퇴를 원하시는 이유를 모두 선택해주세요</h6>
+
+<form>
+    <div>
+        <input type="checkbox" id="reason1" name="reasons" value="품절 문제">
+        <label for="reason1">원하는 빵이 자주 품절됨</label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="reason2" name="reasons" value="맛 품질">
+        <label for="reason2">빵의 맛이나 품질이 기대에 미치지 못함</label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="reason3" name="reasons" value="가격 부담">
+        <label for="reason3">가격이 부담됨</label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="reason4" name="reasons" value="이용 빈도 감소">
+        <label for="reason4">다른 빵집을 더 자주 이용하게 됨</label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="reason5" name="reasons" value="이사 등 위치 변경">
+        <label for="reason5">이사 또는 매장이 멀어서 방문이 어려움</label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="reason6" name="reasons" value="건강 이유">
+        <label for="reason6">건강상의 이유 (다이어트, 알레르기 등)</label>
+    </div>
+
+    <!-- 기타 입력란 -->
+    <div>
+        <input type="checkbox" id="otherReasonCheckbox" name="reasons" value="기타">
+        <label for="otherReasonCheckbox">기타 (직접 입력)</label>
+        <input type="text" id="otherReasonText" name="otherReason" placeholder="직접 입력해주세요" style="display: none;">
+    </div>
+
+    <br>
+
+    <!-- 탈퇴버튼 클릭 시의 팝업창 -->
+    <div class="col-auto">
+      <button type="submit" id="confirmButton" class="btn btn-primary">탈퇴</button>
+    </div>
+</form>
+
+           <!-- 회원탈퇴 첫번째 팝업창 -->
+            <div class="modal fade" id="confirmSuccessModal" tabindex="-1" aria-labelledby="confirmSuccessLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmSuccessLabel">회원탈퇴 안내</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            정말로 탈퇴하시겠습니까?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="finalConfirmButton">확인</button>
+                            <!-- 취소누르면 회원탈퇴 화면으로 return-->
+                            <button type="button" class="btn btn-secondary" id="cancelButton" onclick="location.href='{% url 'member_delete' %}'">취소</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 회원탈퇴 두번째 팝업창 -->
+            <div class="modal fade" id="finalModal" tabindex="-1" aria-labelledby="finalModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="finalModalLabel">탈퇴 완료</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            회원 탈퇴가 완료되었습니다.<br> 그동안 저희 브레드스캔소를 이용해 주셔서 감사합니다.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="goHomeButton" onclick="location.href='{% url 'member_delete' %}'">확인</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock content %}
+
+
+{% block script %}
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    let form = document.querySelector("form");
+                    let confirmButton = document.getElementById("confirmButton"); // 첫번째 팝업창 띄우는 버튼
+                    let finalConfirmButton = document.getElementById("finalConfirmButton"); // 두번째 팝업창 띄우는 버튼
+                    let goHomeButton = document.getElementById("goHomeButton"); // 홈으로 이동 버튼
+
+                    form.addEventListener("submit", function (event) {
+                        event.preventDefault(); // 기본 폼 제출 방지
+
+                        // 회원탈퇴 첫번째 표시
+                        let firstModal = new bootstrap.Modal(document.getElementById("confirmSuccessModal"));
+                        firstModal.show();
+                    });
+
+                    finalConfirmButton.addEventListener("click", function () {
+                        // 첫번째 팝업창 닫기
+                        let firstModal = bootstrap.Modal.getInstance(document.getElementById("confirmSuccessModal"));
+                        firstModal.hide();
+
+                        // 두번째 팝업창 표시
+                        let secondModal = new bootstrap.Modal(document.getElementById("finalModal"));
+                        secondModal.show();
+                    });
+
+                    goHomeButton.addEventListener("click", function () {
+                        window.location.href = "/";  // 홈 페이지로 이동
+                    });
+                });
+            </script>
+
+            <script>
+                document.getElementById("otherReasonCheckbox").addEventListener("change", function() {
+                    let otherReasonText = document.getElementById("otherReasonText");
+                    if (this.checked) {
+                        otherReasonText.style.display = "block"; // 체크되면 입력창 표시
+                    } else {
+                        otherReasonText.style.display = "none";  // 체크 해제되면 숨김
+                        otherReasonText.value = "";  // 입력값 초기화
+                    }
+                });
+            </script>
+{% endblock script %}
+

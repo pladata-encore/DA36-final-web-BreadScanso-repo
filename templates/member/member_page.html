@@ -1,0 +1,99 @@
+{% extends 'layout/member/base_member.html' %}
+{% load static %}
+
+{% block title %}Member | Mypage {% endblock title %}
+{% block user_id%}user_id{% endblock user_id %}
+{% block content %}
+        <h3 style="margin-bottom: 50px;" class="text-center">Mypage</h3>
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"><br>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 50px;
+        }
+        .profile {
+            text-align: center;
+        }
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+        .buttons {
+            margin-top: 10px;
+        }
+        .buttons button {
+            margin: 5px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+        }
+        .info-boxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .box {
+            width: 120px;
+            height: 80px;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .withdraw-btn {
+            margin-top: 20px;
+            padding: 5px 15px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 프로필 정보 -->
+    <div class="profile">
+        <img src="{% static 'images/dong.png' %}" alt="프로필 사진">
+        <p>{{ username }}고길동님 환영합니다.</p>
+        <div class="buttons">
+            <button type="button" class="btn btn-light" onclick="location.href='{% url 'member_edit' %}'">회원정보 수정</button>
+            <button type="button" class="btn btn-light" onclick="location.href='{% url 'member_pw' %}'">비밀번호 변경</button>
+        </div>
+    </div>
+
+    <!-- 마이페이지 정보 박스 -->
+    <div class="info-boxes">
+        <div class="box">포인트적립<br>({{ points }}3,500p)</div>
+        <div class="box">찜빵<br>{{ bread_count }}5개</div>
+        <div class="box">상품문의<br>{{ inquiries }}2개</div>
+        <div class="box">구매/취소내역</div>
+        <div class="box">취소내역</div>
+        <div class="box">전자영수증</div>
+    </div>
+</div>
+
+<!-- 회원 탈퇴 버튼 -> 회원탈퇴 페이지로 이동 -->
+<div class="text-end">
+    <button type="button" class="btn btn-danger" onclick="location.href='{% url 'member_delete' %}'">회원탈퇴</button>
+</div>
+
+</body>
+</html>
+
+{% endblock content %}

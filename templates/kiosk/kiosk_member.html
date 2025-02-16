@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosk | Member</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="kiosk-member">
+    <h2>회원이신가요?</h2>
+
+    <div class="button-container">
+        <a href="{% url 'point' %}">
+            <button class="black-button">네</button>
+        </a>
+        <a href="{% url 'payment_method' %}">
+            <button class="black-button">아니요</button>
+        </a>
+    </div>
+
+
+</body>
+
+</html>

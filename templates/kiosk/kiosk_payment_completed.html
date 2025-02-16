@@ -1,0 +1,28 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosk | Payment Completed</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="kiosk-payment-completed">
+
+    <h3 class="mb-3">✅<br>결제가 완료되었습니다.</h3>
+    <p>적립 포인트<strong id="point">10,000</strong>P</p>
+
+
+    <div class="button-container">
+        <button class="blue-button">영수증 출력</button>
+        <a href="{% url 'kiosk_main' %}">
+            <button class="blue-button">확인</button>
+        </a>
+    </div>
+
+
+
+</body>
+
+</html>
