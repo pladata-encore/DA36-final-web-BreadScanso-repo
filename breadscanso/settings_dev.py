@@ -3,6 +3,7 @@ from .settings import *
 from dotenv import load_dotenv
 load_dotenv()
 
+
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '3.34.46.30']
