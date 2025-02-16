@@ -1,5 +1,8 @@
 import os
 from .settings import *
+from dotenv import load_dotenv
+load_dotenv()
+
 
 DEBUG = True
 
@@ -15,7 +18,7 @@ DATABASES = {
         'HOST': os.getenv('DATABASE_HOST'),                 # 서버의 공인 IP 또는 도메인
         'PORT': os.getenv('DATABASE_PORT'),                          # MySQL 기본 포트
         'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  # 엄격한 SQL 모드 설정
+            'charset': 'utf8mb4',
         }
     }
 }

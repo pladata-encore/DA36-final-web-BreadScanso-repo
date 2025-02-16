@@ -1,0 +1,60 @@
+{% extends 'layout/member/base_member.html' %}
+{% load static %}
+
+{% block title %} MYPAGE | Details {% endblock title %}
+{% block user_id %}user_id{% endblock user_id %}
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+    <div class="receipt-container">
+        <div class="left-section">
+            <div class="receipt-header">7,000원</div>
+            <hr>
+            <p><strong>결제수단:</strong> 카드</p>
+            <p><strong>승인금액:</strong> 7,000원</p>
+            <p><strong>승인번호:</strong> 202501778</p>
+            <p><strong>승인일시:</strong> 2025-01-01 12:50:48</p>
+            <hr>
+            <p><strong>매장명:</strong> 서초동 브레드스캔스</p>
+            <p><strong>점주명:</strong> 김떡떡</p>
+            <p><strong>사업자번호:</strong> 01010101</p>
+            <p><strong>전화번호:</strong> 02-1234-1234</p>
+            <p><strong>주소:</strong> 서울 서초구 효령길12</p>
+            <hr>
+            <p><strong>적립 포인트:</strong> 300P</p>
+        </div>
+        <div class="right-section">
+            <table class="table receipt-table">
+                <thead>
+                    <tr>
+                        <th>상품명</th>
+                        <th>수량</th>
+                        <th>금액</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>소금빵</td>
+                        <td>1</td>
+                        <td>3,500</td>
+                    </tr>
+                    <tr>
+                        <td>소세지빵</td>
+                        <td>1</td>
+                        <td>3,500</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2">합계</th>
+                        <th>7,000</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="btn btn-success">확인</button>
+    </div>
+{% endblock content %}

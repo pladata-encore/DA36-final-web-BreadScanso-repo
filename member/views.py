@@ -41,6 +41,6 @@ def member_pw(request):
 def member_delete(request):
     return render(request, 'member/member_delete.html')
 
-# 회원탈퇴
+# 회원탈퇴사유 입력
 def member_delete_detail(request):
     return render(request, 'member/member_delete_detail.html')
