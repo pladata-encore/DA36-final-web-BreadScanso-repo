@@ -1,11 +1,97 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales | Main</title>
-</head>
-<body>
-    <h1>매출관리 화면 입니다.</h1>
-</body>
-</html>
+{% extends 'layout/store/base_store.html' %}
+{% load static %}
+
+{% block title %} Sales | Main {% endblock title %}
+{% block store_id%}store_id{% endblock store_id %}
+{% block content %}
+    <div style="display: flex; align-items: flex-start; gap: 40px; margin-bottom: 50px;">
+        <div style="flex: 6.5; display: flex; flex-direction: column;">
+            <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 20px;">
+                <div>
+                    <label for="product-select">제품 선택:</label>
+                    <select id="product-select">
+                        <option value="all">전체</option>
+                        <option value="1">단팥빵</option>
+                        <option value="2">소금빵</option>
+                        <option value="3">식빵</option>
+                        <option value="4">커스터드크림빵</option>
+                        <option value="5">피자빵</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="time-select">기간 선택:</label>
+                    <select id="time-select">
+                        <option value="daily">최근 7일</option>
+                        <option value="weekly">최근 4주</option>
+                        <option value="monthly">최근 4개월</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="start-date">기간 설정:</label>
+                    <input type="date" id="start-date"> ~ <input type="date" id="end-date">
+                </div>
+            </div>
+            
+            <canvas id="salesChart" style="width: 100%; height: 400px; margin-top: 20px;"></canvas>
+        </div>
+        
+        <div style="flex: 3.5; align-self: flex-end; margin-bottom: 50px;">
+            <h4>판매량 TOP5 제품</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>상품 ID</th>
+                        <th>상품명</th>
+                        <th>총 판매 수량</th>
+                        <th>총 판매 금액</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in sales_data.top5 %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let salesData = {{ sales_data.daily|safe }};
+    let ctx = document.getElementById('salesChart').getContext('2d');
+    let salesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: salesData.map(data => data.date),
+            datasets: [{
+                label: '매출 금액',
+                data: salesData.map(data => data.sales),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {beginAtZero: true}
+            }
+        }
+    });
+
+    document.getElementById('time-select').addEventListener('change', function() {
+        updateChart(this.value);
+    });
+
+    function updateChart(period) {
+        console.log(period + ' 데이터 업데이트');
+    }
+</script>
+{% endblock script %}
