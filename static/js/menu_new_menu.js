@@ -1,7 +1,6 @@
 const fileInput = document.getElementById('file-input');
 const preview = document.getElementById('preview');
 
-
 // 파일 업로드 후 이미지 미리보기
 fileInput.addEventListener('change', function(event) {
     const file = event.target.files[0];  // 선택한 파일

@@ -63,15 +63,44 @@
     <input type="text" name="price" id="price" class="form-control" placeholder="￦판매가">
 </div>
 
+<!-- modal -->    
+<div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="saveConfirmModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        수정 내용을 저장하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary" id="confirm-save-btn">확인</button>
+      </div>
+    </div>
+  </div>
+</div>    
+    
 <!-- 저장 버튼 -->
-<button type="button" class="btn btn-success">저장</button>
+<button type="button" class="btn btn-success" id="save-btn" data-bs-toggle="modal" data-bs-target="#saveConfirmModal">저장</button>
 
 <!-- 취소 버튼 -->
-<button type="button" class="btn btn-warning">취소</button>
+<button type="button" class="btn btn-warning" id="cancel-btn">취소</button>
     
 {% endblock content%}
 
 {% block script %}
 {{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
-<script src="{% static 'js/menu_new_menu.js' %}"></script>
+<!-- 저장 버튼 모달에서 확인후 -->
+<script>
+document.getElementById("confirm-save-btn").addEventListener("click", function () {
+    window.location.href = "/menu/store/menu_info";  // 확인을 누르면 menu_info 페이지로 이동
+});
+
+document.getElementById("cancel-btn").addEventListener("click", function () {
+    window.location.href = "/menu/store/menu_info";  // 최소을 누르면 바로 menu_info 페이지로 이동
+});
+</script>
+
 {% endblock script %}

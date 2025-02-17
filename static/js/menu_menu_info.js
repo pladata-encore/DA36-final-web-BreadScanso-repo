@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const cancelBtn = document.getElementById("cancel-btn");
     const editMenuBtn = document.getElementById("edit-menu-btn");
-    const listBtn = document.querySelector(".list-button-container .btn-success");
+    const listBtn = document.getElementById("list-btn");
 
     // 삭제 버튼
     if (cancelBtn) {
