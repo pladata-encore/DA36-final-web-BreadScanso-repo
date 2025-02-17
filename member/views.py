@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from .models import Member  # 모델 가져오기
 
 
 # member 메인
@@ -10,7 +11,8 @@ def member_main(request):
 
 # 점주 회원관리
 def member_store(request):
-    return render(request, 'member/member_store.html')
+    members = Member.objects.all() # 모든 회원 정보 가져오기
+    return render(request, 'member/member_store.html', {'members': members})
 
 # 회원 마이페이지
 def member_page(request):
