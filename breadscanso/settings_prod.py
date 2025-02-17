@@ -7,6 +7,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
   'eb-breadscanso-env.eba-ivnsims9.ap-northeast-2.elasticbeanstalk.com',
   '52.79.158.104',
+  'localhost',
 ]
 
 # DATABASES = {
