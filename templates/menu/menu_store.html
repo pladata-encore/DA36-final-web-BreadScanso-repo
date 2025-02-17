@@ -7,35 +7,48 @@
 
 {% block content %}
 <style>
-body.menu_store_table table {
+.store-menu-table table {
     border-collapse: collapse;
     width: 100%;
 }
-body.menu_store_table th, td {
+.store-menu-table th, td {
     border: 1px solid black;
     padding: 8px;
     text-align: center;
 }
-body.menu_store_table thead {
+.store-menu-table thead {
     border-bottom: 3px solid black;
 }
-body.menu_store_table .checkbox-column {
+.store-menu-table .checkbox-column {
     width: 50px;
 }
+
+/* 검색창 위치 */
+#search-container {
+    position: absolute;
+    top: 150px;  /* 위쪽 위치 조정 */
+    right: 20px; /* 오른쪽 위치 조정 */
+}
+
+.store-menu-table tbody tr {
+    cursor: pointer;
+}
+
+.store-menu-table tbody tr:hover {
+    background-color: gray; 
+}
+
 </style>
 
 <!-- 검색창 -->
-<nav class="navbar bg-body-tertiary">
-  <div class="container-fluid">
-    <form class="d-flex" role="search" id="search-form">
-      <input class="form-control me-2" type="search" id="search-input" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>
-  </div>
-</nav>
+<div class="d-flex justify-content-end mt-3" id="search-container">
+  <form class="d-flex" role="search" id="search-form">
+    <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
+</div>
 
 <!-- 테이블 -->
-<body class="menu_store_table">
 <table class="table store-menu-table">
   <thead>
     <tr>
@@ -102,7 +115,7 @@ body.menu_store_table .checkbox-column {
     </tr>
   </tbody>
 </table>
-</body>
+
     
 <!-- 삭제 확인 모달 -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
@@ -125,7 +138,7 @@ body.menu_store_table .checkbox-column {
     
 <div class="d-flex justify-content-between align-items-center mt-3">
     <!-- 삭제 버튼 (왼쪽) -->
-    <button type="button" class="btn btn-danger" id="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" style="margin-right: 250px;">삭제</button>
+    <button type="button" class="btn btn-danger" id="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" style="margin-right: 500px;">삭제</button>
 
     <!-- 페이지 네비게이션 (중앙) -->
     <nav aria-label="Page navigation" style="margin-right: 20px;">
@@ -147,7 +160,7 @@ body.menu_store_table .checkbox-column {
     </nav>
 
     <!-- 신규등록 버튼 (오른쪽) -->
-    <button type="button" class="btn btn-info" id="new-register-btn" style="margin-left: 250px;">신규등록</button>
+    <button type="button" class="btn btn-info" id="new-register-btn" style="margin-left: 500px;">신규등록</button>
 </div>
 
     

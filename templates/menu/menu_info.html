@@ -7,91 +7,93 @@
 
 {% block content %}
 <style>
-  /* 상태 표시 컨테이너 */
-  .status-container {
+/* 상태 표시 컨테이너 */
+.status-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-  }
+    margin-bottom: 10px; /* 제품명과 간격 조절 */
+}
 
-  .status-left {
+/* 왼쪽 상태 표시 (Best, New) */
+.status-left {
     display: flex;
-    gap: 10px;
-  }
+    gap: 5px; /* Best와 New 사이 간격 유지 */
+}
 
-  .status-right {
-    margin-left: auto;
-  }
+/* 오른쪽 상태 표시 (노출중) */
+.status-right {
+    margin-left: 700px; /* New와 노출중 사이 간격 조절 가능 */
+    margin-right: 50px; /* 노출중을 더 오른쪽으로 이동 가능 */
+}
 
-  .custom-box {
+.custom-box {
     padding: 8px 12px;
     border-radius: 8px;
     font-size: 16px;
     text-align: center;
     min-width: 80px;
-  }
+}
 
-  .best {
+.best {
     background-color: #00FFFF;
-  }
+}
 
-  .new {
+.new {
     background-color: #FFEE8C;
-  }
+}
 
-  .exposed {
+.exposed {
     border: 1px solid red;
     background-color: transparent;
-  }
+}
 
-  /* 전체 레이아웃 */
-  .container {
+/* 전체 레이아웃 */
+.container {
     display: flex;
     align-items: flex-start;
-    gap: 20px;
-  }
+    gap: 40px; /* 이미지와 제품 설명 간격 조정 가능 */
+}
 
-  .image-area img {
-    max-width: 300px;
+/* 이미지 영역 */
+.image-area {
+    flex-shrink: 0;
+    width: 300px; /* 이미지 크기 조정 가능 */
+}
+
+.image-area img {
+    width: 100%;
     height: auto;
     display: block;
-  }
+}
 
-  /* 제품 정보 영역 */
-  .product-info {
+/* 제품 정보 영역 */
+.product-info {
     flex-grow: 1;
-  }
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 가운데 정렬되지 않고 왼쪽 정렬 */
+}
 
-  .product-info h2 {
+.product-info h2, .product-info p {
+    text-align: left; /* 제품 설명 내용 왼쪽 정렬 */
     margin: 5px 0;
-  }
+}
 
-  /* 버튼 정렬 */
-  .button-container {
+/* 버튼 정렬 */
+.button-container {
     display: flex;
     gap: 10px;
     margin-top: 10px;
-  }
+}
 
-  /* 목록 버튼을 왼쪽 하단에 배치 */
-  .list-button-container {
+/* 목록 버튼을 왼쪽 하단에 배치 */
+.list-button-container {
     display: flex;
     justify-content: flex-start;
     margin-top: 20px;
-  }
+}
 </style>
-
-<!-- 상태 표시 -->
-<div class="status-container">
-  <div class="status-left">
-    <div class="custom-box best">Best</div>
-    <div class="custom-box new">New</div>
-  </div>
-  <div class="status-right">
-    <div class="custom-box exposed">노출중</div>
-  </div>
-</div>
 
 <!-- 메인 컨테이너 -->
 <div class="container">
@@ -102,6 +104,18 @@
 
   <!-- 제품 정보 -->
   <div class="product-info">
+    <!-- 상태 표시 (Best, New) -->
+    <div class="status-container">
+      <div class="status-left">
+        <div class="custom-box best">Best</div>
+        <div class="custom-box new">New</div>
+      </div>
+      <div class="status-right">
+        <div class="custom-box exposed">노출중</div>
+      </div>
+    </div>
+
+    <!-- 제품명 -->
     <h2>소금빵</h2>
     <p>속은 촉촉, 빵 밑면은 바삭 두 가지 식감과 고소한 풍미를 느낄 수 있는 소금빵</p>
     
@@ -116,7 +130,7 @@
 
     <!-- 수정 & 삭제 버튼 -->
     <div class="button-container">
-      <button type="button" class="btn btn-primary">수정</button>
+      <button type="button" class="btn btn-primary" id="edit-menu-btn">수정</button>
       <button type="button" class="btn btn-danger" id="cancel-btn">삭제</button>
     </div>
   </div>
