@@ -6,7 +6,8 @@ import os
 DEBUG = True
 
 ALLOWED_HOSTS = [
-  'eb-breadscanso2-env.eba-ivnsims9.ap-northeast-2.elasticbeanstalk.com',
+  'eb-breadscanso2-env.eba-ivnsims9.ap-northeast-2.elasticbeanstalk.com', # eb 도메인
+  'ec2-43-200-142-127.ap-northeast-2.compute.amazonaws.com', # ec2 도메인
   'breadscanso.shop', 
   'www.breadscanso.shop',
 ]
