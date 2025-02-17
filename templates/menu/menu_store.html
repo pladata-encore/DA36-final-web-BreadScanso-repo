@@ -26,8 +26,8 @@
 /* 검색창 위치 */
 #search-container {
     position: absolute;
-    top: 150px;  
-    right: 20px; 
+    top: 150px;
+    right: 20px;
 }
 
 .store-menu-table tbody tr {
@@ -35,7 +35,7 @@
 }
 
 .store-menu-table tbody tr:hover {
-    background-color: gray; 
+    background-color: gray;
 }
 
 /* 반응형 레이아웃을 위한 추가 스타일 */
@@ -125,6 +125,7 @@
   </tbody>
 </table>
 
+    
 <!-- 삭제 확인 모달 -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -143,9 +144,8 @@
     </div>
   </div>
 </div>
-
-<!-- 버튼들 -->
-<div class="container d-flex justify-content-between align-items-center mt-3">
+    
+<div class="d-flex justify-content-between align-items-center mt-3">
     <!-- 삭제 버튼 (왼쪽) -->
     <button type="button" class="btn btn-danger" id="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">삭제</button>
 
@@ -172,6 +172,7 @@
     <button type="button" class="btn btn-info" id="new-register-btn">신규등록</button>
 </div>
 
+    
 {% endblock content %}
 
 {% block script %}

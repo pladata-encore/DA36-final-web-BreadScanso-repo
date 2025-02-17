@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import Item
 
 def menu_main(request):
     return render(request, 'menu/menu_main.html')  # 메인 메뉴정보 페이지

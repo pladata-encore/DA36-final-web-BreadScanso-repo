@@ -3,3 +3,4 @@ gunicorn
 uvicorn
 blacknoise
 mysqlclient
+django-ebhealthcheck
