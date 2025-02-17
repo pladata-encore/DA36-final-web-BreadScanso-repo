@@ -7,8 +7,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
   'eb-breadscanso-env.eba-ivnsims9.ap-northeast-2.elasticbeanstalk.com',
-  'breadscanso.shop',
-    'www.breadsanso.shop',
+  'breadscanso.shop', 'www.breadscanso.shop',
 ]
 
 DATABASES = {
