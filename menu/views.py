@@ -5,8 +5,7 @@ def menu_main(request):
     return render(request, 'menu/menu_main.html')  # 메인 메뉴정보 페이지
 
 def menu_store(request):
-    items = Item.objects.all()
-    return render(request, 'menu/menu_store.html', {'items': items})  # 점주 페이지의 메뉴관리 페이지
+    return render(request, 'menu/menu_store.html')  # 점주 페이지의 메뉴관리 페이지
 
 def product_detail(request, product_id):
     return render(request, 'menu/product_detail.html', {'product_id': product_id}) # 제품상세 페이지 경로

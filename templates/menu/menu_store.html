@@ -6,47 +6,166 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% block content %}
+<style>
+.store-menu-table table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.store-menu-table th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+.store-menu-table thead {
+    border-bottom: 3px solid black;
+}
+.store-menu-table .checkbox-column {
+    width: 50px;
+}
+
+/* 검색창 위치 */
+#search-container {
+    position: absolute;
+    top: 150px;  /* 위쪽 위치 조정 */
+    right: 20px; /* 오른쪽 위치 조정 */
+}
+
+.store-menu-table tbody tr {
+    cursor: pointer;
+}
+
+.store-menu-table tbody tr:hover {
+    background-color: gray;
+}
+
+</style>
+
+<!-- 검색창 -->
+<div class="d-flex justify-content-end mt-3" id="search-container">
+  <form class="d-flex" role="search" id="search-form">
+    <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
+</div>
 
 <!-- 테이블 -->
-<table class="Item">
+<table class="table store-menu-table">
   <thead>
     <tr>
       <th class="checkbox-column"><input type="checkbox" id="select-all"></th>
-      <th>제품아이디</th>
-      <th>제품명</th>
-      <th>매장</th>
-      <th>판매가</th>
-      <th>원가</th>
-      <th>제품설명</th>
-      <th>카테고리</th>
-      <th>인기상품</th>
-      <th>신상품</th>
-      <th>노출여부</th>
-      <th>재고수량</th>
+      <th scope="col">번호</th>
+      <th scope="col">제품 아이디</th>
+      <th scope="col">제품명</th>
+      <th scope="col">매장</th>
+      <th scope="col">판매가</th>
+      <th scope="col">원가</th>
+      <th scope="col">제품 설명</th>
+      <th scope="col">카테고리</th>
+      <th scope="col">인기상품</th>
+      <th scope="col">신상품</th>
+      <th scope="col">노출여부</th>
+      <th scope="col">재고수량</th>
     </tr>
   </thead>
   <tbody>
-    {% for item in items %}
     <tr>
-        <td>{{ item.item_id }}</td>
-        <td>{{ item.item_name }}</td>
-        <td>{{ item.store }}</td>
-        <td>{{ item.sale_price }}</td>
-        <td>{{ item.cost_price }}</td>
-        <td>{{ item.description }}</td>
-        <td>{{ item.category }}</td>
-        <td>{{ item.best }}</td>
-        <td>{{ item.new }}</td>
-        <td>{{ item.show }}</td>
-        <td>{{ item.stock }}</td>
+      <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+      <th scope="row">1</th>
+      <td>A0001</td>
+      <td>베이글</td>
+      <td>서초점</td>
+      <td>￦3000원</td>
+      <td>￦1000원</td>
+      <td>쫄깃한 베이글</td>
+      <td>빵</td>
+      <td>O</td>
+      <td>X</td>
+      <td>O</td>
+      <td>3</td>
     </tr>
-    {% endfor %}
-</tbody>
+    <tr>
+      <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+      <th scope="row">2</th>
+      <td>A0002</td>
+      <td>단팥빵</td>
+      <td>서초점</td>
+      <td>￦3500원</td>
+      <td>￦1200원</td>
+      <td>달콤한 단팥빵</td>
+      <td>빵</td>
+      <td>O</td>
+      <td>X</td>
+      <td>O</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+      <th scope="row">3</th>
+      <td>A0003</td>
+      <td>피자빵</td>
+      <td>서초점</td>
+      <td>￦4000원</td>
+      <td>￦1500원</td>
+      <td>단짠단짠 피자빵</td>
+      <td>빵</td>
+      <td>O</td>
+      <td>X</td>
+      <td>O</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
 
-</table>>
 
-    
+<!-- 삭제 확인 모달 -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteConfirmModalLabel">삭제 확인</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        선택한 제품을 삭제하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-danger" id="confirm-delete-btn">삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <!-- 삭제 버튼 (왼쪽) -->
+    <button type="button" class="btn btn-danger" id="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" style="margin-right: 500px;">삭제</button>
+
+    <!-- 페이지 네비게이션 (중앙) -->
+    <nav aria-label="Page navigation" style="margin-right: 20px;">
+        <ul class="pagination mb-0">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo; 이전</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">다음 &raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- 신규등록 버튼 (오른쪽) -->
+    <button type="button" class="btn btn-info" id="new-register-btn" style="margin-left: 500px;">신규등록</button>
+</div>
+
+
 {% endblock content %}
 
 {% block script %}
+<script src="{% static 'js/menu_store_main.js' %}"></script>
 {% endblock script %}
