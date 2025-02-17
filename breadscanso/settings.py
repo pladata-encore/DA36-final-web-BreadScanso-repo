@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'stock',
     'store',
     'store_info',
+    'ebhealthcheck.apps.EBHealthCheckConfig' # eb 상태 관리(CI/CD 안정화)
 ]
 
 MIDDLEWARE = [
