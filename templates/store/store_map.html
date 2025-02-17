@@ -6,10 +6,103 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% block content %}
-    
+<style>
+    .store-map-container {
+        text-align: center;
+        margin: 30px auto;
+        max-width: 1200px;
+        display: flex;
+        flex-direction: column;  /* 세로로 배치 */
+        justify-content: space-between;  /* 위와 아래에 요소들이 배치되도록 설정 */
+        position: relative;  /* 버튼을 내부에서 자유롭게 배치할 수 있게 설정 */
+    }
+    .store-title {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+    .store-map-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .map-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .map-section img {
+        width: 100%;  /* 이미지가 가로로 꽉 차도록 설정 */
+        max-width: 600px; /* 최대 너비 설정 */
+        height: auto;
+        object-fit: cover; /* 비율 유지하면서 이미지 잘라내기 */
+        object-position: center; /* 이미지의 중앙을 기준으로 잘라내기 */
+    }
+    .store-info-section {
+        text-align: left;
+    }
+    .store-info-section h3 {
+        font-size: 20px;
+        margin-top: 15px;
+        font-weight: bold;
+    }
+    .store-info-section p {
+        font-size: 16px;
+        margin: 5px 0;
+    }
+
+    /* 수정 버튼을 오른쪽 아래로 배치 */
+    .button-container {
+        margin-top: 20px;  
+        align-self: flex-end;  
+    }
+</style>
+
+<!-- 매장 안내 정보 -->    
+<div class="store-map-container">
+    <h2 class="store-title">매장 안내</h2>
+    <div class="store-map-content">
+        <!-- 매장 지도 -->
+        <div class="map-section">
+            <img src="{% static 'images/store_map.png' %}" alt="Store Map">
+        </div>
+        
+        <!-- 매장 정보 -->
+        <div class="store-info-section">
+            <h3>| 주소</h3>
+            <p id="address-display">서울 서초구 효령로 335</p> 
+        
+            <h3>| 대중교통 안내</h3>
+            <p id="transportation-display">3호선 남부터미널역 2번 출구 도보 10분</p> 
+        
+            <h3>| 자가용 이용 시</h3>
+            <p id="parking-display">매장 건너편 공영주차장 이용 (10분 이상 주차 시 유료)</p> 
+        </div>
+
+    </div>
+
+    <!-- 버튼 섹션 -->
+    <div class="button-container">
+        <a href="{% url 'store_map_edit' %}" class="btn btn-primary">수정</a>
+    </div>
+</div>
+
     
 {% endblock content %}
 
 {% block script %}
+{{ block.super }}
+<script>
+window.onload = function() {
+    // 로컬 스토리지에서 저장된 값 읽기
+    const address = localStorage.getItem('store_address') || '서울 서초구 효령로 335';  // 기본값
+    const transportation = localStorage.getItem('store_transportation') || '3호선 남부터미널역 2번 출구 도보 10분';  // 기본값
+    const parking = localStorage.getItem('store_parking') || '매장 건너편 공영주차장 이용 (10분 이상 주차 시 유료)';  // 기본값
 
+    // 페이지에 표시하기
+    document.getElementById('address-display').innerText = address;
+    document.getElementById('transportation-display').innerText = transportation;
+    document.getElementById('parking-display').innerText = parking;
+};
+</script>
 {% endblock script %}

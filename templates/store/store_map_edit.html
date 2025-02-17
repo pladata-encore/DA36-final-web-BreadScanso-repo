@@ -1,0 +1,124 @@
+{% extends 'layout/store/base_store.html' %}
+{% load static %}
+
+{% block title %}Store | Edit Map{% endblock %}
+{% block store_id %}store_id{% endblock %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block content %}
+<style>
+    .edit-store-container {
+        max-width: 1200px;
+        margin: 30px auto;
+    }
+    .edit-title {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+    .edit-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .edit-map-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .edit-map-section img {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+    }
+    .edit-info-section {
+        text-align: left;
+    }
+    .edit-info-section input, .edit-info-section textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+    .edit-info-section label {
+        font-weight: bold;
+        font-size: 20px;
+        margin-top: 15px;
+        display: block;
+    }
+    .save-button {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+</style>
+
+<!-- 매장 정보 수정 페이지 -->
+<div class="edit-store-container">
+    <h2 class="edit-title">매장 정보 수정</h2>
+    <div class="edit-content">
+        <!-- 지도 수정 -->
+        <div class="edit-map-section">
+            <label for="map-image">매장 지도 이미지 수정</label>
+            <img id="store-map-preview" src="{% static 'images/store_map.png' %}" alt="Store Map">
+            <input type="file" id="map-image" accept="image/*">
+        </div>
+
+        <!-- 매장 정보 수정 -->
+        <div class="edit-info-section">
+            <label for="address">주소</label>
+            <input type="text" id="address" value="서울 서초구 효령로 335">
+
+            <label for="transportation">대중교통 안내</label>
+            <textarea id="transportation">3호선 남부터미널역 2번 출구 도보 10분</textarea>
+
+            <label for="parking">자가용 이용 시</label>
+            <textarea id="parking">매장 건너편 공영주차장 이용 (10분 이상 주차 시 유료)</textarea>
+
+            <div class="save-button">
+                <button type="button" class="btn btn-primary" id="save-changes-btn">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+    // 지도 이미지 미리보기
+    const mapImageInput = document.getElementById('map-image');
+    const mapImagePreview = document.getElementById('store-map-preview');
+
+    mapImageInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                mapImagePreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 저장 버튼 클릭 시 동작
+    document.getElementById('save-changes-btn').addEventListener('click', function() {
+        const address = document.getElementById('address').value;
+        const transportation = document.getElementById('transportation').value;
+        const parking = document.getElementById('parking').value;
+
+        // 로컬 스토리지에 저장
+        localStorage.setItem('store_address', address);
+        localStorage.setItem('store_transportation', transportation);
+        localStorage.setItem('store_parking', parking);
+
+        // 변경된 내용 확인
+        alert('저장된 내용:\n주소: ' + address + '\n대중교통 안내: ' + transportation + '\n자가용 이용 시: ' + parking);
+
+        // 저장 후 store_map.html로 리디렉션
+        window.location.href = '/store/store_map';
+    });
+</script>
+{% endblock script %}

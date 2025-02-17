@@ -7,7 +7,7 @@
 
 {% block content %}
 <style>
-  /* 템플릿 버튼 위치 (우측 상단) */
+    /* 템플릿 버튼 위치 (우측 상단) */
     #show-templates-btn {
         position: absolute;
         top: 150px;
@@ -21,12 +21,13 @@
         padding: 15px;
         background-color: #f1f1f1;
         border-radius: 8px;
+        width: 100%;
     }
 
     /* 템플릿 박스 */
     .template-box {
         border: 1px solid #ddd;
-        padding: 15px;
+        padding: 10px;
         margin: 10px 0;
         background-color: #fff;
         cursor: pointer;
@@ -39,31 +40,169 @@
         border: 2px solid #007bff;
     }
 
-    /* 적용된 템플릿 표시 영역 */
-    #selected-template {
+    /* 템플릿 편집 영역 */
+    .template-editor {
+        display: none;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    textarea {
+        width: 100%;
+        height: 150px;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: none;
+    }
+
+    /* 미리보기 영역 */
+    .preview-container {
         margin-top: 20px;
         padding: 15px;
         border: 2px dashed #007bff;
         background-color: #e9f5ff;
         min-height: 100px;
     }
+
+    /* 템플릿 선택 및 미리보기 레이아웃 */
+    .layout-container {
+        display: flex;
+        justify-content: space-between; /* 좌우 정렬 */
+        gap: 20px;
+    }
+
+    /* 이미지 삽입 공간 */
+    .image-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .image-container input {
+        width: 32%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    /* 이벤트 및 제품 그리드 레이아웃 */
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 30px;
+    }
+    .grid-container input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    /* 이벤트 및 제품 제목 */
+    .event-section {
+        font-size: 1em;
+        margin-bottom: 10px;
+    }
+    
+    .product-section {
+        font-size: 1em;
+        margin-bottom: 10px;
+    }
+    
+    /* 목록/저장 버튼 위치 */
+    .button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+    gap: 10px;
+    }
+    
 </style>
 
 <!-- 템플릿 버튼 -->
 <button id="show-templates-btn" class="btn btn-primary">템플릿 선택</button>
 
-<!-- 템플릿 컨테이너 -->
-<div class="template-container" id="template-container">
-    <h4>템플릿을 선택하세요:</h4>
-    <div class="template-box" data-template="템플릿 1 내용">템플릿 1: 기본 설명이 들어갑니다.</div>
-    <div class="template-box" data-template="템플릿 2 내용">템플릿 2: 추가 정보가 포함된 내용입니다.</div>
-    <div class="template-box" data-template="템플릿 3 내용">템플릿 3: 맞춤형 안내 메시지가 포함됩니다.</div>
+<!-- 템플릿 및 미리보기 레이아웃 -->
+<div class="layout-container">
+    <!-- 템플릿 선택 영역 -->
+    <div class="template-container" id="template-container">
+        <h4>템플릿을 선택하세요:</h4>
+        <div class="template-box" data-template="템플릿 1 내용">템플릿 1</div>
+        <div class="template-box" data-template="템플릿 2 내용">템플릿 2</div>
+        <div class="template-box" data-template="템플릿 3 내용">템플릿 3</div>
+    </div>
+
+    <!-- 템플릿 편집 영역 -->
+    <div class="template-editor" id="template-editor">
+        <h4>홈 화면 수정</h4>
+        <br>
+        
+        <!-- 첫 번째 텍스트 영역: 홈 화면 설명 문구 입력 -->
+        <div class="home-section">
+            <label id="home-description">홈 화면 설명</label>
+            <textarea id="home-description" placeholder="홈 화면 설명을 입력하세요."></textarea>
+        </div>
+        
+        <!-- 이미지 삽입 공간 -->
+        <div class="image-container">
+            <input type="file" id="image1" accept="image/*" placeholder="이미지 1">
+            <input type="file" id="image2" accept="image/*" placeholder="이미지 2">
+            <input type="file" id="image3" accept="image/*" placeholder="이미지 3">
+        </div>
+        <br>
+        
+        <!-- 브랜드 소개 텍스트 영역 -->
+        <div class="brand-section">
+            <label id="brand-description">브랜드 소개 문구</label>
+            <textarea id="brand-description" placeholder="브랜드 소개 문구를 입력하세요."></textarea>
+        </div>
+        <br>
+        
+        <!-- 이벤트 섹션 -->
+        <div class="event-section">
+            <div class="mb-3">
+                <label id="event-title">이벤트(타이틀)</label>
+                <input type="text" placeholder="예: 이벤트">
+            </div>
+            <div class="grid-container">
+                <input type="file" id="event-image1" accept="image/*" placeholder="이벤트 이미지 1">
+                <input type="file" id="event-image2" accept="image/*" placeholder="이벤트 이미지 2">
+                <input type="file" id="event-image3" accept="image/*" placeholder="이벤트 이미지 3">
+            </div>
+        </div>
+        <br>
+        
+        <!-- 제품 섹션 -->
+        <div class="product-section">
+            <div class="mb-3">
+                <label id="product-title">제품(타이틀)</label>
+                <input type="text" placeholder="예: 인기상품">
+            </div>
+            <div class="grid-container">
+                <input type="file" id="product-image1" accept="image/*" placeholder="제품 이미지 1">
+                <input type="file" id="product-image2" accept="image/*" placeholder="제품 이미지 2">
+                <input type="file" id="product-image3" accept="image/*" placeholder="제품 이미지 3">
+            </div>
+        </div>
+        <br>
+        
+        <!-- 버튼 섹션 -->
+        <div class="button-container">
+            <button type="button" class="btn btn-success" id="save-btn">저장</button>
+            <button type="button" class="btn btn-primary" id="edit-menu-btn">수정</button>
+        </div>
+    </div>
 </div>
 
-<!-- 선택된 템플릿 적용 영역 -->
-<h4>적용된 템플릿</h4>
-<div id="selected-template">선택한 템플릿 내용이 여기에 표시됩니다.</div>
-
+<!-- 선택된 템플릿 미리보기 -->
+<div id="preview-container" class="preview-container">
+    미리보기
+</div>
+    
 {% endblock content %}
 
 {% block script %}
