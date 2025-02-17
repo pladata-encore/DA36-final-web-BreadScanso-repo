@@ -125,7 +125,56 @@ body.main-index .event-img, body.main-index .product-img {
     margin-right: 10px; /* 오른쪽 여백 추가 */
 }
 /* ----------------------------------------------------------------------- */
+/* 마이페이지 - 회원정보 */
 
+body {
+    font-family: Arial, sans-serif;
+}
+.member-page-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 50px;
+}
+.member-page-profile {
+    text-align: center;
+}
+.member-page-profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+.member-page-buttons {
+    margin-top: 10px;
+}
+.member-page-buttons button {
+    margin: 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+.member-page-info-boxes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3개씩 배치 */
+    gap: 10px; /* 박스 간격 */
+    text-align: center;
+}
+.member-page-box {
+    width: 120px;
+    height: 80px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.member-page-withdraw-btn {
+    margin-top: 20px;
+    padding: 5px 15px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
 
 
 
