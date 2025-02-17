@@ -18,6 +18,7 @@
     <!-- Bootstrap JavaScript (필수) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+
 </head>
 <body>
     <div class="container">
@@ -126,29 +127,29 @@
     <br>
 
     <div class="d-flex">
-        <!-- 연령대 드롭다운 버튼  -->
+    <!-- 연령대 드롭다운 버튼  -->
         <div class="dropdown me-1">
             <button id="ageDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">연령대</button>
             <!-- 연령대 드롭다운 메뉴 -->
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" onclick="setAge('10대')">10대</a></li>
-              <li><a class="dropdown-item" href="#" onclick="setAge('20대')">20대</a></li>
-              <li><a class="dropdown-item" href="#" onclick="setAge('30대')">30대</a></li>
-              <li><a class="dropdown-item" href="#" onclick="setAge('40대')">40대</a></li>
-              <li><a class="dropdown-item" href="#" onclick="setAge('50대')">50대</a></li>
-              <li><a class="dropdown-item" href="#" onclick="setAge('60대 이상')">60대 이상</a></li>
-            </ul>
-        </div>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" onclick="setAge('10대')">10대</a></li>
+          <li><a class="dropdown-item" href="#" onclick="setAge('20대')">20대</a></li>
+          <li><a class="dropdown-item" href="#" onclick="setAge('30대')">30대</a></li>
+          <li><a class="dropdown-item" href="#" onclick="setAge('40대')">40대</a></li>
+          <li><a class="dropdown-item" href="#" onclick="setAge('50대')">50대</a></li>
+          <li><a class="dropdown-item" href="#" onclick="setAge('60대 이상')">60대 이상</a></li>
+        </ul>
+    </div>
 
-        <div class="btn-group">
-            <!-- 성별 드롭다운 버튼  -->
-            <button id="genderDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">성별</button>
-            <!-- 성별 드롭다운 메뉴 -->
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" onclick="setSex('남성')">남성</a></li>
-              <li><a class="dropdown-item" href="#" onclick="setSex('여성')">여성</a></li>
-            </ul>
-        </div>
+    <div class="btn-group">
+        <!-- 성별 드롭다운 버튼  -->
+          <button id="genderDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">성별</button>
+        <!-- 성별 드롭다운 메뉴 -->
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" onclick="setSex('남성')">남성</a></li>
+          <li><a class="dropdown-item" href="#" onclick="setSex('여성')">여성</a></li>
+        </ul>
+    </div>
     </div>
 
         <br>

@@ -4,52 +4,117 @@
 {% block title %}Store | Member {% endblock title %}
 {% block store_id%}store_id{% endblock store_id %}
 {% block content %}
-            <h3 style="margin-bottom: 50px;" class="text-center">회원관리</h3>
-            <!-- 회원명 검색 -->
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                <input type="search" id="searchMember" placeholder="회원명을 입력하세요" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
-
-                <button id="search_button" type="button" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
-                    검색
-                </button>
-            </div>
-            <table class="table">
-              <thead>
+    <h3 style="margin-bottom: 50px;" class="text-center">회원관리</h3>
+    <!-- 회원명 검색 -->
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <input type="search" id="searchMember" placeholder="회원명을 입력하세요" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+        <button id="search_button" type="button" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
+            검색
+        </button>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">번호</th>
+                <th scope="col">회원명</th>
+                <th scope="col">아이디</th>
+                <th scope="col">휴대폰번호</th>
+                <th scope="col">성별</th>
+                <th scope="col">연령대</th>
+                <th scope="col">이메일</th>
+                <th scope="col">방문횟수</th>
+                <th scope="col">총 결제액</th>
+                <th scope="col">회원가입일</th>
+                <th scope="col">마지막 방문일</th>
+                <th scope="col">포인트</th>
+                <th scope="col">프로필사진</th>
+                <th scope="col">수정/삭제</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for member in members %}
                 <tr>
-                  <th scope="col"></th>
-                  <th scope="col">번호</th>
-                  <th scope="col">회원명</th>
-                  <th scope="col">아이디</th>
-                  <th scope="col">휴대폰번호</th>
-                  <th scope="col">성별</th>
-                  <th scope="col">연령대</th>
-                  <th scope="col">이메일</th>
-                  <th scope="col">방문횟수</th>
-                  <th scope="col">총 결제액</th>
-                  <th scope="col">회원가입일</th>
-                  <th scope="col">마지막 방문일</th>
-                  <th scope="col">포인트</th>
-                  <th scope="col">프로필사진</th>
-                  <th scope="col">수정/삭제</th>
+                    <td><input type="checkbox" class="member-checkbox" value="{{ member.id }}"></td>
+                    <th scope="row">{{ forloop.counter }}</th> <!-- 회원 번호 -->
+                    <td>{{ member.name }}</td> <!-- 회원명 -->
+                    <td>{{ member.username }}</td> <!-- 아이디 -->
+                    <td>{{ member.phone_number }}</td> <!-- 휴대폰번호 -->
+                    <td>{{ member.gender }}</td> <!-- 성별 -->
+                    <td>{{ member.age_group }}</td> <!-- 연령대 -->
+                    <td>{{ member.email }}</td> <!-- 이메일 -->
+                    <td>{{ member.visit_count }}</td> <!-- 방문횟수 -->
+                    <td>{{ member.total_spent }} 원</td> <!-- 총 결제액 -->
+                    <td>{{ member.join_date }}</td> <!-- 회원가입일 -->
+                    <td>{{ member.last_visit_date }}</td> <!-- 마지막 방문일 -->
+                    <td>{{ member.points }}</td> <!-- 포인트 -->
+                    <td>
+                        {% if member.profile_picture %}
+                            <img src="{{ member.profile_picture.url }}" width="30">
+                        {% else %}
+                            null
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-light" onclick="toggleButton(this)">수정</button>
+                    </td>
                 </tr>
-              </thead>
-              <tbody class="table-group-divider">
+            {% empty %}
                 <tr>
-                  <td><input type="checkbox" class="member-checkbox" value="1"></td>
-                  <th scope="row">1</th>
-                  <td>홍길동</td>
-                  <td>hong</td>
-                  <td>01012345678</td>
-                  <td>남성</td>
-                  <td>20대</td>
-                  <td>hong@naver.com</td>
-                  <td>10</td>
-                  <td>300,000</td>
-                  <td>2025-01-01</td>
-                  <td>2025-02-14</td>
-                  <td>9,000</td>
-                  <td>null</td>
-                  <td><button type="button" class="btn btn-light" onclick="toggleButton(this)">수정</button></td>
+                    <td colspan="14">등록된 회원이 없습니다.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- 추가된 HTML 코드 아래에 그대로 위치 -->
+{#    #}
+{#    #}
+{#            <h3 style="margin-bottom: 50px;" class="text-center">회원관리</h3>#}
+{#            <!-- 회원명 검색 -->#}
+{#            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">#}
+{#                <input type="search" id="searchMember" placeholder="회원명을 입력하세요" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">#}
+{##}
+{#                <button id="search_button" type="button" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">#}
+{#                    검색#}
+{#                </button>#}
+{#            </div>#}
+{#            <table class="table">#}
+{#              <thead>#}
+{#                <tr>#}
+{#                  <th scope="col"></th>#}
+{#                  <th scope="col">번호</th>#}
+{#                  <th scope="col">회원명</th>#}
+{#                  <th scope="col">아이디</th>#}
+{#                  <th scope="col">휴대폰번호</th>#}
+{#                  <th scope="col">성별</th>#}
+{#                  <th scope="col">연령대</th>#}
+{#                  <th scope="col">이메일</th>#}
+{#                  <th scope="col">방문횟수</th>#}
+{#                  <th scope="col">총 결제액</th>#}
+{#                  <th scope="col">회원가입일</th>#}
+{#                  <th scope="col">마지막 방문일</th>#}
+{#                  <th scope="col">포인트</th>#}
+{#                  <th scope="col">프로필사진</th>#}
+{#                  <th scope="col">수정/삭제</th>#}
+{#                </tr>#}
+{#              </thead>#}
+{#              <tbody class="table-group-divider">#}
+{#                <tr>#}
+{#                  <td><input type="checkbox" class="member-checkbox" value="1"></td>#}
+{#                  <th scope="row">1</th>#}
+{#                  <td>홍길동</td>#}
+{#                  <td>hong</td>#}
+{#                  <td>01012345678</td>#}
+{#                  <td>남성</td>#}
+{#                  <td>20대</td>#}
+{#                  <td>hong@naver.com</td>#}
+{#                  <td>10</td>#}
+{#                  <td>300,000</td>#}
+{#                  <td>2025-01-01</td>#}
+{#                  <td>2025-02-14</td>#}
+{#                  <td>9,000</td>#}
+{#                  <td>null</td>#}
+{#                  <td><button type="button" class="btn btn-light" onclick="toggleButton(this)">수정</button></td>#}
                     <script>
                       function toggleButton(button) {
                         // 버튼 텍스트와 클래스 변경
@@ -65,89 +130,89 @@
                       }
                     </script>
                 </tr>
-                <tr>
-                  <td><input type="checkbox" class="member-checkbox" value="2"></td>
-                  <th scope="row">2</th>
-                  <td>고길동</td>
-                  <td>dong</td>
-                  <td>01011112222</td>
-                  <td>남성</td>
-                  <td>40대</td>
-                  <td>dong@gmail.com</td>
-                  <td>20</td>
-                  <td>500,000</td>
-                  <td>2024-09-10</td>
-                  <td>2025-02-02</td>
-                  <td>15,000</td>
-                  <td><img src="{% static 'images/dong.png' %}" width="30"></td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="member-checkbox" value="3"></td>
-                  <th scope="row">3</th>
-                  <td>하니</td>
-                  <td>hani</td>
-                  <td>01077778888</td>
-                  <td>여성</td>
-                  <td>10대</td>
-                  <td>hani@naver.com</td>
-                  <td>15</td>
-                  <td>100,000</td>
-                  <td>2024-10-14</td>
-                  <td>2025-01-31</td>
-                  <td>3,000</td>
-                  <td>null</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="member-checkbox" value="4"></td>
-                  <th scope="row">4</th>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="member-checkbox" value="5"></td>
-                  <th scope="row">5</th>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              <tr>
-                 <td><input type="checkbox" class="member-checkbox" value="6"></td>
-                  <th scope="row">6</th>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tr>
-              </tbody>
-            </table>
+{#                <tr>#}
+{#                  <td><input type="checkbox" class="member-checkbox" value="2"></td>#}
+{#                  <th scope="row">2</th>#}
+{#                  <td>고길동</td>#}
+{#                  <td>dong</td>#}
+{#                  <td>01011112222</td>#}
+{#                  <td>남성</td>#}
+{#                  <td>40대</td>#}
+{#                  <td>dong@gmail.com</td>#}
+{#                  <td>20</td>#}
+{#                  <td>500,000</td>#}
+{#                  <td>2024-09-10</td>#}
+{#                  <td>2025-02-02</td>#}
+{#                  <td>15,000</td>#}
+{#                  <td><img src="{% static 'images/dong.png' %}" width="30"></td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                  <td><input type="checkbox" class="member-checkbox" value="3"></td>#}
+{#                  <th scope="row">3</th>#}
+{#                  <td>하니</td>#}
+{#                  <td>hani</td>#}
+{#                  <td>01077778888</td>#}
+{#                  <td>여성</td>#}
+{#                  <td>10대</td>#}
+{#                  <td>hani@naver.com</td>#}
+{#                  <td>15</td>#}
+{#                  <td>100,000</td>#}
+{#                  <td>2024-10-14</td>#}
+{#                  <td>2025-01-31</td>#}
+{#                  <td>3,000</td>#}
+{#                  <td>null</td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                  <td><input type="checkbox" class="member-checkbox" value="4"></td>#}
+{#                  <th scope="row">4</th>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                  <td><input type="checkbox" class="member-checkbox" value="5"></td>#}
+{#                  <th scope="row">5</th>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                </tr>#}
+{#              <tr>#}
+{#                 <td><input type="checkbox" class="member-checkbox" value="6"></td>#}
+{#                  <th scope="row">6</th>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                  <td></td>#}
+{#                </tr>#}
+{#              </tr>#}
+{#              </tbody>#}
+{#            </table>#}
 
             <!-- 삭제 버튼 -->
             <div class="member-container">
