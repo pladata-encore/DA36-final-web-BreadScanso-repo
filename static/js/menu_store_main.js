@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const rowCheckboxes = document.querySelectorAll(".row-checkbox");
     const searchForm = document.getElementById("search-form");
     const searchInput = document.getElementById("search-input");
-    const rows = document.querySelectorAll("table.store-menu-table tbody tr");
+    const rows = document.querySelectorAll(".store-menu-table tbody tr");
     const deleteBtn = document.getElementById("delete-btn");
     const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
     const deleteConfirmModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
@@ -23,7 +23,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 검색 폼 제출 시
+    // 행 클릭 시 /menu/store/menu_info 이동 (체크박스를 제외한 부분 클릭 시)
+    rows.forEach(row => {
+        row.addEventListener("click", function (event) {
+            // 클릭한 요소가 체크박스이면 이동하지 않음
+            if (event.target.type === "checkbox") return;
+
+            // 체크박스 외의 영역 클릭 시 이동
+            window.location.href = "/menu/store/menu_info";
+        });
+    });
+
+    // 검색 폼 제출 시 검색 기능
     searchForm.addEventListener("submit", function (event) {
         event.preventDefault();
         const searchTerm = searchInput.value.toLowerCase();
@@ -43,18 +54,15 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "/menu/store/new_menu"; // 이동할 URL 설정
     });
 
-    // 삭제 버튼 클릭 시 모달 표시 (체크된 항목에 따라 팝업 혹은 모달 처리)
+    // 삭제 버튼 클릭 시 모달 표시
     deleteBtn.addEventListener("click", function () {
         const checkedRows = document.querySelectorAll(".row-checkbox:checked");
 
         if (checkedRows.length === 0) {
-            // 체크된 항목이 없으면 팝업만 표시하고 모달은 표시하지 않음
             alert("삭제할 제품을 선택하세요.");
-            return;
+        } else {
+            deleteConfirmModal.show();
         }
-
-        // 선택된 항목이 있으면 모달 표시
-        deleteConfirmModal.show();
     });
 
     // 모달에서 삭제 버튼 클릭 시 선택된 행 삭제
@@ -67,14 +75,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // 모달 닫기
         deleteConfirmModal.hide();
-    });
-
-    // 모달 이벤트 방지: 선택된 행이 없으면 모달이 뜨지 않도록 수정
-    document.getElementById("deleteConfirmModal").addEventListener("show.bs.modal", function (event) {
-        const checkedRows = document.querySelectorAll(".row-checkbox:checked");
-        if (checkedRows.length === 0) {
-            event.preventDefault();
-            alert("삭제할 제품을 선택하세요.");
-        }
     });
 });
