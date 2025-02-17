@@ -1,6 +1,26 @@
-// 취소 버튼 누르면 목록 화면으로 이동
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("cancel-btn").addEventListener("click", function () {
-        window.location.href = "/menu/store/";  // 취소 시 이전 화면으로 이동
-    });
+    const cancelBtn = document.getElementById("cancel-btn");
+    const editMenuBtn = document.getElementById("edit-menu-btn");
+    const listBtn = document.querySelector(".list-button-container .btn-success");
+
+    // 삭제 버튼
+    if (cancelBtn) {
+        cancelBtn.addEventListener("click", function () {
+            window.location.href = "/menu/store/";
+        });
+    }
+
+    // 수정 버튼
+    if (editMenuBtn) {
+        editMenuBtn.addEventListener("click", function () {
+            window.location.href = "/menu/store/menu_edit";
+        });
+    }
+
+    // 목록 버튼
+    if (listBtn) {
+        listBtn.addEventListener("click", function () {
+            window.location.href = "/menu/store/";
+        });
+    }
 });

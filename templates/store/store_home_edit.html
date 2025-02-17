@@ -1,0 +1,72 @@
+{% extends 'layout/store/base_store.html' %}
+{% load static %}
+
+{% block title %}Store | Home {% endblock %}
+{% block store_id %}store_id{% endblock %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block content %}
+<style>
+  /* 템플릿 버튼 위치 (우측 상단) */
+    #show-templates-btn {
+        position: absolute;
+        top: 150px;
+        right: 20px;
+    }
+
+    /* 템플릿 컨테이너 */
+    .template-container {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f1f1f1;
+        border-radius: 8px;
+    }
+
+    /* 템플릿 박스 */
+    .template-box {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin: 10px 0;
+        background-color: #fff;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    /* 선택된 템플릿 하이라이트 */
+    .template-box.selected {
+        background-color: #d1e7fd;
+        border: 2px solid #007bff;
+    }
+
+    /* 적용된 템플릿 표시 영역 */
+    #selected-template {
+        margin-top: 20px;
+        padding: 15px;
+        border: 2px dashed #007bff;
+        background-color: #e9f5ff;
+        min-height: 100px;
+    }
+</style>
+
+<!-- 템플릿 버튼 -->
+<button id="show-templates-btn" class="btn btn-primary">템플릿 선택</button>
+
+<!-- 템플릿 컨테이너 -->
+<div class="template-container" id="template-container">
+    <h4>템플릿을 선택하세요:</h4>
+    <div class="template-box" data-template="템플릿 1 내용">템플릿 1: 기본 설명이 들어갑니다.</div>
+    <div class="template-box" data-template="템플릿 2 내용">템플릿 2: 추가 정보가 포함된 내용입니다.</div>
+    <div class="template-box" data-template="템플릿 3 내용">템플릿 3: 맞춤형 안내 메시지가 포함됩니다.</div>
+</div>
+
+<!-- 선택된 템플릿 적용 영역 -->
+<h4>적용된 템플릿</h4>
+<div id="selected-template">선택한 템플릿 내용이 여기에 표시됩니다.</div>
+
+{% endblock content %}
+
+{% block script %}
+{{ block.super }} 
+<script src="{% static 'js/store_home_edit.js' %}"></script>
+{% endblock script %}
