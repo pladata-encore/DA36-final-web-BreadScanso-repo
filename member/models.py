@@ -80,5 +80,12 @@ class QnAReply(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)  # 등록일시, 처음 생성되면 변경 X
     updated_at = models.DateTimeField(auto_now=True)  # 수정일시, 수정될 때마다 업데이트
 
+    def save(self, *args, **kwargs):
+        if self.qna:
+            self.qna.is_answered = True
+            self.qna.save()
+        super().save(*args, **kwargs)
+
+
     def __str__(self):
         return f"답변 - {self.qna.title}"
