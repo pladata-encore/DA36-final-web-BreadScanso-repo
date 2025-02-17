@@ -5,7 +5,8 @@ from .settings import *
 DEBUG = True
 
 ALLOWED_HOSTS = [
-'eb-breadscanso-env.eba-ivnsims9.ap-northeast-2.elasticbeanstalk.com',
+  'eb-breadscanso-env.eba-ivnsims9.ap-northeast-2.elasticbeanstalk.com',
+  '52.79.158.104',
 ]
 
 # DATABASES = {
