@@ -32,6 +32,13 @@
         width: 100%;
         padding-left: 15px;
     }
+    
+    .button-container {
+        display: flex;
+        align-self: flex-end;
+        margin-top: 20px;
+        margin-right: 175px;
+    }
 </style>
 
 <div class="content-container">
@@ -59,7 +66,27 @@
     </div>
 </div>
 
-    <button type="button" class="btn btn-success" id="save-btn" style="margin-top: 15px; align-items: center">저장</button>
+<!-- modal -->    
+<div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="saveConfirmModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">저장하시겠습니까?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary" id="confirm-save-btn" onclick="location.href='{% url 'community_notice_modify' notice_id=notice.id|default:"0" %}'">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- 저장 버튼 -->
+    <div class="button-container">
+        <button type="button" class="btn btn-success" id="save-btn" data-bs-toggle="modal" data-bs-target="#saveConfirmModal">저장</button>
+    </div>
 
 {% endblock content %}
 
@@ -70,7 +97,6 @@
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 <script src="{% static 'js/summernote-ko-KR.js' %}"></script>
-<script src="{% static 'font' %}"></script>
 
 <script>
 $(document).ready(function() {
