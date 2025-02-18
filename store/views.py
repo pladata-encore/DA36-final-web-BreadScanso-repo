@@ -12,8 +12,14 @@ def about_breadscanso_edit(request):
 def store_map(request):
     return render(request, 'store/store_map.html')  # 매장 안내
 
-def event_edit(request):
-    return render(request, 'store/event_edit.html')  # 이벤트
+def store_map_edit(request):
+    return render(request, 'store/store_map_edit.html')  # 매장 안내
+
+def store_event(request):
+    return render(request, 'store/store_event.html')  # 이벤트
+
+def store_event_edit(request):
+    return render(request, 'store/store_event_edit.html')  # 이벤트
 
 def community_notice(request):
     return render(request, 'store/community_notice.html')  # 커뮤니티/공지사항

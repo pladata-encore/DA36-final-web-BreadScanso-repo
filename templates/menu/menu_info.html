@@ -80,18 +80,24 @@
     margin: 5px 0;
 }
 
-/* 버튼 정렬 */
+/* 버튼 컨테이너 전체 */
 .button-container {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 10px;
+    width: 100%;
 }
 
-/* 목록 버튼을 왼쪽 하단에 배치 */
-.list-button-container {
+/* 목록 버튼 위치 (왼쪽 정렬) */
+.left-buttons {
+    align-self: flex-start;
+}
+
+/* 수정 & 삭제 버튼 위치 (오른쪽 정렬) */
+.right-buttons {
     display: flex;
-    justify-content: flex-start;
-    margin-top: 20px;
+    gap: 10px;
 }
 </style>
 
@@ -128,17 +134,17 @@
       <p class="product-cost" id="cost">원가: </p>
     </div>
 
-    <!-- 수정 & 삭제 버튼 -->
+    <!-- 목록, 수정, 삭제 버튼 -->
     <div class="button-container">
-      <button type="button" class="btn btn-primary" id="edit-menu-btn">수정</button>
-      <button type="button" class="btn btn-danger" id="cancel-btn">삭제</button>
+        <div class="left-buttons">
+            <button type="button" class="btn btn-success" id="list-btn">목록</button>
+        </div>
+        <div class="right-buttons">
+            <button type="button" class="btn btn-primary" id="edit-menu-btn">수정</button>
+            <button type="button" class="btn btn-danger" id="cancel-btn">삭제</button>
+        </div>
     </div>
   </div>
-</div>
-
-<!-- 목록 버튼 (이미지 영역 밖, 왼쪽 하단) -->
-<div class="list-button-container">
-  <button type="button" class="btn btn-success">목록</button>
 </div>
     
 {% endblock content%}
