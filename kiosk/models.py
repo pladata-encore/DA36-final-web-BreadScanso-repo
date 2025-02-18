@@ -2,6 +2,7 @@ from django.db import models
 from member.models import Member
 from menu.models import Item
 from django.utils import timezone
+from django.db import transaction
 import random
 
 
@@ -53,7 +54,7 @@ class OrderItem(models.Model):
         self.order.save()
 
     def __str__(self):
-        return f"Item {self.item_id} in Order {self.order.order_id}"
+        return f"Item {self.item} in Order {self.order.order_id}"
 
 
 # PaymentInfo 결제정보
@@ -68,23 +69,41 @@ class PaymentInfo(models.Model):
     pay_at = models.DateTimeField(default=timezone.now)
     approval_code = models.CharField(max_length=5, null=True, blank=True)  # 승인 번호
 
+
     def save(self, *args, **kwargs):
-        # 카드 결제인 경우에만 승인번호 생성
+        is_new = self._state.adding
+
+        if not is_new:
+            try:
+                previous_payment = PaymentInfo.objects.get(pk=self.pk)
+                prev_status = previous_payment.payment_status
+            except PaymentInfo.DoesNotExist:
+                prev_status = None
+        else:
+            prev_status = None
+
+        # 카드 결제 승인번호
         if self.payment_method == "credit" and not self.approval_code:
-            self.approval_code = str(random.randint(10000, 99999))  # 5자리 난수 생성
+            self.approval_code = str(random.randint(10000, 99999))
         elif self.payment_method == "cash":
             self.approval_code = None
 
-        super().save(*args, **kwargs)
+        with transaction.atomic():
+            super().save(*args, **kwargs)
 
-        # 결제가 완료되면 회원 정보 업데이트
-        if self.payment_status and self.member:
-            self.member.total_spent += self.order.total_amount  # 총 사용 금액 갱신
-            self.member.points += self.order.earned_points  # 적립 포인트 갱신
-            self.member.last_visited = self.order.order_at  # 마지막 방문일 갱신
-            self.member.visit_count += 1  # 방문 횟수 증가
-            self.member.save()
+            if self.member:
+                if is_new and self.payment_status:
+                    self.member.total_spent += self.order.total_amount
+                    self.member.points += self.order.earned_points
+                    self.member.last_visited = self.order.order_at
+                    self.member.visit_count += 1
+                    self.member.save()
+
+                # 결제 취소 시
+                elif not is_new and prev_status is True and self.payment_status is False:
+                    self.member.total_spent -= self.order.total_amount
+                    self.member.points -= self.order.earned_points
+                    self.member.save()
 
     def __str__(self):
         return f"Payment {self.payment_id} for Order {self.order.order_id}"
-
