@@ -7,21 +7,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiosk | Products</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .video-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        video {
+            width: 400px;
+            height: 300px;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+
+        #capture-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .order-list {
+            width: 350px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .order-list h3 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .total {
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body class="kiosk-products">
     <!-- 헤더 추가 (로고 포함) -->
     <header>
-        <img src="{% static '/images/brand_logo.png' %}" alt="브랜드 로고" class="brand-logo">
+        <img src="{% static 'images/brand_logo.png' %}" alt="브랜드 로고" class="brand-logo">
     </header>
 
     <!-- 지점명 -->
     <div class="store-name">서초동점</div>
 
     <div class="container">
-        <!-- 왼쪽: 이미지 업로드 영역 -->
-        <div class="image-area">
-            <input type="file" id="file-input" accept="image/*">
-            <img id="preview" src="" alt="Uploaded image preview">
+        <!-- 왼쪽: 웹캠 화면 및 버튼 -->
+        <div class="video-container">
+            <video id="webcam" autoplay playsinline></video>
+            <button id="capture-btn">📸촬영</button>
         </div>
 
         <!-- 오른쪽: 주문 목록 -->
@@ -37,36 +100,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>소금빵</td>
-                        <td>3800</td>
-                        <td>2</td>
-                        <td>7600</td>
-                    </tr>
-                    <tr>
-                        <td>에멘탈소금빵</td>
-                        <td>4500</td>
-                        <td>1</td>
-                        <td>4500</td>
-                    </tr>
-                    <tr>
-                        <td>빠다코코넛꽈베기</td>
-                        <td>4500</td>
-                        <td>1</td>
-                        <td>4500</td>
-                    </tr>
-                    <tr>
-                        <td>먹물소금빵</td>
-                        <td>4200</td>
-                        <td>1</td>
-                        <td>4200</td>
-                    </tr>
-                    <tr>
-                        <td>후추소금빵</td>
-                        <td>4200</td>
-                        <td>1</td>
-                        <td>4200</td>
-                    </tr>
+                    <tr><td>소금빵</td><td>3800</td><td>2</td><td>7600</td></tr>
+                    <tr><td>에멘탈소금빵</td><td>4500</td><td>1</td><td>4500</td></tr>
+                    <tr><td>빠다코코넛꽈베기</td><td>4500</td><td>1</td><td>4500</td></tr>
+                    <tr><td>먹물소금빵</td><td>4200</td><td>1</td><td>4200</td></tr>
+                    <tr><td>후추소금빵</td><td>4200</td><td>1</td><td>4200</td></tr>
                 </tbody>
             </table>
             <div class="total">
@@ -76,19 +114,75 @@
         </div>
     </div>
 
-    <!-- 버튼 영역 -->
-    <div class="button-container">
-        <button class="yellow-button" id="reset-btn">다시 스캔</button>
-        <button class="blue-button">직원 호출</button>
-        <a href="{% url 'member' %}">
-            <button class="black-button">결제</button>
-        </a>
-    </div>
+    <!-- JavaScript -->
+    <script>
+const video = document.getElementById("webcam");
+const captureBtn = document.getElementById("capture-btn");
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
 
+const NGROK_URL = "https://d674-175-121-129-72.ngrok-free.app/predict/";
+
+// 📌 웹캠 활성화 (버튼 누르기 전에도 항상 표시)
+async function startWebcam() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+    } catch (error) {
+        console.error("🚨 웹캠 접근 실패:", error);
+        alert("웹캠을 사용할 수 없습니다. 브라우저 설정을 확인하세요.");
+    }
+}
+
+// 📌 캡처 버튼 클릭 시 실행
+captureBtn.addEventListener("click", async () => {
+    captureBtn.disabled = true;  // 버튼 비활성화
+    captureBtn.textContent = "🔄 추론 중...";
+
+    // 🔹 웹캠 프레임 캡처
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = canvas.toDataURL("image/jpeg");  // Base64 인코딩
+
+    // 🔹 FastAPI 추론 서버로 이미지 전송
+    try {
+        const response = await fetch(NGROK_URL, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ image: imageData }),
+            mode: "cors"
+        });
+
+        const result = await response.json();
+        
+        // 📌 결과 확인
+        console.log("📷 추론 결과:", result);
+
+        if (result?.prediction) {
+            alert("✅ 추론 성공!\n결과: " + JSON.stringify(result.prediction, null, 2));
+        } else {
+            alert("⚠️ 추론 실패! 서버 응답 오류");
+        }
+    } catch (error) {
+        console.error("🚨 추론 요청 오류:", error);
+        alert("🚨 서버 오류 발생!");
+    } finally {
+        captureBtn.disabled = false;  // 버튼 활성화
+        captureBtn.textContent = "📸 촬영";
+    }
+});
+
+// 📌 웹캠 실행
+startWebcam();
+
+    </script>
 
     <!-- JavaScript 파일 불러오기 -->
     <script src="{% static 'js/kiosk-imageUpload.js' %}"></script>
 
 </body>
-
 </html>
