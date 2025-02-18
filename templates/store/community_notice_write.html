@@ -1,0 +1,116 @@
+{% extends 'layout/store/base_store.html' %}
+{% load static %}
+
+{% block title %}Store | Community Write {% endblock %}
+{% block store_id %}store_id{% endblock %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+{% block content %}
+<style>
+    .notice-check {
+        justify-content: flex-start;
+        margin-bottom: 15px;
+    }
+
+    .notice-title label {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        align-self: flex-start;
+    }
+
+    .notice-title input {
+        height: 40px;
+        margin-bottom: 15px;
+    }
+
+    /* 콘텐츠 왼쪽 정렬 */
+    .content-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding-left: 15px;
+    }
+</style>
+
+<div class="content-container">
+    <!-- 공지사항 -->
+    <h3 class="align-self-center" style="margin-bottom: 50px; font-weight: bold;">공지사항</h3>
+
+    <!-- 공지 체크박스 -->
+    <div class="notice-check d-flex align-items-center w-75">
+        <input class="form-check-input me-2" type="checkbox" id="flexCheckBest">
+        <label class="form-check-label" for="flexCheckBest">[공지]</label>
+    </div>
+
+    <!-- 제목 입력 -->
+    <div class="notice-title d-flex flex-column w-75">
+        <label for="notice-title" class="form-label">제목</label>
+        <input type="text" id="notice-title" class="form-control" placeholder="제목을 입력하세요">
+    </div>
+
+    <!-- 텍스트 에디터 공지글 작성용 -->
+    <div class="notice-title d-flex flex-column w-75">
+        <label for="notice-title" class="form-label">내용</label>
+        <form method="post">
+            <textarea id="summernote" name="postContent"></textarea>
+        </form>
+    </div>
+</div>
+
+    <button type="button" class="btn btn-success" id="save-btn" style="margin-top: 15px; align-items: center">저장</button>
+
+{% endblock content %}
+
+{% block script %}
+<!-- jQuery 추가 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Summernote css/js 추가 -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script src="{% static 'js/summernote-ko-KR.js' %}"></script>
+<script src="{% static 'font' %}"></script>
+
+<script>
+$(document).ready(function() {
+    // Summernote 에디터 초기화
+    $('#summernote').summernote({
+        height: 400,
+        width: "100%",
+        lang: 'ko-KR',
+        styleWithCSS: true, // ✅ CSS 스타일을 직접 적용하도록 설정
+        toolbar: [
+            ['style', ['style']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+            ['color', ['color']],
+            ['table', ['table']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['picture', 'link', 'video']],
+            ['view', ['fullscreen', 'help']]
+        ],
+        fontNames: ['Arial', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '돋음체', '바탕체'],
+        fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72', '96'],
+        focus: true,
+        callbacks: {
+            onImageUpload: function (files) {
+                for (var i = 0; i < files.length; i++) {
+                    imageUploader(files[i], this);
+                }
+            }
+        }
+    });
+
+    // Summernote 내부 텍스트 왼쪽 정렬 및 폰트 스타일 적용 강제화
+    $('.note-editable').css({
+        'text-align': 'left',
+        'font-family': 'Arial, sans-serif !important',
+        'font-size': '14px !important'
+    });
+});
+</script>
+{% endblock script %}
+
