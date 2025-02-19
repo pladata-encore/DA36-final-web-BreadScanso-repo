@@ -6,10 +6,91 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% block content %}
+    <h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">공지사항</h3>
     
+    <!-- 검색 -->
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <input type="search" id="searchMember" placeholder="검색어를 입력해주세요" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+        <button id="search_button" type="button" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
+            검색
+        </button>
+    </div>
     
+    <!-- 공지사항 테이블 -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">번호</th>
+                <th scope="col">제목</th>
+                <th scope="col">작성자</th>
+                <th scope="col">등록일</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            <tr>
+                <td><input type="checkbox" class="member-checkbox"></td>
+                <th scope="row">1</th> <!-- 번호 -->
+                <td>멤버십 서비스 정책 변경 안내</td> <!-- 제목 -->
+                <td>지점 A</td> <!-- 작성자 -->
+                <td>2025-02-18</td> <!-- 등록일 -->
+            </tr>
+        </tbody>
+    </table> 
+    
+    <!-- 삭제 % 글쓰기 버튼 -->
+    <div class="notice-container">
+        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">삭제</a>
+        <a type="button" class="btn btn-success write-btn" onclick="location.href='{% url 'community_notice_write' %}'">글쓰기</a>
+    </div>
+    
+    <!-- 게시글 삭제 팝업창 -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="confirmSuccessLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmSuccessLabel">게시글 삭제 안내</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    정말로 삭제하시겠습니까?
+                </div>
+                <div class="modal-footer">
+                    <!-- 확인 버튼 -->
+                    <button type="button" class="btn btn-danger" id="finalConfirmButton">확인</button>
+                    <!-- 취소누르면 게시글 화면으로 return-->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.href='{% url 'community_notice' %}'">취소</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 페이지 네비게이션 (중앙) -->
+    <nav aria-label="Page navigation" style="margin-top:10%">
+        <ul class="pagination">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo; 이전</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-next">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">다음 &raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 {% endblock content %}
 
 {% block script %}
-
+<script>
+    document.getElementById("finalConfirmButton").addEventListener("click", function () {
+        // 실제 삭제 요청을 서버에 보낼 수 있도록 수정 필요
+        alert("삭제가 완료되었습니다.");
+        window.location.href = "{% url 'community_notice' %}"; // 삭제 후 이동할 페이지 설정
+    });
+</script>
 {% endblock script %}

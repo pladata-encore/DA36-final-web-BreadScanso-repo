@@ -13,16 +13,22 @@ def store_map(request):
     return render(request, 'store/store_map.html')  # 매장 안내
 
 def store_map_edit(request):
-    return render(request, 'store/store_map_edit.html')  # 매장 안내
+    return render(request, 'store/store_map_edit.html')  # 매장 안내 수정
 
 def store_event(request):
     return render(request, 'store/store_event.html')  # 이벤트
 
 def store_event_edit(request):
-    return render(request, 'store/store_event_edit.html')  # 이벤트
+    return render(request, 'store/store_event_edit.html')  # 이벤트 수정
 
 def community_notice(request):
     return render(request, 'store/community_notice.html')  # 커뮤니티/공지사항
+
+def community_notice_write(request):
+    return render(request, 'store/community_notice_write.html')  # 커뮤니티/공지사항 글쓰기
+
+def community_notice_modify(request, notice_id):
+    return render(request, 'store/community_notice_modify.html', {'notice_id': notice_id})  # 커뮤니티/공지사항 글쓰기
 
 def community_qna(request):
     return render(request, 'store/community_qna.html')  # 커뮤니티/qna
