@@ -3,7 +3,7 @@ from .settings import *
 import os
 
 # 운영환경에서는 반드시 False로 설정
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
   'eb-breadscanso2-env.eba-ivnsims9.ap-northeast-2.elasticbeanstalk.com', # eb 도메인
@@ -30,6 +30,10 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.breadscanso.shop",
     "https://breadscanso.shop"
 ]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
 
 
 
