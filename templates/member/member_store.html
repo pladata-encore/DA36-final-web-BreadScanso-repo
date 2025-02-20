@@ -5,6 +5,8 @@
 {% block title %}Store | Member {% endblock title %}
 {% block store_id%}store_id{% endblock store_id %}
 {% block content %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
     <hr/>
     <h3 style="margin-bottom: 50px;" class="text-center">회원관리</h3>
 
@@ -13,7 +15,7 @@
 
   <!-- 목록 버튼 (왼쪽 정렬) -->
   <div style="flex-shrink: 0;">
-    <button class="btn btn-success" type="button" onclick="location.href='{% url 'member_store' %}'">목록</button>
+    <a class="btn btn-success signup-btn" onclick="location.href='{% url 'member_store' %}'">목록</a>
   </div>
 
   <!-- 검색창 (오른쪽 정렬) -->
@@ -34,12 +36,12 @@
             <tr>
                 <th scope="col"></th>
                 <th scope="col">번호</th>
-                <th scope="col">회원명</th>
+                <th scope="col">*회원명</th>
                 <th scope="col">아이디</th>
-                <th scope="col">휴대폰번호</th>
-                <th scope="col">성별</th>
+                <th scope="col">*휴대폰번호</th>
+                <th scope="col">*성별</th>
                 <th scope="col">연령대</th>
-                <th scope="col">이메일</th>
+                <th scope="col">*이메일</th>
                 <th scope="col">방문횟수</th>
                 <th scope="col">총 결제액(원)</th>
                 <th scope="col">회원가입일</th>
@@ -54,19 +56,19 @@
                 <tr>
                     <td><input type="checkbox" class="member-checkbox" value="{{ member.member_id }}"></td>
                     <th scope="row">{{ forloop.counter }}</th> <!-- 목록 번호 -->
-                    <td data-field="name" contenteditable="false">{{ member.name }}</td> <!-- 이름 -->
+                    <td data-field="name" contenteditable="true">{{ member.name }}</td> <!-- 이름 -->
                     <td data-field="member_id" data-id="{{ member.member_id }}">{{ member.member_id }}</td> <!-- 아이디 -->
-                    <td data-field="phone_num" contenteditable="false">{{ member.phone_num }}</td> <!-- 휴대폰번호 -->
-                    <td data-field="sex" contenteditable="false">{{ member.sex }}</td> <!-- 성별 -->
-                    <td class="editable" data-field="age_group">{{ member.age_group }}</td> <!-- 연령대 -->
-                    <td data-field="email" contenteditable="false">{{ member.email }}</td> <!-- 이메일 -->
+                    <td data-field="phone_num" contenteditable="true">{{ member.phone_num }}</td> <!-- 휴대폰번호 -->
+                    <td data-field="sex" contenteditable="true">{{ member.sex }}</td> <!-- 성별 -->
+                    <td data-field="age_group">{{ member.age_group }}</td> <!-- 연령대 -->
+                    <td data-field="email" contenteditable="true">{{ member.email }}</td> <!-- 이메일 -->
                     <td>{{ member.visit_count }}</td> <!-- 방문횟수 -->
                     <td>{{ member.total_spent|intcomma }}</td> <!-- 총 결제액(천단위에 콤마 붙이기) -->
                     <td>{{ member.membership_date }}</td> <!-- 회원가입일 -->
                     <td>{{ member.last_visited|date:"Y/n/j" }}</td> <!-- 마지막 방문일(년/월/일 출력) -->
                     <td>{{ member.points|intcomma }}</td> <!-- 포인트 -->
                     <td>
-                        {% if member.profile_picture %}
+                        {% if member.profile_image %}
                             <img src="{{ member.profile_image.url }}" width="30">
                         {% else %}
                             null
@@ -83,6 +85,8 @@
             {% endfor %}
         </tbody>
     </table>
+
+
 
     <script>
       function toggleButton(button) {
@@ -108,11 +112,8 @@
     </div>
 
     <!-- 신규등록 버튼 (오른쪽 정렬) -->
-    <div style="flex-grow: 1; display: flex; justify-content: flex-end;">
-        <form method="post" class="d-flex" role="search" id="search-form">
-            {% csrf_token %}
-            <a type="button" class="btn btn-primary signup-btn" onclick="location.href='{% url 'signup' %}'">신규등록</a>
-        </form>
+    <div style="flex-shrink: 0;">
+        <a class="btn btn-primary signup-btn" onclick="location.href='{% url 'signup' %}'">신규등록</a>
     </div>
     </div>
 
