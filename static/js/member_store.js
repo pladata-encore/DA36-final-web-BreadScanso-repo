@@ -30,86 +30,47 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
 
-// 회원정보 수정/저장
-        function toggleButton(button, memberId) {
-    let row = button.closest('tr');  // 수정할 행을 찾음
-    let cells = row.querySelectorAll('td[data-field]');  // 해당 행의 td 요소들 찾기
+// 회원정보 수정 버튼 클릭 시 동작
+function toggleButton(button) {
+    const row = button.closest('tr'); // 버튼이 속한 행(tr)을 찾음
+    const cells = row.querySelectorAll('td'); // 해당 행의 모든 셀을 선택
 
     if (button.innerText === "수정") {
-        button.innerText = "저장";
-        button.classList.remove("btn-light");
-        button.classList.add("btn-secondary");
+    button.innerText = "저장"; // 버튼 텍스트 변경
+    button.classList.remove("btn-light");
+    button.classList.add("btn-secondary");
 
-        // input 필드로 변환 (내용을 편집 가능하도록)
-        cells.forEach(cell => {
-            if (cell.dataset.field !== "member_id") {  // 회원 아이디는 수정할 수 없으므로 제외
-                let value = cell.innerText.trim();
-                let input = document.createElement("input");
-                input.type = "text";
-                input.className = "form-control";
-                input.value = value;
-                cell.innerHTML = '';  // 기존 내용 지우고 input 추가
-                cell.appendChild(input);
-            }
-        });
-    } else {
-        button.innerText = "수정";
-        button.classList.remove("btn-secondary");
-        button.classList.add("btn-light");
+    // contenteditable을 true로 바꾸어 셀을 수정할 수 있게 함
+    cells.forEach(cell => {
+    if (cell.dataset.field) { // 데이터 필드가 있는 셀만 수정 가능하도록 처리
+    cell.contentEditable = true;
+    cell.style.backgroundColor = "#fff"; // 수정 중인 셀 배경색 변경 (선택 사항)
+}
+});
+} else {
+    button.innerText = "수정"; // 버튼 텍스트 변경
+    button.classList.remove("btn-secondary");
+    button.classList.add("btn-light");
 
-        // 수정된 값 저장
-        let updatedData = {};
-        cells.forEach(cell => {
-            if (cell.dataset.field !== "member_id") {
-                let input = cell.querySelector("input");
-                if (input) {
-                    updatedData[cell.dataset.field] = input.value;
-                    cell.innerHTML = input.value;  // 변경된 값으로 업데이트
-                }
-            }
-        });
+    // contenteditable을 false로 바꾸어 셀 수정 마무리
+    cells.forEach(cell => {
+    if (cell.dataset.field) {
+    cell.contentEditable = false;
+    cell.style.backgroundColor = ""; // 배경색 원래대로
+}
+});
 
-        // 서버에 데이터 전송 (AJAX 사용)
-        saveMemberData(memberId, updatedData);
-    }
+    // 수정된 데이터를 서버로 보내는 처리 추가 가능
+    saveChanges(row); // 여기서 row 데이터를 서버로 보내거나 처리
+}
 }
 
-function saveMemberData(memberId, data) {
-    fetch(`/update_member/${memberId}/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert("회원 정보가 성공적으로 업데이트되었습니다.");
-        } else {
-            alert("회원 정보 업데이트에 실패했습니다.");
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+// CSRF Token을 가져오는 함수 (Django에서 사용)
+function getCSRFToken() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    return csrfToken;
 }
 
-//         function toggleEdit(button) {
-//             let row = button.closest("tr"); // 해당 행 가져오기
-//             let editableFields = row.querySelectorAll("[data-field]");
-//
-//             editableFields.forEach(field => {
-//                 field.contentEditable = "true"; // 수정 가능하게 변경
-//                 field.style.backgroundColor = "#f8f9fa"; // 배경색 변경 (수정 중 표시)
-//             });
-//
-//             // 버튼 변경
-//             button.style.display = "none"; // 수정 버튼 숨기기
-//             let saveButton = row.querySelector(".save-btn");
-//             saveButton.style.display = "inline-block"; // 저장 버튼 보이기
-//         }
 
 // 회원 ID 가져오기
         function saveData(button) {
