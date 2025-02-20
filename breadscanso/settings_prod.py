@@ -3,7 +3,7 @@ from .settings import *
 import os
 
 # 운영환경에서는 반드시 False로 설정
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
   'eb-breadscanso2-env.eba-ivnsims9.ap-northeast-2.elasticbeanstalk.com', # eb 도메인
@@ -24,6 +24,12 @@ DATABASES = {
 }
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',] # 인증 백엔드 설정
+
+# CSRF(Cross-Site Request Forgery) 보호 정책
+CSRF_TRUSTED_ORIGINS = [
+    "https://www.breadscanso.shop",
+    "https://breadscanso.shop"
+]
 
 
 
