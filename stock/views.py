@@ -48,7 +48,34 @@ def stock_product_new(request):
     return render(request, 'stock/stock_product_new.html')  # 제품 신규등록
 
 def stock_ingredient(request):
-    return render(request, 'stock/stock_ingredient.html')  # 재료
+    store_filter = request.GET.get('store', '')
+    category_filter = request.GET.get('category', '')  # 수정된 부분
+    sort_by = request.GET.get('sort', 'item_id')  # 정렬 기준 (기본값: item_id)
+    order = request.GET.get('order', 'asc')  # 오름차순/내림차순 (기본값: asc)
+
+    items = Item.objects.all()
+    if store_filter:
+        items = items.filter(store=store_filter)
+    if category_filter:  # 카테고리 필터링
+        items = items.filter(category=category_filter)
+
+    if order == 'desc':
+        sort_by = f"-{sort_by}"
+    items = items.order_by(sort_by)
+    paginator = Paginator(items, 10)
+    page_number = request.GET.get('page', 1)
+    try:
+        page_number = int(page_number)
+        if page_number < 1:
+            page_number = 1
+    except ValueError:
+        page_number = 1
+    try:
+        page_obj = paginator.get_page(page_number)
+    except EmptyPage:
+        # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
+        page_obj = paginator.get_page(paginator.num_pages)
+    return render(request, 'stock/stock_ingredient.html', {'page_obj': page_obj})
 
 def stock_ingredient_edit(request):
     return render(request, 'stock/stock_ingredient_edit.html')  # 재료 수정
