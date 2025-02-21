@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from menu.models import Item
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from stock.models import Ingredient
+
 
 def stock_main(request):
     return render(request, 'stock/stock_main.html')  # 메인
@@ -49,20 +51,17 @@ def stock_product_new(request):
 
 def stock_ingredient(request):
     store_filter = request.GET.get('store', '')
-    category_filter = request.GET.get('category', '')  # 수정된 부분
-    sort_by = request.GET.get('sort', 'item_id')  # 정렬 기준 (기본값: item_id)
+    sort_by = request.GET.get('sort', 'ingredient_id')  # 정렬 기준
     order = request.GET.get('order', 'asc')  # 오름차순/내림차순 (기본값: asc)
 
-    items = Item.objects.all()
+    ingredients = Ingredient.objects.all()
     if store_filter:
-        items = items.filter(store=store_filter)
-    if category_filter:  # 카테고리 필터링
-        items = items.filter(category=category_filter)
+        ingredients = ingredients.filter(store=store_filter)
 
     if order == 'desc':
         sort_by = f"-{sort_by}"
-    items = items.order_by(sort_by)
-    paginator = Paginator(items, 10)
+    ingredients = ingredients.order_by(sort_by)
+    paginator = Paginator(ingredients, 10)
     page_number = request.GET.get('page', 1)
     try:
         page_number = int(page_number)
