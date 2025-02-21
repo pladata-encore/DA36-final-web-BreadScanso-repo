@@ -15,7 +15,7 @@
 
   <!-- 목록 버튼 (왼쪽 정렬) -->
   <div style="flex-shrink: 0;">
-    <a class="btn btn-success signup-btn" onclick="location.href='{% url 'member:member_store' %}'">목록</a>
+    <a class="btn btn-success signup-btn" onclick="location.href='{% url 'store:member_store' %}'">목록</a>
   </div>
 
   <!-- 검색창 (오른쪽 정렬) -->
@@ -132,7 +132,7 @@
                 <!-- 확인 버튼 -->
                 <button type="button" class="btn btn-danger" id="finalConfirmButton">확인</button>
                 <!-- 취소누르면 회원탈퇴 화면으로 return-->
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.href='{% url 'member:member_store' %}'">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.href='{% url 'store:member_store' %}'">취소</button>
             </div>
         </div>
     </div>
@@ -150,7 +150,7 @@
                     회원 삭제가 완료되었습니다.
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="goHomeButton" onclick="location.href='{% url 'member:member_store' %}'">확인</button>
+                    <button type="button" class="btn btn-primary" id="goHomeButton" onclick="location.href='{% url 'store:member_store' %}'">확인</button>
                 </div>
             </div>
         </div>
