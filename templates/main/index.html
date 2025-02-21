@@ -37,7 +37,7 @@
         <div class="text-end" style="background-color: #b3997d;">
             <a href="{% url 'kiosk_main' %}" class="btn btn-light">KIOSK</a>
             <a href="{% url 'sales_main' %}" class="btn btn-light">매장페이지</a>
-            <a href="{% url 'member_page' %}" class="btn btn-light">마이페이지</a>
+            <a href="{% url 'member:member_page' %}" class="btn btn-light">마이페이지</a>
         </div>
         <div class="logo-container" style="background-color: #b3997d;">
             <a href="/brand" class="btn">브랜드소개</a>
@@ -58,7 +58,7 @@
             </div>
 
             {% if user.is_authenticated %}
-                <a href="{% url 'member_page' %}" class="btn btn-light">마이페이지</a>
+                <a href="{% url 'member:member_page' %}" class="btn btn-light">마이페이지</a>
                 
                 <!-- 로그아웃 버튼 (POST)-->
                 <form action="{% url 'main:logout' %}" method="POST" style="display: inline-block;">

@@ -22,8 +22,8 @@
         <img src="{% static 'images/dong.png' %}" alt="프로필 사진">
         <p>환영합니다, {{ member.name }}님</p>
         <div class="member-page-buttons">
-            <button type="button" class="btn btn-light" onclick="location.href='{% url 'member_edit' %}'">회원정보 수정</button>
-            <button type="button" class="btn btn-light" onclick="location.href='{% url 'member_pw' %}'">비밀번호 변경</button>
+            <button type="button" class="btn btn-light" onclick="location.href='{% url 'member:member_edit' %}'">회원정보 수정</button>
+            <button type="button" class="btn btn-light" onclick="location.href='{% url 'member:member_pw' %}'">비밀번호 변경</button>
         </div>
     </div>
 
@@ -40,7 +40,7 @@
 
 <!-- 회원 탈퇴 버튼 -> 회원탈퇴 페이지로 이동 -->
 <div class="text-end">
-    <button type="button" class="btn btn-danger" onclick="location.href='{% url 'member_delete' %}'">회원탈퇴</button>
+    <button type="button" class="btn btn-danger" onclick="location.href='{% url 'member:member_delete' %}'">회원탈퇴</button>
 </div>
 
 </body>
