@@ -69,3 +69,58 @@ rowCheckboxes.forEach(function(checkbox) {
     });
 });
 
+// ========================================================================
+
+// 재고 수정
+
+document.querySelectorAll('.btn-warning').forEach(button => {
+    button.addEventListener('click', function(event) {
+        const button = event.target;
+        if (!button || !button.closest('tr')) return;
+
+        const row = button.closest('tr'); // 버튼이 포함된 행
+        const rowId = row.querySelector('td:nth-child(2)').innerText; // 재료 ID
+        const rowName = row.querySelector('td:nth-child(3)').innerText; // 재료명
+        const stockCell = row.querySelector('td:nth-child(5)'); // 재고
+        const currentStock = stockCell.innerText; // 현재 재고 수량
+
+        const newStock = prompt(`${rowName}의 새로운 재고를 입력하세요:`, currentStock);
+
+        if (newStock !== null && !isNaN(newStock)) {
+            updateStock_ingredient(rowId, newStock, stockCell); // 재고 업데이트 함수 호출
+        } else {
+            alert('유효한 수량을 입력해주세요.');
+        }
+    });
+});
+
+
+function updateStock_ingredient(ingredientID, newStock, stockCell) {
+  fetch('product/update_stock_ingredient/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCSRFToken(),
+    },
+    body: JSON.stringify({ 'ingredient_id': ingredientID, 'new_stock': newStock })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById(`stock-${ingredientID}`).innerText = newStock;
+      alert('재고가 변경되었습니다.');
+    } else {
+      alert('재고 변경에 실패하였습니다.');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('서버 오류가 발생했습니다.');
+  });
+}
+
+function getCSRFToken() {
+  let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  return csrfToken;
+}
+
