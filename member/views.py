@@ -10,25 +10,17 @@ from django.contrib import messages
 def member_main(request):
     return render(request, 'member/member_main.html')  # 템플릿 파일 경로 지정
 
-# 점주 회원관리
-def member_store(request):
-    members = Member.objects.all() # 모든 회원 정보 가져오기
-    return render(request, 'member/member_store.html', {'members': members})
-
 # 회원 마이페이지
 def member_page(request):
     if not request.user.is_authenticated:
         messages.error(request, "로그인이 필요합니다.")
         return redirect("main:login")
-
     try:
         member = Member.objects.get(user=request.user)
+        return render(request, "member/member_page.html", {"member": member})
     except Member.DoesNotExist:
-        messages.error(request, "회원 정보가 없습니다.")
+        messages.error(request, "회원 정보가 존재하지 않습니다.")
         return redirect("main:index")
-
-    return render(request, "member/member_page.html", {"member": member})
-
 
 # 회원정보수정
 def member_edit(request):
