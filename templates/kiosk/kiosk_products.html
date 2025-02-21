@@ -114,6 +114,18 @@
         </div>
     </div>
 
+    <!-- 버튼 영역 -->
+    <div class="button-container">
+{#        <button class="yellow-button" id="reset-btn">다시 스캔</button>#}
+        <button class="blue-button">직원 호출</button>
+        <a href="{% url 'member' %}">
+            <button class="black-button">결제</button>
+        </a>
+    </div>
+
+
+
+
     <!-- JavaScript -->
     <script> // 주석으로 local서버 | ec2서버 전환
     
@@ -247,7 +259,7 @@ startWebcam();
     </script>
 
     <!-- JavaScript 파일 불러오기 -->
-    <script src="{% static 'js/kiosk-imageUpload.js' %}"></script>
+{#    <script src="{% static 'js/kiosk-imageUpload.js' %}"></script>#}
 
 </body>
 </html>
