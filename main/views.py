@@ -91,15 +91,3 @@ def login_find(request):
             return redirect("main:login_find")
 
     return render(request, "main/login_find.html")
-
-# 🔥 각 회원의 마이페이지로 이동
-def member_page(request):
-    if not request.user.is_authenticated:
-        messages.error(request, "로그인이 필요합니다.")
-        return redirect("main:login")
-    try:
-        member = Member.objects.get(user=request.user)
-        return render(request, "member/member_page.html", {"member": member})
-    except Member.DoesNotExist:
-        messages.error(request, "회원 정보가 존재하지 않습니다.")
-        return redirect("main:index")

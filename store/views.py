@@ -5,10 +5,15 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, resolve_url
 from django.db.models import Q
 from store.models import Question, QuestionForm, Answer
-
+from member.models import Member
 
 def store_main(request):
     return render(request, 'store/store_main.html')  # /store/
+
+# 점주 회원관리
+def member_store(request):
+    members = Member.objects.all() # 모든 회원 정보 가져오기
+    return render(request, 'member/member_store.html', {'members': members})
 
 def store_home_edit(request):
     return render(request, 'store/store_home_edit.html')  # 홈 화면 수정
