@@ -7,15 +7,13 @@
 
 {% block content %}
     <h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">공지사항</h3>
-    
+
     <!-- 검색 -->
     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
         <input type="search" id="searchMember" placeholder="검색어를 입력해주세요" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
-        <button id="search_button" type="button" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
-            검색
-        </button>
+        <button id="search_button" type="button" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
     </div>
-    
+
     <!-- 공지사항 테이블 -->
     <table class="table">
         <thead>
@@ -36,14 +34,14 @@
                 <td>2025-02-18</td> <!-- 등록일 -->
             </tr>
         </tbody>
-    </table> 
-    
+    </table>
+
     <!-- 삭제 % 글쓰기 버튼 -->
     <div class="notice-container">
         <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">삭제</a>
-        <a type="button" class="btn btn-success write-btn" onclick="location.href='{% url 'community_notice_write' %}'">글쓰기</a>
+        <a type="button" class="btn btn-success write-btn" onclick="location.href='{% url 'store:community_notice_write' %}'">글쓰기</a>
     </div>
-    
+
     <!-- 게시글 삭제 팝업창 -->
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="confirmSuccessLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -59,12 +57,12 @@
                     <!-- 확인 버튼 -->
                     <button type="button" class="btn btn-danger" id="finalConfirmButton">확인</button>
                     <!-- 취소누르면 게시글 화면으로 return-->
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.href='{% url 'community_notice' %}'">취소</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.href='{% url 'store:community_notice' %}'">취소</button>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- 페이지 네비게이션 (중앙) -->
     <nav aria-label="Page navigation" style="margin-top:10%">
         <ul class="pagination">
@@ -90,7 +88,7 @@
     document.getElementById("finalConfirmButton").addEventListener("click", function () {
         // 실제 삭제 요청을 서버에 보낼 수 있도록 수정 필요
         alert("삭제가 완료되었습니다.");
-        window.location.href = "{% url 'community_notice' %}"; // 삭제 후 이동할 페이지 설정
+        window.location.href = "{% url 'store:community_notice' %}"; // 삭제 후 이동할 페이지 설정
     });
 </script>
 {% endblock script %}
