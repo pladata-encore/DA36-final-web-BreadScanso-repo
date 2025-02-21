@@ -1,8 +1,12 @@
 from django.shortcuts import render
+from django.views.decorators.http import require_POST
+
 from menu.models import Item
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from stock.models import Ingredient
-
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 def stock_main(request):
     return render(request, 'stock/stock_main.html')  # 메인
@@ -41,6 +45,25 @@ def stock_product(request):
         # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
     return render(request, 'stock/stock_product.html', {'page_obj': page_obj})
+
+
+@csrf_exempt
+def update_stock(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            item_id = data.get('item_id')
+            new_stock = int(data.get('new_stock'))
+
+            # 재고 수량 업데이트
+            item = Item.objects.get(item_id=item_id)
+            item.stock = new_stock
+            item.save()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+
 
 
 def stock_product_edit(request):
