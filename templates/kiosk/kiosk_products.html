@@ -129,8 +129,7 @@
     <!-- JavaScript -->
     <script> // 주석으로 local서버 | ec2서버 전환
     
-// local server    
-// local server    
+// local server
 const video = document.getElementById("webcam");
 const captureBtn = document.getElementById("capture-btn");
 const canvas = document.createElement("canvas");
@@ -164,7 +163,7 @@ captureBtn.addEventListener("click", async () => {
     try {
         const response = await fetch(NGROK_URL, {
             method: "POST",
-            headers: { 
+            headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
@@ -173,18 +172,30 @@ captureBtn.addEventListener("click", async () => {
         });
 
         const result = await response.json();
-        
+
         // 📌 결과 확인
         console.log("📷 추론 결과:", result);
 
-        if (result?.prediction) {
-            alert("✅ 추론 성공!\n결과: " + JSON.stringify(result.prediction, null, 2));
+        // 🔹 JSON 데이터에서 상품명(name)과 확률(confidence)만 추출
+        let item_names = [];         // 상품명 리스트
+        let item_confidences = [];   // 확률 리스트
+
+        if (result?.prediction && Array.isArray(result.prediction)) {
+            result.prediction.forEach(item => {
+                item_names.push(item.name);
+                item_confidences.push(item.confidence);
+            });
+
+            // ✅ 콘솔 출력 (디버깅 용도)
+            console.log("📌 상품명 리스트:", item_names);
+            console.log("📊 확률 리스트:", item_confidences);
         } else {
-            alert("⚠️ 추론 실패! 서버 응답 오류");
+            console.error("❌ 예측된 항목이 없습니다.");
         }
+            alert(item_names[0] + item_confidences[0])
+
     } catch (error) {
         console.error("🚨 추론 요청 오류:", error);
-        alert("🚨 서버 오류 발생!");
     } finally {
         captureBtn.disabled = false;  // 버튼 활성화
         captureBtn.textContent = "📸 촬영";
@@ -193,7 +204,9 @@ captureBtn.addEventListener("click", async () => {
 
 // 📌 웹캠 실행
 startWebcam();
-/*    
+
+
+/*
     // ec2
 const video = document.getElementById("webcam");
 const captureBtn = document.getElementById("capture-btn");
