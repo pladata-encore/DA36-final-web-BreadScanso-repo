@@ -1,10 +1,10 @@
 from django.db import models
-
+from member.models import Member
 # Create your models here.
 class Notice(models.Model):  # 공지사항 글 테이블
     notice_id = models.AutoField(primary_key=True)  # 공지사항 아이디 (PK)
     title = models.CharField(max_length=30)  # 제목
-    member = models.ForeignKey('Member', on_delete=models.SET_NULL, null=True)  # 회원 아이디 (FK)
+    member = models.ForeignKey('member.Member', on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)  # 등록일시
     updated_at = models.DateTimeField(auto_now=True)  # 수정일시
     content = models.TextField()  # 내용
