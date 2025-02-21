@@ -99,6 +99,26 @@ def stock_ingredient(request):
         page_obj = paginator.get_page(paginator.num_pages)
     return render(request, 'stock/stock_ingredient.html', {'page_obj': page_obj})
 
+@csrf_exempt
+def update_stock_ingredient(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            ingredient_id = data.get('ingredient_id')
+            new_stock = int(data.get('new_stock'))
+
+            # 재고 수량 업데이트
+            ingredient = Ingredient.objects.get(ingredient_id=ingredient_id)
+            ingredient.stock = new_stock
+            ingredient.save()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+
+
+
 def stock_ingredient_edit(request):
     return render(request, 'stock/stock_ingredient_edit.html')  # 재료 수정
 
