@@ -10,7 +10,7 @@ def index(request):
 
 def signup(request):
     if request.method == "POST":
-        user_id = request.POST.get('user_id')
+        member_id = request.POST.get('user_id')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
         name = request.POST.get('name')
@@ -21,19 +21,19 @@ def signup(request):
 
         if password1 != password2:
             messages.error(request, '비밀번호가 일치하지 않습니다.')
-            return render(request, 'main/signup.html', {'user_id': user_id, 'name': name, 'phone_num': phone_num, 'email': email})
+            return render(request, 'main/signup.html', {'user_id': member_id, 'name': name, 'phone_num': phone_num, 'email': email})
 
-        if User.objects.filter(username=user_id).exists() or Member.objects.filter(member_id=user_id).exists():
+        if User.objects.filter(username=member_id).exists() or Member.objects.filter(member_id=member_id).exists():
             messages.error(request, '이미 존재하는 아이디입니다.')
-            return render(request, "main/signup.html", {'user_id': user_id, 'name': name, 'phone_num': phone_num, 'email': email})
+            return render(request, "main/signup.html", {'user_id': member_id, 'name': name, 'phone_num': phone_num, 'email': email})
 
         # User 모델에 회원 생성
-        user = User.objects.create_user(username=user_id, email=email, password=password1)
+        user = User.objects.create_user(username=member_id, email=email, password=password1)
 
         # Member 모델에 회원 정보 저장 + User 연결
         member = Member.objects.create(
             user=user,
-            member_id=user_id,
+            member_id=member_id,
             name=name,
             phone_num=phone_num,
             email=email,
@@ -72,8 +72,8 @@ def user_logout(request):
 
 
 def check_user_id(request):
-    user_id = request.GET.get('user_id', '')
-    exists = User.objects.filter(username=user_id).exists() or Member.objects.filter(member_id=user_id).exists()
+    member_id = request.GET.get('user_id', '')
+    exists = User.objects.filter(username=member_id).exists() or Member.objects.filter(member_id=member_id).exists()
     return JsonResponse({"exists": exists})
 
 def login_find(request):
