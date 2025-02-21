@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.http import JsonResponse
+from member.models import Member
+
 
 def kiosk_main(request):
     return render(request, 'kiosk/kiosk_main.html')  # kiosk_main 템플릿 파일 경로 지정
@@ -21,4 +24,14 @@ def payment_method(request):
 def payment_completed(request):
     return render(request, 'kiosk/kiosk_payment_completed.html')  # kiosk_결제완료/영수증 템플릿 파일 경로 지정
 
+
+def check_phone_number(request):
+    phone_num = request.GET.get("phone_num")  # GET 방식으로 전화번호 받기
+
+    if phone_num:
+        # 회원이 존재하는지 확인
+        exists = Member.objects.filter(phone_num=phone_num).exists()
+        return JsonResponse({"is_member": exists})
+    else:
+        return JsonResponse({"is_member": False})
 
