@@ -115,15 +115,81 @@
     </div>
 
     <!-- JavaScript -->
-    <script>
+    <script> // 주석으로 local서버 | ec2서버 전환
+    
+// local server    
+{#const video = document.getElementById("webcam");#}
+{#const captureBtn = document.getElementById("capture-btn");#}
+{#const canvas = document.createElement("canvas");#}
+{#const ctx = canvas.getContext("2d");#}
+{##}
+{#const NGROK_URL = "https://d674-175-121-129-72.ngrok-free.app/predict/";#}
+{##}
+{#// 📌 웹캠 활성화 (버튼 누르기 전에도 항상 표시)#}
+{#async function startWebcam() {#}
+{#    try {#}
+{#        const stream = await navigator.mediaDevices.getUserMedia({ video: true });#}
+{#        video.srcObject = stream;#}
+{#    } catch (error) {#}
+{#        console.error("🚨 웹캠 접근 실패:", error);#}
+{#        alert("웹캠을 사용할 수 없습니다. 브라우저 설정을 확인하세요.");#}
+{#    }#}
+// {#}#}
+{##}
+{#// 📌 캡처 버튼 클릭 시 실행#}
+{#captureBtn.addEventListener("click", async () => {#}
+{#    captureBtn.disabled = true;  // 버튼 비활성화#}
+{#    captureBtn.textContent = "🔄 추론 중...";#}
+{##}
+{#    // 🔹 웹캠 프레임 캡처#}
+{#    canvas.width = video.videoWidth;#}
+{#    canvas.height = video.videoHeight;#}
+{#    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);#}
+{#    const imageData = canvas.toDataURL("image/jpeg");  // Base64 인코딩#}
+{##}
+{#    // 🔹 FastAPI 추론 서버로 이미지 전송#}
+{#    try {#}
+{#        const response = await fetch(NGROK_URL, {#}
+{#            method: "POST",#}
+{#            headers: { #}
+{#                "Content-Type": "application/json",#}
+{#                "Accept": "application/json"#}
+{#            },#}
+{#            body: JSON.stringify({ image: imageData }),#}
+{#            mode: "cors"#}
+{#        });#}
+{##}
+{#        const result = await response.json();#}
+{#        #}
+{#        // 📌 결과 확인#}
+{#        console.log("📷 추론 결과:", result);#}
+{##}
+{#        if (result?.prediction) {#}
+{#            alert("✅ 추론 성공!\n결과: " + JSON.stringify(result.prediction, null, 2));#}
+{#        } else {#}
+{#            alert("⚠️ 추론 실패! 서버 응답 오류");#}
+{#        }#}
+{#    } catch (error) {#}
+{#        console.error("🚨 추론 요청 오류:", error);#}
+{#        alert("🚨 서버 오류 발생!");#}
+{#    } finally {#}
+{#        captureBtn.disabled = false;  // 버튼 활성화#}
+{#        captureBtn.textContent = "📸 촬영";#}
+{#    }#}
+// {#});#}
+{##}
+{#// 📌 웹캠 실행#}
+{#startWebcam();#}
+    
+    // ec2
 const video = document.getElementById("webcam");
 const captureBtn = document.getElementById("capture-btn");
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
 
-const NGROK_URL = "https://d674-175-121-129-72.ngrok-free.app/predict/";
+const EC2_PREDICT_URL = "http://3.38.150.51:8001/predict/";
 
-// 📌 웹캠 활성화 (버튼 누르기 전에도 항상 표시)
+// 📌 웹캠 활성화
 async function startWebcam() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -136,34 +202,32 @@ async function startWebcam() {
 
 // 📌 캡처 버튼 클릭 시 실행
 captureBtn.addEventListener("click", async () => {
-    captureBtn.disabled = true;  // 버튼 비활성화
+    captureBtn.disabled = true;
     captureBtn.textContent = "🔄 추론 중...";
 
-    // 🔹 웹캠 프레임 캡처
+    // 웹캠 이미지 캡처
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = canvas.toDataURL("image/jpeg");  // Base64 인코딩
+    const imageData = canvas.toDataURL("image/jpeg");
 
-    // 🔹 FastAPI 추론 서버로 이미지 전송
+    // FastAPI로 전송
     try {
-        const response = await fetch(NGROK_URL, {
+        const response = await fetch(EC2_PREDICT_URL, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
-            body: JSON.stringify({ image: imageData }),
+            body: JSON.stringify({ file: imageData }),
             mode: "cors"
         });
 
         const result = await response.json();
-        
-        // 📌 결과 확인
         console.log("📷 추론 결과:", result);
 
-        if (result?.prediction) {
-            alert("✅ 추론 성공!\n결과: " + JSON.stringify(result.prediction, null, 2));
+        if (result?.predictions) {
+            alert("✅ 추론 성공!\n결과: " + JSON.stringify(result.predictions, null, 2));
         } else {
             alert("⚠️ 추론 실패! 서버 응답 오류");
         }
@@ -171,7 +235,7 @@ captureBtn.addEventListener("click", async () => {
         console.error("🚨 추론 요청 오류:", error);
         alert("🚨 서버 오류 발생!");
     } finally {
-        captureBtn.disabled = false;  // 버튼 활성화
+        captureBtn.disabled = false;
         captureBtn.textContent = "📸 촬영";
     }
 });
