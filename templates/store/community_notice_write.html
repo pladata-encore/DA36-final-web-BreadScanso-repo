@@ -77,7 +77,7 @@
       <div class="modal-body">저장하시겠습니까?</div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary" id="confirm-save-btn" onclick="location.href='{% url 'community_notice_modify' notice_id=notice.id|default:"0" %}'">확인</button>
+        <button type="button" class="btn btn-primary" id="confirm-save-btn" onclick="location.href='{% url 'store:community_notice_modify' notice_id=notice.id|default:"0" %}'">확인</button>
       </div>
     </div>
   </div>

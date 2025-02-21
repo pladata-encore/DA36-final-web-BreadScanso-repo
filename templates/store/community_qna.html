@@ -1,15 +1,129 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | Community_qna {% endblock %}
+{% block title %}Store | Community QnA {% endblock %}
 {% block store_id %}store_id{% endblock %}
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% block content %}
-    
-    
+	<h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">QnA</h3>
+    {# 검색어 자동완성 #}
+    <div class="container d-flex justify-content-end mb-1">
+        <form class="d-flex col-6" role="search">
+            <input class="form-control" type="search" id="question-search" placeholder="제목/내용을 검색하세요..." aria-label="Search" autocomplete="off">
+        </form>
+    </div>
+    <div class="container my-1">
+{#        table.table>thead>tr.table-dark>th*4#}
+        <table class="table table-striped">
+            <thead>
+            <tr class="table-dark">
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일시</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for question in page_obj %}
+                <tr>
+                    <td>{{ question.id }}</td>
+                    <td>
+                        {# /qna/question/2/ #}
+                        <a href="{% url 'store:question_detail' question_id=question.id %}">{{ question.subject }}</a>
+                        {# 질문별 답변개수 출력 #}
+                        {% if question.answer_set.count > 0 %}
+                            <span class="badge text-bg-info">{{ question.answer_set.count }}</span>
+                        {% endif %} 
+                    </td>
+                    <td>{{ question.author|default:'' }}</td>
+                    <td>{{ question.created_at }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">질문이 존재하지 않습니다.</td>
+                </tr>
+            {% endfor %}
+
+
+            </tbody>
+        </table>
+    </div>
+    <!-- 페이징 처리 시작 -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <!-- 이전페이지 영역 시작 -->
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'qna:index' %}?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">Previous</a>
+                </li>
+            {% endif %}
+            <!-- 이전페이지 영역 끝 -->
+        
+            <!-- 페이지넘버 영역 시작 -->
+            {% for page_number in page_obj.paginator.page_range %}
+                {# 현재페이지 기준 앞뒤 3개까지만 표시 (4 ~ 7 링크 표시) #}
+                {% if page_number >= page_obj.number|add:-3 and page_number <= page_obj.number|add:3 %}
+                    {% if page_number == page_obj.number %}
+                        {# 현재페이지인 경우 #}
+                        <li class="page-item active"><a class="page-link" href="#">{{ page_number }}</a></li>
+                    {% else %}
+                        {# 현재페이지가 아닌 경우 #}
+                        <li class="page-item">
+                            <a class="page-link" href="{% url 'qna:index' %}?page={{ page_number }}">{{ page_number }}</a>
+                        </li>		
+                    {% endif %} 
+                {% endif %}
+                
+            {% endfor %}
+            <!-- 페이지넘버 영역 끝 -->
+
+            <!-- 다음페이지 영역 시작 -->
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'qna:index' %}?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            {% endif %}
+            <!-- 다음페이지 영역 끝 -->
+        </ul>
+    </nav>
+    <!-- 페이징 처리 끝 -->
+
+    <a href="{% url 'store:question_create' %}" class="btn btn-primary">질문 등록</a>
 {% endblock content %}
 
 {% block script %}
-
-{% endblock script %}
+    <!-- 검색어 자동완성 관련 jquery.js, bootstrap-autocomplete.js -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="{% static 'js/bootstrap-autocomplete.js' %}"></script>
+    <script>
+        let results;
+        /**
+         * bootstrap-autocomplete api
+         * https://iqbalfn.github.io/bootstrap-autocomplete/
+         */
+        $('#question-search').autocomplete({
+            filter: '{% url 'store:question_search' %}?query=#QUERY#',
+            preProcess(response){
+                // 검색결과를 autocomplete형식에 맞게 가공
+                results = response.results; // 전연변수 results에 임시로 저장해두고, onPick에서 사용
+                return response.results.map((item) => item.text); // text만 추출해서 배열로 리턴
+            },
+            onPick(input, item) {
+                // 사용자가 주어진 결과를 선택했을때, 해당 질문의 상세페이지로 이동
+                console.log('onPick', input, item); // input#question-search, item(드랍다운으로 제공된 a태그객체)
+                const {id} = results.find((result) => result.text === item.textContent);
+                console.log('id = ', id);
+                location.href = `/qna/question/${id}/`;
+            }
+        });
+    </script>
+{% endblock %}
