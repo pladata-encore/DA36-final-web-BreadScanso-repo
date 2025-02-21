@@ -1,11 +1,15 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | Product{% endblock %}
-{% block store_id %}store_id{% endblock %}
+{% block title %}Store | Stock{% endblock title %}
+{% block store_id %}store_id{% endblock store_id %}
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% block content %}
+
+    <hr/>
+    <h3 style="margin-bottom: 50px;" class="text-center">재고관리 - 제품</h3>
+
 <style>
 /* 기존 CSS 스타일 유지 */
 .stock-product-table table {
@@ -23,23 +27,7 @@
 .stock-product-table .checkbox-column {
     width: 50px;
 }
-.stock-product-table th:nth-child(2), .stock-product-table td:nth-child(2) {
-    width: 110px;
-}
-.stock-product-table th:nth-child(3), .stock-product-table td:nth-child(3) {
-    width: 300px;
-}
-.stock-product-table th:nth-child(4), .stock-product-table td:nth-child(4) {
-    width: 150px;
-}
-.stock-product-table th:nth-child(5), .stock-product-table td:nth-child(5) {
-    width: 150px;
-}
-#search-container {
-    position: absolute;
-    top: 150px;
-    right: 20px;
-}
+
 .stock-product-table tbody tr {
     cursor: pointer;
 }
@@ -48,12 +36,17 @@
 }
 </style>
 
-<!-- 검색창 -->
-<div class="d-flex justify-content-end mt-3" id="search-container">
-  <form class="d-flex" role="search" id="search-form">
-    <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success" type="submit">Search</button>
-  </form>
+<!-- 버튼과 검색창을 한 줄에 배치 -->
+<div class="d-flex justify-content-between align-items-center mt-3 mb-4" style="width: 100%;"> 
+
+  <!-- 검색창 (오른쪽 정렬) -->
+  <div style="flex-grow: 1; display: flex; justify-content: flex-end;">
+    <form method="post" class="d-flex" role="search" id="search-form">
+      {% csrf_token %}
+      <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="제품명을 입력하세요" aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+      <button id="search_button" type="submit" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
+    </form>
+  </div>
 </div>
 
 <!-- 테이블 -->
@@ -96,14 +89,11 @@
 </table>
 
 <div class="d-flex justify-content-between align-items-center mt-3">
-    <!-- 삭제 버튼 (왼쪽) -->
-    <button type="button" class="btn btn-danger" id="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">삭제</button>
-    
     <!-- 페이지 네비게이션 (중앙) -->
     <nav aria-label="Page navigation">
         <ul class="pagination mb-0">
             <!-- 이전 버튼 -->
-            <li class="page-item {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
+            <li class="page-product {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
                 {% if page_obj.has_previous %}
                     <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
                         <span aria-hidden="true">&laquo; 이전</span>
@@ -117,13 +107,13 @@
 
             <!-- 페이지 번호들 -->
             {% for num in page_obj.paginator.page_range %}
-                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <li class="page-product {% if page_obj.number == num %}active{% endif %}">
                     <a class="page-link" href="?page={{ num }}">{{ num }}</a>
                 </li>
             {% endfor %}
 
             <!-- 다음 버튼 -->
-            <li class="page-item {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
+            <li class="page-product {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
                 {% if page_obj.has_next %}
                     <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
                         <span aria-hidden="true">다음 &raquo;</span>
@@ -136,11 +126,7 @@
             </li>
         </ul>
     </nav>
-
-    <!-- 신규등록 버튼 (오른쪽) -->
-    <button type="button" class="btn btn-info" id="new-register-btn">신규등록</button>
 </div>
-
 
 {% endblock content %}
 
