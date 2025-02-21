@@ -120,9 +120,9 @@ function updateStock(itemId, newStock, stockCell) {
     if (data.success) {
       // stockCell.innerText = newStock;
       document.getElementById(`stock-${itemId}`).innerText = newStock;
-      alert('재고 수량이 업데이트되었습니다.');
+      alert('재고가 변경되었습니다.');
     } else {
-      alert('재고 수량 업데이트에 실패했습니다.');
+      alert('재고 변경에 실패하였습니다.');
     }
   })
   .catch(error => {
