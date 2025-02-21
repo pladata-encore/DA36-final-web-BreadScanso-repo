@@ -1,9 +1,16 @@
 from django.db import models
 
 # Create your models here.
+class Notice(models.Model):  # 공지사항 글 테이블
+    notice_id = models.AutoField(primary_key=True)  # 공지사항 아이디 (PK)
+    title = models.CharField(max_length=30)  # 제목
+    member = models.ForeignKey('Member', on_delete=models.SET_NULL, null=True)  # 회원 아이디 (FK)
+    created_at = models.DateTimeField(auto_now_add=True)  # 등록일시
+    updated_at = models.DateTimeField(auto_now=True)  # 수정일시
+    content = models.TextField()  # 내용
+    view_count = models.IntegerField(default=0)  # 조회수
+    pinned = models.BooleanField(default=False)  # 상단 고정 여부
+    store = models.CharField(max_length=50, null=True, choices=[("A", "Store A"), ("B", "Store B")])  # 매장
 
-class Notice(models.Model):
-    title = models.CharField(max_length=255)  # 공지 제목
-    content = models.TextField()  # 공지 내용
-    created_at = models.DateTimeField(auto_now_add=True)  # 생성 날짜
-    updated_at = models.DateTimeField(auto_now=True)  # 수정 날짜
+    def __str__(self):
+        return f"공지사항 {self.notice_id} - {self.title}"
