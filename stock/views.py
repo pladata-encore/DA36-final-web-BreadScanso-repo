@@ -99,25 +99,38 @@ def stock_ingredient(request):
         page_obj = paginator.get_page(paginator.num_pages)
     return render(request, 'stock/stock_ingredient.html', {'page_obj': page_obj})
 
-@csrf_exempt
+@csrf_exempt  # CSRF 인증을 비활성화하거나 활성화하는 방식
 def update_stock_ingredient(request):
     if request.method == 'POST':
         try:
+            # POST로 넘어오는 데이터
             data = json.loads(request.body)
-            ingredient_id = data.get('ingredient_id')
-            new_stock = int(data.get('new_stock'))
+            ingredient_id = data.get('ingredient_id')  # 재료 ID
+            new_name = data.get('new_ingredient_name')  # 새로운 제품명
+            new_store = data.get('new_store')  # 새로운 매장
+            new_stock = int(data.get('new_stock'))  # 새로운 재고 수량
 
-            # 재고 수량 업데이트
-            ingredient = Ingredient.objects.get(ingredient_id=ingredient_id)
+            # 유효성 검사
+            if not ingredient_id or not new_name or not new_store or new_stock is None or new_stock < 0:
+                return JsonResponse({'success': False, 'error': 'Invalid data provided'})
+
+            # 재료 존재 여부 확인
+            try:
+                ingredient = Ingredient.objects.get(ingredient_id=ingredient_id)
+            except Ingredient.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Ingredient not found'})
+
+            # 재료 정보 업데이트
+            ingredient.ingredient_name = new_name
+            ingredient.store = new_store
             ingredient.stock = new_stock
             ingredient.save()
+
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
-    return JsonResponse({'success': False, 'error': 'Invalid request'})
 
-
-
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 def stock_ingredient_edit(request):
     return render(request, 'stock/stock_ingredient_edit.html')  # 재료 수정
