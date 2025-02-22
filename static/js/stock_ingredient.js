@@ -170,11 +170,48 @@ function updateStock_ingredient(ingredientID, newIngredientName, newStore, newSt
     });
 }
 
+// ====================================================================
 
-// CSRF 토큰 가져오기 함수
+// 삭제
+
+document.addEventListener("DOMContentLoaded", function () {
+    const deleteButton = document.getElementById("delete-selected");
+    deleteButton.addEventListener("click", async function () {
+        // 선택된 항목 ID 수집
+        const selectedIds = Array.from(document.querySelectorAll(".row-checkbox:checked"))
+            .map(checkbox => checkbox.closest("tr").querySelector("td:nth-child(2)").textContent.trim());
+
+        if (selectedIds.length === 0) {
+            alert("삭제할 항목을 선택해주세요.");
+            return;
+        }
+        if (!confirm(`선택한 ${selectedIds.length}개의 재료를 삭제하시겠습니까?`)) {
+            return;
+        }
+        try {
+            const response = await fetch("ingredient/delete-ingredients/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken(),
+                },
+                body: JSON.stringify({ ingredient_ids: selectedIds }),
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert("삭제가 완료되었습니다.");
+                window.location.reload();
+            }
+        } catch (error) {
+            alert("삭제 중 오류가 발생했습니다.");
+        }
+    });
+});
+
+
+
+// CSRF 토큰 가져오기 함수 (이 부분이 eventListener 바깥으로 이동해야 함)
 function getCSRFToken() {
     let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     return csrfToken;
 }
-
-
