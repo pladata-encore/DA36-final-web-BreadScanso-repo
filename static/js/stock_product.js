@@ -99,9 +99,7 @@ document.querySelectorAll('.btn-warning').forEach(button => {
 
         if (newStock !== null && !isNaN(newStock)) {
             updateStock(rowId, newStock, stockCell); // 재고 업데이트 함수 호출
-        } else {
-            alert('유효한 수량을 입력해주세요.');
-        }
+        } 
     });
 });
 

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
-
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 from menu.models import Item
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from stock.models import Ingredient
@@ -137,3 +138,41 @@ def stock_ingredient_edit(request):
 
 def stock_ingredient_new(request):
     return render(request, 'stock/stock_ingredient_new.html')  # 재료 신규등록
+
+
+@require_http_methods(["POST"])
+def delete_ingredients(request):
+    try:
+        # 요청 데이터 파싱
+        data = json.loads(request.body)
+        ingredient_ids = data.get("ingredient_ids", [])
+
+        if not ingredient_ids:
+            return JsonResponse({
+                "success": False,
+                "message": "삭제할 항목이 없습니다."
+            })
+
+        # 선택된 재료들 삭제
+        deleted_count, _ = Ingredient.objects.filter(ingredient_id__in=ingredient_ids).delete()
+
+        # 삭제 결과 반환
+        if deleted_count > 0:
+            return JsonResponse({
+                "success": True,
+            })
+        else:
+            return JsonResponse({
+                "success": False,
+            })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "message": "잘못된 요청 데이터입니다."
+        })
+    except Exception as e:
+        return JsonResponse({
+            "success": False,
+            "message": "서버 오류가 발생했습니다."
+        })
