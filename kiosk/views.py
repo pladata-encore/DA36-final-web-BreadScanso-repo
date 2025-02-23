@@ -12,8 +12,8 @@ def products(request):
 def member(request):
     return render(request, 'kiosk/kiosk_member.html')  # kiosk_회원확인 템플릿 파일 경로 지정
 
-def point(request):
-    return render(request, 'kiosk/kiosk_point.html')  # kiosk_포인트 적립 템플릿 파일 경로 지정
+def phonenumber(request):
+    return render(request, 'kiosk/kiosk_phonenumber.html')  # kiosk_전화번호 확인 템플릿 파일 경로 지정
 
 def usepoint(request):
     return render(request, 'kiosk/kiosk_usepoint.html')  # kiosk_포인트 사용 템플릿 파일 경로 지정

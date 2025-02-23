@@ -45,11 +45,18 @@ function confirm() {
             console.log("서버 응답:", data);
             if (data.is_member) {
                 alert("입력한 번호 : " + phoneNumber + " 로 포인트가 적립됩니다.");
+
                 console.log("전화번호:", data.phone_num);  // 🔹 회원 전화번호 출력
                 console.log("적립금:", data.points);  // 🔹 적립금 출력
+
+                // 📌 sessionStorage에 데이터 저장
+                sessionStorage.setItem("phone_num", data.phone_num);
+                sessionStorage.setItem("points", data.points);
+
+
                 window.location.href = "/kiosk/usepoint";
             } else {
-                alert("회원이 아닙니다. 비회원은 적립이 불가능합니다.<br>홈페이지에서 신규 회원가입을 진행해주세요!");
+                alert("회원이 아닙니다. 비회원은 적립이 불가능합니다. 홈페이지에서 신규 회원가입을 진행해주세요!");
                 window.location.href = "/kiosk/payment_method";  // 결제수단 선택 페이지로 이동
             }
         })

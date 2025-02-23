@@ -13,13 +13,15 @@
 
     <div class="keypad-container">
         <h5 class="mb-3">포인트를 사용하시겠습니까?</h5>
-        <p class="mb-3">남은 결제 금액 <strong id="max-price">10,000</strong>원</p>
+        <p class="mb-3">총 결제 금액 <strong id="max-price">25,000</strong>원</p>
 
-        <p class="mb-3">잔여 포인트 <strong id="max-points">25,000</strong>P</p>
+        <p class="mb-3">잔여 포인트 <strong id="points">0</strong>P</p>
+
+        <p class="mb-3">사용 가능한 최대 포인트 <strong id="max-points">0</strong>P</p>
 
         <label for="points-input"></label><input type="text" id="points-input" class="input-box" value="0" readonly>
 
-        <p class="text-muted small">최소 사용 포인트는 <strong id="min-points">500</strong>P 입니다.</p>
+        <p class="text-muted small">최소 사용 포인트는 <strong id="min-points">1,000</strong>P 입니다.</p>
 
         <div class="keypad">
             <button class="btn btn-light" onclick="addNumber(1)">1</button>
