@@ -10,8 +10,9 @@
 </head>
 <body class="kiosk-payment-completed">
 
-    <h3 class="mb-3">✅<br>결제가 완료되었습니다.</h3>
-    <p>적립 포인트<strong id="point">10,000</strong>P</p>
+    <h3 class="mb-3">✅ 결제가 완료되었습니다.</h3>
+    <p>적립 포인트 : <strong id="earned_point">0</strong>P</p>
+    <p>최종 보유 포인트 : <strong id="final_point">0</strong>P</p>
 
 
     <div class="button-container">
@@ -21,7 +22,8 @@
         </a>
     </div>
 
-
+    <!-- JavaScript 파일 불러오기 -->
+    <script src="{% static 'js/kiosk-paymentCompleted.js' %}"></script>
 
 </body>
 
