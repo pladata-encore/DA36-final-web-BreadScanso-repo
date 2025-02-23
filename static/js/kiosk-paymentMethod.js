@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let finalAmount = Math.max(totalAmount - use_points, 0); // 음수 방지
         finalAmountElem.textContent = finalAmount.toLocaleString(); // 천 단위 쉼표 적용
+        sessionStorage.setItem("final_amount", finalAmount);
         console.log("최종 결제 금액:", finalAmount);  // 콘솔 확인
 
     }
@@ -27,3 +28,4 @@ document.addEventListener("DOMContentLoaded", function () {
     // 페이지 로드 시 자동 업데이트
     updateFinalAmount();
 });
+
