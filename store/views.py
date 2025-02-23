@@ -7,8 +7,26 @@ from django.db.models import Q
 from store.models import Question, QuestionForm, Answer
 from member.models import Member
 
+
 def store_main(request):
-    return render(request, 'store/store_main.html')  # /store/
+    if not request.user.is_authenticated:
+        return redirect("main:login")
+
+    try:
+        member = Member.objects.get(user=request.user)
+
+        # member_type이 none이면 'normal'로 간주
+        member_type = member.member_type if member.member_type else "normal"
+
+        # owner 또는 manager일 경우 매장페이지 첫화면(매출관리)으로 이동
+        if member_type in ["owner", "manager"]:
+            return redirect("sales:sales_main")
+
+        else:
+            return redirect("member:member_page")  # normal 회원은 마이페이지로 이동
+
+    except Member.DoesNotExist:
+        return redirect("main:index")
 
 # 점주 회원관리
 def member_store(request):
