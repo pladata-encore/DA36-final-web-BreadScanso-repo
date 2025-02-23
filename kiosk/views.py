@@ -12,8 +12,8 @@ def products(request):
 def member(request):
     return render(request, 'kiosk/kiosk_member.html')  # kiosk_회원확인 템플릿 파일 경로 지정
 
-def point(request):
-    return render(request, 'kiosk/kiosk_point.html')  # kiosk_포인트 적립 템플릿 파일 경로 지정
+def phonenumber(request):
+    return render(request, 'kiosk/kiosk_phonenumber.html')  # kiosk_전화번호 확인 템플릿 파일 경로 지정
 
 def usepoint(request):
     return render(request, 'kiosk/kiosk_usepoint.html')  # kiosk_포인트 사용 템플릿 파일 경로 지정
@@ -28,10 +28,23 @@ def payment_completed(request):
 def check_phone_number(request):
     phone_num = request.GET.get("phone_num")  # GET 방식으로 전화번호 받기
 
-    if phone_num:
-        # 회원이 존재하는지 확인
-        exists = Member.objects.filter(phone_num=phone_num).exists()
-        return JsonResponse({"is_member": exists})
-    else:
-        return JsonResponse({"is_member": False})
+    if not phone_num:
+        return JsonResponse({"is_member": False, "message": "전화번호가 제공되지 않았습니다."})
+
+    try:
+        # 회원 정보 조회
+        member = Member.objects.filter(phone_num=phone_num).first()
+
+        if member:
+            return JsonResponse({
+                "is_member": True,
+                "phone_num": member.phone_num,  # 전화번호 반환
+                "points": member.points  # 적립금 반환
+            })
+        else:
+            return JsonResponse({"is_member": False, "message": "회원이 아닙니다."})
+
+    except Exception as e:
+        return JsonResponse({"is_member": False, "error": str(e)})
+
 

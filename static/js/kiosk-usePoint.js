@@ -1,8 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
     let inputField = document.getElementById("points-input");
     let minPoints = parseInt(document.getElementById("min-points").innerText);
-    let maxPoints = parseInt(document.getElementById("max-points").innerText.replace(/,/g, ""), 10);
     let maxPrice = parseInt(document.getElementById("max-price").innerText.replace(/,/g, ""), 10);
+
+    const points = sessionStorage.getItem("points");  // 저장된 적립금 가져오기
+    console.log("세션 저장된 포인트:", points);  // 콘솔 확인
+
+    if (points) {
+        document.getElementById("points").textContent = parseInt(points).toLocaleString();
+    }
+
+    // 최대 사용 가능한 적립금 계산 (결제 금액 또는 보유 포인트 중 적은 값을 선택)
+    let maxPoints = Math.min(parseInt(points) || 0, maxPrice);
+    console.log("사용 가능한 최대 포인트:", maxPoints);  // 콘솔 확인
+    document.getElementById("max-points").textContent = formatNumber(maxPoints);
+
 
     function addNumber(num) {
         let currentValue = inputField.value.replace(/,/g, ""); // 쉼표 제거
@@ -30,12 +42,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function confirmPoints() {
         let inputPoints = parseInt(inputField.value.replace(/,/g, "")); // 입력 값 (쉼표 제거)
+        sessionStorage.setItem("use_points", inputPoints);
 
         if (inputPoints < minPoints) {
             alert(`최소 사용 포인트는 ${minPoints}P 입니다.`);
             return;
         } else if (inputPoints > maxPoints) {
-            alert(`사용 가능한 포인트를 초과했습니다.`);
+            alert(`사용 가능한 포인트를 초과했습니다. 최대 사용 가능 포인트는 ${maxPoints}P입니다.`);
             return;
         } else if (inputPoints > maxPrice) {
             alert(`결제 금액을 초과했습니다.`);
