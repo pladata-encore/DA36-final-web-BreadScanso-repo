@@ -64,7 +64,7 @@
             <div class="total">
                 <p>총 수량: <strong>6개</strong></p>
                 <p>총 금액: <strong>25,000원</strong></p>
-                <p>포인트 사용: <strong>1,000원</strong></p>
+                <p>포인트 사용: <strong id="use_points">0</strong>p</p>
                 <p>총 결제 금액: <strong>24,000원</strong></p>
             </div>
         </div>
@@ -79,6 +79,8 @@
         </a>
     </div>
 
+    <!-- JavaScript 파일 불러오기 -->
+    <script src="{% static 'js/kiosk-paymentMethod.js' %}"></script>
 
 </body>
 
