@@ -7,7 +7,7 @@ app_name = 'main'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('main/', include('main.urls')),
+    path('main/', include('main.urls')), # 회원 관련 URL
     path('kiosk/', include('kiosk.urls')),  # kiosk 앱의 urls.py를 포함
     path('brand/', include('brand.urls')),  # brand 앱의 urls.py를 포함
     path('event/', include('event.urls')),  # event 앱의 urls.py를 포함

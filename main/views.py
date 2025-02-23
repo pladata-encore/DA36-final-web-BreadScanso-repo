@@ -40,6 +40,7 @@ def signup(request):
 
     return render(request, "main/signup.html")
 
+
 def user_login(request):
     if request.method == "POST":
         user_id = request.POST.get('user_id')
@@ -49,18 +50,30 @@ def user_login(request):
 
         if user is not None:
             login(request, user)
-            return redirect("/")
+
+            try:
+                member = Member.objects.get(user=user)
+
+                # 로그인한 사용자 정보를 세션에 저장
+                request.session['member_type'] = member.member_type
+                return redirect("main:index")
+
+            except Member.DoesNotExist:
+                messages.error(request, "회원 정보가 없습니다.")
+                return redirect("main:login")
         else:
             messages.error(request, "아이디 또는 비밀번호가 틀렸습니다.")
             return redirect("main:login")
 
     return render(request, "main/login.html")
 
+
+
 def user_logout(request):
     if request.method == "POST":  # post 요청만 허용
         logout(request)
         request.session.flush()  # 세션 삭제
-        return redirect("/")
+        return redirect("main:index")
     return HttpResponseNotAllowed(["POST"]) # get 허용 안 함
 
 
