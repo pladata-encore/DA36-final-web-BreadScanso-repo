@@ -13,7 +13,9 @@ class Member(models.Model):
                                             ("manager", "점주"), ("normal", "일반회원")])  # 회원 유형
     name = models.CharField(validators=[MinLengthValidator(2)], max_length=50)
     sex = models.CharField(max_length=1, choices=[('M', '남성'), ('F', '여성')], null=True, blank=True)  # 성별 (M/F)
-    age_group = models.PositiveSmallIntegerField(null=True, blank=True)  # 연령대 (20, 30, 40)
+    age_group = models.PositiveSmallIntegerField(
+        null=True, blank=True,
+        choices=[(10, "10대"), (20, "20대"), (30, "30대"), (40, "40대"), (50, "50대"), (60, "60대 이상")])  # 연령대 (20, 30, 40)
     phone_num = models.CharField(max_length=13)  # 전화번호
     member_password = models.CharField(validators=[MinLengthValidator(4)], max_length=20)  # 비밀번호
     email = models.EmailField()  # 이메일

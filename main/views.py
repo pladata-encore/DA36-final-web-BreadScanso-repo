@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from member.models import Member
 from django.contrib import messages
+import re
 
 def index(request):
     return render(request, "main/index.html")
@@ -18,14 +19,6 @@ def signup(request):
         email = request.POST.get('email')
         age_group = request.POST.get('age_group')
         sex = request.POST.get('sex')
-
-        if password1 != password2:
-            messages.error(request, '비밀번호가 일치하지 않습니다.')
-            return render(request, 'main/signup.html', {'user_id': member_id, 'name': name, 'phone_num': phone_num, 'email': email})
-
-        if User.objects.filter(username=member_id).exists() or Member.objects.filter(member_id=member_id).exists():
-            messages.error(request, '이미 존재하는 아이디입니다.')
-            return render(request, "main/signup.html", {'user_id': member_id, 'name': name, 'phone_num': phone_num, 'email': email})
 
         # User 모델에 회원 생성
         user = User.objects.create_user(username=member_id, email=email, password=password1)
@@ -64,17 +57,27 @@ def user_login(request):
     return render(request, "main/login.html")
 
 def user_logout(request):
-    if request.method == "POST":  # post 요청만 허용!!!!1
+    if request.method == "POST":  # post 요청만 허용
         logout(request)
-        request.session.flush()  # 세션 삭제!!!!
+        request.session.flush()  # 세션 삭제
         return redirect("/")
-    return HttpResponseNotAllowed(["POST"]) # get 허용 안 함 !!!!!
+    return HttpResponseNotAllowed(["POST"]) # get 허용 안 함
 
 
 def check_user_id(request):
-    member_id = request.GET.get('user_id', '')
+    member_id = request.GET.get('user_id', '').strip()
+
+    # 아이디 유효성 검사 (영소문자+숫자 4~12자리)
+    if not re.match(r'^[a-z0-9]{4,12}$', member_id):
+        return JsonResponse({"valid": False, "message": "아이디는 영소문자+숫자 4~12자리여야 합니다."})
+
+    # DB에서 중복 확인
     exists = User.objects.filter(username=member_id).exists() or Member.objects.filter(member_id=member_id).exists()
-    return JsonResponse({"exists": exists})
+
+    if exists:
+        return JsonResponse({"valid": False, "message": "이미 사용 중인 아이디입니다."})
+
+    return JsonResponse({"valid": True, "message": "사용 가능한 아이디입니다."})
 
 def login_find(request):
     if request.method == "POST":
