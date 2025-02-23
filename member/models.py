@@ -80,6 +80,21 @@ class QnAReply(models.Model):
         return f"답변 - {self.qna.title}"
 
 
+# 회원정보수정
+class CustomUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  # User 모델과 연결
+    member_id = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=50)
+    phone_num = models.CharField(max_length=20)
+    email = models.EmailField(unique=True)
+    age_group = models.CharField(max_length=10, choices=[("10대", "10대"), ("20대", "20대"), ("30대", "30대"), ("40대", "40대"),
+                                                         ("50대", "50대"), ("60대 이상", "60대 이상")])
+    sex = models.CharField(max_length=10, choices=[("남성", "남성"), ("여성", "여성")])
+    profile_image = models.ImageField(upload_to="profile_images/", blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
 
 
 
