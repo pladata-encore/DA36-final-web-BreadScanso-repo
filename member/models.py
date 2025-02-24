@@ -2,8 +2,11 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 from datetime import datetime
+
+from django.forms import forms
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import check_password
 
 class Member(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -94,9 +97,6 @@ class CustomUser(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
 
 
 

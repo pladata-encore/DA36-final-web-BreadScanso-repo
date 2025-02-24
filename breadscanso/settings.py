@@ -144,8 +144,7 @@ AUTHENTICATION_BACKENDS = [
 
 # AUTH_USER_MODEL = 'member.Member'
 
-
-
+LOGIN_URL = '/main/login/'  # 실제 로그인 URL에 맞게 수정
 
 
 
