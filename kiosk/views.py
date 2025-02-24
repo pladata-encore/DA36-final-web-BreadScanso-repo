@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from member.models import Member
 from django.views.decorators.csrf import csrf_exempt
+from menu.models import Item
 import json
-from django.shortcuts import redirect
 
 
 
@@ -11,7 +11,15 @@ def kiosk_main(request):
     return render(request, 'kiosk/kiosk_main.html')  # kiosk_main 템플릿 파일 경로 지정
 
 def products(request):
-    return render(request, 'kiosk/kiosk_products.html')  # kiosk_상품안내화면 템플릿 파일 경로 지정
+    items = Item.objects.values('item_name', 'item_name_eng', 'sale_price')
+    menu_dict = {item['item_name_eng']: {
+        'name': item['item_name'],
+        'price': item['sale_price']
+    } for item in items}
+
+    return render(request, 'kiosk/kiosk_products.html', {
+        'menu_data': menu_dict
+    })
 
 def member(request):
     return render(request, 'kiosk/kiosk_member.html')  # kiosk_회원확인 템플릿 파일 경로 지정
@@ -79,25 +87,4 @@ def update_points(request):
             return JsonResponse({"success": False, "error": str(e)}, status=500)
 
     return JsonResponse({"success": False, "message": "잘못된 요청 방식입니다."}, status=405)
-
-
-
-def reset_points(request):
-    # 사용한 포인트를 0으로 설정하는 로직 추가
-    request.session['used_points'] = 0  # 세션에 저장된 포인트 값 초기화
-
-    # 'payment_method'로 리다이렉션
-    return redirect('payment_method')
-
-def reset_phonenumber(request):
-    # 사용한 포인트를 0으로 설정하는 로직 추가
-    request.session['phone_num'] = 0  # 세션에 저장된 포인트 값 초기화
-    request.session['points'] = 0
-    request.session['use_points'] = 0
-    request.session['final_amount'] = 0
-    request.session['earned_point'] = 0
-    request.session['final_point'] = 0
-
-    # 'payment_method'로 리다이렉션
-    return redirect('payment_method')
 

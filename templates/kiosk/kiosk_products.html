@@ -72,7 +72,7 @@
 </head>
 
 <body class="kiosk-products">
-    <!-- 헤더 추가 (로고 포함) -->
+    <!-- 헤더 -->
     <header>
         <img src="{% static 'images/brand_logo.png' %}" alt="브랜드 로고" class="brand-logo">
     </header>
@@ -81,13 +81,14 @@
     <div class="store-name">서초동점</div>
 
     <div class="container">
-        <!-- 왼쪽: 웹캠 화면 및 버튼 -->
+        <!-- 웹캠 -->
         <div class="video-container">
             <video id="webcam" autoplay playsinline></video>
             <button id="capture-btn">📸촬영</button>
+            
         </div>
 
-        <!-- 오른쪽: 주문 목록 -->
+        <!-- 주문 목록 -->
         <div class="order-list">
             <h3>메뉴 목록</h3>
             <table>
@@ -99,180 +100,164 @@
                         <th>금액</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr><td>소금빵</td><td>3800</td><td>2</td><td>7600</td></tr>
-                    <tr><td>에멘탈소금빵</td><td>4500</td><td>1</td><td>4500</td></tr>
-                    <tr><td>빠다코코넛꽈베기</td><td>4500</td><td>1</td><td>4500</td></tr>
-                    <tr><td>먹물소금빵</td><td>4200</td><td>1</td><td>4200</td></tr>
-                    <tr><td>후추소금빵</td><td>4200</td><td>1</td><td>4200</td></tr>
+                <tbody id="order-table">
                 </tbody>
             </table>
             <div class="total">
-                <p>총 수량: <strong>6개</strong></p>
-                <p>총 금액: <strong>25,000원</strong></p>
+                <p>총 수량: <strong id="total-quantity">0개</strong></p>
+                <p>총 금액: <strong id="total-price">0원</strong></p>
             </div>
         </div>
     </div>
 
-    <!-- 버튼 영역 -->
+    <!-- 버튼 -->
     <div class="button-container">
-{#        <button class="yellow-button" id="reset-btn">다시 스캔</button>#}
         <button class="blue-button">직원 호출</button>
         <a href="{% url 'member' %}">
             <button class="black-button">결제</button>
         </a>
     </div>
-
-
-
-
-    <!-- JavaScript -->
-    <script> // 주석으로 local서버 | ec2서버 전환
     
-// local server
-const video = document.getElementById("webcam");
-const captureBtn = document.getElementById("capture-btn");
-const canvas = document.createElement("canvas");
-const ctx = canvas.getContext("2d");
 
-const NGROK_URL = "https://5998-175-121-129-72.ngrok-free.app/predict/";
-
-// 📌 웹캠 활성화 (버튼 누르기 전에도 항상 표시)
-async function startWebcam() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-    } catch (error) {
-        console.error("🚨 웹캠 접근 실패:", error);
-        alert("웹캠을 사용할 수 없습니다. 브라우저 설정을 확인하세요.");
-    }
-}
-
-// 📌 캡처 버튼 클릭 시 실행
-captureBtn.addEventListener("click", async () => {
-    captureBtn.disabled = true;  // 버튼 비활성화
-    captureBtn.textContent = "🔄 추론 중...";
-
-    // 🔹 웹캠 프레임 캡처
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = canvas.toDataURL("image/jpeg");  // Base64 인코딩
-
-    // 🔹 FastAPI 추론 서버로 이미지 전송
-    try {
-        const response = await fetch(NGROK_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({ image: imageData }),
-            mode: "cors"
-        });
-
-        const result = await response.json();
-
-        // 📌 결과 확인
-        console.log("📷 추론 결과:", result);
-
-        // 🔹 JSON 데이터에서 상품명(name)과 확률(confidence)만 추출
-        let item_names = [];         // 상품명 리스트
-        let item_confidences = [];   // 확률 리스트
-
-        if (result?.prediction && Array.isArray(result.prediction)) {
-            result.prediction.forEach(item => {
-                item_names.push(item.name);
-                item_confidences.push(item.confidence);
-            });
-
-            // ✅ 콘솔 출력 (디버깅 용도)
-            console.log("📌 상품명 리스트:", item_names);
-            console.log("📊 확률 리스트:", item_confidences);
-        } else {
-            console.error("❌ 예측된 항목이 없습니다.");
-        }
-            alert(item_names[0] + item_confidences[0])
-
-    } catch (error) {
-        console.error("🚨 추론 요청 오류:", error);
-    } finally {
-        captureBtn.disabled = false;  // 버튼 활성화
-        captureBtn.textContent = "📸 촬영";
-    }
-});
-
-// 📌 웹캠 실행
-startWebcam();
-
-
-/*
-    // ec2
-const video = document.getElementById("webcam");
-const captureBtn = document.getElementById("capture-btn");
-const canvas = document.createElement("canvas");
-const ctx = canvas.getContext("2d");
-
-const EC2_PREDICT_URL = "http://3.38.150.51:8001/predict/";
-
-// 📌 웹캠 활성화
-async function startWebcam() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-    } catch (error) {
-        console.error("🚨 웹캠 접근 실패:", error);
-        alert("웹캠을 사용할 수 없습니다. 브라우저 설정을 확인하세요.");
-    }
-}
-
-// 📌 캡처 버튼 클릭 시 실행
-captureBtn.addEventListener("click", async () => {
-    captureBtn.disabled = true;
-    captureBtn.textContent = "🔄 추론 중...";
-
-    // 웹캠 이미지 캡처
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = canvas.toDataURL("image/jpeg");
-
-    // FastAPI로 전송
-    try {
-        const response = await fetch(EC2_PREDICT_URL, {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({ file: imageData }),
-            mode: "cors"
-        });
-
-        const result = await response.json();
-        console.log("📷 추론 결과:", result);
-
-        if (result?.predictions) {
-            alert("✅ 추론 성공!\n결과: " + JSON.stringify(result.predictions, null, 2));
-        } else {
-            alert("⚠️ 추론 실패! 서버 응답 오류");
-        }
-    } catch (error) {
-        console.error("🚨 추론 요청 오류:", error);
-        alert("🚨 서버 오류 발생!");
-    } finally {
-        captureBtn.disabled = false;
-        captureBtn.textContent = "📸 촬영";
-    }
-});
-
-// 📌 웹캠 실행
-startWebcam();
-*/
+    <!-- Django 데이터를 JavaScript에 전달 -->
+    <script>
+        const menu_data = {{ menu_data|safe|default:"{}" }};
+        console.log("Loaded menu_data:", menu_data);
     </script>
 
-    <!-- JavaScript 파일 불러오기 -->
-{#    <script src="{% static 'js/kiosk-imageUpload.js' %}"></script>#}
+<script>
+    // 웹캠 설정
+    const video = document.getElementById("webcam");
+    const captureBtn = document.getElementById("capture-btn");
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const NGROK_URL = "https://8369-175-121-129-72.ngrok-free.app/predict/";
+
+    let productDictionary = {};
+
+    // 한글명 매핑 함수
+    function getKoreanName(engName) {
+        const nameMapping = {
+            "bagel": "베이글",
+            "croissant": "크루아상",
+            "whitebread": "식빵",
+            "redbeanbread": "단팥빵",
+            "pizzabread": "피자빵",
+            "saltbread": "소금빵",
+            "custardcreambread": "슈크림빵",
+            "soboro": "소보로"
+        };
+        return nameMapping[engName] || engName;
+    }
+
+    // 웹캠 시작
+    async function startWebcam() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+        } catch (error) {
+            console.error("🚨 웹캠 접근 실패:", error);
+            alert("웹캠을 사용할 수 없습니다. 브라우저 설정을 확인하세요.");
+        }
+    }
+    // 테이블 초기화 함수
+    function resetOrder() {
+    productDictionary = {};
+    updateOrderTable();      
+}
+    // 테이블 업데이트 함수
+    function updateOrderTable() {
+        const orderTable = document.getElementById("order-table");
+        const totalQuantityElement = document.getElementById("total-quantity");
+        const totalPriceElement = document.getElementById("total-price");
+        // 테이블 초기화
+        orderTable.innerHTML = "";
+        let totalQuantity = 0;
+        let totalPrice = 0;
+
+        Object.keys(productDictionary).forEach(itemName => {
+            const product = productDictionary[itemName];
+            totalQuantity += product.quantity;
+            totalPrice += product.totalAmount;
+            const row = `
+                <tr>
+                    <td>${product.korName}</td>
+                    <td>${product.price.toLocaleString()}원</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.totalAmount.toLocaleString()}원</td>
+                </tr>
+            `;
+            orderTable.innerHTML += row;
+        });
+
+        // 총 수량과 금액 업데이트 {# 아마도 session으로 업데이트 #}
+        totalQuantityElement.innerHTML = `${totalQuantity}개`;
+        totalPriceElement.innerHTML = `${totalPrice.toLocaleString()}원`;
+    }
+
+    // 촬영 버튼 이벤트
+    captureBtn.addEventListener("click", async () => {
+        captureBtn.disabled = true;
+        captureBtn.textContent = "🔄 추론 중...";
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = canvas.toDataURL("image/jpeg");
+
+        try {
+            const response = await fetch(NGROK_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({ image: imageData }),
+                mode: "cors"
+            });
+
+            const responseText = await response.text();
+            if (!responseText) throw new Error("빈 응답이 왔습니다");
+
+            const results = JSON.parse(responseText);
+            console.log("📌 추론 결과:", results);
+
+            // 상품 데이터를 테이블에 추가
+            results.forEach(result => {
+                if (result?.name && result?.confidence) {
+                    const engName = result.name;
+                    const korName = getKoreanName(engName);
+                    const price = menu_data[engName]?.price || 0;
+
+
+                    if (productDictionary[engName]) {
+                        productDictionary[engName].quantity += 1;
+                        productDictionary[engName].totalAmount =
+                            productDictionary[engName].quantity * productDictionary[engName].price;
+                    } else {
+                        productDictionary[engName] = {
+                            korName: korName,
+                            price: price,
+                            quantity: 1,
+                            totalAmount: price
+                        };
+                    }
+                }
+            });
+
+            // 테이블 업데이트
+            updateOrderTable();
+
+        } catch (error) {
+            console.error("🚨 에러:", error);
+        } finally {
+            captureBtn.disabled = false;
+            captureBtn.textContent = "📸 촬영";
+        }
+    });
+
+    startWebcam();
+</script>
 
 </body>
 </html>
