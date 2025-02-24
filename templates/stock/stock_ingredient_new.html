@@ -1,15 +1,47 @@
+<!-- stock_ingredient_new.html -->
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Stock | New Ingredient {% endblock %}
+{% block title %}Store | New Ingredient{% endblock %}
 {% block store_id %}store_id{% endblock %}
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% block content %}
-    
-    
-{% endblock content %}
+    <h3 class="text-center">신규 재료 등록👩🏻‍🍳</h3>
+    <br> <br>
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- 재료명 입력 -->
+        <div class="mb-3">
+            <label for="ingredientName" class="form-label"><strong>재료명</strong></label>
+            <input type="text" class="form-control" id="ingredientName" name="ingredient_name" required>
+        </div>
 
-{% block script %}
+        <!-- 매장 선택 -->
+        <div class="mb-3">
+            <label for="store" class="form-label"><strong>매장</strong></label>
+            <select class="form-select" id="store" name="store">
+                <option value="A">서초점 (A)</option>
+                <option value="B">강남점 (B)</option>
+            </select>
+        </div>
 
-{% endblock script %}
+        <!-- 재고 수량 입력 -->
+        <div class="mb-3">
+            <label for="stock" class="form-label"><strong>재고 수량</strong></label>
+            <input type="number" class="form-control" id="stock" name="stock" required>
+        </div>
+
+        <br>
+        <!-- 취소 버튼 -->
+        <a href="{% url 'stock_ingredient' %}" class="btn btn-secondary">취소</a>
+        <!-- 등록 버튼 -->
+        <button type="submit" class="btn btn-primary">등록</button>
+
+    </form>
+
+    {% if error %}
+        <div class="alert alert-danger mt-3">{{ error }}</div>
+    {% endif %}
+{% endblock %}
