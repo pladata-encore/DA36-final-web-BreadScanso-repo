@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from member.models import Member
 from django.views.decorators.csrf import csrf_exempt
+from menu.models import Item
 import json
 
 
@@ -10,7 +11,15 @@ def kiosk_main(request):
     return render(request, 'kiosk/kiosk_main.html')  # kiosk_main 템플릿 파일 경로 지정
 
 def products(request):
-    return render(request, 'kiosk/kiosk_products.html')  # kiosk_상품안내화면 템플릿 파일 경로 지정
+    items = Item.objects.values('item_name', 'item_name_eng', 'sale_price')
+    menu_dict = {item['item_name_eng']: {
+        'name': item['item_name'],
+        'price': item['sale_price']
+    } for item in items}
+
+    return render(request, 'kiosk/kiosk_products.html', {
+        'menu_data': menu_dict
+    })
 
 def member(request):
     return render(request, 'kiosk/kiosk_member.html')  # kiosk_회원확인 템플릿 파일 경로 지정
