@@ -173,3 +173,9 @@ function updateStock_ingredient(ingredientID, newIngredientName, newStore, newSt
         alert("서버 오류 발생");
     });
 }
+
+const newRegisterBtn = document.getElementById("new-register-btn");
+newRegisterBtn.addEventListener("click", function () {
+    window.location.href = "/stock/ingredient/new";  // 이동할 URL 경로
+});
+

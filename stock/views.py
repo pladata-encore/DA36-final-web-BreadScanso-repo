@@ -136,10 +136,6 @@ def update_stock_ingredient(request):
 def stock_ingredient_edit(request):
     return render(request, 'stock/stock_ingredient_edit.html')  # 재료 수정
 
-def stock_ingredient_new(request):
-    return render(request, 'stock/stock_ingredient_new.html')  # 재료 신규등록
-
-
 @require_http_methods(["POST"])
 def delete_ingredients(request):
     try:
@@ -176,3 +172,7 @@ def delete_ingredients(request):
             "success": False,
             "message": "서버 오류가 발생했습니다."
         })
+
+
+def stock_ingredient_new(request):
+    return render(request, 'stock/stock_ingredient_new.html')  # 재료 신규등록
