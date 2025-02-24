@@ -1,15 +1,110 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Stock | New Ingredient {% endblock %}
+{% block title %}Store | New Ingredient{% endblock %}
 {% block store_id %}store_id{% endblock %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
 {% block content %}
+<style>
+/* border 간격 색 설정 */
+       .form-check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid black; 
+        padding: 5px 30px;
+        border-radius: 5px;
+        background-color: white;
+    }
+/* 정보 입력란 설정 */
+    .form-area {
+        width: 55%; /* 입력 폼 비율 조정 가능 */
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .form-area .mb-3 {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* 라벨 왼쪽 정렬 */
+    }
+    .form-area label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        text-align: left; /* 라벨 왼쪽 정렬 */
+    }
     
+/* 버튼 위치 설정 */
+    .button-container {
+        display: flex;
+        justify-content: space-between; /* 취소 버튼 왼쪽, 저장 버튼 오른쪽 배치 */
+        width: 100%;
+        max-width: 1000px; /* 컨테이너 크기 조정 가능 */
+        position: absolute;
+        bottom: 30px; /* 버튼의 위치 조정 가능 */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    #cancel-btn {
+        margin-left: -10px; /* 왼쪽 버튼 간격 조정 가능 */
+    }
+    #save-btn {
+        margin-right: -50px; /* 오른쪽 버튼 간격 조정 가능 */
+    }
+</style>
+
+<div class="content-wrapper">
+    <!-- 재료 정보 입력 -->
+    <div class="form-area">
+        <div class="mb-3">
+            <label for="ingredient_name">재료명</label>
+            <input type="text" name="ingredient_name" id="ingredient_name" class="form-control" placeholder="재료명을 입력해주세요" required>
+        </div>
+        <div class="mb-3">
+            <label for="store">매장</label>
+            <input type="text" name="store" id="store" class="form-control" placeholder="매장" required>
+        </div>
+        <div class="mb-3">
+            <label for="stock">재고 수량</label>
+            <input type="number" name="stock" id="stock" class="form-control" placeholder="재고 수량">
+        </div>
+    </div>
+</div>
     
-{% endblock content %}
+
+<!-- modal -->    
+<div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="saveConfirmModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        재료를 저장하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary" id="confirm-save-btn">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+    
+<div class="button-container">
+    <!-- 취소 버튼 (왼쪽) -->
+    <button type="button" class="btn btn-warning" id="cancel-btn">취소</button>
+
+    <!-- 저장 버튼 (오른쪽) -->
+    <button type="button" class="btn btn-success" id="save-btn" data-bs-toggle="modal" data-bs-target="#saveConfirmModal">저장</button>
+</div>
+    
+
+    
+{% endblock content%}
 
 {% block script %}
-
+{{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
+<script src="{% static 'js/menu_new_menu.js' %}"></script>
 {% endblock script %}
