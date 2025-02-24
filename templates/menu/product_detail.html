@@ -4,64 +4,81 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BreadScanco | Product_detail</title>
+    <title>BreadScanco | {{ item.item_name }}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap JS, Popper.js, and jQuery (필수) -->
-<!--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>-->
+    <!-- Bootstrap JS  -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- JavaScript 파일 불러오기 -->
-    <script src="{% static 'js/menu_product_detail.js' %}"></script>
 </head>
 
 <!-- 메인 헤더 -->
-<body class="main-index">
-    <header>
-        <div class="logo-container">
-            <a href="/brand" class="btn btn-outline-success">브랜드소개</a>
-            <a href="/store" class="btn btn-outline-success">매장안내</a>
-            <a href="/menu" class="btn btn-outline-success">메뉴정보</a>
-            <img src="{% static 'images/text_logo.png' %}" alt="text" class="logo-img">
-            <a href="/event" class="btn btn-outline-success">이벤트</a>
-            <div class="btn-group">
-                <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티</button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="/notice">공지사항</a></li>
-                    <li><a class="dropdown-item" href="/qna">Q&A</a></li>
-                </ul>
-            </div>
-            <a href="/login" class="btn btn-outline-success">Log in</a>
-            <a href="/signup" class="btn btn-outline-success">회원가입</a>
-        </div>
-    </header>
-</body>
+<body class="main-index product_detail" style="background-color: #FFFFFF;">
+    <!-- 헤더 -->
+    {% include 'layout/main/header_main.html' %}
 
-<!-- 제품 상세 정보 -->
-<body class="product_detail">
+    <!-- 제품 상세 정보 -->
     <div class="product-detail-container">
         <div class="product-content">
             <div class="product-image">
                 <!-- 버튼을 이미지 상단 왼쪽에 위치 -->
-                <button class="back-button" onclick="goBackToList()">◀ 목록으로</button>
-                <img id="detailImage" src="" alt="제품 이미지">
+                <button class="back-button" onclick="history.back()">◀ 목록으로</button>
+                
+                <!-- 제품 이미지 -->
+                {% if item.image_filename %}
+                    <img src="{% static 'images/' %}{{ item.image_filename }}" alt="{{ item.item_name }}">
+                {% endif %}
             </div>
-    
+
             <div class="product-info">
-                <div class="product-tag" id="productTag"></div>
-                <h1 id="detailName"></h1>
-                <p id="detailDescription"></p>
-    
+                <h1>{{ item.item_name }}</h1>
+                <p>{{ item.description }}</p>
+
                 <div class="product-meta">
                     <hr>
-                    <p><strong>영양정보:</strong> <span id="detailNutrition"></span></p>
-                    <p><strong>알레르기 정보:</strong> <span id="detailAllergy"></span></p>
-                    <hr>
-                    <p class="product-price" id="detailPrice">판매가: </p>
+                    <p><strong>영양정보:</strong></p>
+                
+                    {% if nutrition %}
+                            <p>● 총 내용량: {{ nutrition.nutrition_weight }}g</p>
+                            <p>● 총 내용량당 칼로리(kcal): {{ nutrition.nutrition_calories }}</p>
+                        
+                        <div class="nutrition-row">
+                            <p>● 총 내용량당:</p>
+                            <p>· 나트륨(mg): {{ nutrition.nutrition_sodium }}</p>
+                            <p>· 당류(g): {{ nutrition.nutrition_sugar }}</p>
+                            <p>· 탄수화물(g): {{ nutrition.nutrition_carbohydrates }}</p>
+                            <p>· 포화지방(g): {{ nutrition.nutrition_saturated_fat }}</p>
+                            <p>· 트랜스지방(g): {{ nutrition.nutrition_trans_fat }}</p>
+                            <p>· 단백질(g): {{ nutrition.nutrition_protein }}</p>
+                        </div>
+                    {% else %}
+                        <p>정보 없음</p>
+                    {% endif %}
+
+                <hr>
+                    <p><strong>알레르기 정보:</strong></p>
+                
+                    {% if allergy %}
+                        <div class="nutrition-row">
+                            {% if allergy.allergy_wheat %}<p>밀,</p>{% endif %}
+                            {% if allergy.allergy_milk %}<p>우유,</p>{% endif %}
+                            {% if allergy.allergy_egg %}<p>계란,</p>{% endif %}
+                            {% if allergy.allergy_soybean %}<p>대두,</p>{% endif %}
+                            {% if allergy.allergy_nuts %}<p>견과류,</p>{% endif %}
+                            <p>기타: {{ allergy.allergy_etc }}</p>
+                        </div>
+                    {% else %}
+                        <p>정보 없음</p>
+                    {% endif %}
                 </div>
+                
+                <hr>
+                <p class="product-price"><strong>판매가:</strong> {{ item.sale_price|default:"가격 미정" }}원</p>
             </div>
         </div>
     </div>
 </body>
+
+<!-- 풋터 -->
+{% include 'layout/main/footer_main.html' %}
 </html>

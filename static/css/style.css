@@ -702,7 +702,7 @@ body.kiosk-payment-completed {
 
 /*--정석 start--*/
 /* ----------------------------------------------------------------------- */
-/*--정석 start--*/
+/*-- 메인 메뉴 carousel 설정 --*/
 body.menu-main.best-carousel-item {
     flex: 0 0 20%; /* 5개씩 보이도록 설정 */
     padding: 10px;
@@ -729,7 +729,6 @@ body.menu-main.best-carousel-item {
 
 .best-carousel-track {
     display: flex;
-    transition: transform 0.5s ease-in-out;
 }
 
 .best-carousel-item {
@@ -750,6 +749,10 @@ body.menu-main.best-carousel-item {
 
 .best-carousel-item img:hover {
     transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
 }
 
 .product-name {
@@ -779,56 +782,18 @@ body.menu-main.best-carousel-item {
     right: -50px; /* 오른쪽 버튼을 캐러셀 바깥으로 이동 */
 }
 /* ----------------------------------------------------------------------- */
-/* 전체 제품 grid styling */
+/* 메뉴 메인 전체 제품 grid styling */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 20px;
 }
 
-.product-item {
-    text-align: center;
-    cursor: pointer;
-    position: relative;
-    flex-direction: column; /* 세로로 정렬 */
-    justify-content: center;
-    align-items: center;
-}
-
-.product-item img {
-    width: 150px;
-    height: 150px;
-    border-radius: 10px;
-    object-fit: cover;
-}
-
-.product-item img:hover {
-    transform: scale(1.1);
-}
-
-.product-name {
-    margin-top: 12px; /* 이미지와 이름 사이에 여백 추가 */
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center; /* 이름 가운데 정렬 */
-}
-
-/* Tag Styling */
-.tag {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: #ff6347;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.9rem;
-}
 /* ----------------------------------------------------------------------- */
 /* 제품 상세 페이지 */
 /* 전체 컨테이너 중앙 정렬 */
 .product-detail-container {
-    max-width: 900px;
+    max-width: 80%;
     margin: 20px auto;
     padding: 20px;
 }
@@ -872,7 +837,20 @@ body.menu-main.best-carousel-item {
 
 /* 제품 정보 스타일 */
 .product-info {
-    max-width: 400px;
+    max-width: 1000px;
+}
+
+.nutrition-row {
+    display: flex;
+    flex-wrap: wrap;  /* 화면 크기에 따라 줄바꿈 */
+    gap: 10px;  /* 요소 간 간격 */
+    align-items: center;  /* 항목들을 중앙 정렬 */
+}
+
+.nutrition-row p {
+    margin: 0;
+    white-space: nowrap; /* 너무 좁을 때만 줄바꿈 */
+    flex-shrink: 0; /* 화면 줄어들어도 글자 크기 유지 */
 }
 
 .product-tag {
@@ -883,16 +861,6 @@ body.menu-main.best-carousel-item {
     border-radius: 20px;
     font-size: 0.9rem;
     margin-bottom: 10px;
-}
-
-h1 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.product-meta hr {
-    margin: 15px 0;
 }
 
 .product-price {
