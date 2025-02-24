@@ -1,11 +1,11 @@
+from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
 from .models import Member  # 모델 가져오기
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
+import json
 
 
 
@@ -176,10 +176,91 @@ def check_user_id(request):
     else:
         return JsonResponse({'available': True, 'message': '사용 가능한 아이디입니다.'})
 
-
-# 비밀번호변경
+@login_required
 def member_pw(request):
+    if request.method == 'POST':
+        current_password = request.POST.get('password1')
+        new_password = request.POST.get('password2')
+        password_confirm = request.POST.get('password3')
+
+        user = request.user
+
+        # 현재 비밀번호 검증
+        if not user.check_password(current_password):
+            messages.error(request, '현재 비밀번호가 일치하지 않습니다.')
+            return render(request, 'member/member_pw.html')
+
+        # 새 비밀번호 검증
+        if new_password != password_confirm:
+            messages.error(request, '새 비밀번호가 일치하지 않습니다.')
+            return render(request, 'member/member_pw.html')
+
+        # 비밀번호 길이 검증
+        if len(new_password) < 4 or len(new_password) > 12:
+            messages.error(request, '비밀번호는 4~12자리로 입력해주세요.')
+            return render(request, 'member/member_pw.html')
+
+        # 현재 비밀번호와 새 비밀번호가 같은지 검증
+        if current_password == new_password:
+            messages.error(request, '현재 비밀번호와 새 비밀번호가 같습니다.')
+            return render(request, 'member/member_pw.html')
+
+        try:
+            # 비밀번호 변경
+            user.set_password(new_password)
+            user.save()
+
+            # 세션 유지를 위한 코드 추가
+            update_session_auth_hash(request, user)
+
+            messages.success(request, '비밀번호가 성공적으로 변경되었습니다.')
+            # 모달 표시를 위한 context 추가
+            return render(request, 'member/member_pw.html', {'show_modal': True})
+
+        except Exception as e:
+            messages.error(request, '비밀번호 변경 중 오류가 발생했습니다.')
+            return render(request, 'member/member_pw.html')
+
     return render(request, 'member/member_pw.html')
+
+# @login_required
+@require_http_methods(["POST"])
+def check_password(request):
+    data = json.loads(request.body)
+    current_password = data.get('current_password')
+
+    is_valid = request.user.check_password(current_password)
+    return JsonResponse({'valid': is_valid})
+
+    #    if member_pw(password1, user.password):
+    #         password2 = request.POST.get('password2')
+    #         password3 = request.POST.get('password3')
+    #         if password2 == password3:
+    #             user.set_password(password2)
+    #             user.save()
+    #             auth.login(request, user)
+    #             return redirect("main:index")
+    #         else:
+    #             messages.error(request,'비밀번호가 일치하지않습니다.')
+    #     else:
+    #         messages.error(request, '비밀번호가 올바르지 않습니다.')
+    #         return redirect("member:member_page.html")
+    # else:
+    #     return render(request, "member:member_page.html")
+
+    # if request.method == "POST":
+    #     form = PasswordChangeForm(request.user, request.POST)
+    #     if form.is_valid():
+    #         user = form.save()
+    #         update_session_auth_hash(request, user)
+    #         messages.success(request, '새로운 비밀번호로 변경되었습니다.')
+    #         return redirect("main:index")
+    #     else:
+    #         messages.error(request, '비밀번호 변경이 되지않았습니다.')
+    # else:
+    #     form = PasswordChangeForm(request.user)
+    # return render(request, 'member/member_pw.html', {'form': form})
+
 
 # 회원탈퇴
 def member_delete(request):

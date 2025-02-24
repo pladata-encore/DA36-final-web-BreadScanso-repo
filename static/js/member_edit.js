@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 초기 이메일 값 설정
     updateEmail();
 });
+
 // document.addEventListener("DOMContentLoaded", function () {
 //     let emailIdInput = document.getElementById("email_id");
 //     let emailDomainSelect = document.getElementById("email_domain");
@@ -153,6 +154,7 @@ document.querySelector('input[name="user_id"]').addEventListener('input', functi
     form.dataset.idChecked = 'false';
     document.getElementById('user_id-result').textContent = '';
 });
+
 // function checkUser_id() {
 //     var user_id = document.getElementById("user_id").value;
 //     var resultElement = document.getElementById("user_id-result");
