@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -175,4 +175,20 @@ def delete_ingredients(request):
 
 
 def stock_ingredient_new(request):
-    return render(request, 'stock/stock_ingredient_new.html')  # 재료 신규등록
+    if request.method == 'POST':
+        ingredient_name = request.POST.get('ingredient_name')
+        store = request.POST.get('store')
+        stock = request.POST.get('stock')
+
+        if ingredient_name and store and stock:
+            ingredient = Ingredient(ingredient_name=ingredient_name, store=store, stock=stock)
+            ingredient.save()
+            return redirect('stock_ingredient')  # 저장 후 재료 페이지로 !
+
+        else:
+            # 빈 칸이 있을 경우
+            return render(request, 'stock/stock_ingredient_new.html', {
+                'error': '모든 필드를 입력해주세요.'
+            })
+    else:
+        return render(request, 'stock/stock_ingredient_new.html')
