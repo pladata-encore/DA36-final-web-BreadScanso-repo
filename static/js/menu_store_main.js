@@ -1,36 +1,41 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const selectAllCheckbox = document.getElementById("select-all");
-    const rowCheckboxes = document.querySelectorAll(".row-checkbox");
     const searchForm = document.getElementById("search-form");
     const searchInput = document.getElementById("search-input");
-    const rows = document.querySelectorAll(".store-menu-table tbody tr");
     const deleteBtn = document.getElementById("delete-btn");
     const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
     const deleteConfirmModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
     const newRegisterBtn = document.getElementById("new-register-btn");
+    const selectAllCheckbox = document.getElementById("select-all");
+    const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+    const rows = document.querySelectorAll(".store-menu-table tbody tr");
 
-    // 전체 선택 체크박스 상태 변경 시
+    // 전체 선택 체크박스 변경
     selectAllCheckbox.addEventListener("change", function () {
         rowCheckboxes.forEach(checkbox => {
             checkbox.checked = selectAllCheckbox.checked;
         });
     });
 
-    // 개별 체크박스 상태 변경 시
-    rowCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", function () {
-            // 개별 체크박스 상태 변경 시 추가 동작 없음
-        });
-    });
-
-    // 행 클릭 시 /menu/store/menu_info 이동 (체크박스를 제외한 부분 클릭 시)
+    // 행 클릭 시 페이지 이동 (체크박스 열 제외)
     rows.forEach(row => {
         row.addEventListener("click", function (event) {
-            // 클릭한 요소가 체크박스이면 이동하지 않음
-            if (event.target.type === "checkbox") return;
+            const target = event.target;
 
-            // 체크박스 외의 영역 클릭 시 이동
-            window.location.href = "/menu/store/menu_info";
+            // 체크박스 클릭 시 체크 상태 변경 후 이벤트 전파 방지
+            if (target.closest(".checkbox-column")) {
+                const checkbox = target.closest(".checkbox-column").querySelector(".row-checkbox");
+                if (checkbox) {
+                    checkbox.checked = !checkbox.checked;
+                }
+                event.stopPropagation(); // tr 클릭 이벤트 방지
+                return;
+            }
+
+            // 체크박스 열이 아닌 경우에만 페이지 이동
+            const item_id = row.querySelector("td:nth-child(2)").textContent.trim();
+
+            // Django view URL 패턴에 맞게 변경
+            window.location.href = `/menu/store/menu_info/${item_id}/`;
         });
     });
 
@@ -51,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 메뉴 신규 등록 페이지 이동
     newRegisterBtn.addEventListener("click", function () {
-        window.location.href = "/menu/store/new_menu"; // 이동할 URL 설정
+        window.location.href = "/menu/store/menu_add"; // 이동할 URL 설정
     });
 
     // 삭제 버튼 클릭 시 모달 표시

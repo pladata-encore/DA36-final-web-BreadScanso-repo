@@ -14,7 +14,7 @@
         right: 50px;
         display: flex;
         flex-direction: row;
-        gap: 30px;
+        gap: 20px;
     }
 /* border 간격 색 설정 */
        .form-check {
@@ -22,7 +22,7 @@
         align-items: center;
         gap: 10px;
         border: 1px solid black; 
-        padding: 5px 30px;
+        padding: 5px 5px 5px 30px ;
         border-radius: 5px;
         background-color: white;
     }
@@ -32,11 +32,12 @@
         justify-content: space-between; /* 왼쪽(이미지) - 오른쪽(입력 폼) 간격 유지 */
         align-items: flex-start;
         width: 100%;
-        max-width: 800px; /* 전체 컨텐츠 크기 조정 가능 */
+        max-width: 1000px; /* 전체 컨텐츠 크기 조정 가능 */
     }
 
     .image-area {
         width: 40%; /* 이미지 영역 비율 조정 가능 */
+        height: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -76,24 +77,24 @@
 /* 버튼 위치 설정 */
     .button-container {
         display: flex;
-        justify-content: space-between; /* 취소 버튼 왼쪽, 저장 버튼 오른쪽 배치 */
+        justify-content: space-between; /* 왼쪽(취소) - 오른쪽(저장) 정렬 */
         width: 100%;
-        max-width: 1000px; /* 컨테이너 크기 조정 가능 */
-        position: absolute;
-        bottom: 30px; /* 버튼의 위치 조정 가능 */
-        left: 50%;
-        transform: translateX(-50%);
+        max-width: 1000px; /* 전체 컨테이너 크기 */
+        margin-top: 20px; /* content-wrapper와 간격 조정 */
     }
     
+    /* 개별 버튼 스타일 */
     #cancel-btn {
-        margin-left: -10px; /* 왼쪽 버튼 간격 조정 가능 */
+        margin-left: 0; /* 왼쪽 정렬 */
     }
     
     #save-btn {
-        margin-right: -50px; /* 오른쪽 버튼 간격 조정 가능 */
+        margin-right: 0; /* 오른쪽 정렬 */
     }
 </style>
 
+<h3 style="margin-bottom: 50px;" class="text-center">제품 등록</h3>
+    
 <!-- best, new, 노출 여부 체크박스 -->
 <div class="form-check-group">
     <div class="form-check">
@@ -120,63 +121,102 @@
 
     <!-- 오른쪽: 제품 정보 입력 -->
     <div class="form-area">
-        <div class="mb-3">
-            <label for="item_name">제품명</label>
-            <input type="text" name="item_name" id="item_name" class="form-control" placeholder="제품명을 입력해주세요" required>
+    <div class="mb-3">
+        <label for="item_name">제품명</label>
+        <input type="text" name="item_name" id="item_name" class="form-control" placeholder="제품명을 입력해주세요" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="category">카테고리</label>
+        <div class="d-flex">
+            <select class="form-select" aria-label="카테고리 선택" id="category" name="category">
+                <option selected>카테고리를 선택하세요</option>
+                <option value="빵">빵</option>
+                <option value="디저트">디저트</option>
+            </select>
         </div>
-        <div class="mb-3">
-            <label for="category">카테고리</label>
-            <div class="d-flex">
-                <select class="form-select" aria-label="Default select example" id="category">
-                    <option selected>카테고리를 선택하세요</option>
-                    <option value="빵">빵</option>
-                    <option value="디저트">디저트</option>
-                </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="description">제품설명</label>
+        <input type="text" name="description" id="description" class="form-control" placeholder="제품설명을 입력해주세요" required>
+    </div>
+
+    <div class="mb-3">
+        <fieldset>
+            <legend>영양정보</legend>
+            <label for="nutrition_weight">총 내용량(g)</label>
+            <input type="text" name="nutrition_weight" id="nutrition_weight" class="form-control" placeholder="총 내용량(g)">
+
+            <label for="nutrition_calories">총 내용량당 칼로리(kcal)</label>
+            <input type="text" name="nutrition_calories" id="nutrition_calories" class="form-control" placeholder="총 내용량당 칼로리(kcal)">
+
+            <label for="nutrition_sodium">나트륨(mg)</label>
+            <input type="text" name="nutrition_sodium" id="nutrition_sodium" class="form-control" placeholder="나트륨(mg)">
+
+            <label for="nutrition_sugar">당류(g)</label>
+            <input type="text" name="nutrition_sugar" id="nutrition_sugar" class="form-control" placeholder="당류(g)">
+
+            <label for="nutrition_carbohydrates">탄수화물(g)</label>
+            <input type="text" name="nutrition_carbohydrates" id="nutrition_carbohydrates" class="form-control" placeholder="탄수화물(g)">
+
+            <label for="nutrition_saturated_fat">포화지방(g)</label>
+            <input type="text" name="nutrition_saturated_fat" id="nutrition_saturated_fat" class="form-control" placeholder="포화지방(g)">
+
+            <label for="nutrition_trans_fat">트랜스지방(g)</label>
+            <input type="text" name="nutrition_trans_fat" id="nutrition_trans_fat" class="form-control" placeholder="트랜스지방(g)">
+
+            <label for="nutrition_protein">단백질(g)</label>
+            <input type="text" name="nutrition_protein" id="nutrition_protein" class="form-control" placeholder="단백질(g)">
+        </fieldset>
+    </div>
+
+    <div class="mb-3">
+        <fieldset>
+            <legend>알레르기정보</legend>
+
+            <div class="form-check">
+                <input type="checkbox" name="allergy_wheat" id="allergy_wheat" value="1" class="form-check-input">
+                <label for="allergy_wheat" class="form-check-label">밀</label>
             </div>
-        </div>
-        <div class="mb-3">
-            <label for="item_info">제품설명</label>
-            <input type="text" name="item_info" id="item_info" class="form-control" placeholder="제품설명을 입력해주세요" required>
-        </div>
-        <div class="mb-3">
-            <label for="nutrition_info">영양정보</label>
-            <input type="text" name="nutrition_info" id="nutrition_info" class="form-control" placeholder="영양정보" required>
-        </div>
-        <div class="mb-3">
-            <label for="allergy_info">알레르기정보</label>
-            <input type="text" name="allergy_info" id="allergy_info" class="form-control" placeholder="알레르기 정보" required>
-        </div>
-        <div class="mb-3">
-            <label for="cost">원가</label>
-            <input type="text" name="cost" id="cost" class="form-control" placeholder="￦원가">
-        </div>
-        <div class="mb-3">
-            <label for="price">판매가</label>
-            <input type="text" name="price" id="price" class="form-control" placeholder="￦판매가">
-        </div>
+
+            <div class="form-check">
+                <input type="checkbox" name="allergy_milk" id="allergy_milk" value="1" class="form-check-input">
+                <label for="allergy_milk" class="form-check-label">우유</label>
+            </div>
+
+            <div class="form-check">
+                <input type="checkbox" name="allergy_egg" id="allergy_egg" value="1" class="form-check-input">
+                <label for="allergy_egg" class="form-check-label">계란</label>
+            </div>
+
+            <div class="form-check">
+                <input type="checkbox" name="allergy_soybean" id="allergy_soybean" value="1" class="form-check-input">
+                <label for="allergy_soybean" class="form-check-label">대두</label>
+            </div>
+
+            <div class="form-check">
+                <input type="checkbox" name="allergy_nuts" id="allergy_nuts" value="1" class="form-check-input">
+                <label for="allergy_nuts" class="form-check-label">견과류</label>
+            </div>
+
+            <label for="allergy_etc">기타</label>
+            <input type="text" name="allergy_etc" id="allergy_etc" class="form-control" placeholder="그외 알레르기 정보">
+        </fieldset>
+    </div>
+
+    <div class="mb-3">
+        <label for="cost_price">원가</label>
+        <input type="text" name="cost_price" id="cost_price" class="form-control" placeholder="￦원가">
+    </div>
+
+    <div class="mb-3">
+        <label for="sale_price">판매가</label>
+        <input type="text" name="sale_price" id="sale_price" class="form-control" placeholder="￦판매가">
+    </div>
     </div>
 </div>
 
-
-<!-- modal -->    
-<div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="saveConfirmModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        제품을 저장하시겠습니까?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary" id="confirm-save-btn">확인</button>
-      </div>
-    </div>
-  </div>
-</div>
-    
 <div class="button-container">
     <!-- 취소 버튼 (왼쪽) -->
     <button type="button" class="btn btn-warning" id="cancel-btn">취소</button>
@@ -184,8 +224,25 @@
     <!-- 저장 버튼 (오른쪽) -->
     <button type="button" class="btn btn-success" id="save-btn" data-bs-toggle="modal" data-bs-target="#saveConfirmModal">저장</button>
 </div>
-    
 
+<!-- modal -->
+<div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="saveConfirmModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            제품을 저장하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary" id="confirm-save-btn">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
     
 {% endblock content%}
 
