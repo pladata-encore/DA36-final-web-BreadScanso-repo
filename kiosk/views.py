@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from member.models import Member
+from django.views.decorators.csrf import csrf_exempt
+import json
+
 
 
 def kiosk_main(request):
@@ -47,4 +50,32 @@ def check_phone_number(request):
     except Exception as e:
         return JsonResponse({"is_member": False, "error": str(e)})
 
+
+
+@csrf_exempt
+def update_points(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)  # JSON 데이터 받기
+            phone_num = data.get("phone_num")  # 전화번호 가져오기
+            final_points = data.get("final_points")  # 최종 보유 포인트 가져오기
+
+            if not phone_num or final_points is None:
+                return JsonResponse({"success": False, "message": "필수 데이터가 부족합니다."}, status=400)
+
+            # 회원 정보 조회 및 포인트 업데이트
+            member = Member.objects.filter(phone_num=phone_num).first()
+            if member:
+                member.points = final_points  # 포인트 업데이트
+                member.save()
+                return JsonResponse({"success": True, "message": "포인트가 업데이트되었습니다."})
+            else:
+                return JsonResponse({"success": False, "message": "해당 회원을 찾을 수 없습니다."}, status=404)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "message": "잘못된 JSON 형식입니다."}, status=400)
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+    return JsonResponse({"success": False, "message": "잘못된 요청 방식입니다."}, status=405)
 
