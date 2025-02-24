@@ -121,7 +121,7 @@
     <script>
         const menu_data = {{ menu_data|safe|default:"{}" }};
     </script>
-    
+
 <script>
     // 웹캠 설정
     const video = document.getElementById("webcam");
@@ -167,7 +167,7 @@
         orderTable.innerHTML = "";
         let totalQuantity = 0;
         let totalPrice = 0;
-        
+
         Object.keys(productDictionary).forEach(itemName => {
             const product = productDictionary[itemName];
             totalQuantity += product.quantity;
@@ -183,7 +183,7 @@
             orderTable.innerHTML += row;
         });
 
-        // 총 수량과 금액 업데이트
+        // 총 수량과 금액 업데이트 {# 아마도 session으로 업데이트 #}
         totalQuantityElement.innerHTML = `${totalQuantity}개`;
         totalPriceElement.innerHTML = `${totalPrice.toLocaleString()}원`;
     }
@@ -221,11 +221,11 @@
                     const engName = result.name;
                     const korName = getKoreanName(engName);
                     const price = menu_data[engName]?.price || 0;
-                    
+
 
                     if (productDictionary[engName]) {
                         productDictionary[engName].quantity += 1;
-                        productDictionary[engName].totalAmount = 
+                        productDictionary[engName].totalAmount =
                             productDictionary[engName].quantity * productDictionary[engName].price;
                     } else {
                         productDictionary[engName] = {
