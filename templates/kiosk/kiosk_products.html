@@ -85,6 +85,7 @@
         <div class="video-container">
             <video id="webcam" autoplay playsinline></video>
             <button id="capture-btn">📸촬영</button>
+            
         </div>
 
         <!-- 주문 목록 -->
@@ -116,10 +117,12 @@
             <button class="black-button">결제</button>
         </a>
     </div>
+    
 
     <!-- Django 데이터를 JavaScript에 전달 -->
     <script>
         const menu_data = {{ menu_data|safe|default:"{}" }};
+        console.log("Loaded menu_data:", menu_data);
     </script>
 
 <script>
@@ -157,7 +160,11 @@
             alert("웹캠을 사용할 수 없습니다. 브라우저 설정을 확인하세요.");
         }
     }
-
+    // 테이블 초기화 함수
+    function resetOrder() {
+    productDictionary = {};
+    updateOrderTable();      
+}
     // 테이블 업데이트 함수
     function updateOrderTable() {
         const orderTable = document.getElementById("order-table");
