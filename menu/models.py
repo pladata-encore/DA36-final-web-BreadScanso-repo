@@ -15,6 +15,7 @@ class Item(models.Model):
     show = models.BooleanField(default=False)
     stock = models.IntegerField(default=0)
     item_name_eng = models.CharField(max_length=50, null=True)
+    item_image = models.ImageField(upload_to='', null=True, blank=True)  # 제품 사진
 
 
     def __str__(self):
