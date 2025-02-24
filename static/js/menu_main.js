@@ -82,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
             this.style.transform = "scale(1.05)";
             this.style.zIndex = "10";
             this.style.position = "relative";
-            this.style.boxShadow = "0px 4px 10px rgba(0, 0, 0, 0.2)";
         });
 
         element.addEventListener("mouseleave", function () {

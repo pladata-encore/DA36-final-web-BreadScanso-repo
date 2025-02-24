@@ -49,7 +49,8 @@
                 <div class="best-carousel-wrapper">
                     <div class="best-carousel-track">
                         {% for item in best_items %}
-                        <div class="best-carousel-item" data-id="{{ item.item_id }}">
+                        <div class="best-carousel-item" data-id="{{ item.item_id }}" 
+                             style="transition: transform 0.3s ease-in-out; cursor: pointer;">
                             <img src="{% static 'images/' %}{{ item.image_filename }}" alt="{{ item.item_name }}">
                             <div class="product-name">{{ item.item_name }}</div>
                         </div>
@@ -89,6 +90,6 @@
     </div>
 </body>
 
-    <!-- 풋터 -->   
+    <!-- 풋터 -->
     {% include 'layout/main/footer_main.html' %}
 </html>
