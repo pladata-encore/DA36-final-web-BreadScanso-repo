@@ -12,6 +12,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const usePoints = parseNumber(sessionStorage.getItem("use_points") || "0");
         const phoneNum = sessionStorage.getItem("phone_num"); // 회원 전화번호 가져오기
 
+        // 핸드폰 번호가 0이 아니면 회원으로 간주
+        if (phoneNum !== "0" && phoneNum !== null) {
+            document.getElementById("points-section").style.display = "block";
+            document.getElementById("final-points").style.display = "block";
+        } else {
+            document.getElementById("points-section").style.display = "none";
+            document.getElementById("final-points").style.display = "none";
+        }
+
         console.log("최종 결제 금액:", finalAmount);
         console.log("기존 보유 포인트:", points);
         console.log("사용한 포인트:", usePoints);
