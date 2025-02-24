@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     let bestCarouselIndex = 0;
     const track = document.querySelector(".best-carousel-track");
     const items = document.querySelectorAll(".best-carousel-item");
@@ -40,86 +40,68 @@ document.addEventListener("DOMContentLoaded", function() {
     // 5초마다 자동 이동
     setInterval(() => moveBestCarousel(1), 5000);
 
-    // 임의 제품 리스트
-    const products = [
-        {id: 1, name: 'Bagel', image: '/static/images/bagel.jpg', description: '쫄깃한 베이글', nutrition: '칼로리: 250kcal', allergy: '글루텐', price: '3,000원', tag: 'Best'},
-        {id: 2, name: 'Croissant', image: '/static/images/croissant.jpg', description: '바삭한 크루아상', nutrition: '칼로리: 300kcal', allergy: '우유, 글루텐', price: '3,500원', tag: 'New'},
-        {id: 3, name: 'Custard Cream Bread', image: '/static/images/custardcreambread.png', description: '달콤한 커스터드 크림빵', nutrition: '칼로리: 350kcal', allergy: '우유, 계란', price: '4,000원'},
-        {id: 4, name: 'Loaf Bread', image: '/static/images/loafbread.jpg', description: '부드러운 식빵', nutrition: '칼로리: 270kcal', allergy: '글루텐', price: '2,500원'},
-        {id: 5, name: 'Macaron', image: '/static/images/product1.jpg', description: '달콤한 마카롱', nutrition: '칼로리: 150kcal', allergy: '계란, 견과류', price: '2,000원'},
-        {id: 6, name: 'Pizza Bread', image: '/static/images/pizzabread.jpg', description: '맛있는 피자 브레드', nutrition: '칼로리: 400kcal', allergy: '글루텐, 유제품', price: '4,500원'},
-        {id: 7, name: 'Red Bean Bread', image: '/static/images/redbeanbread.jpg', description: '달콤한 팥빵', nutrition: '칼로리: 320kcal', allergy: '글루텐', price: '3,200원'},
-        {id: 8, name: 'Salt Bread', image: '/static/images/saltbread.jpg', description: '짭짤한 소금빵', nutrition: '칼로리: 280kcal', allergy: '글루텐', price: '2,800원'},
-        {id: 9, name: 'Soboro', image: '/static/images/soboro.jpg', description: '고소한 소보로빵', nutrition: '칼로리: 350kcal', allergy: '글루텐, 우유', price: '3,300원'},
-        {id: 10, name: 'White Bread', image: '/static/images/whitebread.jpg', description: '담백한 화이트 브레드', nutrition: '칼로리: 260kcal', allergy: '글루텐', price: '2,800원'},
-        {id: 11, name: 'Croissant', image: '/static/images/croissant.jpg', description: '바삭한 크루아상', nutrition: '칼로리: 300kcal', allergy: '우유, 글루텐', price: '3,500원', tag: 'New'},
-        {id: 12, name: 'Custard Cream Bread', image: '/static/images/custardcreambread.png', description: '달콤한 커스터드 크림빵', nutrition: '칼로리: 350kcal', allergy: '우유, 계란', price: '4,000원'},
-        {id: 13, name: 'Loaf Bread', image: '/static/images/loafbread.jpg', description: '부드러운 식빵', nutrition: '칼로리: 270kcal', allergy: '글루텐', price: '2,500원'},
-        {id: 14, name: 'Macaron', image: '/static/images/product1.jpg', description: '달콤한 마카롱', nutrition: '칼로리: 150kcal', allergy: '계란, 견과류', price: '2,000원'},
-        {id: 15, name: 'Pizza Bread', image: '/static/images/pizzabread.jpg', description: '맛있는 피자 브레드', nutrition: '칼로리: 400kcal', allergy: '글루텐, 유제품', price: '4,500원'},
-        {id: 16, name: 'Red Bean Bread', image: '/static/images/redbeanbread.jpg', description: '달콤한 팥빵', nutrition: '칼로리: 320kcal', allergy: '글루텐', price: '3,200원'},
-        {id: 16, name: 'Salt Bread', image: '/static/images/saltbread.jpg', description: '짭짤한 소금빵', nutrition: '칼로리: 280kcal', allergy: '글루텐', price: '2,800원'},
-        {id: 18, name: 'Soboro', image: '/static/images/soboro.jpg', description: '고소한 소보로빵', nutrition: '칼로리: 350kcal', allergy: '글루텐, 우유', price: '3,300원'},
-        {id: 19, name: 'White Bread', image: '/static/images/whitebread.jpg', description: '담백한 화이트 브레드', nutrition: '칼로리: 260kcal', allergy: '글루텐', price: '2,800원'},
-        {id: 20, name: 'Bagel', image: '/static/images/bagel.jpg', description: '쫄깃한 베이글', nutrition: '칼로리: 250kcal', allergy: '글루텐', price: '3,000원', tag: 'Best'}
-    ];
-
-    products.sort((a, b) => a.name.localeCompare(b.name));  // 가나다 순 정렬
-
+    // 제품 표시 기능
     let displayedProducts = 0;
+    const itemsData = Array.from(document.querySelectorAll('.col'));  // 모든 제품 가져오기
+    const productGrid = document.getElementById('productGrid');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-    function showProductDetails(id) {
-        location.href = `/menu/product_detail/${id}`
-    }
-
-    // 제품 표시
     function displayProducts() {
-        const productGrid = document.getElementById('productGrid');
-        const productsToShow = products.slice(displayedProducts, displayedProducts + 10);
+        const productsToShow = itemsData.slice(displayedProducts, displayedProducts + 10);
 
         productsToShow.forEach(product => {
-            console.log(product)
-            const productItem = document.createElement('div');
-            productItem.className = 'product-item';
-            productItem.innerHTML = `
-                <div>
-                    <img src="${product.image}" alt="${product.name}" onclick="location.href = '/menu/product_detail/${product.id}'">
-                    ${product.tag ? `<div class="tag">${product.tag}</div>` : ''}
-                </div>
-                <div class="product-name">${product.name}</div>
-            `;
-            productGrid.appendChild(productItem);
+            product.style.display = 'block';  // 제품 보이게 설정
         });
 
         displayedProducts += productsToShow.length;
-        if (displayedProducts >= products.length) {
-            document.getElementById('loadMoreBtn').style.display = 'none';
+
+        if (displayedProducts >= itemsData.length) {
+            loadMoreBtn.style.display = 'none';  // 모든 제품이 표시되면 버튼 숨김
         }
     }
 
-// // Show product details
-//     function showProductDetails(productName) {
-//         const product = products.find(p => p.name === productName);
-//         document.querySelector('.container').style.display = 'none';
-//         document.getElementById('productDetails').style.display = 'block';
-//
-//         document.getElementById('detailName').innerText = product.name;
-//         document.getElementById('detailImage').src = product.image;
-//         document.getElementById('detailDescription').innerText = product.description;
-//         document.getElementById('detailNutrition').innerText = product.nutrition;
-//         document.getElementById('detailAllergy').innerText = product.allergy;
-//         document.getElementById('detailPrice').innerText = product.price;
-//     }
+    // 더보기 버튼 클릭 시 제품 추가 표시
+    loadMoreBtn.addEventListener('click', displayProducts);
 
-    // // Go back to list
-    // function goBackToList() {
-    //     document.getElementById('productDetails').style.display = 'none';
-    //     document.querySelector('.container').style.display = 'block';
-    // }
+    // 초기 10개만 보이게 설정
+    itemsData.forEach((product, index) => {
+        product.style.display = index < 10 ? 'block' : 'none';
+    });
 
-    // 더보기 버튼
-    document.getElementById('loadMoreBtn').addEventListener('click', displayProducts);
+    // 카드 및 캐러셀 아이템 클릭 시 상세 페이지로 이동
+    document.querySelectorAll(".product-card, .best-carousel-item").forEach(element => {
+        element.addEventListener("click", function () {
+            const item_id = this.getAttribute("data-id");
+            if (item_id) {
+                location.href = `/menu/product_detail/${item_id}`;
+            }
+        });
 
-    // 첫화면 로드
-    window.onload = displayProducts;
+        // hover 효과 추가
+        element.addEventListener("mouseenter", function () {
+            this.style.transform = "scale(1.05)";
+            this.style.zIndex = "10";
+            this.style.position = "relative";
+            this.style.boxShadow = "0px 4px 10px rgba(0, 0, 0, 0.2)";
+        });
+
+        element.addEventListener("mouseleave", function () {
+            this.style.transform = "scale(1)";
+            this.style.zIndex = "1";
+            this.style.boxShadow = "none";
+        });
+    });
+
+    // 캐러셀 내부의 이미지 클릭 시에도 부모의 data-id로 이동 가능하게 수정
+    document.querySelectorAll(".best-carousel-item img").forEach(img => {
+        img.addEventListener("click", function () {
+            const parent = this.closest(".best-carousel-item");
+            const item_id = parent.getAttribute("data-id");
+
+            if (item_id) {
+                location.href = `/menu/product_detail/${item_id}`;
+            }
+        });
+    });
 });
+
