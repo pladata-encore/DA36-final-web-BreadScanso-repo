@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from member.models import Member
 from django.contrib import messages
 import re
+from .utils import upload_to_s3
 
 def index(request):
     return render(request, "main/index.html")
@@ -19,9 +20,13 @@ def signup(request):
         email = request.POST.get('email')
         age_group = request.POST.get('age_group')
         sex = request.POST.get('sex')
+        profile = request.FILES.get("profile")
 
         # User 모델에 회원 생성
         user = User.objects.create_user(username=member_id, email=email, password=password1)
+
+        # S3에 프로필 이미지 업로드 후 URL 저장
+        profile_url = upload_to_s3(profile) if profile else None
 
         # Member 모델에 회원 정보 저장 + User 연결
         member = Member.objects.create(
