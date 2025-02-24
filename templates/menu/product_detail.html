@@ -21,8 +21,6 @@
     <div class="product-detail-container">
         <div class="product-content">
             <div class="product-image">
-                <!-- 버튼을 이미지 상단 왼쪽에 위치 -->
-                <button class="back-button" onclick="history.back()">◀ 목록으로</button>
                 
                 <!-- 제품 이미지 -->
                 {% if item.image_filename %}
@@ -31,6 +29,16 @@
             </div>
 
             <div class="product-info">
+                <!-- Best & New 태그 추가 -->
+                <div class="tag-container">
+                    {% if item.best %}
+                        <span class="tag best-tag">Best</span>
+                    {% endif %}
+                    {% if item.new %}
+                        <span class="tag new-tag">New</span>
+                    {% endif %}
+                </div>
+            
                 <h1>{{ item.item_name }}</h1>
                 <p>{{ item.description }}</p>
 
@@ -76,6 +84,8 @@
                 <p class="product-price"><strong>판매가:</strong> {{ item.sale_price|default:"가격 미정" }}원</p>
             </div>
         </div>
+        <!-- 목록 버튼 하단 왼쪽에 위치 -->
+        <button class="back-button" onclick="history.back()">◀ 목록으로</button>
     </div>
 </body>
 
