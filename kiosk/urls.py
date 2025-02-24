@@ -10,6 +10,9 @@ urlpatterns = [
     path('payment_method/', views.payment_method, name='payment_method'),  # 결제 방식 페이지
     path('payment_completed/', views.payment_completed, name='payment_completed'),  # 결제 완료/영수증 페이지
     path('phonenumber/check-phone/', views.check_phone_number, name='check_phone_number'),
+    path("update_points/", views.update_points, name="update_points"),
 ]
+
+
 
 
