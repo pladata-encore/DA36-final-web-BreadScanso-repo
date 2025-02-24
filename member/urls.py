@@ -9,6 +9,7 @@ urlpatterns = [
     path('member_edit/', views.member_edit, name='member_edit'), # 회원정보수정 페이지
     path('check-user-id/', views.check_user_id, name='check_user_id'), # 회원정보수정 - 아이디중복확인
     path('member_pw/', views.member_pw, name='member_pw'), # 비밀번호변경 페이지
+    path("check_password/", views.check_password, name="check_password"),  # 비밀번호 확인
     path('member_delete/', views.member_delete, name='member_delete'), # 회원탈퇴 페이지
     path('member_delete_detail/', views.member_delete_detail, name='member_delete_detail'), # 회원탈퇴 사유입력 페이지
 ]
