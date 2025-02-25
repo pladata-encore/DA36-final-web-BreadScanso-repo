@@ -84,7 +84,7 @@
                             {% if item.item_image %}
                                 <img src="{{ item.item_image }}" class="card-img-top" alt="{{ item.item_name }}">
                             {% else %}
-                                <img src="{% static 'images/default.png' %}" class="card-img-top">
+                                <img src="{% static 'images/' %}{{ item.image_filename }}" class="card-img-top">
                             {% endif %}
                             <div class="card-body text-center">
                                 <h5 class="card-title">{{ item.item_name }}</h5>
