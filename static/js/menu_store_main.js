@@ -59,26 +59,51 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "/menu/store/menu_add"; // 이동할 URL 설정
     });
 
-    // 삭제 버튼 클릭 시 모달 표시
+    // 삭제 기능
     deleteBtn.addEventListener("click", function () {
-        const checkedRows = document.querySelectorAll(".row-checkbox:checked");
-
-        if (checkedRows.length === 0) {
-            alert("삭제할 제품을 선택하세요.");
-        } else {
-            deleteConfirmModal.show();
+        const selectedIds = document.querySelectorAll(".row-checkbox:checked");
+        if (selectedIds.length === 0) {
+            alert("삭제할 항목을 선택해주세요.");
+            return;
         }
+        deleteConfirmModal.show();  // ✅ 모달 표시
     });
 
-    // 모달에서 삭제 버튼 클릭 시 선택된 행 삭제
-    confirmDeleteBtn.addEventListener("click", function () {
-        const checkedRows = document.querySelectorAll(".row-checkbox:checked");
+    // ✅ 모달에서 삭제 확인 버튼 클릭 시 삭제 요청 보내기
+    confirmDeleteBtn.addEventListener("click", async function () {
+        const selectedIds = Array.from(document.querySelectorAll(".row-checkbox:checked"))
+            .map(checkbox => checkbox.closest("tr").querySelector("td:nth-child(2)").textContent.trim());
 
-        checkedRows.forEach((checkbox) => {
-            checkbox.closest("tr").remove(); // 선택된 행 삭제
-        });
+        if (selectedIds.length === 0) {
+            alert("삭제할 항목을 선택해주세요.");
+            return;
+        }
 
-        // 모달 닫기
-        deleteConfirmModal.hide();
+        try {
+            const response = await fetch('menu_delete/', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken(),
+                },
+                body: JSON.stringify({ item_ids: selectedIds }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert("삭제가 완료되었습니다.");
+                window.location.reload();
+            } else {
+                alert("삭제 실패: " + data.message);
+            }
+        } catch (error) {
+            alert("삭제 중 오류가 발생했습니다.");
+        }
+
+        console.log(selectedIds);
     });
 });
+
+function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}

@@ -2,9 +2,11 @@ import os
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
 from .models import Item, NutritionInfo, Allergy
+import json
 
 def menu_main(request):
     items = Item.objects.filter(show='1')
@@ -16,10 +18,22 @@ def menu_main(request):
     return render(request, 'menu/menu_main.html', {'items': items, 'best_items': best_items})  # 메인 메뉴정보 페이지
 
 def menu_store(request):
-    items = Item.objects.all()
-    paginator = Paginator(items, 10)  # 한 페이지당 10개씩 표시
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
+    items = Item.objects.all().order_by("item_id")
+    # 페이지네이션 처리 (10개씩)
+    paginator = Paginator(items, 10)
+    # 페이지 번호 가져오기, 유효하지 않으면 1 페이지로 설정
+    page_number = request.GET.get("page", 1)
+    try:
+        page_number = int(page_number)
+        if page_number < 1:
+            page_number = 1
+    except ValueError:
+        page_number = 1
+    try:
+        page_obj = paginator.get_page(page_number)
+    except EmptyPage:
+        # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
+        page_obj = paginator.get_page(paginator.num_pages)
     return render(request, 'menu/menu_store.html',{'items': items, "page_obj": page_obj})  # 점주 페이지의 메뉴관리 페이지
 
 def product_detail(request, item_id):
@@ -65,46 +79,144 @@ def get_existing_image(item_name_eng):
             return f"{item_name_eng}{ext}"
     return None  # 이미지가 없으면 None 반환
 
+@require_http_methods(["POST"])
+def menu_delete(request):
+    try:
+        # 요청 데이터 파싱
+        data = json.loads(request.body)
+        item_ids = data.get("item_ids", [])
 
-@csrf_exempt  # POST 요청을 CSRF 검사 없이 받도록 설정 (테스트 용도)
+        if not item_ids:
+            return JsonResponse({
+                "success": False,
+                "message": "삭제할 항목이 없습니다."
+            })
+
+        NutritionInfo.objects.filter(item_id__in=item_ids).delete()
+        Allergy.objects.filter(item_id__in=item_ids).delete()
+        deleted_count, _ = Item.objects.filter(item_id__in=item_ids).delete()
+
+        # 삭제 결과 반환
+        if deleted_count > 0:
+            return JsonResponse({
+                "success": True,
+            })
+        else:
+            return JsonResponse({
+                "success": False,
+            })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "message": "잘못된 요청 데이터입니다."
+        })
+    except Exception as e:
+        return JsonResponse({
+            "success": False,
+            "message": "서버 오류가 발생했습니다."
+        })
+
+
+# 신규 제품 등록
 def menu_save(request):
     if request.method == "POST":
-        # 제품 기본 정보 저장
-        item = Item.objects.create(
-            item_name=request.POST.get("item_name"),
-            category="bread" if request.POST.get("category") == "빵" else "dessert",
-            description=request.POST.get("description"),
-            cost_price=request.POST.get("cost_price"),
-            sale_price=request.POST.get("sale_price"),
-            best=bool(int(request.POST.get("best", 0))),
-            new=bool(int(request.POST.get("new", 0))),
-            show=bool(int(request.POST.get("show", 0)))
-        )
+        # best, new, show 체크박스 여부
+        best = request.POST.get("best") == "on"
+        new = request.POST.get("new") == "on"
+        show = request.POST.get("show") == "on"
 
-        # 영양 정보 저장
-        NutritionInfo.objects.create(
-            item=item,
-            nutrition_weight=request.POST.get("nutrition_weight"),
-            nutrition_calories=request.POST.get("nutrition_calories"),
-            nutrition_sodium=request.POST.get("nutrition_sodium"),
-            nutrition_sugar=request.POST.get("nutrition_sugar"),
-            nutrition_carbohydrates=request.POST.get("nutrition_carbohydrates"),
-            nutrition_saturated_fat=request.POST.get("nutrition_saturated_fat"),
-            nutrition_trans_fat=request.POST.get("nutrition_trans_fat"),
-            nutrition_protein=request.POST.get("nutrition_protein")
-        )
+        # 기본 제품 정보
+        item_name = request.POST.get("item_name")
+        category = request.POST.get("category")
+        store = request.POST.get("store")
+        description = request.POST.get("description")
+        cost_price = request.POST.get("cost_price")
+        sale_price = request.POST.get("sale_price")
 
-        # 알레르기 정보 저장
-        Allergy.objects.create(
-            item=item,
-            allergy_wheat=bool(int(request.POST.get("allergy_wheat", 0))),
-            allergy_milk=bool(int(request.POST.get("allergy_milk", 0))),
-            allergy_egg=bool(int(request.POST.get("allergy_egg", 0))),
-            allergy_soybean=bool(int(request.POST.get("allergy_soybean", 0))),
-            allergy_nuts=bool(int(request.POST.get("allergy_nuts", 0))),
-            allergy_etc=request.POST.get("allergy_etc", "")
-        )
+        # 영양 정보
+        nutrition_weight = request.POST.get("nutrition_weight")
+        nutrition_calories = request.POST.get("nutrition_calories")
+        nutrition_sodium = request.POST.get("nutrition_sodium")
+        nutrition_sugar = request.POST.get("nutrition_sugar")
+        nutrition_carbohydrates = request.POST.get("nutrition_carbohydrates")
+        nutrition_saturated_fat = request.POST.get("nutrition_saturated_fat")
+        nutrition_trans_fat = request.POST.get("nutrition_trans_fat")
+        nutrition_protein = request.POST.get("nutrition_protein")
 
-        return JsonResponse({"message": "메뉴가 성공적으로 저장되었습니다!", "item_id": item.id})
+        # 알레르기 정보
+        allergy_wheat = request.POST.get("allergy_wheat") == "on"
+        allergy_milk = request.POST.get("allergy_milk") == "on"
+        allergy_egg = request.POST.get("allergy_egg") == "on"
+        allergy_soybean = request.POST.get("allergy_soybean") == "on"
+        allergy_nuts = request.POST.get("allergy_nuts") == "on"
+        allergy_etc = request.POST.get("allergy_etc", "")
 
-    return JsonResponse({"message": "잘못된 요청입니다."}, status=400)
+        # 이미지 업로드
+        item_image = None
+        if 'item_image' in request.FILES:
+            item_image = request.FILES['item_image']
+
+        # 제품 정보 입력 검수
+        if not all([item_name, category, description, cost_price, sale_price, store]):
+            return render(request, 'menu/new_menu.html', {
+                'error': '기본 정보의 모든 필드를 입력해주세요.'
+            })
+
+        try:
+            menu = Item(
+                best=best,
+                new=new,
+                show=show,
+                item_name=item_name,
+                category=category,
+                store=store,
+                description=description,
+                cost_price=cost_price,
+                sale_price=sale_price,
+                item_image=item_image
+            )
+            menu.save()
+
+            # 영양 정보
+            if all([nutrition_weight, nutrition_calories, nutrition_sodium, nutrition_sugar,
+                    nutrition_carbohydrates, nutrition_saturated_fat, nutrition_trans_fat, nutrition_protein]):
+                nutrition = NutritionInfo(
+                    item_id=menu.item_id,
+                    nutrition_weight=nutrition_weight,
+                    nutrition_calories=nutrition_calories,
+                    nutrition_sodium=nutrition_sodium,
+                    nutrition_sugar=nutrition_sugar,
+                    nutrition_carbohydrates=nutrition_carbohydrates,
+                    nutrition_saturated_fat=nutrition_saturated_fat,
+                    nutrition_trans_fat=nutrition_trans_fat,
+                    nutrition_protein=nutrition_protein
+                )
+                nutrition.save()
+            else:
+                # 영양 정보 입력 검수
+                menu.delete()
+                return render(request, 'menu/new_menu.html', {
+                    'error': '영양 정보의 모든 필드를 입력해주세요.'
+                })
+
+            # 영양 정보 등록
+            allergy = Allergy(
+                item_id=menu.item_id,
+                allergy_wheat=allergy_wheat,
+                allergy_milk=allergy_milk,
+                allergy_egg=allergy_egg,
+                allergy_soybean=allergy_soybean,
+                allergy_nuts=allergy_nuts,
+                allergy_etc=allergy_etc
+            )
+            allergy.save()
+
+            return redirect('menu_store_menu_info')
+
+        except Exception as e:
+            return render(request, 'menu/new_menu.html', {
+                'error': f'저장 중 오류가 발생했습니다: {str(e)}'
+            })
+    else:
+        return render(request, 'menu/new_menu.html')

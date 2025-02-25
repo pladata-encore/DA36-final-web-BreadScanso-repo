@@ -8,7 +8,8 @@ urlpatterns = [
     path('dessert', views.menu_main_dessert, name='menu_main_dessert'),  # 디저트 카테고리 페이지
     path('store/', views.menu_store, name='menu_store'),  # 점주 메뉴관리 페이지
     path('store/menu_add', views.menu_add, name='menu_add'),  # 점주 메뉴 신규등록 페이지
-    path("store/menu_save/", views.menu_save, name="menu_save"), # 점주 메뉴 신규 등록 api
+    path('store/menu_save', views.menu_save, name="menu_save"), # 점주 메뉴 신규 등록 api
+    path('store/menu_delete/', views.menu_delete, name="menu_delete"), # 점주 메뉴 삭제 api
     path('store/menu_info', views.menu_store_menu_info, name='menu_store_menu_info'),  # 점주 메뉴관리 상세 페이지
     path('store/menu_edit', views.menu_store_menu_edit, name='menu_store_menu_edit'),  # 점주 메뉴관리 수정 페이지
 ]
