@@ -58,12 +58,12 @@
       <th class="checkbox-column"><input type="checkbox" id="select-all"></th>
       <th scope="col">재료 ID</th>
       <th scope="col">재료명</th>
-      <th scope="col">
-        <select class="form-select form-select-sm" name="store" id="store-filter" onchange="filterStore()">
-          <option value="" style="text-align: center;">전체 매장</option>
-          <option value="A" style="text-align: center;" {% if request.GET.store == "A" %}selected{% endif %}>서초점 (A)</option>
-          <option value="B" style="text-align: center;" {% if request.GET.store == "B" %}selected{% endif %}>강남점 (B)</option>
-        </select>
+      <th scope="col">매장
+{#        <select class="form-select form-select-sm" name="store" id="store-filter" onchange="filterStore()">#}
+{#          <option value="" style="text-align: center;">전체 매장</option>#}
+{#          <option value="A" style="text-align: center;" {% if request.GET.store == "A" %}selected{% endif %}>서초점 (A)</option>#}
+{#          <option value="B" style="text-align: center;" {% if request.GET.store == "B" %}selected{% endif %}>강남점 (B)</option>#}
+{#        </select>#}
       </th>
       <th scope="col" onclick="sortTable()">▲ 재고수량 ▼<i class="bi bi-sort-down-alt"></i></th>
       <th>관리</th>
@@ -88,7 +88,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">재료 정보 수정</h5>
+        <h5 class="modal-title" id="editModalLabel">수정할 정보를 입력하세요.</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">

@@ -1,7 +1,43 @@
+// 테이블 정렬 기능
+function sortTable() {
+    const table = document.querySelector('.stock-ingredient-table tbody');
+    const rows = Array.from(table.rows);
+
+    let currentDirection = table.dataset.direction || 'asc';
+
+    // 재고수량을 기준으로 정렬
+    rows.sort((rowA, rowB) => {
+        const stockA = parseInt(rowA.cells[4].textContent); // 재고수량 열 (index 5)
+        const stockB = parseInt(rowB.cells[4].textContent);
+
+        if (currentDirection === 'asc') {
+            return stockA - stockB; // 오름차순
+        } else {
+            return stockB - stockA; // 내림차순
+        }
+    });
+
+    rows.forEach(row => table.appendChild(row));  // 테이블에 정렬된 rows를 추가
+
+    // 정렬 상태 업데이트
+    table.dataset.direction = currentDirection === 'asc' ? 'desc' : 'asc';
+
+    // 아이콘 업데이트
+    const icon = document.querySelector('.stock-ingredient-table th:nth-child(5) i'); // 5번째 열, 재고수량 열
+    if (currentDirection === 'asc') {
+        icon.classList.remove('bi-sort-down-alt');
+        icon.classList.add('bi-sort-up-alt');
+    } else {
+        icon.classList.remove('bi-sort-up-alt');
+        icon.classList.add('bi-sort-down-alt');
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
     // 테이블 정렬 기능
-    const table = document.querySelector('.stock-ingredient-table tbody');
-    const icon = document.querySelector('.stock-ingredient-table th:nth-child(5) i'); // 재고수량 열 아이콘
+    // const table = document.querySelector('.stock-ingredient-table tbody');
+    // const icon = document.querySelector('.stock-ingredient-table th:nth-child(5) i'); // 재고수량 열 아이콘
 
     // 전체 선택/해제 체크박스 이벤트 처리
     document.getElementById('select-all').addEventListener('change', function () {
@@ -26,44 +62,44 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 테이블 정렬 이벤트 처리
-    table.addEventListener('click', function (event) {
-        if (event.target && event.target.closest('th:nth-child(5)')) { // 5번째 열 클릭 시
-            const rows = Array.from(table.rows);
-            let currentDirection = table.dataset.direction || 'asc';
-
-            rows.sort((rowA, rowB) => {
-                const stockA = parseInt(rowA.cells[4].textContent);
-                const stockB = parseInt(rowB.cells[4].textContent);
-
-                return currentDirection === 'asc' ? stockA - stockB : stockB - stockA;
-            });
-
-            rows.forEach(row => table.appendChild(row));  // 정렬된 rows 다시 추가
-            table.dataset.direction = currentDirection === 'asc' ? 'desc' : 'asc';
-
-            // 아이콘 업데이트
-            if (table.dataset.direction === 'asc') {
-                icon.classList.remove('bi-sort-down-alt');
-                icon.classList.add('bi-sort-up-alt');
-            } else {
-                icon.classList.remove('bi-sort-up-alt');
-                icon.classList.add('bi-sort-down-alt');
-            }
-        }
-    });
+    // table.addEventListener('click', function (event) {
+    //     if (event.target && event.target.closest('th:nth-child(5)')) { // 5번째 열 클릭 시
+    //         const rows = Array.from(table.rows);
+    //         let currentDirection = table.dataset.direction || 'asc';
+    //
+    //         rows.sort((rowA, rowB) => {
+    //             const stockA = parseInt(rowA.cells[4].textContent);
+    //             const stockB = parseInt(rowB.cells[4].textContent);
+    //
+    //             return currentDirection === 'asc' ? stockA - stockB : stockB - stockA;
+    //         });
+    //
+    //         rows.forEach(row => table.appendChild(row));  // 정렬된 rows 다시 추가
+    //         table.dataset.direction = currentDirection === 'asc' ? 'desc' : 'asc';
+    //
+    //         // 아이콘 업데이트
+    //         if (table.dataset.direction === 'asc') {
+    //             icon.classList.remove('bi-sort-down-alt');
+    //             icon.classList.add('bi-sort-up-alt');
+    //         } else {
+    //             icon.classList.remove('bi-sort-up-alt');
+    //             icon.classList.add('bi-sort-down-alt');
+    //         }
+    //     }
+    // });
 
     // 매장 필터링 기능
-    document.getElementById('store-filter').addEventListener('input', function () {
-        var storeValue = this.value;
-        var url = new URL(window.location.href);
-
-        if (storeValue) {
-            url.searchParams.set('store', storeValue);
-        } else {
-            url.searchParams.delete('store');
-        }
-        window.location.href = url;
-    });
+    // document.getElementById('store-filter').addEventListener('input', function () {
+    //     var storeValue = this.value;
+    //     var url = new URL(window.location.href);
+    //
+    //     if (storeValue) {
+    //         url.searchParams.set('store', storeValue);
+    //     } else {
+    //         url.searchParams.delete('store');
+    //     }
+    //     window.location.href = url;
+    // });
 
     // 재고 수정 버튼 클릭 시 모달 열기
     document.querySelectorAll('.btn-warning').forEach(button => {
