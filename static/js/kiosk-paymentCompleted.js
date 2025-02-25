@@ -69,17 +69,18 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("최종 보유 포인트:", finalPoints);
 
         // 서버에 최종 보유 포인트 업데이트 요청
-        fetch("/kiosk/update_points/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCSRFToken(),
-            },
-            body: JSON.stringify({
-                phone_num: phoneNum,
-                final_points: finalPoints,
-            }),
-        })
+fetch("/kiosk/update_points/", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCSRFToken(),
+    },
+    body: JSON.stringify({
+        phone_num: phoneNum,
+        final_points: finalPoints,
+        final_amount: finalAmount  // 최종 결제 금액 추가
+    }),
+})
         .then(response => response.json())
         .then(data => {
             console.log("포인트 업데이트 응답:", data);
@@ -110,3 +111,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updatePoints();
 });
+
