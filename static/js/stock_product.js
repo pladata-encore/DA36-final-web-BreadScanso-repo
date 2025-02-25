@@ -46,13 +46,11 @@ document.querySelectorAll('.btn-warning').forEach(button => {
         const stockCell = row.querySelector('td:nth-child(5)'); // 재고 셀
         const currentStock = stockCell.innerText; // 현재 재고 수량
 
-        const newStock = prompt(`${rowName}의 새로운 재고를 입력하세요:`, currentStock);
+        const newStock = prompt(`${rowName}의 새로운 재고 값을 입력하세요:`, currentStock);
 
         if (newStock !== null && !isNaN(newStock)) {
             updateStock(rowId, newStock, stockCell); // 재고 업데이트 함수 호출
-        } else {
-            alert('유효한 수량을 입력해주세요.');
-        }
+        } 
     });
 });
 

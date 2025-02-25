@@ -14,7 +14,7 @@ def stock_main(request):
 
 def stock_product(request):
     category_filter = request.GET.get('category', '')
-    sort_by = request.GET.get('sort', 'item_id')  # 정렬 기준 (기본값: item_id)
+    sort_by = request.GET.get('sort', 'item_name')  # 정렬 기준 (기본값: item_id)
     order = request.GET.get('order', 'asc')  # 오름차순/내림차순 (기본값: asc)
 
     # 필터링
@@ -71,13 +71,17 @@ def stock_product_new(request):
     return render(request, 'stock/stock_product_new.html')  # 제품 신규등록
 
 def stock_ingredient(request):
-    sort_by = request.GET.get('sort', 'ingredient_id')  # 정렬 기준
+    sort_by = request.GET.get('sort', 'ingredient_name')  # 정렬 기준 (기본값: ingredient_name)
     order = request.GET.get('order', 'asc')  # 오름차순/내림차순 (기본값: asc)
 
     ingredients = Ingredient.objects.all()
+
+    # 정렬 처리
     if order == 'desc':
         sort_by = f"-{sort_by}"
     ingredients = ingredients.order_by(sort_by)
+
+    # 페이지네이션
     paginator = Paginator(ingredients, 10)
     page_number = request.GET.get('page', 1)
     try:
