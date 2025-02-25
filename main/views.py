@@ -6,6 +6,8 @@ from member.models import Member
 from django.contrib import messages
 import re
 from .utils import upload_profile_image_to_s3
+import random
+import string
 
 def index(request):
     return render(request, "main/index.html")
@@ -98,6 +100,13 @@ def check_user_id(request):
 
     return JsonResponse({"valid": True, "message": "사용 가능한 아이디입니다."})
 
+
+def generate_temp_password(length=10):
+    """랜덤한 임시 비밀번호 생성"""
+    characters = string.ascii_letters + string.digits  # 알파벳(대소문자) + 숫자 포함
+    return ''.join(random.choices(characters, k=length))
+
+
 def login_find(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -106,10 +115,28 @@ def login_find(request):
 
         try:
             member = Member.objects.get(name=username, phone_num=phone_num, email=email)
-            messages.success(request, f"회원님의 아이디는 {member.member_id} 입니다.")
-            return redirect("main:login_find")
+
+            try:
+                user = User.objects.get(username=member.member_id)
+
+                temp_password = generate_temp_password()
+                user.set_password(temp_password)
+                user.save()
+
+                return render(request, "main/login_find.html", {
+                    "found_id": member.member_id,
+                    "temp_password": temp_password,  # 새로운 비밀번호를 템플릿에 전달
+                    "username": username,
+                    "phone_num": phone_num,
+                    "email": email,
+                })
+
+            except User.DoesNotExist:
+                messages.error(request, "회원 정보는 존재하지만, 계정 정보(auth_user)를 찾을 수 없습니다.")
+                return render(request, "main/login_find.html")
+
         except Member.DoesNotExist:
             messages.error(request, "일치하는 회원 정보가 없습니다.")
-            return redirect("main:login_find")
+            return render(request, "main/login_find.html")
 
     return render(request, "main/login_find.html")
