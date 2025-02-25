@@ -13,15 +13,12 @@ def stock_main(request):
     return render(request, 'stock/stock_main.html')  # 메인
 
 def stock_product(request):
-    store_filter = request.GET.get('store', '')
-    category_filter = request.GET.get('category', '')  # 수정된 부분
+    category_filter = request.GET.get('category', '')
     sort_by = request.GET.get('sort', 'item_id')  # 정렬 기준 (기본값: item_id)
     order = request.GET.get('order', 'asc')  # 오름차순/내림차순 (기본값: asc)
 
     # 필터링
     items = Item.objects.all()
-    if store_filter:
-        items = items.filter(store=store_filter)
     if category_filter:  # 카테고리 필터링
         items = items.filter(category=category_filter)
 
@@ -74,14 +71,10 @@ def stock_product_new(request):
     return render(request, 'stock/stock_product_new.html')  # 제품 신규등록
 
 def stock_ingredient(request):
-    store_filter = request.GET.get('store', '')
     sort_by = request.GET.get('sort', 'ingredient_id')  # 정렬 기준
     order = request.GET.get('order', 'asc')  # 오름차순/내림차순 (기본값: asc)
 
     ingredients = Ingredient.objects.all()
-    if store_filter:
-        ingredients = ingredients.filter(store=store_filter)
-
     if order == 'desc':
         sort_by = f"-{sort_by}"
     ingredients = ingredients.order_by(sort_by)
@@ -130,7 +123,6 @@ def update_stock_ingredient(request):
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
-
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 def stock_ingredient_edit(request):
