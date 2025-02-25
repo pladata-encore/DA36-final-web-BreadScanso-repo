@@ -20,9 +20,9 @@ def pay_cancel(request):
     # return render(request, "pay/pay_cancel.html", {"cancels": cancels})
 
 def pay_member(request):
-    # purchases = Purchase.objects.filter(member_status="member", is_cancelled=False).order_by("-date")
-    # return render(request, "pay/pay_member.html", {"purchases": purchases})
-    return render(request, "pay/pay_member.html")
+    # GET 요청 처리
+    member = request.user.member
+    return render(request, "pay/pay_member.html", {'member': member})
 
 def pay_member_details(request):
 # def pay_member_details(request, payment_id):
@@ -34,3 +34,5 @@ def pay_member_cancel(request):
     # cancels = Purchase.objects.filter(member_status="member", is_cancelled=True).order_by("-date")
     # return render(request, "pay/pay_member_cancel.html", {"cancels": cancels})
     return render(request, "pay/pay_member_cancel.html")
+
+

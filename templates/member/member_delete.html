@@ -1,22 +1,29 @@
 {% extends 'layout/member/member_base.html' %}
 {% load static %}
 
-{% block title %}Mypage | Delete {% endblock title %}
-{% block user_id%}user_id{% endblock user_id %}
+{% block title %}회원탈퇴{% endblock title %}
+
+{% block header %}
+    {% include 'layout/member/member_header.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/member/member_sidebar.html' %}
+{% endblock sidebar %}
+
 {% block content %}
-            <h3 style="margin-bottom: 50px;" class="text-center">회원탈퇴</h3>
+    <h3 style="margin-bottom: 50px;" class="text-center">회원탈퇴</h3>
 
-            <form class="row g-3">
-              <div class="col-auto">
-                <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="비밀번호">
-              </div>
-              <div class="col-auto">
-                <input type="password" class="form-control" id="inputPassword2" placeholder="비밀번호를 입력해주세요">
-              </div>
-              <div class="col-auto">
-                <button type="button" id="confirmButton" class="btn btn-primary" onclick="location.href='{% url 'member:member_delete_detail' %}'">확인</button>
-              </div>
-            </form>
-
+    <form class="row g-3">
+        <div class="col-auto">
+            <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="비밀번호">
+        </div>
+        <div class="col-auto">
+            <input type="password" class="form-control" id="inputPassword2" placeholder="비밀번호를 입력해주세요">
+        </div>
+        <div class="col-auto">
+            <button type="button" id="confirmButton" class="btn btn-primary" onclick="location.href='{% url 'member:member_delete_detail' %}'">확인</button>
+        </div>
+    </form>
 {% endblock content %}
 
