@@ -15,16 +15,6 @@ class OrderInfo(models.Model):
     store = models.CharField(max_length=50, choices=[("A", "Store A"), ("B", "Store B")])  # 매장
     earned_points = models.IntegerField(default=0)  # 적립 포인트
 
-    def calculate_earned_points(self):  # 적립 포인트 계산
-        store_name = Member.objects.get(store=self.store)
-        if store_name and store_name.earning_rate is not None:
-            self.earned_points = int(self.total_amount * store_name.earning_rate)
-        else:
-            self.earned_points = 0
-
-    def save(self, *args, **kwargs):
-        self.calculate_earned_points()
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Order {self.order_id}"
