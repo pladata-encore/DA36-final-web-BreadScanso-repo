@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const password3 = document.getElementById("password3");
     const passwordCheckMessage = document.getElementById("passwordCheckMessage");
     const changePasswordBtn = document.getElementById("changePasswordBtn");
-    const successModal = document.getElementById('signupSuccessModal');
-    const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+    // const successModal = document.getElementById('signupSuccessModal');
+    // const modalConfirmBtn = document.getElementById('modalConfirmBtn');
 
     // 초기 상태 설정
     password2.disabled = true;
@@ -105,12 +105,6 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = targetUrl;
         });
     });
-
-    // const confirmButton = document.getElementById('confirmButton');
-    // confirmButton.addEventListener('click', function() {
-    //     // window.location.href = confirmButton.getAttribute('onclick').replace("location.href='{% url 'member:member_pw' %}'", "").replace("'", "");
-    //     window.location.href = confirmButton.getAttribute('onclick').replace("location.href='{% url 'member:member_pw' %}'")
-    // });
 
     // CSRF 토큰 가져오기
     function getCookie(name) {

@@ -69,94 +69,6 @@ def member_edit(request):
     member = request.user.member  # 또는 해당하는 회원 모델 인스턴스 가져오기
     return render(request, 'member/member_edit.html', {'member': member})
 
-# # 마이페이지 - 회원정보 수정
-# def member_edit(request):
-#     # 현재 로그인한 사용자의 회원정보 가져오기
-#     user = request.user
-#     try:
-#         member = Member.objects.get(user=user)  # 현재 유저의 Member 정보 가져오기
-#     except Member.DoesNotExist:
-#         messages.error(request, "회원 정보가 존재하지 않습니다.")
-#         return redirect("main:index")
-#
-#     if request.method == "POST":
-#         # user 업데이트
-#         user.email = request.POST.get("email") # 이메일 업데이트
-#         user.save()
-#
-#         # member 업데이트
-#         member_id = request.POST.get('user_id')
-#         name = request.POST.get('name')
-#         phone_num = request.POST.get('phone_num')
-#         email = request.POST.get('email')
-#         age_group = request.POST.get('age_group')
-#         sex = request.POST.get('sex')
-#         # member.member_id = request.POST.get("user_id")
-#         # member.name = request.POST.get("name")
-#         # member.phone_num = request.POST.get("phone_num")
-#         # member.email = request.POST.get("email")
-#         # member.age_group = request.POST.get("age_group")
-#         # member.sex = request.POST.get("sex")
-#
-#         # 프로필 사진 업데이트 (변경된 경우만)
-#         if "profile_image" in request.FILES:
-#             member.profile_image = request.FILES["profile_image"]
-#
-#         # 기존의 Member 업데이트
-#         member.member_id = member_id
-#         member.name = name
-#         member.phone_num = phone_num
-#         member.email = email
-#         member.age_group = age_group
-#         member.sex = sex
-#
-#         member.save()  # 변경 사항 저장
-#
-#         # 수정 완료 후 JSON 응답
-#         return JsonResponse({"success": True})
-#
-#     return render(request, "member/member_edit.html", {"user": user, "member": member})
-
-# # 마이페이지 - 회원정보수정
-# def member_edit(request):
-#     user = request.user  # 현재 로그인한 사용자
-#
-#     if request.method == "POST":
-#         user.member_id = request.POST.get("user_id")
-#         user.name = request.POST.get("name")
-#         user.phone_number = request.POST.get("phone_number")
-#         user.email = request.POST.get("email")
-#         user.age_group = request.POST.get("age_group")
-#         user.sex = request.POST.get("sex")
-#
-#         # 프로필 사진 업데이트 (변경된 경우만)
-#         if "profile_image" in request.FILES:
-#             user.profile_image = request.FILES["profile_image"]
-#
-#         user.save()  # 변경 사항 저장
-#
-#         return render(request, "member/member_edit.html", {"user": user, "message": "회원정보가 성공적으로 수정되었습니다!"})
-#
-#     return render(request, "member/member_edit.html", {"user": user})
-
-    # if request.method == "POST":
-        # member_id = request.POST['user_id']
-        # name = request.POST['name']
-        # phone_num = request.POST['phone_num']
-        # profile_image = request.POST['profile_image']
-        # email = request.POST['email']
-        # age_group = request.POST.get('age_group')
-        # sex = request.POST.get('sex')
-
-        # # 아이디 중복 확인
-        # if User.objects.filter(username=member_id).exists():
-        #     return render(request, "member/member_edit.html", {'error': '이미 존재하는 아이디입니다.'})
-        #
-        #     return JsonResponse({"success": True})  # 성공 응답
-
-
-    # # 회원정보수정 페이지로 이동
-    # return render(request, 'member/member_edit.html')
 
 # 아이디 중복확인
 def check_user_id(request):
@@ -221,7 +133,9 @@ def member_pw(request):
             messages.error(request, '비밀번호 변경 중 오류가 발생했습니다.')
             return render(request, 'member/member_pw.html')
 
-    return render(request, 'member/member_pw.html')
+    # GET 요청 처리
+    member = request.user.member  # 또는 해당하는 회원 모델 인스턴스 가져오기
+    return render(request, 'member/member_pw.html', {'member': member})
 
 # @login_required
 @require_http_methods(["POST"])
