@@ -22,19 +22,23 @@
                 <li><a class="dropdown-item" href="/qna">Q&A</a></li>
             </ul>
         </div>
-        {% if user.is_authenticated %}
+        <div style="background-color: #b3997d;">
+            {% if user.is_authenticated %}
                 {% if request.session.member_type == "manager" %}
-                <a href="{% url 'sales:sales_main' %}" class="btn btn-light">매장페이지</a>
+
+                    <a href="{% url 'kiosk_main' %}" class="btn btn-light">KIOSK</a>
+                    <a href="{% url 'sales:sales_main' %}" class="btn btn-light">매장페이지</a>
+                {% else %}
+                    <a href="{% url 'member:member_page' %}" class="btn btn-light">마이페이지</a>
+                {% endif %}
+                    <form action="{% url 'main:logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-light">로그아웃</button>
+                    </form>
             {% else %}
-                <a href="{% url 'member:member_page' %}" class="btn btn-light">마이페이지</a>
+                <a href="{% url 'main:login' %}" class="btn btn-light">로그인</a>
+                <a href="{% url 'main:signup' %}" class="btn btn-light">회원가입</a>
             {% endif %}
-            <form action="{% url 'main:logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-light">로그아웃</button>
-            </form>
-        {% else %}
-            <a href="{% url 'main:login' %}" class="btn btn-light">로그인</a>
-            <a href="{% url 'main:signup' %}" class="btn btn-light">회원가입</a>
-        {% endif %}
+        </div>
     </div>
 </header>
