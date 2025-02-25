@@ -1,31 +1,54 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let totalAmountElem = document.getElementById("total_amount"); // 총 금액 요소
-    let finalAmountElem = document.getElementById("final_amount"); // 최종 결제 금액 요소
+document.addEventListener('DOMContentLoaded', function() {
+    // 세션 스토리지에서 데이터 가져오기
+    const productDictionary = JSON.parse(sessionStorage.getItem("productDictionary") || "{}");
+    const totalQuantity = sessionStorage.getItem("totalQuantity") || 0;
+    const totalPrice = parseInt(sessionStorage.getItem("totalPrice") || "0");
+    const usedPoints = parseInt(sessionStorage.getItem("usedPoints") || "0");
+    const finalPrice = parseInt(sessionStorage.getItem("finalPrice") || "0");
 
-    const use_points = sessionStorage.getItem("use_points");  // 사용한 적립금 가져오기
-    console.log("사용한 포인트:", use_points);  // 콘솔 확인
-    if (use_points) {
-        document.getElementById("use_points").textContent = parseInt(use_points).toLocaleString();
+    console.log("세션 스토리지 데이터:", {
+        productDictionary,
+        totalQuantity,
+        totalPrice,
+        usedPoints,
+        finalPrice
+    });
+
+    // 주문 테이블 업데이트
+    const orderTable = document.getElementById("order-table");
+
+    // 테이블에 데이터 채우기
+    Object.keys(productDictionary).forEach(itemName => {
+        const product = productDictionary[itemName];
+        const row = `
+            <tr>
+                <td>${product.korName}</td>
+                <td>${product.price.toLocaleString()}원</td>
+                <td>${product.quantity}</td>
+                <td>${product.totalAmount.toLocaleString()}원</td>
+            </tr>
+        `;
+        orderTable.innerHTML += row;
+    });
+
+    // 총 수량과 금액 업데이트
+    document.getElementById("totalQuantity").textContent = `${totalQuantity}개`;
+    document.getElementById("totalPrice").textContent = `${totalPrice.toLocaleString()}원`;
+
+    // 포인트 사용 정보가 있는 경우 표시
+    const usedPointsElement = document.getElementById("usedPoints");
+    const finalAmountElement = document.getElementById("final_amount");
+
+    if (usedPointsElement && usedPoints > 0) {
+        usedPointsElement.textContent = `${usedPoints.toLocaleString()}원`;
     }
 
+    // 최종 결제 금액 표시
+    if (finalAmountElement) {
+        const finalAmount = finalPrice || Math.max(totalPrice - usedPoints, 0);
+        finalAmountElement.textContent = `${finalAmount.toLocaleString()}원`;
+        }
 
-    // 숫자 변환 함수 (쉼표 제거 후 정수 변환)
-    function parseNumber(text) {
-        return parseInt(text.replace(/,/g, ""), 10) || 0;
-    }
+        console.log("최종 결제 금액:", finalAmount);
 
-    function updateFinalAmount() {
-        let totalAmount = parseNumber(totalAmountElem.textContent);
-        console.log("총 결제 금액:", totalAmount);  // 콘솔 확인
-
-        let finalAmount = Math.max(totalAmount - use_points, 0); // 음수 방지
-        finalAmountElem.textContent = finalAmount.toLocaleString(); // 천 단위 쉼표 적용
-        sessionStorage.setItem("final_amount", finalAmount);
-        console.log("최종 결제 금액:", finalAmount);  // 콘솔 확인
-
-    }
-
-    // 페이지 로드 시 자동 업데이트
-    updateFinalAmount();
 });
-
