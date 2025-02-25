@@ -1,8 +1,16 @@
 {% extends 'layout/member/member_base.html' %}
 {% load static %}
 
-{% block title %} MYPAGE | Member Main {% endblock title %}
-{% block user_id %}user_id{% endblock user_id %}
+{% block title %}구매/취소내역{% endblock title %}
+
+{% block header %}
+    {% include 'layout/member/member_header.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/member/member_sidebar.html' %}
+{% endblock sidebar %}
+
 
 {% block content %}
     <h3 class="text-center">회원 구매/취소내역</h3>
