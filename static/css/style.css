@@ -5,17 +5,23 @@ body.main-index {
 }
 /* ----------------------------------------------------------------------- */
 /* 최상단 텍스트 로고 이미지 설정 */
-body.main-index .logo-container {
+header .logo-container {
     display: flex;         /* 플렉스박스로 정렬 */
     justify-content: center; /* 가로 중앙 정렬 */
     align-items: center;     /* 세로 중앙 정렬 */
     height: 200px;          /* 컨테이너 높이 (필요시 조정) */
 }
 
-body.main-index .logo-img {
+header .logo-img {
     width: 200px;  /* 로고 크기 조정 (원하는 크기로 변경) */
     height: auto;  /* 원본 비율 유지 */
 }
+
+footer .logo-img {
+    width: 200px;  /* 로고 크기 조정 (원하는 크기로 변경) */
+    height: auto;  /* 원본 비율 유지 */
+}
+
 /* ----------------------------------------------------------------------- */
 /* 상단 텍스트 정렬 */
 body.main-index .center-text {
