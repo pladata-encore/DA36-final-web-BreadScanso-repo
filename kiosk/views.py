@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from member.models import Member
 from django.views.decorators.csrf import csrf_exempt
 from menu.models import Item
-from .models import OrderInfo, PaymentInfo  # 모델 import 추가
+from .models import OrderInfo, PaymentInfo, OrderItem
 from django.utils import timezone  # timezone 추가
 import json
 
@@ -100,18 +100,41 @@ def complete_payment(request):
             phone_num = data.get("phone_num")
             final_amount = data.get("final_amount")
             payment_method = data.get("payment_method", "credit")
+            product_dictionary = data.get("productDictionary", {})  # 상품 정보 추가
 
-            if not phone_num or not final_amount:
+            if final_amount is None:  # phone_num은 비회원일 경우 없을 수 있음
                 return JsonResponse({"success": False, "message": "필수 데이터가 부족합니다."}, status=400)
 
-            # 회원 정보 조회
-            member = Member.objects.filter(phone_num=phone_num).first()
+            # 회원 정보 조회 (비회원인 경우 None)
+            member = None
+            if phone_num:
+                member = Member.objects.filter(phone_num=phone_num).first()
 
             # OrderInfo 생성
             order = OrderInfo.objects.create(
                 total_amount=final_amount,
                 store="A"  # 적절한 매장 정보로 변경
             )
+
+            # OrderItem 생성 (각 상품별로)
+            for product_key, product_info in product_dictionary.items():
+                try:
+                    # 상품 정보 조회
+                    item = Item.objects.filter(item_name_eng=product_key).first()
+
+                    if item:
+                        # OrderItem 생성
+                        OrderItem.objects.create(
+                            order=order,
+                            item=item,
+                            item_count=product_info.get('quantity', 0),
+                            item_price=product_info.get('price', 0),
+                            item_total=product_info.get('totalAmount', 0)
+                        )
+                    else:
+                        print(f"상품을 찾을 수 없음: {product_key}")
+                except Exception as e:
+                    print(f"OrderItem 생성 중 오류: {str(e)}")
 
             # PaymentInfo 생성
             payment = PaymentInfo.objects.create(
