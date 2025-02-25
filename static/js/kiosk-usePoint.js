@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("세션 저장된 포인트:", memberPoints);
     console.log("사용 가능한 최대 포인트:", maxPoints);
     
-    // 최소 사용 포인트 (이미 HTML에 1,000으로 설정되어 있음)
+    // 최소 사용 포인트
     const minPoints = parseInt(document.getElementById('min-points').textContent.replace(/,/g, ''), 10) || 1000;
 });
 
