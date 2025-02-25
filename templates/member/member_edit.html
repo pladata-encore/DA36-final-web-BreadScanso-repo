@@ -1,40 +1,21 @@
-{% extends 'layout/member/base_member.html' %}
+{% extends 'layout/member/member_base.html' %}
 {% load static %}
 
-{% block title %}Mypage | Edit {% endblock title %}
-{% block user_id%}user_id{% endblock user_id %}
+{% block title %}Edit{% endblock title %}
+
+{% block header %}
+    {% include 'layout/member/member_header.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/member/member_sidebar.html' %}
+{% endblock sidebar %}
+
 {% block content %}
-<h3 style="margin-bottom: 50px;" class="text-center">회원정보수정</h3>
-    <!-- Bootstrap CSS (필수) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap JavaScript (필수) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- member_edit JavaScript 연결 (필수) -->
-    <script src="{% static 'js/member_edit.js' %}"></script>
-
-    <meta charset="UTF-8">
-    <title>회원정보수정</title>
-
-
-<body>
+    <h3 style="margin-bottom: 50px;" class="text-center">회원정보수정</h3>
     <div class="container">
         <form id="memberEditForm" method="POST" enctype="multipart/form-data">
-{#        <form method="post">#}
             {% csrf_token %}
-{#            <div class="mb-3">#}
-{#                <label for="user_id" class="form-label w-100 text-start">* 아이디</label>#}
-{#                <div class="input-group">#}
-{#                    <input type="text" id="user_id" name="user_id" class="form-control"#}
-{#                           value="{% if member %}{{ member.member_id }}{% endif %}"#}
-{#                           {% if member %}readonly{% endif %}>#}
-{#                    {% if not member %}#}
-{#                        <button type="button" class="btn btn-secondary" onclick="checkUser_id()">중복 확인</button>#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#                <p id="user_id-result" class="mt-1 mb-0"></p>#}
-{#            </div>#}
             <div class="mb-3">
                 <label for="user_id" class="form-label w-100 text-start">* 아이디</label>
                 <div class="input-group">
@@ -46,8 +27,6 @@
     <div class="mb-3">
         <label for="name" class="w-100 text-start">* 이름</label>
         <input type="text" id="name" name="name" class="form-control" value="{% if member %}{{ member.name }}{% endif %}">
-
-{#        <input type="text" name="name" class="form-control" value="{{ user.name }}">#}
     </div>
     <div class="mb-3">
         <label for="phone_num" class="w-100 text-start">* 휴대폰 번호</label>
@@ -60,11 +39,6 @@
         {% endif %}
         <input class="form-control" type="file" id="profile_image" name="profile_image">
     </div>
-{#    <div class="mb-3">#}
-{#        <label for="profile_image" class="form-label w-100 text-start">프로필</label>#}
-{#        <input class="form-control" type="file" id="profile_image" name="profile_image" value="{% if member %}{{ user.profile_image }}{% endif %}">#}
-{#    </div>#}
-
     <div class="mb-3">
         <label for="email_id" class="w-100 text-start">* 이메일</label>
         <div class="d-flex">
@@ -81,26 +55,7 @@
         </div>
         <input type="hidden" name="email" id="email_full">
     </div>
-
-
-{#    <div class="mb-3">#}
-{#        <label for="email" class="w-100 text-start">* 이메일</label>#}
-{#        <div class="d-flex">#}
-{#            <input type="text" name="email" class="form-control" value="{% if member %}{{ user.email_id }}{% endif %}">#}
-{#            <span class="mx-2">@</span>#}
-{#        <select id="email_domain" class="form-control">#}
-{#            <option value="naver.com">naver.com</option>#}
-{#            <option value="gmail.com">gmail.com</option>#}
-{#            <option value="daum.net">daum.net</option>#}
-{#            <option value="직접입력">직접입력</option>#}
-{#        </select>#}
-{#        <input type="text" id="email_custom" class="form-control d-none" placeholder="직접입력">#}
-{#        </div>#}
-{#        <input type="hidden" name="email" id="email_full">#}
-{#    </div>#}
-
     <br>
-
     <div class="d-flex">
             <div class="dropdown me-1">
                 <button id="ageDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -149,132 +104,12 @@
                 </div>
             </div>
         </div>
-    </form>
-</div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // 기존 이메일 관련 코드는 그대로 유지
-    const emailId = document.getElementById('email_id');
-    const emailDomain = document.getElementById('email_domain');
-    const emailCustom = document.getElementById('email_custom');
-    const emailFull = document.getElementById('email_full');
-
-    function updateEmail() {
-        const domain = emailDomain.value === '직접입력' ? emailCustom.value : emailDomain.value;
-        emailFull.value = emailId.value + '@' + domain;
-    }
-
-    emailId.addEventListener('input', updateEmail);
-    emailDomain.addEventListener('change', function() {
-        if (this.value === '직접입력') {
-            emailCustom.classList.remove('d-none');
-            emailCustom.addEventListener('input', updateEmail);
-        } else {
-            emailCustom.classList.add('d-none');
-            updateEmail();
-        }
-    });
-
-    // 폼 제출 처리 수정
-    const form = document.getElementById('memberEditForm');
-    form.addEventListener('submit', function(e) {
-        e.preventDefault(); // 기본 제출 동작 중지
-        updateEmail();
-
-        // FormData 객체 생성
-        const formData = new FormData(this);
-
-        // AJAX를 사용하여 폼 데이터 전송
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // 성공 시 모달 표시
-                const modal = new bootstrap.Modal(document.getElementById('signupSuccessModal'));
-                modal.show();
-            } else {
-                // 실패 시 에러 메시지 표시
-                alert(data.error || '수정 중 오류가 발생했습니다.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('수정 중 오류가 발생했습니다.');
-        });
-    });
-});
-
-function setAge(age) {
-    document.getElementById('ageDropdownBtn').textContent = age;
-    document.getElementById('age_group').value = age;
-}
-
-function setSex(sex) {
-    document.getElementById('sexDropdownBtn').textContent = sex;
-    document.getElementById('gender').value = sex;
-}
-</script>
+        </form>
+    </div>
 {% endblock content %}
-{#        <div class="d-flex">#}
-{#    <!-- 연령대 드롭다운 버튼  -->#}
-{#        <div class="dropdown me-1">#}
-{#            <button id="ageDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">연령대</button>#}
-{#            <!-- 연령대 드롭다운 메뉴 -->#}
-{#        <ul class="dropdown-menu">#}
-{#          <li><a class="dropdown-item" href="#" onclick="setAge('10대')">10대</a></li>#}
-{#          <li><a class="dropdown-item" href="#" onclick="setAge('20대')">20대</a></li>#}
-{#          <li><a class="dropdown-item" href="#" onclick="setAge('30대')">30대</a></li>#}
-{#          <li><a class="dropdown-item" href="#" onclick="setAge('40대')">40대</a></li>#}
-{#          <li><a class="dropdown-item" href="#" onclick="setAge('50대')">50대</a></li>#}
-{#          <li><a class="dropdown-item" href="#" onclick="setAge('60대 이상')">60대 이상</a></li>#}
-{#        </ul>#}
-{#    </div>#}
 
-{#        <!-- 성별 드롭다운 버튼  -->#}
-{#        <div class="dropdown">#}
-{#            <button id="sexDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">성별</button>#}
-{#        <!-- 성별 드롭다운 메뉴 -->#}
-{#        <ul class="dropdown-menu">#}
-{#          <li><a class="dropdown-item" href="#" onclick="setSex('남성')">남성</a></li>#}
-{#          <li><a class="dropdown-item" href="#" onclick="setSex('여성')">여성</a></li>#}
-{#        </ul>#}
-{#        </div>#}
-{#    </div>#}
+{% block script %}
+    <script src="{% static 'js/member-edit.js' %}"></script>
+{% endblock script %}
 
-{#        <br>#}
-{##}
-{#            {% if error %}#}
-{#                <div class="alert alert-danger">{{ error }}</div>#}
-{#            {% endif %}#}
-{##}
-{#            <br>#}
-{##}
-{#            <!-- 수정하기 버튼 -->#}
-{#            <button type="submit" id="signupButton" class="btn btn-primary">수정하기</button>#}
-{##}
-{#            <!-- 회원정보수정 완료 팝업창 -->#}
-{#            <div class="modal fade" id="signupSuccessModal" tabindex="-1" aria-labelledby="signupSuccessLabel" aria-hidden="true">#}
-{#                <div class="modal-dialog">#}
-{#                    <div class="modal-content">#}
-{#                        <div class="modal-header">#}
-{#                            <h5 class="modal-title" id="signupSuccessLabel">회원정보수정 완료</h5>#}
-{#                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>#}
-{#                        </div>#}
-{#                        <div class="modal-body">#}
-{#                            수정이 완료되었습니다.#}
-{#                        </div>#}
-{#                        <div class="modal-footer">#}
-{#                            <button type="button" class="btn btn-secondary" id="confirmButton" onclick="location.href='{% url 'member:member_page' %}'">확인</button>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </form>#}
-{#    </div>#}
-{#{% endblock content %}#}
+

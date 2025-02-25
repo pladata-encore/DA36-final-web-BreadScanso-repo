@@ -1,14 +1,10 @@
-from django.shortcuts import render, get_object_or_404
-# from .models import Purchase
+from django.shortcuts import render
+
+def kiosk_main(request):
+    return render(request, 'kiosk/kiosk_main.html')  # kiosk_main 템플릿 파일 경로 지정
 
 def pay_main(request):
-    # purchases = Purchase.objects.all().order_by("-date")
-    #
-    # payment_filter = request.GET.get("payment_method")
-    # if payment_filter:
-    #     purchases = purchases.filter(payment_method=payment_filter)
     return render(request, "pay/pay_main.html")
-    # return render(request, "pay/pay_main.html", {"purchases": purchases})
 
 
 # def pay_details(request, payment_id):

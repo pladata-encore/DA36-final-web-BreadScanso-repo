@@ -1,0 +1,16 @@
+{% load static %}
+
+<header class="store_header d-flex justify-content-between">
+    <span id="logo">
+        <a href="{% url 'index' %}"><img src="{% static 'images/brand_logo.png' %}" class="logo-img" alt="브래드스캔소 로고"></a>
+    </span>
+    <span class="d-flex align-items-center flex-row mb-3" style="height: 60px;  margin-right: 30px; margin-top: 30px;">
+        <span class="p-2">{% if member %}{{ member.member_id }}{% endif %} 님</span>
+        <form action="{% url 'main:logout' %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-light">로그아웃</button>
+        </form>
+    </span>
+
+</header>
+
