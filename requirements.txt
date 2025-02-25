@@ -4,3 +4,4 @@ uvicorn
 blacknoise
 mysqlclient
 django-ebhealthcheck
+boto3
