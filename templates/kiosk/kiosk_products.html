@@ -80,43 +80,47 @@
     <!-- 지점명 -->
     <div class="store-name">서초동점</div>
 
-    <div class="container">
-        <!-- 웹캠 -->
-        <div class="video-container">
-            <video id="webcam" autoplay playsinline></video>
-            <button id="capture-btn">📸촬영</button>
-            
-        </div>
+<div class="container">
+    <!-- 웹캠 -->
+    <div class="video-container">
+        <video id="webcam" autoplay playsinline></video>
+        <button id="capture-btn">📸촬영</button>
+    </div>
 
-        <!-- 주문 목록 -->
-        <div class="order-list">
-            <h3>메뉴 목록</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>메뉴이름</th>
-                        <th>단가</th>
-                        <th>수량</th>
-                        <th>금액</th>
-                    </tr>
-                </thead>
-                <tbody id="order-table">
-                </tbody>
-            </table>
-            <div class="total">
+    <!-- 주문 목록 -->
+    <div class="order-list">
+        <h3>메뉴 목록</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>메뉴이름</th>
+                    <th>단가</th>
+                    <th>수량</th>
+                    <th>금액</th>
+                </tr>
+            </thead>
+            <tbody id="order-table">
+            </tbody>
+        </table>
+        <div class="total-container">
+            <div class="total-info">
                 <p>총 수량: <strong id="total-quantity">0개</strong></p>
                 <p>총 금액: <strong id="total-price">0원</strong></p>
             </div>
+            <div class="reset-button-container">
+                <button id="reset-order-btn" class="reset-button">초기화</button>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- 버튼 -->
-    <div class="button-container">
-        <button class="blue-button">직원 호출</button>
-        <a href="{% url 'member' %}">
-            <button class="black-button">결제</button>
-        </a>
-    </div>
+<!-- 버튼 -->
+<div class="button-container">
+    <button class="blue-button">직원 호출</button>
+    <a href="{% url 'member' %}">
+        <button class="black-button">결제</button>
+    </a>
+</div>
     
 
     <!-- Django 데이터를 JavaScript에 전달 -->
@@ -131,7 +135,7 @@
     const captureBtn = document.getElementById("capture-btn");
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    const NGROK_URL = "https://8369-175-121-129-72.ngrok-free.app/predict/";
+    const NGROK_URL = "https://7868-175-121-129-72.ngrok-free.app/predict/";
 
     let productDictionary = {};
 
@@ -160,11 +164,16 @@
             alert("웹캠을 사용할 수 없습니다. 브라우저 설정을 확인하세요.");
         }
     }
-    // 테이블 초기화 함수
-    function resetOrder() {
-    productDictionary = {};
-    updateOrderTable();      
-}
+    // reset button 동작
+    document.getElementById('reset-order-btn').addEventListener('click', function() {
+    // 주문 테이블 비우기
+    document.getElementById('order-table').innerHTML = '';
+    
+    // 총 수량과 총 금액 초기화
+    document.getElementById('total-quantity').textContent = '0개';
+    document.getElementById('total-price').textContent = '0원';
+});
+
     // 테이블 업데이트 함수
     function updateOrderTable() {
         const orderTable = document.getElementById("order-table");
