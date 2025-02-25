@@ -2,8 +2,8 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 import os
 from uuid import uuid4
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 def upload_profile_image_to_s3(file, folder="profile_images"):
     """S3에 파일을 업로드하고 URL을 반환하는 함수"""
