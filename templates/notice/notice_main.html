@@ -12,7 +12,7 @@
 <body class="main-index" style="background-color: #FFFFFF;">
 {% block content %}
     <!-- 헤더 -->
-    {% include 'layout/main/header_main.html' %}
+    {% include 'layout/main/main_base.html' %}
     
     <div class="container">
         <h2>공지사항</h2>
@@ -47,7 +47,7 @@
     <p>데이터 확인: {{ notices }}</p>
 
     <!-- 풋터 -->   
-    {% include 'layout/main/footer_main.html' %}
+    {% include 'layout/main/main_footer.html' %}
 {% endblock content %}
 </body>
 </html>
