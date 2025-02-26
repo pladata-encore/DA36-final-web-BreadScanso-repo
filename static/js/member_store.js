@@ -19,160 +19,264 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-// 회원정보db - 표
-    document.addEventListener("DOMContentLoaded", function () {
-        let editButtons = document.querySelectorAll(".btn-light, .btn-danger");
+// 전체 선택/해제 체크박스 이벤트 처리
+    document.getElementById('select-all').addEventListener('change', function () {
+        let checkboxes = document.querySelectorAll('.row-checkbox');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = document.getElementById('select-all').checked;
+        });
+    });
 
-        // 수정 버튼 클릭 시 동작
-        editButtons.forEach(button => {
-            button.addEventListener("click", function () {
-                toggleButton(this);
+    // 각 행의 체크박스 상태 변경 시, '전체 선택' 체크박스 상태를 업데이트
+    let rowCheckboxes = document.querySelectorAll('.row-checkbox');
+    rowCheckboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            let allChecked = true;
+            rowCheckboxes.forEach(function (checkbox) {
+                if (!checkbox.checked) {
+                    allChecked = false;
+                }
             });
+            document.getElementById('select-all').checked = allChecked;
+        });
+    });
+
+    // 회원정보 수정 버튼 클릭 시 모달 열기
+document.querySelectorAll('.edit-member-btn').forEach(button => {
+    button.addEventListener('click', function (event) {
+        const row = event.target.closest('tr');
+        const rowId = row.querySelector('td:nth-child(3)').innerText;  // 아이디
+        const Name = row.querySelector('td:nth-child(2)').innerText;   // 이름
+        const PhoneNum = row.querySelector('td:nth-child(4)').innerText; // 휴대폰 번호
+        const Email = row.querySelector('td:nth-child(7)').innerText;  // 이메일
+
+        // 모달창에 값 설정
+        document.getElementById('editName').value = Name;
+        document.getElementById('editPhoneNum').value = PhoneNum;
+        document.getElementById('editEmail').value = Email;
+
+        const modalElement = document.getElementById('editModal');
+        const editModal = new bootstrap.Modal(modalElement, {
+            backdrop: 'static',
+            keyboard: false
         });
 
-// 회원정보 수정 버튼 클릭 시 동작
-function toggleButton(button) {
-    const row = button.closest('tr'); // 버튼이 속한 행(tr)을 찾음
-    const cells = row.querySelectorAll('td'); // 해당 행의 모든 셀을 선택
+        editModal.show();
 
-    if (button.innerText === "수정") {
-    button.innerText = "저장"; // 버튼 텍스트 변경
-    button.classList.remove("btn-light");
-    button.classList.add("btn-secondary");
+        // 저장 버튼 클릭 시
+        document.getElementById('saveChangesButton').onclick = function () {
+            const newName = document.getElementById('editName').value;
+            const newPhoneNum = document.getElementById('editPhoneNum').value;
+            const newEmail = document.getElementById('editEmail').value;
 
-    // contenteditable을 true로 바꾸어 셀을 수정할 수 있게 함
-    cells.forEach(cell => {
-    if (cell.dataset.field) { // 데이터 필드가 있는 셀만 수정 가능하도록 처리
-    cell.contentEditable = true;
-    cell.style.backgroundColor = "#fff"; // 수정 중인 셀 배경색 변경 (선택 사항)
-}
-});
-} else {
-    button.innerText = "수정"; // 버튼 텍스트 변경
-    button.classList.remove("btn-secondary");
-    button.classList.add("btn-light");
-
-    // contenteditable을 false로 바꾸어 셀 수정 마무리
-    cells.forEach(cell => {
-    if (cell.dataset.field) {
-    cell.contentEditable = false;
-    cell.style.backgroundColor = ""; // 배경색 원래대로
-}
+            // 이메일 유효성 검사 (간단한 정규식 사용)
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (newName && newPhoneNum && newEmail && emailPattern.test(newEmail)) {
+                updateMember_store(rowId, newName, newPhoneNum, newEmail);
+                editModal.hide();
+            } else {
+                alert('유효한 값을 입력해주세요.');
+            }
+        };
+    });
 });
 
-    // 수정된 데이터를 서버로 보내는 처리 추가 가능
-    saveChanges(row); // 여기서 row 데이터를 서버로 보내거나 처리
-}
-}
 
-// CSRF Token을 가져오는 함수 (Django에서 사용)
-function getCSRFToken() {
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    return csrfToken;
-}
+            // document.getElementById('saveChangesButton').onclick = function () {
+            //     const newName = document.getElementById('editName').value;
+            //     const newPhoneNum = document.getElementById('editPhoneNum').value;
+            //     const newEmail = document.getElementById('editEmail').value;
 
+            // // 이메일 유효성 검사 (간단한 정규식 사용)
+            // const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            // if (newName && newPhoneNum && newEmail !== "" && emailPattern.test(newEmail)) {
+            //     updateMember_store(rowId, newName, newPhoneNum, newEmail);
+            //     editModal.hide();
 
-// 회원 ID 가져오기
-        function saveData(button) {
-            let row = button.closest("tr");
-            let memberId = row.querySelector("[data-field='member_id']").innerText;
+            // if (newName && newPhoneNum && newEmail !== "" && !isNaN(newEmail)) {
+            //     updateMember_store(newName, newPhoneNum, newEmail);
+            //     editModal.hide();
+            //         } else {
+            //             alert('유효한 값을 입력해주세요.');
+            //         }
+            //     };
+            // });
+        });
 
-            // 수정된 데이터 가져오기
-            let updatedData = {};
-            let editableFields = row.querySelectorAll("[data-field]");
+        // 삭제 버튼 클릭 시
+        document.getElementById("delete-selected").addEventListener("click", async function () {
+            const selectedIds = Array.from(document.querySelectorAll(".row-checkbox:checked"))
+                .map(checkbox => checkbox.closest("tr").querySelector("td:nth-child(3)").textContent.trim());  // 아이디 열이 3번째 열입니다
 
-            editableFields.forEach(field => {
-                updatedData[field.getAttribute("data-field")] = field.innerText.trim();
-                field.contentEditable = "false"; // 다시 수정 불가능하게 변경
-                field.style.backgroundColor = ""; // 원래 배경색 복원
-            });
+            if (selectedIds.length === 0) {
+                alert("삭제할 회원을 선택해주세요.");
+                return;
+            }
 
-            console.log("수정된 데이터:", updatedData);
+            if (!confirm(`선택한 회원의 정보를 삭제하시겠습니까?`)) {
+                return;
+            }
 
-// 회원 ID 서버로 데이터 전송 (AJAX)
-            function saveMemberData(row) {
-                let memberId = row.querySelector("[data-field='member_id']").innerText;
-                let name = row.querySelector("[data-field='name']").innerText;
-                let phone_num = row.querySelector("[data-field='phone_num']").innerText;
-                let sex = row.querySelector("[data-field='sex']").innerText;
-                let age_group = row.querySelector("[data-field='age_group']").innerText;
-                let email = row.querySelector("[data-field='email']").innerText;
-
-                let data = {
-                    member_id: memberId,
-                    name: name,
-                    phone_num: phone_num,
-                    sex: sex,
-                    age_group: age_group,
-                    email: email,
-                    csrfmiddlewaretoken: "{{ csrf_token }}" // CSRF 토큰 추가
-                };
-
-                fetch("/update_member/", {
+            try {
+                const response = await fetch("/store/delete_member/", {  // URL 경로 수정
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRFToken": data.csrfmiddlewaretoken
+                        "X-CSRFToken": getCSRFToken(),
                     },
-                    body: JSON.stringify(data)
-                })
-                    .then(response => response.json())
-                    .then(result => {
-                        if (result.success) {
-                            alert("회원 정보가 성공적으로 수정되었습니다!");
-                        } else {
-                            alert("수정 실패: " + result.error);
-                        }
-                    })
-                    .catch(error => console.error("에러:", error));
+                    body: JSON.stringify({member_ids: selectedIds}),
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert("삭제가 완료되었습니다.");
+                    window.location.reload();
+                } else {
+                    alert("삭제 실패: " + (data.message || "알 수 없는 오류가 발생했습니다."));
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("삭제 중 오류가 발생했습니다.");
+            }
+        });
+
+
+        // CSRF 토큰 가져오기 함수
+            function getCSRFToken() {
+                return document.querySelector('[name=csrfmiddlewaretoken]').value;
             }
 
-// 버튼 변경
-            button.style.display = "none"; // 저장 버튼 숨기기
-            let editButton = row.querySelector(".edit-btn");
-            editButton.style.display = "inline-block"; // 수정 버튼 다시 보이기
+
+// // 회원 정보 업데이트 함수
+//     function updateMember_store(memberID, newName, newPhoneNum, newEmail, sex, ageGroup, visitCount, totalSpent, membershipDate, lastVisited, points, profileImage) {
+//         fetch('/store/update_member_store/', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'X-CSRFToken': getCSRFToken(),
+//             },
+//             'member_id': memberID,
+//             'new_name': newName,
+//             'new_phone_num': newPhoneNum,
+//             'new_email': newEmail,
+//             'sex': sex,
+//             'age_group': ageGroup,
+//             'visit_count': visitCount,
+//             'total_spent': totalSpent,
+//             'membership_date': membershipDate,
+//             'last_visited': lastVisited,
+//             'points': points,
+//             'profile_image': profileImage
+//         })
+//
+//             .then(response => response.json())
+//             .then(data => {
+//                 if (data.success) {
+//                     const row = event.target.closest('tr');
+//                     row.querySelector('td:nth-child(2)').innerText = newName;
+//                     row.querySelector('td:nth-child(4)').innerText = newPhoneNum;
+//                     row.querySelector('td:nth-child(7)').innerText = newEmail;
+//                     alert('회원 정보가 변경되었습니다.');
+//                 }
+//             })
+//     // 회원 정보 업데이트 함수 내부
+//     then(response => {
+//         console.log("Response status:", response.status);
+//         return response.json();
+//     })
+//         .then(data => {
+//             console.log("Server response:", data);
+//         })
+//         .catch(error => {
+//             alert("서버 오류 발생");
+//         });
+
+
+// 회원 정보 업데이트 함수
+function updateMember_store(memberID, newName, newPhoneNum, newEmail) {
+    fetch('/store/update_member_store/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(),
+        },
+        body: JSON.stringify({
+            member_id: memberID,
+            new_name: newName,
+            new_phone_num: newPhoneNum,
+            new_email: newEmail
+        })
+    })
+    .then(response => {
+        console.log("Response status:", response.status);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-
-// CSRF 토큰 가져오는 함수 (Django 보안용)
-        function getCSRFToken() {
-            return document.querySelector("[name=csrfmiddlewaretoken]").value;
+        return response.json();
+    })
+    .then(data => {
+        console.log("Server response:", data);
+        if (data.success) {
+            alert('회원 정보가 변경되었습니다.');
+            // 페이지 새로고침
+            window.location.reload();
+        } else {
+            alert('회원 정보 변경에 실패했습니다: ' + (data.error || '알 수 없는 오류'));
         }
-
-// 삭제 요청 보내기
-        document.getElementById("finalConfirmButton").addEventListener("click", function () {
-            // 실제 삭제 요청을 서버에 보낼 수 있도록 수정 필요
-            alert("삭제가 완료되었습니다.");
-            window.location.href = "{% url 'member_store' %}"; // 삭제 후 이동할 페이지 설정
-        });
-
-// 팝업창 표시
-        document.addEventListener("DOMContentLoaded", function () {
-            let form = document.querySelector("form");
-            // let confirmButton = document.getElementById("confirmButton"); // 첫번째 팝업창 띄우는 버튼
-            let finalConfirmButton = document.getElementById("finalConfirmButton"); // 두번째 팝업창 띄우는 버튼
-            let goHomeButton = document.getElementById("goHomeButton"); // 홈으로 이동 버튼
-
-            form.addEventListener("submit", function (event) {
-                event.preventDefault(); // 기본 폼 제출 방지
-
-                // 회원삭제 첫번째 표시
-                let firstModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
-                firstModal.show();
-            });
-
-            finalConfirmButton.addEventListener("click", function () {
-                // 첫번째 팝업창 닫기
-                let firstModal = bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal"));
-                firstModal.hide();
-
-                // 두번째 팝업창 표시
-                let secondModal = new bootstrap.Modal(document.getElementById("finalModal"));
-                secondModal.show();
-            });
-
-            goHomeButton.addEventListener("click", function () {
-                window.location.href = "/";  // 홈 페이지로 이동
-            });
-        });
+    })
+    .catch(error => {
+        console.error("Fetch 에러:", error);
+        alert("서버 오류가 발생했습니다: " + error.message);
     });
-})
+}
+
+// function updateMember_store(memberID, newName, newPhoneNum, newEmail) {
+//     fetch('/store/update_member_store/', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'X-CSRFToken': getCSRFToken(),
+//         },
+//         body: JSON.stringify({
+//             member_id: memberID,
+//             new_name: newName,
+//             new_phone_num: newPhoneNum,
+//             new_email: newEmail,
+//             sex: sex,
+//             age_group: ageGroup,
+//             visit_count: visitCount,
+//             total_spent: totalSpent,
+//             membership_date: membershipDate,
+//             last_visited: lastVisited,
+//             points: points,
+//             profile_image: profileImage
+//         })
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.success) {
+//             // 클릭된 버튼의 부모 <tr> 요소 찾기
+//             const row = event.target.closest('tr');
+//             row.querySelector('td:nth-child(2)').innerText = newName;
+//             row.querySelector('td:nth-child(4)').innerText = newPhoneNum;
+//             row.querySelector('td:nth-child(7)').innerText = newEmail;
+//             alert('회원 정보가 변경되었습니다.');
+//         } else {
+//             alert('회원 정보 변경에 실패했습니다.');
+//         }
+//     })
+//     .catch(error => {
+//         console.error("Fetch 에러:", error);
+//         alert("서버 오류가 발생했습니다.");
+//     });
+// }
+
+
+
+
+    // const newRegisterBtn = document.getElementById("new-register-btn");
+    // newRegisterBtn.addEventListener("click", function () {
+    //     window.location.href = "/store/store";  // 이동할 URL 경로
+    // });
+
+
