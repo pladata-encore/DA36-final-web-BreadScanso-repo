@@ -44,16 +44,21 @@ def about_breadscanso_edit(request):
     return render(request, 'store/about_breadscanso_edit.html', {"member": member})  # 브랜드 소개
 
 def store_map(request):
-    return render(request, 'store/store_map.html')  # 매장 안내
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+    return render(request, 'store/store_map.html', {"member": member})  # 매장 안내
 
 def store_map_edit(request):
-    return render(request, 'store/store_map_edit.html')  # 매장 안내 수정
+    member = request.user.member
+    return render(request, 'store/store_map_edit.html', {"member": member})  # 매장 안내 수정
 
 def store_event(request):
-    return render(request, 'store/store_event.html')  # 이벤트
+    member = request.user.member
+    return render(request, 'store/store_event.html', {"member": member})  # 이벤트
 
 def store_event_edit(request):
-    return render(request, 'store/store_event_edit.html')  # 이벤트 수정
+    member = request.user.member
+    return render(request, 'store/store_event_edit.html', {"member": member})  # 이벤트 수정
 
 def community_notice(request):
     return render(request, 'store/community_notice.html')  # 커뮤니티/공지사항
