@@ -7,13 +7,13 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Item, NutritionInfo, Allergy
 import json
+from .utils import upload_product_image_to_s3
 
 # 소비자 화면 메뉴 정보 페이지
 def menu_main(request):
     items = Item.objects.filter(show='1')
     best_items = []  # best=1인 아이템을 저장할 리스트
     for item in items:
-        item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
         if item.best == 1 and item.show == 1:
             best_items.append(item)  # best 컬럼이 1인 아이템만 저장
     return render(request, 'menu/menu_main.html', {'items': items, 'best_items': best_items})
@@ -36,12 +36,22 @@ def menu_store(request):
     except EmptyPage:
         # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
-    return render(request, 'menu/menu_store.html',{'items': items, "page_obj": page_obj})
+
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+
+    # 하나의 딕셔너리로 합쳐서 전달
+    context = {
+        'items': items,
+        'page_obj': page_obj,
+        'member': member
+    }
+        
+    return render(request, 'menu/menu_store.html',context)
 
 # 소비자 화면 제품 상세 페이지
 def product_detail(request, item_id):
     item = get_object_or_404(Item, pk=item_id)  # 해당 item_id의 제품을 가져옴
-    item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
     nutrition_info = NutritionInfo.objects.filter(item_id=item_id).first() # NutritionInfo에서 해당 item_id의 영양 정보 가져오기
     allergy_info = Allergy.objects.filter(item_id=item_id).first() # AllergyInfo에서 해당 item_id의 영양 정보 가져오기
     return render(request, 'menu/product_detail.html', {'item': item, 'nutrition': nutrition_info, 'allergy': allergy_info})
@@ -51,7 +61,6 @@ def menu_main_bread(request):
     items = Item.objects.filter(category='bread', show=1)  # 빵(bread) 이면서 노출중 컬럼이 1인 항목만 필터링
     best_items = []  # best=1인 아이템을 저장할 리스트
     for item in items:
-        item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
         if item.best == 1 and item.show == 1:  # best 컬럼이 1이고 show가 1인 아이템만 저장
             best_items.append(item)  # best 컬럼이 1인 아이템만 저장
     return render(request, 'menu/menu_main_bread.html', {'items': items, 'best_items': best_items})
@@ -61,7 +70,6 @@ def menu_main_dessert(request):
     items = Item.objects.filter(category='dessert', show=1)  # 디저트(dessert) 이면서 노출중 컬럼이 1인 항목만 필터링
     best_items = []  # best=1인 아이템을 저장할 리스트
     for item in items:
-        item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
         if item.best == 1 and item.show == 1:  # best 컬럼이 1이고 show가 1인 아이템만 저장
             best_items.append(item)  # best 컬럼이 1인 아이템만 저장
     return render(request, 'menu/menu_main_dessert.html', {'items': items, 'best_items': best_items})
@@ -75,6 +83,7 @@ def menu_store_menu_info(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
     nutrition_info = NutritionInfo.objects.filter(item_id=item_id).first()
     allergy_info = Allergy.objects.filter(item_id=item_id).first()
+
     return render(request, 'menu/menu_info.html', {'item': item, 'nutrition': nutrition_info, 'allergy': allergy_info})
 
 # 점주 메뉴 관리 수정 페이지
@@ -88,15 +97,30 @@ def menu_store_menu_edit(request, item_id):
         item.description = request.POST.get("item_info", item.description)
         item.cost_price = request.POST.get("cost", item.cost_price)
         item.sale_price = request.POST.get("price", item.sale_price)
-        item.category = request.POST.get("category")
-        item.store = request.POST.get("store")
+        item.category = request.POST.get("category", item.category)
+        item.store = request.POST.get("store", item.store)
 
         # Best, New, 노출 여부 업데이트
         item.best = request.POST.get("best") == "on"
         item.new = request.POST.get("new") == "on"
         item.show = request.POST.get("show") == "on"
 
-        # 영양 정보 업데이트 (새로 생성 X, 기존 데이터만 수정)
+        # **이미지 업로드 로직 추가**
+        if 'item_image' in request.FILES:  # 새 이미지 업로드 확인
+            try:
+                new_image_url = upload_product_image_to_s3(request.FILES['item_image'])
+                item.item_image = new_image_url  # S3 URL로 업데이트
+            except Exception as e:
+                return render(request, "menu/menu_edit.html", {
+                    "item": item,
+                    "nutrition": NutritionInfo.objects.filter(item=item).first(),
+                    "allergy": Allergy.objects.filter(item=item).first(),
+                    "error": f"이미지 업로드 중 오류 발생: {str(e)}"
+                })
+
+        item.save()  # 제품 정보 저장
+
+        # **영양 정보 업데이트 (있으면 수정, 없으면 추가하지 않음)**
         nutrition_info = NutritionInfo.objects.filter(item=item).first()
         if nutrition_info:
             nutrition_info.nutrition_weight = request.POST.get("nutrition_weight", nutrition_info.nutrition_weight)
@@ -109,7 +133,7 @@ def menu_store_menu_edit(request, item_id):
             nutrition_info.nutrition_protein = request.POST.get("nutrition_protein", nutrition_info.nutrition_protein)
             nutrition_info.save()
 
-        # 알레르기 정보 업데이트 (새로 생성 X, 기존 데이터만 수정)
+        # **알레르기 정보 업데이트 (있으면 수정, 없으면 추가하지 않음)**
         allergy_info = Allergy.objects.filter(item=item).first()
         if allergy_info:
             allergy_info.allergy_wheat = request.POST.get("allergy_wheat") == "on"
@@ -120,26 +144,18 @@ def menu_store_menu_edit(request, item_id):
             allergy_info.allergy_etc = request.POST.get("allergy_etc", allergy_info.allergy_etc)
             allergy_info.save()
 
-        # 변경 사항 저장
-        item.save()
-
-        # 저장 후 상세 페이지로 이동
         return redirect("menu_store_menu_info", item_id=item.item_id)
 
-    # 기존 데이터 가져오기
+    # **기존 데이터 불러오기**
     nutrition_info = NutritionInfo.objects.filter(item=item).first()
     allergy_info = Allergy.objects.filter(item=item).first()
 
-    return render(request, "menu/menu_edit.html", {"item": item, "nutrition": nutrition_info, "allergy": allergy_info})
+    return render(request, "menu/menu_edit.html", {
+        "item": item,
+        "nutrition": nutrition_info,
+        "allergy": allergy_info
+    })
 
-# 이미지 불러오기
-def get_existing_image(item_name_eng):
-    static_path = os.path.join(settings.STATICFILES_DIRS[0], 'images')
-    for ext in ['.jpg', '.png']:
-        file_path = os.path.join(static_path, f"{item_name_eng}{ext}")
-        if os.path.exists(file_path):
-            return f"{item_name_eng}{ext}"
-    return None  # 이미지가 없으면 None 반환
 
 # 점주 메뉴 관리에서 메뉴 삭제 기능
 @require_http_methods(["POST"])
@@ -182,6 +198,7 @@ def menu_delete(request):
 
 
 # 신규 제품 등록 기능
+# @require_http_methods(["POST"])
 def menu_save(request):
     if request.method == "POST":
         # best, new, show 체크박스 여부
@@ -215,10 +232,15 @@ def menu_save(request):
         allergy_nuts = request.POST.get("allergy_nuts") == "on"
         allergy_etc = request.POST.get("allergy_etc", "")
 
-        # 이미지 업로드
-        item_image = None
+        # S3
+        item_image_url = None
         if 'item_image' in request.FILES:
-            item_image = request.FILES['item_image']
+            try:
+                item_image_url = upload_product_image_to_s3(request.FILES['item_image'])
+            except Exception as e:
+                return render(request, 'menu/new_menu.html', {
+                    'error': f'이미지 업로드 중 오류가 발생했습니다: {str(e)}'
+                })
 
         # 제품 정보 입력 검수
         if not all([item_name, category, description, cost_price, sale_price, store]):
@@ -237,7 +259,7 @@ def menu_save(request):
                 description=description,
                 cost_price=cost_price,
                 sale_price=sale_price,
-                item_image=item_image
+                item_image=item_image_url
             )
             menu.save()
 

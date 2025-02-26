@@ -20,4 +20,14 @@ def sales_main(request):
             {"id": "5", "name": "피자빵", "quantity": 5, "total_price": 25000}
         ]
     }
-    return render(request, 'sales/sales_main.html', {'sales_data': sales_data})
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+
+    # 하나의 딕셔너리로 합쳐서 전달
+    context = {
+        'sales_data': sales_data,
+        'member': member
+    }
+
+    return render(request, 'sales/sales_main.html', context)
+
