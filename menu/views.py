@@ -14,7 +14,6 @@ def menu_main(request):
     items = Item.objects.filter(show='1')
     best_items = []  # best=1인 아이템을 저장할 리스트
     for item in items:
-        item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
         if item.best == 1 and item.show == 1:
             best_items.append(item)  # best 컬럼이 1인 아이템만 저장
     return render(request, 'menu/menu_main.html', {'items': items, 'best_items': best_items})
@@ -42,7 +41,6 @@ def menu_store(request):
 # 소비자 화면 제품 상세 페이지
 def product_detail(request, item_id):
     item = get_object_or_404(Item, pk=item_id)  # 해당 item_id의 제품을 가져옴
-    item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
     nutrition_info = NutritionInfo.objects.filter(item_id=item_id).first() # NutritionInfo에서 해당 item_id의 영양 정보 가져오기
     allergy_info = Allergy.objects.filter(item_id=item_id).first() # AllergyInfo에서 해당 item_id의 영양 정보 가져오기
     return render(request, 'menu/product_detail.html', {'item': item, 'nutrition': nutrition_info, 'allergy': allergy_info})
@@ -52,7 +50,6 @@ def menu_main_bread(request):
     items = Item.objects.filter(category='bread', show=1)  # 빵(bread) 이면서 노출중 컬럼이 1인 항목만 필터링
     best_items = []  # best=1인 아이템을 저장할 리스트
     for item in items:
-        item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
         if item.best == 1 and item.show == 1:  # best 컬럼이 1이고 show가 1인 아이템만 저장
             best_items.append(item)  # best 컬럼이 1인 아이템만 저장
     return render(request, 'menu/menu_main_bread.html', {'items': items, 'best_items': best_items})
@@ -62,7 +59,6 @@ def menu_main_dessert(request):
     items = Item.objects.filter(category='dessert', show=1)  # 디저트(dessert) 이면서 노출중 컬럼이 1인 항목만 필터링
     best_items = []  # best=1인 아이템을 저장할 리스트
     for item in items:
-        item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
         if item.best == 1 and item.show == 1:  # best 컬럼이 1이고 show가 1인 아이템만 저장
             best_items.append(item)  # best 컬럼이 1인 아이템만 저장
     return render(request, 'menu/menu_main_dessert.html', {'items': items, 'best_items': best_items})
