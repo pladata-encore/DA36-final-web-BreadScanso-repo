@@ -39,6 +39,8 @@ def pay_member_details(request):
 def pay_member_cancel(request):
     # cancels = Purchase.objects.filter(member_status="member", is_cancelled=True).order_by("-date")
     # return render(request, "pay/pay_member_cancel.html", {"cancels": cancels})
-    return render(request, "pay/pay_member_cancel.html")
+    member = request.user.member
+
+    return render(request, "pay/pay_member_cancel.html", {'member': member})
 
 

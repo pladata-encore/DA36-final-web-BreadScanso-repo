@@ -207,8 +207,8 @@
 {% endblock content %}
 
 {% block script %}
-{{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
-<script src="{% static 'js/menu_store_main.js' %}"></script>
+    {{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
+    <script src="{% static 'js/menu_store_main.js' %}"></script>
 {% endblock script %}
 
 {##}

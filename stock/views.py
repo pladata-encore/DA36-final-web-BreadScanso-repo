@@ -47,7 +47,20 @@ def stock_product(request):
     except EmptyPage:
         # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
-    return render(request, 'stock/stock_product.html', {'page_obj': page_obj, 'search_query':search_query})
+
+    member = request.user.member
+
+    # member.store과 같은 store 값을 가진 항목 필터링 후 상위 10개만 가져오기
+    filtered_items = Item.objects.filter(store=member.store)[:10]
+
+    context = {
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'member': member,
+        'filtered_items': filtered_items
+    }
+
+    return render(request, 'stock/stock_product.html', context)
 
 
 @csrf_exempt

@@ -1,11 +1,18 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Q&A | Main</title>
-</head>
-<body>
+{% extends 'layout/main/main_base.html' %}
+{% load static %}
+
+{% block title %}Q&A{% endblock title %}
+
+{% block header %}
+    {% include 'layout/main/main_header.html' %}
+{% endblock header %}
+
+{% block content %}
     <h1>Q&A 화면 입니다.</h1>
-</body>
-</html>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+{% endblock content %}
+
+{% block footer %}
+    {% include 'layout/main/main_footer.html' %}
+{% endblock footer %}
+
