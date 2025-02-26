@@ -20,10 +20,35 @@ def menu_main(request):
 
 # 점주의 메뉴관리 메인 페이지
 def menu_store(request):
-    items = Item.objects.all().order_by("item_id")
-    # 페이지네이션 처리 (10개씩)
-    paginator = Paginator(items, 10)
-    # 페이지 번호 가져오기, 유효하지 않으면 1 페이지로 설정
+    # 현재 로그인한 멤버의 가게 정보 가져오기
+    member = request.user.member
+    store = member.store
+
+    # 해당 가게의 아이템만 필터링하여 가져오기
+    items = Item.objects.filter(store=store).order_by("item_name")
+
+    # 필터링
+    category_filter = request.GET.get('category', '')
+    show_filter = request.GET.get('show', '')
+    best_filter = request.GET.get('best', '')
+    new_filter = request.GET.get('new', '')
+
+    if category_filter:
+        items = items.filter(category=category_filter)
+    if show_filter:
+        items = items.filter(show=show_filter == "1")
+    if best_filter:
+        items = items.filter(best=best_filter == "1")
+    if new_filter:
+        items = items.filter(new=new_filter == "1")
+
+    # 페이지당 항목 수 (고정)
+    items_per_page = 10
+
+    # 페이지네이션 처리
+    paginator = Paginator(items, items_per_page)
+
+    # 페이지 번호 가져오기
     page_number = request.GET.get("page", 1)
     try:
         page_number = int(page_number)
@@ -31,23 +56,39 @@ def menu_store(request):
             page_number = 1
     except ValueError:
         page_number = 1
+
+    # 페이지 객체 가져오기
     try:
-        page_obj = paginator.get_page(page_number)
+        page_obj = paginator.page(page_number)
     except EmptyPage:
-        # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
-        page_obj = paginator.get_page(paginator.num_pages)
+        page_obj = paginator.page(paginator.num_pages)
 
-    # GET 요청 처리 (member 데이터 가져오기)
-    member = request.user.member
+    # 페이지 범위 계산
+    max_pages = 5
+    current_page = page_obj.number
+    total_pages = paginator.num_pages
 
-    # 하나의 딕셔너리로 합쳐서 전달
+    start_page = max(1, current_page - 2)
+    end_page = min(total_pages, start_page + max_pages - 1)
+
+    if end_page - start_page + 1 < max_pages and start_page > 1:
+        start_page = max(1, end_page - max_pages + 1)
+
+    page_range = range(start_page, end_page + 1)
+
     context = {
-        'items': items,
+        'items': page_obj,
         'page_obj': page_obj,
-        'member': member
+        'page_range': page_range,
+        'member': member,
+        'category_filter': category_filter,
+        'show_filter': show_filter,
+        'best_filter': best_filter,
+        'new_filter': new_filter,
+        'total_items': items.count(),  # 총 아이템 수
     }
-        
-    return render(request, 'menu/menu_store.html',context)
+
+    return render(request, 'menu/menu_store.html', context)
 
 # 소비자 화면 제품 상세 페이지
 def product_detail(request, item_id):
