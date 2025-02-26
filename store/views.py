@@ -34,7 +34,9 @@ def member_store(request):
     return render(request, 'member/member_store.html', {'members': members})
 
 def store_home_edit(request):
-    return render(request, 'store/store_home_edit.html')  # 홈 화면 수정
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+    return render(request, 'store/store_home_edit.html', {"member": member})  # 홈 화면 수정
 
 def about_breadscanso_edit(request):
     return render(request, 'store/about_breadscanso_edit.html')  # 브랜드 소개
