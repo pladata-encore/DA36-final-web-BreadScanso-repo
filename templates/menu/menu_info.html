@@ -27,57 +27,22 @@
     margin-right: 50px; /* 노출중을 더 오른쪽으로 이동 가능 */
 }
 
-.custom-box {
+.best-tag {
+    background-color: #00FFFF;
+}
+
+.new-tag {
+    background-color: #FFEE8C;
+}
+
+.show-tag {
     padding: 8px 12px;
     border-radius: 8px;
     font-size: 16px;
     text-align: center;
     min-width: 80px;
-}
-
-.best {
-    background-color: #00FFFF;
-}
-
-.new {
-    background-color: #FFEE8C;
-}
-
-.exposed {
     border: 1px solid red;
     background-color: transparent;
-}
-
-/* 전체 레이아웃 */
-.container {
-    display: flex;
-    align-items: flex-start;
-    gap: 40px; /* 이미지와 제품 설명 간격 조정 가능 */
-}
-
-/* 이미지 영역 */
-.image-area {
-    flex-shrink: 0;
-    width: 300px; /* 이미지 크기 조정 가능 */
-}
-
-.image-area img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* 제품 정보 영역 */
-.product-info {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* 가운데 정렬되지 않고 왼쪽 정렬 */
-}
-
-.product-info h2, .product-info p {
-    text-align: left; /* 제품 설명 내용 왼쪽 정렬 */
-    margin: 5px 0;
 }
 
 /* 버튼 컨테이너 전체 */
@@ -102,50 +67,98 @@
 </style>
 
 <!-- 메인 컨테이너 -->
-<div class="container">
-  <!-- 이미지 영역 -->
-  <div class="image-area">
-    <img src="{% static 'images/saltbread.jpg' %}" alt="image">
-  </div>
+   <div class="product-detail-container">
+        <div class="product-content">
+            <!-- 이미지 영역 -->
+                <div class="product-image">
+                    <!-- S3 이미지 사용 -->
+                    {% if item.item_image %}
+                        <img src="{{ item.item_image }}" alt="{{ item.item_name }}">
+                    {% else %}
+                        <img src="{% static 'images/default.png' %}">
+                    {% endif %}
+                </div>
+{#  <div class="image-area">#}
+{#    <img src="{% static 'images/saltbread.jpg' %}" alt="image">#}
 
-  <!-- 제품 정보 -->
-  <div class="product-info">
-    <!-- 상태 표시 (Best, New) -->
-    <div class="status-container">
-      <div class="status-left">
-        <div class="custom-box best">Best</div>
-        <div class="custom-box new">New</div>
-      </div>
-      <div class="status-right">
-        <div class="custom-box exposed">노출중</div>
-      </div>
-    </div>
-
-    <!-- 제품명 -->
-    <h2>소금빵</h2>
-    <p>속은 촉촉, 빵 밑면은 바삭 두 가지 식감과 고소한 풍미를 느낄 수 있는 소금빵</p>
+            <!-- 제품 정보 -->
+            <div class="product-info">
+                <!-- 상태 표시 (Best, New, 노출중)  -->
+                <div class="status-container">
+                    <div class="status-left">
+                        {% if item.best %}
+                            <span class="tag best-tag">Best</span>
+                        {% endif %}
+                        {% if item.new %}
+                            <span class="tag new-tag">New</span>
+                        {% endif %}
+                    </div>
+                    <div class="status-right">
+                        {% if item.show %}
+                            <span class="tag show-tag">노출중</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        
+            <!-- 제품명 -->
+            <h1>{{ item.item_name }}</h1>
+            <p>{{ item.description }}</p>
+            <p>{{ item.store }}</p>
+            <p>{{ item.category }}</p>
+            
+            <!-- 제품 정보 -->
+            <div class="product-meta">
+            <hr>
+                <p><strong>영양정보:</strong></p>
+                    {% if nutrition %}
+                            <p>● 총 내용량: {{ nutrition.nutrition_weight }}g</p>
+                            <p>● 총 내용량당 칼로리(kcal): {{ nutrition.nutrition_calories }}</p>
+                    
+                        <div class="nutrition-row">
+                            <p>● 총 내용량당:</p>
+                            <p>· 나트륨(mg): {{ nutrition.nutrition_sodium }}</p>
+                            <p>· 당류(g): {{ nutrition.nutrition_sugar }}</p>
+                            <p>· 탄수화물(g): {{ nutrition.nutrition_carbohydrates }}</p>
+                            <p>· 포화지방(g): {{ nutrition.nutrition_saturated_fat }}</p>
+                            <p>· 트랜스지방(g): {{ nutrition.nutrition_trans_fat }}</p>
+                            <p>· 단백질(g): {{ nutrition.nutrition_protein }}</p>
+                        </div>
+                    {% else %}
+                        <p>정보 없음</p>
+                    {% endif %}
+            <hr>
+                <p><strong>알레르기 정보:</strong></p>
+                    {% if allergy %}
+                        <div class="nutrition-row">
+                            {% if allergy.allergy_wheat %}<p>밀,</p>{% endif %}
+                            {% if allergy.allergy_milk %}<p>우유,</p>{% endif %}
+                            {% if allergy.allergy_egg %}<p>계란,</p>{% endif %}
+                            {% if allergy.allergy_soybean %}<p>대두,</p>{% endif %}
+                            {% if allergy.allergy_nuts %}<p>견과류,</p>{% endif %}
+                            <p>기타: {{ allergy.allergy_etc }}</p>
+                        </div>
+                    {% else %}
+                        <p>정보 없음</p>
+                    {% endif %}
+            <hr>
+                <p class="product-price"><strong>판매가:</strong> {{ item.sale_price|default:"가격 미정" }}원</p>
+                <p class="cost-price"><strong>원가:</strong> {{ item.cost_price|default:"가격 미정" }}원</p>
+            </div>
+        </div>
     
-    <div class="product-meta">
-      <hr>
-      <p><strong>영양정보:</strong> <span id="detailNutrition"></span></p>
-      <p><strong>알레르기 정보:</strong> <span id="detailAllergy"></span></p>
-      <hr>
-      <p class="product-price" id="detailPrice">판매가: </p>
-      <p class="product-cost" id="cost">원가: </p>
-    </div>
+        <!-- 목록, 수정, 삭제 버튼 -->
+        <div class="button-container">
+            <div class="left-buttons">
+                <button type="button" class="btn btn-success" id="list-btn">목록</button>
+            </div>
+            <div class="right-buttons">
+                <button type="button" class="btn btn-primary" id="edit-menu-btn" data-item-id="{{ item.item_id }}">수정</button>
+                <button type="button" class="btn btn-danger" id="cancel-btn">삭제</button>
+            </div>
+        </div>
+   </div>
 
-    <!-- 목록, 수정, 삭제 버튼 -->
-    <div class="button-container">
-        <div class="left-buttons">
-            <button type="button" class="btn btn-success" id="list-btn">목록</button>
-        </div>
-        <div class="right-buttons">
-            <button type="button" class="btn btn-primary" id="edit-menu-btn">수정</button>
-            <button type="button" class="btn btn-danger" id="cancel-btn">삭제</button>
-        </div>
-    </div>
-  </div>
-</div>
     
 {% endblock content%}
 

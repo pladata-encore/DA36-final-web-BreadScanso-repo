@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods
 from .models import Item, NutritionInfo, Allergy
 import json
 
+# 소비자 화면 메뉴 정보 페이지
 def menu_main(request):
     items = Item.objects.filter(show='1')
     best_items = []  # best=1인 아이템을 저장할 리스트
@@ -15,8 +16,9 @@ def menu_main(request):
         item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
         if item.best == 1 and item.show == 1:
             best_items.append(item)  # best 컬럼이 1인 아이템만 저장
-    return render(request, 'menu/menu_main.html', {'items': items, 'best_items': best_items})  # 메인 메뉴정보 페이지
+    return render(request, 'menu/menu_main.html', {'items': items, 'best_items': best_items})
 
+# 점주의 메뉴관리 메인 페이지
 def menu_store(request):
     items = Item.objects.all().order_by("item_id")
     # 페이지네이션 처리 (10개씩)
@@ -34,43 +36,103 @@ def menu_store(request):
     except EmptyPage:
         # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
-    return render(request, 'menu/menu_store.html',{'items': items, "page_obj": page_obj})  # 점주 페이지의 메뉴관리 페이지
+    return render(request, 'menu/menu_store.html',{'items': items, "page_obj": page_obj})
 
+# 소비자 화면 제품 상세 페이지
 def product_detail(request, item_id):
     item = get_object_or_404(Item, pk=item_id)  # 해당 item_id의 제품을 가져옴
     item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
     nutrition_info = NutritionInfo.objects.filter(item_id=item_id).first() # NutritionInfo에서 해당 item_id의 영양 정보 가져오기
     allergy_info = Allergy.objects.filter(item_id=item_id).first() # AllergyInfo에서 해당 item_id의 영양 정보 가져오기
-    return render(request, 'menu/product_detail.html', {'item': item, 'nutrition': nutrition_info, 'allergy': allergy_info})  # 제품 상세 페이지 경로
+    return render(request, 'menu/product_detail.html', {'item': item, 'nutrition': nutrition_info, 'allergy': allergy_info})
 
+# 소비자 화면 빵 카테고리 페이지
 def menu_main_bread(request):
-    items = Item.objects.filter(category='bread', show=1)  # 'dessert' 카테고리이면서 show가 1인 항목만 필터링
+    items = Item.objects.filter(category='bread', show=1)  # 빵(bread) 이면서 노출중 컬럼이 1인 항목만 필터링
     best_items = []  # best=1인 아이템을 저장할 리스트
     for item in items:
         item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
         if item.best == 1 and item.show == 1:  # best 컬럼이 1이고 show가 1인 아이템만 저장
             best_items.append(item)  # best 컬럼이 1인 아이템만 저장
-    return render(request, 'menu/menu_main_bread.html', {'items': items, 'best_items': best_items})  # 디저트 카테고리 페이지
+    return render(request, 'menu/menu_main_bread.html', {'items': items, 'best_items': best_items})
 
+# 소비자 화면 디저트 카테고리 페이지
 def menu_main_dessert(request):
-    items = Item.objects.filter(category='dessert', show=1)  # 'dessert' 카테고리이면서 show가 1인 항목만 필터링
+    items = Item.objects.filter(category='dessert', show=1)  # 디저트(dessert) 이면서 노출중 컬럼이 1인 항목만 필터링
     best_items = []  # best=1인 아이템을 저장할 리스트
     for item in items:
         item.image_filename = get_existing_image(item.item_name_eng)  # 존재하는 파일만 저장
         if item.best == 1 and item.show == 1:  # best 컬럼이 1이고 show가 1인 아이템만 저장
             best_items.append(item)  # best 컬럼이 1인 아이템만 저장
-    return render(request, 'menu/menu_main_dessert.html', {'items': items, 'best_items': best_items})  # 디저트 카테고리 페이지
+    return render(request, 'menu/menu_main_dessert.html', {'items': items, 'best_items': best_items})
 
+# 점주 신규 메뉴 등록 페이지
 def menu_add(request):
-    return render(request, 'menu/new_menu.html') # 점주 신규 메뉴 등록 페이지
+    return render(request, 'menu/new_menu.html')
 
-def menu_store_menu_info(request):
-    return render(request, 'menu/menu_info.html') # 점주 메뉴관리 상세 페이지
+# 점주 메뉴 관리 상세 페이지
+def menu_store_menu_info(request, item_id):
+    item = get_object_or_404(Item, pk=item_id)
+    nutrition_info = NutritionInfo.objects.filter(item_id=item_id).first()
+    allergy_info = Allergy.objects.filter(item_id=item_id).first()
+    return render(request, 'menu/menu_info.html', {'item': item, 'nutrition': nutrition_info, 'allergy': allergy_info})
 
-def menu_store_menu_edit(request):
-    return render(request, 'menu/menu_edit.html') # 점주 메뉴관리 수정 페이지
+# 점주 메뉴 관리 수정 페이지
+@require_http_methods(["GET", "POST"])
+def menu_store_menu_edit(request, item_id):
+    item = get_object_or_404(Item, pk=item_id)
 
-# 메뉴 메인 제품정보 이미지 불러오기
+    if request.method == "POST":
+        # 제품 정보 업데이트
+        item.item_name = request.POST.get("item_name", item.item_name)
+        item.description = request.POST.get("item_info", item.description)
+        item.cost_price = request.POST.get("cost", item.cost_price)
+        item.sale_price = request.POST.get("price", item.sale_price)
+        item.category = request.POST.get("category")
+        item.store = request.POST.get("store")
+
+        # Best, New, 노출 여부 업데이트
+        item.best = request.POST.get("best") == "on"
+        item.new = request.POST.get("new") == "on"
+        item.show = request.POST.get("show") == "on"
+
+        # 영양 정보 업데이트 (새로 생성 X, 기존 데이터만 수정)
+        nutrition_info = NutritionInfo.objects.filter(item=item).first()
+        if nutrition_info:
+            nutrition_info.nutrition_weight = request.POST.get("nutrition_weight", nutrition_info.nutrition_weight)
+            nutrition_info.nutrition_calories = request.POST.get("nutrition_calories", nutrition_info.nutrition_calories)
+            nutrition_info.nutrition_sodium = request.POST.get("nutrition_sodium", nutrition_info.nutrition_sodium)
+            nutrition_info.nutrition_sugar = request.POST.get("nutrition_sugar", nutrition_info.nutrition_sugar)
+            nutrition_info.nutrition_carbohydrates = request.POST.get("nutrition_carbohydrates", nutrition_info.nutrition_carbohydrates)
+            nutrition_info.nutrition_saturated_fat = request.POST.get("nutrition_saturated_fat", nutrition_info.nutrition_saturated_fat)
+            nutrition_info.nutrition_trans_fat = request.POST.get("nutrition_trans_fat", nutrition_info.nutrition_trans_fat)
+            nutrition_info.nutrition_protein = request.POST.get("nutrition_protein", nutrition_info.nutrition_protein)
+            nutrition_info.save()
+
+        # 알레르기 정보 업데이트 (새로 생성 X, 기존 데이터만 수정)
+        allergy_info = Allergy.objects.filter(item=item).first()
+        if allergy_info:
+            allergy_info.allergy_wheat = request.POST.get("allergy_wheat") == "on"
+            allergy_info.allergy_milk = request.POST.get("allergy_milk") == "on"
+            allergy_info.allergy_egg = request.POST.get("allergy_egg") == "on"
+            allergy_info.allergy_soybean = request.POST.get("allergy_soybean") == "on"
+            allergy_info.allergy_nuts = request.POST.get("allergy_nuts") == "on"
+            allergy_info.allergy_etc = request.POST.get("allergy_etc", allergy_info.allergy_etc)
+            allergy_info.save()
+
+        # 변경 사항 저장
+        item.save()
+
+        # 저장 후 상세 페이지로 이동
+        return redirect("menu_store_menu_info", item_id=item.item_id)
+
+    # 기존 데이터 가져오기
+    nutrition_info = NutritionInfo.objects.filter(item=item).first()
+    allergy_info = Allergy.objects.filter(item=item).first()
+
+    return render(request, "menu/menu_edit.html", {"item": item, "nutrition": nutrition_info, "allergy": allergy_info})
+
+# 이미지 불러오기
 def get_existing_image(item_name_eng):
     static_path = os.path.join(settings.STATICFILES_DIRS[0], 'images')
     for ext in ['.jpg', '.png']:
@@ -79,6 +141,7 @@ def get_existing_image(item_name_eng):
             return f"{item_name_eng}{ext}"
     return None  # 이미지가 없으면 None 반환
 
+# 점주 메뉴 관리에서 메뉴 삭제 기능
 @require_http_methods(["POST"])
 def menu_delete(request):
     try:
@@ -118,7 +181,7 @@ def menu_delete(request):
         })
 
 
-# 신규 제품 등록
+# 신규 제품 등록 기능
 def menu_save(request):
     if request.method == "POST":
         # best, new, show 체크박스 여부
@@ -212,7 +275,7 @@ def menu_save(request):
             )
             allergy.save()
 
-            return redirect('menu_store_menu_info')
+            return redirect('menu_store_menu_info', item_id=menu.item_id)
 
         except Exception as e:
             return render(request, 'menu/new_menu.html', {

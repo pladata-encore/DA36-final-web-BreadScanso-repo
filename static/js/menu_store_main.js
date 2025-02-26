@@ -34,12 +34,12 @@ document.addEventListener("DOMContentLoaded", function () {
             // 체크박스 열이 아닌 경우에만 페이지 이동
             const item_id = row.querySelector("td:nth-child(2)").textContent.trim();
 
-            // Django view URL 패턴에 맞게 변경
+            // 해당 제품 정보로 이동
             window.location.href = `/menu/store/menu_info/${item_id}/`;
         });
     });
 
-    // 검색 폼 제출 시 검색 기능
+    // 검색 기능
     searchForm.addEventListener("submit", function (event) {
         event.preventDefault();
         const searchTerm = searchInput.value.toLowerCase();
