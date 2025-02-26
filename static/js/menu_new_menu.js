@@ -26,6 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 취소 버튼 누르면 목록 화면으로 이동
     const cancelBtn = document.getElementById('cancel-btn');
     cancelBtn.addEventListener('click', function() {
-        window.location.href = "/store/";
+        window.location.href = '/menu/store/';
     });
 });
