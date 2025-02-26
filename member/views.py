@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 import json
+from .utils import upload_profile_image_to_s3
 
 
 
@@ -31,29 +32,24 @@ def member_page(request):
 def member_edit(request):
     if request.method == "POST":
         try:
-            # 회원 정보 업데이트 로직
-            member = request.user.member  # 또는 해당하는 회원 모델 인스턴스 가져오기
+            member = request.user.member  # 현재 로그인한 회원 정보 가져오기
             email_id = member.email.split('@')[0] if member.email else ''
 
-            # 폼 데이터로 회원 정보 업데이트
+            # 회원 정보 업데이트
             member.name = request.POST.get('name')
             member.phone_num = request.POST.get('phone_num')
             member.email = request.POST.get('email')
             member.age_group = request.POST.get('age_group')
             member.sex = request.POST.get('sex')
 
-            # 프로필 이미지 처리
+            # **프로필 이미지 S3 업로드**
             if 'profile_image' in request.FILES:
-                member.profile_image = request.FILES['profile_image']
+                uploaded_image = request.FILES['profile_image']
+                s3_url = upload_profile_image_to_s3(uploaded_image)  # ✅ S3에 업로드하고 URL 받기
+                member.profile_image = s3_url  # ✅ DB에 S3 URL 저장
 
-            context = {
-                'member': member,
-                'email_id': email_id
-            }
+            member.save()  # 변경 사항 저장
 
-            member.save()
-
-            # AJAX 요청에 대한 JSON 응답
             return JsonResponse({
                 'success': True,
                 'message': '회원정보가 성공적으로 수정되었습니다.'
@@ -65,8 +61,8 @@ def member_edit(request):
                 'error': str(e)
             })
 
-    # GET 요청 처리
-    member = request.user.member  # 또는 해당하는 회원 모델 인스턴스 가져오기
+    # GET 요청 처리 (회원 정보 페이지 렌더링)
+    member = request.user.member
     return render(request, 'member/member_edit.html', {'member': member})
 
 
