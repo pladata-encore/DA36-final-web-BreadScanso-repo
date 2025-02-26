@@ -61,7 +61,11 @@
                         {% for item in best_items %}
                         <div class="best-carousel-item" data-id="{{ item.item_id }}"
                              style="transition: transform 0.3s ease-in-out; cursor: pointer;">
-                            <img src="{% static 'images/' %}{{ item.image_filename }}" alt="{{ item.item_name }}">
+                            {% if item.item_image %}
+                                <img src="{{ item.item_image }}" class="card-img-top" alt="{{ item.item_name }}">
+                            {% else %}
+                                <img src="{% static 'images/default.jpg' %}{{ item.image_filename }}" class="card-img-top">
+                            {% endif %}
                             <div class="product-name">{{ item.item_name }}</div>
                         </div>
                         {% endfor %}
@@ -84,7 +88,7 @@
                             {% if item.item_image %}
                                 <img src="{{ item.item_image }}" class="card-img-top" alt="{{ item.item_name }}">
                             {% else %}
-                                <img src="{% static 'images/' %}{{ item.image_filename }}" class="card-img-top">
+                                <img src="{% static 'images/default.jpg' %}{{ item.image_filename }}" class="card-img-top">
                             {% endif %}
                             <div class="card-body text-center">
                                 <h5 class="card-title">{{ item.item_name }}</h5>

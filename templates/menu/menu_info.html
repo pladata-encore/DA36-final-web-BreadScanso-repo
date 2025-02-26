@@ -71,15 +71,12 @@
         <div class="product-content">
             <!-- 이미지 영역 -->
                 <div class="product-image">
-                    <!-- S3 이미지 사용 -->
                     {% if item.item_image %}
                         <img src="{{ item.item_image }}" alt="{{ item.item_name }}">
                     {% else %}
-                        <img src="{% static 'images/default.png' %}">
+                        <img src="{% static 'images/default.jpg' %}" alt="기본 이미지">
                     {% endif %}
                 </div>
-{#  <div class="image-area">#}
-{#    <img src="{% static 'images/saltbread.jpg' %}" alt="image">#}
 
             <!-- 제품 정보 -->
             <div class="product-info">
