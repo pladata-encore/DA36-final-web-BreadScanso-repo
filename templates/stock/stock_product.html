@@ -63,8 +63,8 @@
           <th scope="col">
             <select class="form-select form-select-sm" name="category" id="category-filter" onchange="filterCategory()">
               <option value="" style="text-align: center;">카테고리</option>
-              <option value="bread" style="text-align: center;" {% if request.GET.category == "bread" %}selected{% endif %}>bread</option>
-              <option value="desert" style="text-align: center;" {% if request.GET.category == "desert" %}selected{% endif %}>desert</option>
+              <option value="bread" style="text-align: center;" {% if request.GET.category == "bread" %}selected{% endif %}>빵류</option>
+              <option value="desert" style="text-align: center;" {% if request.GET.category == "dessert" %}selected{% endif %}>디저트류</option>
             </select>
           </th>
           <th scope="col" onclick="sortTable()">▲ 재고수량 ▼<i class="bi bi-sort-down-alt"></i></th>
