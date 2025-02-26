@@ -1,7 +1,7 @@
 {% load static %}
 
 <div class="col-md-3 flex-shrink-0 p-3" style="width: 280px;">
-    <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+    <a href="{% url 'sales:sales_main' %}" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
 {#      <svg class="bi pe-none me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>#}
         <span class="fs-5 fw-semibold">Store</span>
     </a>
@@ -62,7 +62,7 @@
                             <li><a href="{% url 'store:community_qna' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Q&A</a></li>
                         </ul>
                     </ul>
-                    <li><a href="{% url 'store:store_account' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">▪️ 매장 정보</a></li>
+                    <li><a href="{% url 'store:store_account' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">⚙️매장 정보</a></li>
                 </ul>
             </div>
         </li>
