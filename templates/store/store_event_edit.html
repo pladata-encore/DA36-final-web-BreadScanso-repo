@@ -1,112 +1,118 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | Community Write {% endblock %}
-{% block store_id %}store_id{% endblock %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}시스템설정{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
 
 {% block content %}
-<style>
-    .event-check {
-        justify-content: flex-start;
-        margin-bottom: 15px;
-    }
+    <style>
+        .event-check {
+            justify-content: flex-start;
+            margin-bottom: 15px;
+        }
 
-    .event-title label {
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 5px;
-        align-self: flex-start;
-    }
+        .event-title label {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            align-self: flex-start;
+        }
 
-    .event-title input {
-        height: 40px;
-        margin-bottom: 15px;
-    }
+        .event-title input {
+            height: 40px;
+            margin-bottom: 15px;
+        }
 
-    /* 콘텐츠 왼쪽 정렬 */
-    .content-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        padding-left: 15px;
-    }
-    
-    .button-container {
-        display: flex;
-        align-self: flex-end;
-        margin-top: 20px;
-        margin-right: 175px;
-    }
-</style>
+        /* 콘텐츠 왼쪽 정렬 */
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding-left: 15px;
+        }
 
-<div class="content-container">
-    <!-- 이벤트 -->
-    <h3 class="align-self-center" style="margin-bottom: 50px; font-weight: bold;">이벤트</h3>
-    
-    <!-- 배너 노출용 -->
-    <div class="event-check d-flex align-items-center w-75">
-        <div class="text-bg-secondary p-1" style="border-radius: 5px; margin-right: 2%; white-space: nowrap;">배너 노출용</div>
-        
-        <!-- 이미지 업로드 버튼 -->
-        <div class="input-group">
-            <input type="file" class="form-control" id="bannerImageUpload" accept="image/*">
-            <label class="input-group-text" for="bannerImageUpload">업로드</label>
+        .button-container {
+            display: flex;
+            align-self: flex-end;
+            margin-top: 20px;
+            margin-right: 175px;
+        }
+    </style>
+
+    <div class="content-container">
+        <!-- 이벤트 -->
+        <h3 class="align-self-center" style="margin-bottom: 50px; font-weight: bold;">이벤트</h3>
+
+        <!-- 배너 노출용 -->
+        <div class="event-check d-flex align-items-center w-75">
+            <div class="text-bg-secondary p-1" style="border-radius: 5px; margin-right: 2%; white-space: nowrap;">배너 노출용</div>
+
+            <!-- 이미지 업로드 버튼 -->
+            <div class="input-group">
+                <input type="file" class="form-control" id="bannerImageUpload" accept="image/*">
+                <label class="input-group-text" for="bannerImageUpload">업로드</label>
+            </div>
+        </div>
+
+
+        <!-- 구분선 -->
+        <hr class="w-75 my-3">
+
+        <!-- 게시글 전용, 진행중, 종료 체크박스 -->
+        <div class="event-check d-flex align-items-center w-75">
+            <div class="text-bg-secondary p-1" style="border-radius: 5px; margin-right: 2%;">게시글 전용</div>
+            <input class="form-check-input me-2" type="checkbox" id="flexCheckBest">
+            <label class="form-check-label" for="flexCheckBest" style="margin-right: 2%">[진행중]</label>
+            <input class="form-check-input me-2" type="checkbox" id="flexCheckBest">
+            <label class="form-check-label" for="flexCheckBest" style="margin-right: 2%">[종료]</label>
+            <div class="btn-group">
+                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" style="border: 1px solid black; border-radius: 5px;">지점선택</button>
+                <ul class="dropdown-menu">
+                <li><a class="dropdown-item">A지점</a></li>
+                <li><a class="dropdown-item">B지점</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 제목 입력 -->
+        <div class="event-title d-flex flex-column w-75">
+            <label for="event-title" class="form-label">제목</label>
+            <input type="text" id="event-title" class="form-control" placeholder="제목을 입력하세요">
+        </div>
+
+        <!-- 텍스트 에디터 공지글 작성용 -->
+        <div class="event-title d-flex flex-column w-75">
+            <label for="event-title" class="form-label">내용</label>
+            <form method="post">
+                <textarea id="summernote" name="postContent"></textarea>
+            </form>
         </div>
     </div>
-    
-    
-    <!-- 구분선 -->
-    <hr class="w-75 my-3">
 
-    <!-- 게시글 전용, 진행중, 종료 체크박스 -->
-    <div class="event-check d-flex align-items-center w-75">
-        <div class="text-bg-secondary p-1" style="border-radius: 5px; margin-right: 2%;">게시글 전용</div>
-        <input class="form-check-input me-2" type="checkbox" id="flexCheckBest">
-        <label class="form-check-label" for="flexCheckBest" style="margin-right: 2%">[진행중]</label>
-        <input class="form-check-input me-2" type="checkbox" id="flexCheckBest">
-        <label class="form-check-label" for="flexCheckBest" style="margin-right: 2%">[종료]</label>
-        <div class="btn-group">
-            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" style="border: 1px solid black; border-radius: 5px;">지점선택</button>
-            <ul class="dropdown-menu">
-            <li><a class="dropdown-item">A지점</a></li>
-            <li><a class="dropdown-item">B지점</a></li>
-            </ul>
+    <!-- modal -->
+    <div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="saveConfirmModalLabel"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">저장하시겠습니까?</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            <button type="button" class="btn btn-primary" id="confirm-save-btn" onclick="location.href='{% url 'store:store_event' %}'">확인</button>
+          </div>
         </div>
-    </div>
-
-    <!-- 제목 입력 -->
-    <div class="event-title d-flex flex-column w-75">
-        <label for="event-title" class="form-label">제목</label>
-        <input type="text" id="event-title" class="form-control" placeholder="제목을 입력하세요">
-    </div>
-
-    <!-- 텍스트 에디터 공지글 작성용 -->
-    <div class="event-title d-flex flex-column w-75">
-        <label for="event-title" class="form-label">내용</label>
-        <form method="post">
-            <textarea id="summernote" name="postContent"></textarea>
-        </form>
-    </div>
-</div>
-
-<!-- modal -->    
-<div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="saveConfirmModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">저장하시겠습니까?</div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary" id="confirm-save-btn" onclick="location.href='{% url 'store:store_event' %}'">확인</button>
       </div>
     </div>
-  </div>
-</div>
 
     <!-- 저장 버튼 -->
     <div class="button-container">
@@ -116,52 +122,52 @@
 {% endblock content %}
 
 {% block script %}
-<!-- jQuery 추가 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Summernote css/js 추가 -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-<script src="{% static 'js/summernote-ko-KR.js' %}"></script>
+    <!-- jQuery 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Summernote css/js 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script src="{% static 'js/summernote-ko-KR.js' %}"></script>
 
-<script>
-$(document).ready(function() {
-    // Summernote 에디터 초기화
-    $('#summernote').summernote({
-        height: 400,
-        width: "100%",
-        lang: 'ko-KR',
-        styleWithCSS: true, // ✅ CSS 스타일을 직접 적용하도록 설정
-        toolbar: [
-            ['style', ['style']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-            ['color', ['color']],
-            ['table', ['table']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['height', ['height']],
-            ['insert', ['picture', 'link', 'video']],
-            ['view', ['fullscreen', 'help']]
-        ],
-        fontNames: ['Arial', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '돋음체', '바탕체'],
-        fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72', '96'],
-        focus: true,
-        callbacks: {
-            onImageUpload: function (files) {
-                for (var i = 0; i < files.length; i++) {
-                    imageUploader(files[i], this);
+    <script>
+    $(document).ready(function() {
+        // Summernote 에디터 초기화
+        $('#summernote').summernote({
+            height: 400,
+            width: "100%",
+            lang: 'ko-KR',
+            styleWithCSS: true, // ✅ CSS 스타일을 직접 적용하도록 설정
+            toolbar: [
+                ['style', ['style']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                ['color', ['color']],
+                ['table', ['table']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['picture', 'link', 'video']],
+                ['view', ['fullscreen', 'help']]
+            ],
+            fontNames: ['Arial', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '돋음체', '바탕체'],
+            fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72', '96'],
+            focus: true,
+            callbacks: {
+                onImageUpload: function (files) {
+                    for (var i = 0; i < files.length; i++) {
+                        imageUploader(files[i], this);
+                    }
                 }
             }
-        }
-    });
+        });
 
-    // Summernote 내부 텍스트 왼쪽 정렬 및 폰트 스타일 적용 강제화
-    $('.note-editable').css({
-        'text-align': 'left',
-        'font-family': 'Arial, sans-serif !important',
-        'font-size': '14px !important'
+        // Summernote 내부 텍스트 왼쪽 정렬 및 폰트 스타일 적용 강제화
+        $('.note-editable').css({
+            'text-align': 'left',
+            'font-family': 'Arial, sans-serif !important',
+            'font-size': '14px !important'
+        });
     });
-});
-</script>
+    </script>
 {% endblock script %}
 
