@@ -176,19 +176,24 @@ def store_event_edit(request):
     return render(request, 'store/store_event_edit.html', {"member": member})  # 이벤트 수정
 
 def community_notice(request):
-    return render(request, 'store/community_notice.html')  # 커뮤니티/공지사항
+    member = request.user.member
+    return render(request, 'store/community_notice.html', {"member": member})  # 커뮤니티/공지사항
 
 def community_notice_write(request):
-    return render(request, 'store/community_notice_write.html')  # 커뮤니티/공지사항 글쓰기
+    member = request.user.member
+    return render(request, 'store/community_notice_write.html', {"member": member})  # 커뮤니티/공지사항 글쓰기
 
 def community_notice_modify(request, notice_id):
-    return render(request, 'store/community_notice_modify.html', {'notice_id': notice_id})  # 커뮤니티/공지사항 글쓰기
+    member = request.user.member
+    return render(request, 'store/community_notice_modify.html', {'notice_id': notice_id, "member": member})  # 커뮤니티/공지사항 글쓰기
 
 def community_qna(request):
-    return render(request, 'store/community_qna.html')  # 커뮤니티/qna
+    member = request.user.member
+    return render(request, 'store/community_qna.html', {"member": member})  # 커뮤니티/qna
 
 def store_account(request):
-    return render(request, 'store/store_account.html')  # 매장정보
+    member = request.user.member
+    return render(request, 'store/store_account.html', {"member": member})  # 매장정보
 
 
 # Repository
@@ -350,7 +355,14 @@ def question_create(request):
             print('form.errors =', form.errors)
     else:
         form = QuestionForm()
-    return render(request, 'store/question_form.html', {'form': form})
+
+    member = request.user.member
+    context = {
+        'form': form,
+        'member': member
+    }
+
+    return render(request, 'store/question_form.html', context)
 
 # @login_required(login_url='login')
 def question_modify(request, question_id):

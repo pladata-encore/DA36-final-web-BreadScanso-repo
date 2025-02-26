@@ -1,9 +1,15 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | Community QnA {% endblock %}
-{% block store_id %}store_id{% endblock %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}시스템설정{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
 
 {% block content %}
 	<h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">QnA</h3>
@@ -126,4 +132,4 @@
             }
         });
     </script>
-{% endblock %}
+{% endblock script %}
