@@ -1,4 +1,4 @@
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, logout
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .models import Member  # 모델 가져오기
@@ -7,7 +7,8 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 import json
 from .utils import upload_profile_image_to_s3
-
+import traceback
+from django.db import connection
 
 
 # member 메인
@@ -178,10 +179,38 @@ def member_delete(request):
     member = request.user.member
     return render(request, 'member/member_delete.html', {'member': member})
 
-# 회원탈퇴사유 입력
+@login_required
 def member_delete_detail(request):
-    # GET 요청 처리
-    member = request.user.member
-    return render(request, 'member/member_delete_detail.html', {'member': member})
+    if request.method == 'POST':
+        try:
+            # 현재 로그인한 사용자의 Member 객체 가져오기
+            member = request.user.member  # request.user가 Member 모델과 올바르게 연결되어 있어야 함.
+            member_id = member.member_id  # Member 객체에서 member_id 가져오기
 
+            # SQL 쿼리를 사용하여 member_member와 auth_user 테이블에서 삭제
+            with connection.cursor() as cursor:
+                # member_member 테이블에서 회원 삭제
+                sql_member = "DELETE FROM member_member WHERE member_id = %s"
+                cursor.execute(sql_member, [member_id])
+                deleted_from_member = cursor.rowcount
 
+                # auth_user 테이블에서 사용자 계정 삭제
+                sql_user = "DELETE FROM auth_user WHERE username = %s"
+                cursor.execute(sql_user, [member_id])
+                deleted_from_user = cursor.rowcount
+
+            # 로그아웃 처리
+            logout(request)
+
+            # 탈퇴 완료 후 홈으로 이동
+            return redirect('main:index')
+
+        except AttributeError:
+            # 회원 정보를 찾을 수 없을 경우
+            return render(request, 'member/member_delete_detail.html', {'error': '회원 정보를 찾을 수 없습니다.'})
+        except Exception as e:
+            # 예외 처리
+            error_details = traceback.format_exc()
+            return render(request, 'member/member_delete_detail.html', {'error': f'삭제 실패: {str(e)}', 'details': error_details})
+
+    return render(request, 'member/member_delete_detail.html')
