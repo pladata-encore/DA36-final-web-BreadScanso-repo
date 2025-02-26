@@ -65,34 +65,30 @@ document.addEventListener("DOMContentLoaded", function () {
         if (earnedPointsElem) earnedPointsElem.textContent = earnedPoints.toLocaleString();
         if (finalPointsElem) finalPointsElem.textContent = finalPoints.toLocaleString();
 
-        console.log("적립된 포인트:", earnedPoints);
-        console.log("최종 보유 포인트:", finalPoints);
-
         // 서버에 최종 보유 포인트 업데이트 요청
-fetch("/kiosk/update_points/", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCSRFToken(),
-    },
-    body: JSON.stringify({
-        phone_num: phoneNum,
-        final_points: finalPoints,
-        final_amount: finalAmount  // 최종 결제 금액 추가
-    }),
-})
+        fetch("/kiosk/update_points/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken(),
+            },
+            body: JSON.stringify({
+                phone_num: phoneNum,
+                final_points: finalPoints,
+                final_amount: finalAmount  // 최종 결제 금액 추가
+            }),
+        })
         .then(response => response.json())
         .then(data => {
             console.log("포인트 업데이트 응답:", data);
             if (data.success) {
-                alert("포인트가 정상적으로 적립되었습니다.");
+                console.log("포인트가 정상적으로 적립되었습니다.");
             } else {
-                alert("포인트 업데이트 실패: " + data.message);
+                console.error("포인트 업데이트 실패:", data.message);
             }
         })
         .catch(error => {
             console.error("포인트 업데이트 중 오류 발생:", error);
-            alert("서버 오류로 인해 포인트 업데이트에 실패했습니다.");
         });
     }
 
@@ -111,4 +107,3 @@ fetch("/kiosk/update_points/", {
 
     updatePoints();
 });
-

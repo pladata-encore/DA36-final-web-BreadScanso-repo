@@ -97,16 +97,19 @@ def complete_payment(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            phone_num = data.get("phone_num")
+            phone_num = data.get("phone_num", "")  # 기본값을 빈 문자열로 설정
             final_amount = data.get("final_amount")
             payment_method = data.get("payment_method", "credit")
-            products = data.get("products", {})  # 상품 정보 가져오기
+            products = data.get("products", {})
 
-            if not phone_num or not final_amount:
-                return JsonResponse({"success": False, "message": "필수 데이터가 부족합니다."}, status=400)
+            # final_amount만 필수로 체크
+            if not final_amount:
+                return JsonResponse({"success": False, "message": "결제 금액이 필요합니다."}, status=400)
 
-            # 회원 정보 조회
-            member = Member.objects.filter(phone_num=phone_num).first()
+            # 회원 정보 조회 (비회원은 None)
+            member = None
+            if phone_num:
+                member = Member.objects.filter(phone_num=phone_num).first()
 
             # OrderInfo 생성
             order = OrderInfo.objects.create(
@@ -114,10 +117,13 @@ def complete_payment(request):
                 store=request.session.get('store', 'A')
             )
 
-            # OrderItem 생성 - 이 부분 추가
+            # OrderItem 생성
             for product_name, product_data in products.items():
                 try:
-                    item = Item.objects.get(item_name_eng=product_name)
+                    item = Item.objects.filter(
+                        item_name_eng=product_name,
+                        store=request.session.get('store')
+                    ).first()
                     OrderItem.objects.create(
                         order=order,
                         item=item,
@@ -131,7 +137,7 @@ def complete_payment(request):
             # PaymentInfo 생성
             payment = PaymentInfo.objects.create(
                 order=order,
-                member=member,
+                member=member,  # 비회원은 None
                 payment_method=payment_method
             )
 
@@ -142,7 +148,9 @@ def complete_payment(request):
                 "payment_id": payment.payment_id
             })
 
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "message": "잘못된 JSON 형식입니다."}, status=400)
         except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=500)
+            return JsonResponse({"success": False, "message": str(e)}, status=500)
 
     return JsonResponse({"success": False, "message": "잘못된 요청 방식입니다."}, status=405)
