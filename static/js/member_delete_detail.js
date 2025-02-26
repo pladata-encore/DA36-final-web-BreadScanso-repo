@@ -38,3 +38,28 @@ document.getElementById("otherReasonCheckbox").addEventListener("change", functi
         otherReasonText.value = "";  // 입력값 초기화
     }
 });
+
+// 회원탈퇴사유 직접입력칸
+document.addEventListener("DOMContentLoaded", function () {
+    const otherCheckbox = document.getElementById("otherReasonCheckbox");
+    const otherText = document.getElementById("otherReasonText");
+
+    // 체크박스 클릭 시 textarea 보이기/숨기기
+    otherCheckbox.addEventListener("change", function () {
+        if (this.checked) {
+            otherText.style.display = "block"; // 보이기
+            otherText.focus(); // 입력 가능하도록 포커스
+        } else {
+            otherText.style.display = "none"; // 숨기기
+            otherText.value = ""; // 내용 초기화
+        }
+    });
+
+    // 입력할 때마다 높이 자동 조절
+    otherText.addEventListener("input", function () {
+        this.style.height = "auto"; // 높이를 초기화
+        this.style.height = this.scrollHeight + "px"; // 내용에 맞춰 높이 조정
+    });
+});
+
+
