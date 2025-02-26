@@ -7,7 +7,7 @@
     </div>
     <div class="logo-container" style="background-color: #b3997d;">
         <a href="/brand" class="btn">브랜드소개</a>
-        <a href="{% url 'store:store_map' %}" class="btn">매장안내</a>
+        <a href="{% url 'store:store_main' %}" class="btn">매장안내</a>
         <a href="/menu" class="btn">메뉴정보</a>
         <a href="/">
             <img src="{% static 'images/bread_im_text.png' %}" alt="text" class="logo-img">
@@ -25,7 +25,6 @@
         <div style="background-color: #b3997d;">
             {% if user.is_authenticated %}
                 {% if request.session.member_type == "manager" %}
-
                     <a href="{% url 'kiosk_main' %}" class="btn btn-light">KIOSK</a>
                     <a href="{% url 'sales:sales_main' %}" class="btn btn-light">매장페이지</a>
                 {% else %}

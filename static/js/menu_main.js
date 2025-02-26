@@ -52,11 +52,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // 더보기 버튼 기능
     loadMoreBtn.addEventListener('click', displayProducts);
     itemsData.forEach((product, index) => {
         product.style.display = index < 10 ? 'block' : 'none';
     });
 
+    // 카드 및 crousel 클릭시 제품 상세 페이지로 이동
     document.querySelectorAll(".product-card, .best-carousel-item").forEach(element => {
         element.addEventListener("click", function () {
             const item_id = this.getAttribute("data-id");
@@ -65,12 +67,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
+        // hover 기능
         element.addEventListener("mouseenter", function () {
             this.style.transform = "scale(1.05)";
             this.style.zIndex = "10";
             this.style.position = "relative";
         });
 
+        // hover 기능
         element.addEventListener("mouseleave", function () {
             this.style.transform = "scale(1)";
             this.style.zIndex = "1";
@@ -89,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // 검색기능
     searchForm.addEventListener("submit", function (event) {
         event.preventDefault(); // 폼 전송 방지
         const searchTerm = searchInput.value.trim().toLowerCase();

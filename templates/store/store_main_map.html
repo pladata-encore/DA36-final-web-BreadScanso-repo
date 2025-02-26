@@ -1,15 +1,11 @@
-{% extends 'layout/store/base_store.html' %}
+{% extends 'layout/main/main_base.html' %}
 {% load static %}
 
-{% block title %}시스템설정{% endblock title %}
+{% block title %}매장안내{% endblock title %}
 
 {% block header %}
-    {% include 'layout/store/header_store.html' %}
+    {% include 'layout/main/main_header.html' %}
 {% endblock header %}
-
-{% block sidebar %}
-    {% include 'layout/store/sidebar_store.html' %}
-{% endblock sidebar %}
 
 {% block content %}
     <style>
@@ -90,7 +86,11 @@
 
         <!-- 버튼 섹션 -->
         <div class="button-container">
-            <a href="{% url 'store:store_map_edit' %}" class="btn btn-primary">수정</a>
+            {% if user.is_authenticated %}
+                {% if request.session.member_type == "manager" %}
+                    <a href="{% url 'store:store_map_edit' %}" class="btn btn-primary">수정</a>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 
@@ -99,16 +99,16 @@
 {% block script %}
     {{ block.super }}
     <script>
-    window.onload = function() {
-        // 로컬 스토리지에서 저장된 값 읽기
-        const address = localStorage.getItem('store_address') || '서울 서초구 효령로 335';  // 기본값
-        const transportation = localStorage.getItem('store_transportation') || '3호선 남부터미널역 2번 출구 도보 10분';  // 기본값
-        const parking = localStorage.getItem('store_parking') || '매장 건너편 공영주차장 이용 (10분 이상 주차 시 유료)';  // 기본값
+        window.onload = function() {
+            // 로컬 스토리지에서 저장된 값 읽기
+            const address = localStorage.getItem('store_address') || '서울 서초구 효령로 335';  // 기본값
+            const transportation = localStorage.getItem('store_transportation') || '3호선 남부터미널역 2번 출구 도보 10분';  // 기본값
+            const parking = localStorage.getItem('store_parking') || '매장 건너편 공영주차장 이용 (10분 이상 주차 시 유료)';  // 기본값
 
-        // 페이지에 표시하기
-        document.getElementById('address-display').innerText = address;
-        document.getElementById('transportation-display').innerText = transportation;
-        document.getElementById('parking-display').innerText = parking;
-    };
+            // 페이지에 표시하기
+            document.getElementById('address-display').innerText = address;
+            document.getElementById('transportation-display').innerText = transportation;
+            document.getElementById('parking-display').innerText = parking;
+        };
     </script>
 {% endblock script %}

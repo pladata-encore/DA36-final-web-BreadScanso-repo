@@ -1,9 +1,15 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | Question Form {% endblock %}
-{% block store_id %}store_id{% endblock %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}시스템설정{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
 
 {% block content %}
     <div class="container">
@@ -53,4 +59,5 @@
             <button type="submit" class="btn btn-primary">저장하기</button>
         </form>
     </div>
-{% endblock %}
+{% endblock content %}
+

@@ -1,204 +1,210 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | Store Account {% endblock %}
-{% block store_id %}store_id{% endblock %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}시스템설정{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
 
 {% block content %}
-<style>
-    /* 제목 스타일 */
-    .store-title {
-        font-size: 30px;
-        font-weight: bold;
-        margin-bottom: 30px;
-    }
+    <style>
+        /* 제목 스타일 */
+        .store-title {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
 
-    /* 컨테이너 */
-    .store-account-container {
-        max-width: 1000px;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+        /* 컨테이너 */
+        .store-account-container {
+            max-width: 1000px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    /* pw-grid 레이아웃 */
-    .pw-grid {
-        display: grid;
-        grid-template-columns: 200px auto;
-        gap: 30px;
-        align-items: start;
-        width: 100%;
-        max-width: 800px;
-    }
-    
-    /* 오른쪽 폼 입력 영역 */
-    .pw-form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-    }
+        /* pw-grid 레이아웃 */
+        .pw-grid {
+            display: grid;
+            grid-template-columns: 200px auto;
+            gap: 30px;
+            align-items: start;
+            width: 100%;
+            max-width: 800px;
+        }
 
-    /* 각 입력 필드의 부모 컨테이너 */
-    .input-container {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        text-align: justify;
-    }
+        /* 오른쪽 폼 입력 영역 */
+        .pw-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
 
-    /* 입력 필드 스타일 (길이 통일) */
-    .form-control-pw {
-        flex: 1;
-        padding: 12px;
-        font-size: 16px;
-        border-radius: 5px !important;
-        border: 1px solid #ced4da;
-        width: 100%;
-    }
+        /* 각 입력 필드의 부모 컨테이너 */
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            text-align: justify;
+        }
 
-    /* 입력 필드 + 버튼 한 줄 배치 (버튼을 오른쪽으로) */
-    .input-group {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-    }
+        /* 입력 필드 스타일 (길이 통일) */
+        .form-control-pw {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px !important;
+            border: 1px solid #ced4da;
+            width: 100%;
+        }
 
-    /* 버튼 스타일 */
-    .btn {
-        padding: 12px 16px;
-        border-radius: 5px !important;
-        white-space: nowrap;
-    }
-    
-    /* point-grid 레이아웃 */
-    .point-grid {
-        display: grid;
-        grid-template-columns: 200px auto;
-        gap: 30px;
-        align-items: start;
-        width: 100%;
-        max-width: 800px;
-        margin-top: 10%;
-    }
-    
-    /* 오른쪽 폼 입력 영역 */
-    .point-form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-    }
+        /* 입력 필드 + 버튼 한 줄 배치 (버튼을 오른쪽으로) */
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
 
-    /* 입력 필드 + 텍스트 한 줄 정렬 */
-    .point-input-container {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-    }
+        /* 버튼 스타일 */
+        .btn {
+            padding: 12px 16px;
+            border-radius: 5px !important;
+            white-space: nowrap;
+        }
 
-    /* label 왼쪽 정렬 */
-    .point-input-container label {
-        flex: 1;
-        text-align: justify;
-    }
+        /* point-grid 레이아웃 */
+        .point-grid {
+            display: grid;
+            grid-template-columns: 200px auto;
+            gap: 30px;
+            align-items: start;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 10%;
+        }
 
-    /* 입력 필드, % 텍스트, 버튼을 오른쪽에 위치시키기 */
-    .point-input-right {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end; /* 오른쪽 정렬 */
-        gap: 10px;
-    }
+        /* 오른쪽 폼 입력 영역 */
+        .point-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
 
-    /* 입력 필드 스타일 */
-    .form-control-point {
-        flex-grow: 1;
-        padding: 12px;
-        font-size: 16px;
-        border-radius: 5px;
-        border: 1px solid #ced4da;
-        text-align: right;
-        max-width: 120px;
-    }
+        /* 입력 필드 + 텍스트 한 줄 정렬 */
+        .point-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
 
-    /* % 텍스트 스타일 */
-    .percent-label {
-        font-size: 16px;
-        font-weight: bold;
-    }
-    
-</style>
+        /* label 왼쪽 정렬 */
+        .point-input-container label {
+            flex: 1;
+            text-align: justify;
+        }
 
-<!-- 매장 정보 (비밀번호 변경) -->
-<div class="store-account-container">
-    <h2 class="store-title">매장 정보</h2>
+        /* 입력 필드, % 텍스트, 버튼을 오른쪽에 위치시키기 */
+        .point-input-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* 오른쪽 정렬 */
+            gap: 10px;
+        }
 
-    <div class="pw-grid">
-        <!-- 왼쪽 고정된 "비밀번호 변경" -->
-        <div class="text-bg-secondary p-2" style="border-radius: 5px; font-size: 18px; white-space: nowrap;">비밀번호 변경</div>
+        /* 입력 필드 스타일 */
+        .form-control-point {
+            flex-grow: 1;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            text-align: right;
+            max-width: 120px;
+        }
 
-        <!-- 오른쪽 입력 폼 -->
-        <div class="pw-form">
-            <!-- 현재 비밀번호 입력 -->
-            <div class="input-container">
-                <label for="password1">현재 비밀번호</label>
-                <div class="input-group">
-                    <input type="password" name="password1" id="password1" class="form-control-pw" placeholder="비밀번호 입력(영문자, 숫자 포함 4~12자리)" required>
-                    <button type="button" class="btn btn-secondary">확인</button>
+        /* % 텍스트 스타일 */
+        .percent-label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+    </style>
+
+    <!-- 매장 정보 (비밀번호 변경) -->
+    <div class="store-account-container">
+        <h2 class="store-title">매장 정보</h2>
+
+        <div class="pw-grid">
+            <!-- 왼쪽 고정된 "비밀번호 변경" -->
+            <div class="text-bg-secondary p-2" style="border-radius: 5px; font-size: 18px; white-space: nowrap;">비밀번호 변경</div>
+
+            <!-- 오른쪽 입력 폼 -->
+            <div class="pw-form">
+                <!-- 현재 비밀번호 입력 -->
+                <div class="input-container">
+                    <label for="password1">현재 비밀번호</label>
+                    <div class="input-group">
+                        <input type="password" name="password1" id="password1" class="form-control-pw" placeholder="비밀번호 입력(영문자, 숫자 포함 4~12자리)" required>
+                        <button type="button" class="btn btn-secondary">확인</button>
+                    </div>
+                </div>
+
+                <!-- 새 비밀번호 입력 -->
+                <div class="input-container">
+                    <label for="password2">새 비밀번호</label>
+                    <div class="input-group">
+                        <input type="password" name="password2" id="password2" class="form-control-pw" placeholder="비밀번호 입력(영문자, 숫자 포함 4~12자리)" required>
+                    </div>
+                </div>
+
+                <!-- 새 비밀번호 확인 + 저장 버튼 -->
+                <div class="input-container">
+                    <label for="password3">새 비밀번호 확인</label>
+                    <div class="input-group">
+                        <input type="password" name="password3" id="password3" class="form-control-pw" placeholder="비밀번호 재입력" required>
+                        <button type="submit" id="save-btn" class="btn btn-warning">저장</button>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- 새 비밀번호 입력 -->
-            <div class="input-container">
-                <label for="password2">새 비밀번호</label>
-                <div class="input-group">
-                    <input type="password" name="password2" id="password2" class="form-control-pw" placeholder="비밀번호 입력(영문자, 숫자 포함 4~12자리)" required>
-                </div>
+        <!-- 포인트 설정 -->
+        <div class="point-grid">
+            <!-- 왼쪽 고정된 "포인트 설정" -->
+            <div class="text-bg-secondary p-2" style="border-radius: 5px; font-size: 18px; white-space: nowrap;">
+                포인트 설정
             </div>
 
-            <!-- 새 비밀번호 확인 + 저장 버튼 -->
-            <div class="input-container">
-                <label for="password3">새 비밀번호 확인</label>
-                <div class="input-group">
-                    <input type="password" name="password3" id="password3" class="form-control-pw" placeholder="비밀번호 재입력" required>
-                    <button type="submit" id="save-btn" class="btn btn-warning">저장</button>
+            <!-- 오른쪽 입력 폼 -->
+            <div class="point-form">
+                <!-- 현재 포인트 적립 % -->
+                <div class="point-input-container">
+                    <label for="current-point">현재 포인트 적립 %</label>
+                    <span class="percent-label">10%</span>
+                </div>
+
+                <!-- 변경 포인트 적립 % 설정 -->
+                <div class="point-input-container">
+                    <label for="change-point">변경 포인트 적립 % 설정</label>
+                    <div class="point-input-right">
+                        <input type="number" id="change-point" class="form-control-point" min="0" max="100">
+                        <span class="percent-label">%</span>
+                        <button type="submit" id="save-point-btn" class="btn btn-warning">저장</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- 포인트 설정 -->
-    <div class="point-grid">
-        <!-- 왼쪽 고정된 "포인트 설정" -->
-        <div class="text-bg-secondary p-2" style="border-radius: 5px; font-size: 18px; white-space: nowrap;">
-            포인트 설정
-        </div>
-    
-        <!-- 오른쪽 입력 폼 -->
-        <div class="point-form">
-            <!-- 현재 포인트 적립 % -->
-            <div class="point-input-container">
-                <label for="current-point">현재 포인트 적립 %</label>
-                <span class="percent-label">10%</span>
-            </div>
-    
-            <!-- 변경 포인트 적립 % 설정 -->
-            <div class="point-input-container">
-                <label for="change-point">변경 포인트 적립 % 설정</label>
-                <div class="point-input-right">
-                    <input type="number" id="change-point" class="form-control-point" min="0" max="100">
-                    <span class="percent-label">%</span>
-                    <button type="submit" id="save-point-btn" class="btn btn-warning">저장</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
     {% if error %}
         <div class="alert alert-danger">{{ error }}</div>
@@ -223,6 +229,4 @@
     </div>
 {% endblock content %}
 
-{% block script %}
-    
-{% endblock script %}
+

@@ -6,65 +6,178 @@ from django.shortcuts import render, redirect, resolve_url
 from django.db.models import Q
 from store.models import Question, QuestionForm, Answer
 from member.models import Member
+import json
+from django.views.decorators.http import require_http_methods
+from django.core.paginator import Paginator, EmptyPage
 
 
 def store_main(request):
-    if not request.user.is_authenticated:
-        return redirect("main:login")
+    return render(request, 'store/store_main_map.html' )
 
-    try:
-        member = Member.objects.get(user=request.user)
-
-        # member_type이 none이면 'normal'로 간주
-        member_type = member.member_type if member.member_type else "normal"
-
-        # owner 또는 manager일 경우 매장페이지 첫화면(매출관리)으로 이동
-        if member_type in ["owner", "manager"]:
-            return redirect("sales:sales_main")
-
-        else:
-            return redirect("member:member_page")  # normal 회원은 마이페이지로 이동
-
-    except Member.DoesNotExist:
-        return redirect("main:index")
-
-# 점주 회원관리
+# 매장페이지 - 회원관리
 def member_store(request):
-    members = Member.objects.all() # 모든 회원 정보 가져오기
-    return render(request, 'member/member_store.html', {'members': members})
+    # 검색 기능 처리
+    search_query = request.POST.get('search_input', '')
+
+    if search_query:
+        # 검색어가 있을 경우 회원명 기준으로 필터링
+        members = Member.objects.filter(name__icontains=search_query)
+    else:
+        # 검색어가 없을 경우 모든 회원 정보 가져오기
+        members = Member.objects.all()
+
+    # 페이지네이션 처리 (10개씩)
+    paginator = Paginator(members, 10)
+    # 페이지 번호 가져오기, 유효하지 않으면 1 페이지로 설정
+    page_number = request.GET.get('page', 1)
+    try:
+        page_number = int(page_number)
+        if page_number < 1:
+            page_number = 1
+    except ValueError:
+        page_number = 1
+    try:
+        page_obj = paginator.get_page(page_number)
+    except EmptyPage:
+        # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
+        page_obj = paginator.get_page(paginator.num_pages)
+
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+
+    # 하나의 딕셔너리로 합쳐서 전달
+    context = {
+        'page_obj': page_obj,
+        'member': member
+    }
+
+    return render(request, 'member/member_store.html', context)
+
+
+# 회원 정보 업데이트
+def update_member_store(request):
+    if request.method == 'POST':
+        try:
+            # POST로 넘어오는 데이터
+            data = json.loads(request.body)
+            member_id = data.get('member_id')  # 회원 ID
+            new_name = data.get('new_name')  # 새로운 회원명
+            new_phone_num = data.get('new_phone_num')  # 새로운 휴대폰 번호
+            new_email = data.get('new_email')  # 새로운 이메일
+
+            # 유효성 검사
+            if not member_id or not new_name or not new_phone_num or not new_email:
+                return JsonResponse({'success': False, 'error': 'Invalid data provided'})
+
+            # 회원 존재 여부 확인
+            try:
+                member = Member.objects.get(member_id=member_id)
+            except Member.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Member not found'})
+
+            # 회원 정보 업데이트
+            member.name = new_name
+            member.phone_num = new_phone_num
+            member.email = new_email
+            member.save()
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            print(f"Error updating member: {str(e)}")
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': '잘못된 요청입니다.'})
+
+def member_store_edit(request):
+    return render(request, 'store/member_store_edit.html')  # 회원 정보 수정
+
+# 회원 삭제
+@require_http_methods(["POST"])
+def delete_member(request):
+    try:
+        # 요청 데이터 파싱
+        data = json.loads(request.body)
+        member_ids = data.get("member_ids", [])
+
+        if not member_ids:
+            return JsonResponse({
+                "success": False,
+                "message": "삭제할 항목이 없습니다."
+            })
+
+        # 선택된 회원 삭제
+        deleted_count, _ = Member.objects.filter(member_id__in=member_ids).delete()
+
+        # 삭제 결과 반환
+        if deleted_count > 0:
+            return JsonResponse({
+                "success": True,
+                "message": f"{deleted_count}명의 회원이 삭제되었습니다."
+            })
+        else:
+            return JsonResponse({
+                "success": False,
+                "message": "삭제할 회원을 찾을 수 없습니다."
+            })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "message": "잘못된 요청 데이터입니다."
+        })
+    except Exception as e:
+        print(f"Error deleting members: {str(e)}")
+        return JsonResponse({
+            "success": False,
+            "message": f"서버 오류가 발생했습니다: {str(e)}"
+        })
 
 def store_home_edit(request):
-    return render(request, 'store/store_home_edit.html')  # 홈 화면 수정
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+    return render(request, 'store/store_home_edit.html', {"member": member})  # 홈 화면 수정
 
 def about_breadscanso_edit(request):
-    return render(request, 'store/about_breadscanso_edit.html')  # 브랜드 소개
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+    return render(request, 'store/about_breadscanso_edit.html', {"member": member})  # 브랜드 소개
 
 def store_map(request):
-    return render(request, 'store/store_map.html')  # 매장 안내
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+    return render(request, 'store/store_map.html', {"member": member})  # 매장 안내
 
 def store_map_edit(request):
-    return render(request, 'store/store_map_edit.html')  # 매장 안내 수정
+    member = request.user.member
+    return render(request, 'store/store_map_edit.html', {"member": member})  # 매장 안내 수정
 
 def store_event(request):
-    return render(request, 'store/store_event.html')  # 이벤트
+    member = request.user.member
+    return render(request, 'store/store_event.html', {"member": member})  # 이벤트
 
 def store_event_edit(request):
-    return render(request, 'store/store_event_edit.html')  # 이벤트 수정
+    member = request.user.member
+    return render(request, 'store/store_event_edit.html', {"member": member})  # 이벤트 수정
 
 def community_notice(request):
-    return render(request, 'store/community_notice.html')  # 커뮤니티/공지사항
+    member = request.user.member
+    return render(request, 'store/community_notice.html', {"member": member})  # 커뮤니티/공지사항
 
 def community_notice_write(request):
-    return render(request, 'store/community_notice_write.html')  # 커뮤니티/공지사항 글쓰기
+    member = request.user.member
+    return render(request, 'store/community_notice_write.html', {"member": member})  # 커뮤니티/공지사항 글쓰기
 
 def community_notice_modify(request, notice_id):
-    return render(request, 'store/community_notice_modify.html', {'notice_id': notice_id})  # 커뮤니티/공지사항 글쓰기
+    member = request.user.member
+    return render(request, 'store/community_notice_modify.html', {'notice_id': notice_id, "member": member})  # 커뮤니티/공지사항 글쓰기
 
 def community_qna(request):
-    return render(request, 'store/community_qna.html')  # 커뮤니티/qna
+    member = request.user.member
+    return render(request, 'store/community_qna.html', {"member": member})  # 커뮤니티/qna
 
 def store_account(request):
-    return render(request, 'store/store_account.html')  # 매장정보
+    member = request.user.member
+    return render(request, 'store/store_account.html', {"member": member})  # 매장정보
 
 
 # Repository
@@ -226,7 +339,14 @@ def question_create(request):
             print('form.errors =', form.errors)
     else:
         form = QuestionForm()
-    return render(request, 'store/question_form.html', {'form': form})
+
+    member = request.user.member
+    context = {
+        'form': form,
+        'member': member
+    }
+
+    return render(request, 'store/question_form.html', context)
 
 # @login_required(login_url='login')
 def question_modify(request, question_id):

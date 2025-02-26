@@ -1,8 +1,16 @@
 {% extends 'layout/member/member_base.html' %}
 {% load static %}
 
-{% block title %}MYPAGE | Cancel {% endblock title %}
-{% block user_id %}user_id{% endblock user_id %}
+{% block title %}구매/취소내역{% endblock title %}
+
+{% block header %}
+    {% include 'layout/member/member_header.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/member/member_sidebar.html' %}
+{% endblock sidebar %}
+
 
 {% block content %}
     <h3 class="text-center">취소 내역</h3>
@@ -43,23 +51,23 @@
 {% endblock content %}
 
 {% block script %}
-<script>
-    document.getElementById("date_button").addEventListener("click", function() {
-        let startDate = new Date(document.getElementById("startDate").value);
-        let endDate = new Date(document.getElementById("endDate").value);
-        let rows = document.querySelectorAll(".table tbody tr");
+    <script>
+        document.getElementById("date_button").addEventListener("click", function() {
+            let startDate = new Date(document.getElementById("startDate").value);
+            let endDate = new Date(document.getElementById("endDate").value);
+            let rows = document.querySelectorAll(".table tbody tr");
 
-        rows.forEach(row => {
-            let dateCell = row.querySelector("td:first-child");
-            if (dateCell) {
-                let purchaseDate = new Date(dateCell.innerText);
-                if (purchaseDate >= startDate && purchaseDate <= endDate) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
+            rows.forEach(row => {
+                let dateCell = row.querySelector("td:first-child");
+                if (dateCell) {
+                    let purchaseDate = new Date(dateCell.innerText);
+                    if (purchaseDate >= startDate && purchaseDate <= endDate) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
                 }
-            }
+            });
         });
-    });
-</script>
+    </script>
 {% endblock script %}

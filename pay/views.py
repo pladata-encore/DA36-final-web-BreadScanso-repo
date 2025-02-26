@@ -4,7 +4,10 @@ def kiosk_main(request):
     return render(request, 'kiosk/kiosk_main.html')  # kiosk_main 템플릿 파일 경로 지정
 
 def pay_main(request):
-    return render(request, "pay/pay_main.html")
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+
+    return render(request, "pay/pay_main.html", {"member": member})
 
 
 # def pay_details(request, payment_id):
@@ -16,7 +19,10 @@ def pay_details(request):
 
 def pay_cancel(request):
     # cancels = Purchase.objects.filter(is_cancelled=True).order_by("-date")
-    return render(request, 'pay/pay_cancel.html')
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+
+    return render(request, 'pay/pay_cancel.html', {"member": member})
     # return render(request, "pay/pay_cancel.html", {"cancels": cancels})
 
 def pay_member(request):
@@ -33,6 +39,8 @@ def pay_member_details(request):
 def pay_member_cancel(request):
     # cancels = Purchase.objects.filter(member_status="member", is_cancelled=True).order_by("-date")
     # return render(request, "pay/pay_member_cancel.html", {"cancels": cancels})
-    return render(request, "pay/pay_member_cancel.html")
+    member = request.user.member
+
+    return render(request, "pay/pay_member_cancel.html", {'member': member})
 
 

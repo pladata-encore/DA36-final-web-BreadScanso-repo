@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 페이지 로드 시 세션 스토리지 초기화
-    sessionStorage.clear();
+    // 페이지 로드시 세션 스토리지 초기화
+    sessionStorage.removeItem("productDictionary");
+    sessionStorage.removeItem("totalQuantity");
+    sessionStorage.removeItem("totalPrice");
+    sessionStorage.removeItem("usedPoints");
+    sessionStorage.removeItem("finalPrice");
     console.log('세션 스토리지가 초기화되었습니다.');
 
 // 웹캠 설정
@@ -8,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const captureBtn = document.getElementById("capture-btn");
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    const NGROK_URL = "https://7868-175-121-129-72.ngrok-free.app/predict/";
+    const NGROK_URL = "https://dbc3-175-121-129-72.ngrok-free.app/predict/";
 
     let productDictionary = {};
 

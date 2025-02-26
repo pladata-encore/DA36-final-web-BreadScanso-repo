@@ -4,7 +4,9 @@ from . import views  # views.py에서 함수 가져오기
 app_name = 'store'
 urlpatterns = [
     path('', views.store_main, name='store_main'),  # /store/
-    path('store/', views.member_store, name='member_store'), # 점주 회원관리
+    path('member_store/', views.member_store, name='member_store'), # 매장페이지 - 회원관리
+    path('update_member_store/', views.update_member_store, name='update_member_store'), # 매장페이지 - 회원관리 내 수정
+    path('delete_member/', views.delete_member, name='delete_member'),  # 회원 삭제
     path('store_home_edit', views.store_home_edit, name='store_home_edit'),  # 홈 화면 수정
     path('about_breadscanso_edit', views.about_breadscanso_edit, name='about_breadscanso_edit'),  # 브랜드 소개
     path('store_map', views.store_map, name='store_map'),  # 매장 안내
