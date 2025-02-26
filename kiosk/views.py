@@ -110,7 +110,7 @@ def complete_payment(request):
             # OrderInfo 생성
             order = OrderInfo.objects.create(
                 total_amount=final_amount,
-                store="A"  # 적절한 매장 정보로 변경
+                store=request.session.get('store')
             )
 
             # PaymentInfo 생성
