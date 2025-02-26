@@ -1,10 +1,15 @@
-<!-- stock_ingredient_new.html -->
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | New Ingredient{% endblock %}
-{% block store_id %}store_id{% endblock %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}재고관리{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
 
 {% block content %}
     <h3 class="text-center">신규 재료 등록👩🏻‍🍳</h3>
@@ -44,4 +49,4 @@
     {% if error %}
         <div class="alert alert-danger mt-3">{{ error }}</div>
     {% endif %}
-{% endblock %}
+{% endblock content %}

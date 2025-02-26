@@ -197,4 +197,6 @@ def stock_ingredient_new(request):
                 'error': '모든 필드를 입력해주세요.'
             })
     else:
-        return render(request, 'stock/stock_ingredient_new.html')
+        member = request.user.member
+
+        return render(request, 'stock/stock_ingredient_new.html', {'member': member})
