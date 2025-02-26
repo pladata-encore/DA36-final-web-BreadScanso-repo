@@ -38,8 +38,8 @@ function confirm() {
     let phoneNumber = "010" + phoneDigits.join("");  // 하이픈 없이 변환
     console.log("요청할 전화번호:", phoneNumber);
 
-    // 서버로 전화번호 존재 여부 확인 요청
-    fetch(`check-phone/?phone_num=${phoneNumber}`)
+        // 서버로 전화번호 존재 여부 확인 요청
+        fetch(`/kiosk/check_phone_number/?phone_num=${phoneNumber}`)
         .then(response => response.json())
         .then(data => {
             console.log("서버 응답:", data);
@@ -65,8 +65,3 @@ function confirm() {
             alert("서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.");
         });
 }
-
-
-
-
-
