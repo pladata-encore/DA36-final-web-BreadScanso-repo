@@ -1,122 +1,120 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | Stock{% endblock %}
-{% block store_id %}store_id{% endblock %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}재료 재고{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-    <hr/>
     <h3 style="margin-bottom: 50px;" class="text-center">재고관리 - 재료</h3>
-    
-    
-<style>
-/* 기존 CSS 스타일 유지 */
-.stock-ingredient-table table {
-    border-collapse: collapse;
-    width: 100%;
-}
-.stock-ingredient-table th, td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: center;
-}
-.stock-ingredient-table thead {
-    border-bottom: 3px solid black;
-}
-.stock-ingredient-table .checkbox-column {
-    width: 50px;
-}
+    <style>
+    /* 기존 CSS 스타일 유지 */
+    .stock-ingredient-table table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    .stock-ingredient-table th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+    }
+    .stock-ingredient-table thead {
+        border-bottom: 3px solid black;
+    }
+    .stock-ingredient-table .checkbox-column {
+        width: 50px;
+    }
 
-.stock-ingredient-table tbody tr {
-    cursor: pointer;
-}
-.stock-ingredient-table tbody tr:hover {
-    background-color: gray;
-}
-</style>
+    .stock-ingredient-table tbody tr {
+        cursor: pointer;
+    }
+    .stock-ingredient-table tbody tr:hover {
+        background-color: gray;
+    }
+    </style>
 
-<!-- 버튼과 검색창을 한 줄에 배치 -->
-<div class="d-flex justify-content-between align-items-center mt-3 mb-4" style="width: 100%;"> 
+    <!-- 버튼과 검색창을 한 줄에 배치 -->
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-4" style="width: 100%;">
 
-  <!-- 검색창 (오른쪽 정렬) -->
-  <div style="flex-grow: 1; display: flex; justify-content: flex-end;">
-    <form method="post" class="d-flex" role="search" id="search-form">
-      {% csrf_token %}
-      <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="재료명을 입력하세요" aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
-      <button id="search_button" type="submit" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
-    </form>
-  </div>
-</div>
-
-<!-- 테이블 -->
-<table class="table stock-ingredient-table">
-  <thead>
-    <tr>
-      <th class="checkbox-column"><input type="checkbox" id="select-all"></th>
-      <th scope="col">재료 ID</th>
-      <th scope="col">재료명</th>
-      <th scope="col">매장
-{#        <select class="form-select form-select-sm" name="store" id="store-filter" onchange="filterStore()">#}
-{#          <option value="" style="text-align: center;">전체 매장</option>#}
-{#          <option value="A" style="text-align: center;" {% if request.GET.store == "A" %}selected{% endif %}>서초점 (A)</option>#}
-{#          <option value="B" style="text-align: center;" {% if request.GET.store == "B" %}selected{% endif %}>강남점 (B)</option>#}
-{#        </select>#}
-      </th>
-      <th scope="col" onclick="sortTable()">▲ 재고수량 ▼<i class="bi bi-sort-down-alt"></i></th>
-      <th>관리</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for ingredient in page_obj %}
-    <tr>
-        <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
-        <td>{{ ingredient.ingredient_id }}</td>
-        <td>{{ ingredient.ingredient_name }}</td>
-        <td>{{ ingredient.store }}</td>
-        <td id="stock-{{ ingredient.ingredient_id }}">{{ ingredient.stock }}</td>
-        <td><button class="btn btn-warning btn-sm edit-stock-btn">수정</button></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<!-- 수정용 모달 -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">수정할 정보를 입력하세요.</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- 재료명, 매장, 재고 입력 폼 -->
-        <div class="mb-3">
-          <label for="editIngredientName" class="form-label">재료명</label>
-          <input type="text" class="form-control" id="editIngredientName" required>
-        </div>
-        <div class="mb-3">
-          <label for="editStore" class="form-label">매장</label>
-          <input type="text" class="form-control" id="editStore" required>
-        </div>
-        <div class="mb-3">
-          <label for="editStock" class="form-label">재고 수량</label>
-          <input type="number" class="form-control" id="editStock" required>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary" id="saveChangesButton">저장</button>
+      <!-- 검색창 (오른쪽 정렬) -->
+      <div style="flex-grow: 1; display: flex; justify-content: flex-end;">
+        <form method="post" class="d-flex" role="search" id="search-form">
+          {% csrf_token %}
+          <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="재료명을 입력하세요" aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+          <button id="search_button" type="submit" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
+        </form>
       </div>
     </div>
-  </div>
-</div>
-    
-    
-    
-    
+
+    <!-- 테이블 -->
+    <table class="table stock-ingredient-table">
+      <thead>
+        <tr>
+          <th class="checkbox-column"><input type="checkbox" id="select-all"></th>
+          <th scope="col">재료 ID</th>
+          <th scope="col">재료명</th>
+          <th scope="col">매장
+    {#        <select class="form-select form-select-sm" name="store" id="store-filter" onchange="filterStore()">#}
+    {#          <option value="" style="text-align: center;">전체 매장</option>#}
+    {#          <option value="A" style="text-align: center;" {% if request.GET.store == "A" %}selected{% endif %}>서초점 (A)</option>#}
+    {#          <option value="B" style="text-align: center;" {% if request.GET.store == "B" %}selected{% endif %}>강남점 (B)</option>#}
+    {#        </select>#}
+          </th>
+          <th scope="col" onclick="sortTable()">▲ 재고수량 ▼<i class="bi bi-sort-down-alt"></i></th>
+          <th>관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ingredient in page_obj %}
+        <tr>
+            <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+            <td>{{ ingredient.ingredient_id }}</td>
+            <td>{{ ingredient.ingredient_name }}</td>
+            <td>{{ ingredient.store }}</td>
+            <td id="stock-{{ ingredient.ingredient_id }}">{{ ingredient.stock }}</td>
+            <td><button class="btn btn-warning btn-sm edit-stock-btn">수정</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- 수정용 모달 -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">수정할 정보를 입력하세요.</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- 재료명, 매장, 재고 입력 폼 -->
+            <div class="mb-3">
+              <label for="editIngredientName" class="form-label">재료명</label>
+              <input type="text" class="form-control" id="editIngredientName" required>
+            </div>
+            <div class="mb-3">
+              <label for="editStore" class="form-label">매장</label>
+              <input type="text" class="form-control" id="editStore" required>
+            </div>
+            <div class="mb-3">
+              <label for="editStock" class="form-label">재고 수량</label>
+              <input type="number" class="form-control" id="editStock" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            <button type="button" class="btn btn-primary" id="saveChangesButton">저장</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 삭제와 신규등록을 한 줄에 배치 -->
     <div class="d-flex justify-content-between align-items-center mt-3" style="width: 100%;">
 
@@ -125,7 +123,7 @@
         <button class="btn btn-danger" type="button" id="delete-selected">삭제</button>
     </div>
 
-<!-- 신규등록 버튼 (오른쪽 정렬) -->
+    <!-- 신규등록 버튼 (오른쪽 정렬) -->
     <div style="flex-shrink: 0;">
         <button class="btn btn-info" type="button" id="new-register-btn">신규등록</button>
     </div>
