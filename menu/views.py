@@ -132,15 +132,6 @@ def menu_store_menu_edit(request, item_id):
 
     return render(request, "menu/menu_edit.html", {"item": item, "nutrition": nutrition_info, "allergy": allergy_info})
 
-# 이미지 불러오기
-def get_existing_image(item_name_eng):
-    static_path = os.path.join(settings.STATICFILES_DIRS[0], 'images')
-    for ext in ['.jpg', '.png']:
-        file_path = os.path.join(static_path, f"{item_name_eng}{ext}")
-        if os.path.exists(file_path):
-            return f"{item_name_eng}{ext}"
-    return None  # 이미지가 없으면 None 반환
-
 # 점주 메뉴 관리에서 메뉴 삭제 기능
 @require_http_methods(["POST"])
 def menu_delete(request):
