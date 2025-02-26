@@ -1,8 +1,15 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Pay | Cancel {% endblock title %}
-{% block store_id %}store_id{% endblock store_id %}
+{% block title %}결제관리{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
 
 {% block content %}
     <h3 class="text-center">취소 내역</h3>
