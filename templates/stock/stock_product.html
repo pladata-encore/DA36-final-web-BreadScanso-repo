@@ -40,37 +40,40 @@
     }
     </style>
 
-    <!-- 버튼과 검색창을 한 줄에 배치 -->
-    <div class="d-flex justify-content-between align-items-center mt-3 mb-4" style="width: 100%;">
+<!-- 버튼과 검색창을 한 줄에 배치 -->
+<div class="d-flex justify-content-between align-items-center mt-3 mb-4" style="width: 100%;">
 
-      <!-- 검색창 (오른쪽 정렬) -->
-      <div style="flex-grow: 1; display: flex; justify-content: flex-end;">
-        <form method="post" class="d-flex" role="search" id="search-form">
-          {% csrf_token %}
-          <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="제품명을 입력하세요" aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
-          <button id="search_button" type="submit" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
+    <!-- 검색창 -->
+    <div>
+        <form method="get" action="" class="d-flex" role="search" id="search-form">
+            <input class="form-control me-2 search-input" type="search" name="search"
+                   value="{{ search_query }}" placeholder="제품명을 입력하세요"
+                   aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+            <button type="submit" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
         </form>
-      </div>
     </div>
+    <!-- 목록 버튼 -->
+    <a href="{% url 'stock_product' %}" class="btn btn-primary" style="padding: 10px 15px; border-radius: 5px;">목록</a>
+</div>
 
     <!-- 테이블 -->
     <table class="table stock-product-table">
-      <thead>
-        <tr>
-          <th scope="col">제품 ID</th>
-          <th scope="col">제품명</th>
-          <th scope="col">매장</th>
-          <th scope="col">
-            <select class="form-select form-select-sm" name="category" id="category-filter" onchange="filterCategory()">
-              <option value="" style="text-align: center;">카테고리</option>
-              <option value="bread" style="text-align: center;" {% if request.GET.category == "bread" %}selected{% endif %}>bread</option>
-              <option value="desert" style="text-align: center;" {% if request.GET.category == "desert" %}selected{% endif %}>desert</option>
-            </select>
-          </th>
-          <th scope="col" onclick="sortTable()">▲ 재고수량 ▼<i class="bi bi-sort-down-alt"></i></th>
-          <th>관리</th>
-        </tr>
-      </thead>
+  <thead>
+    <tr>
+      <th scope="col">제품 ID</th>
+      <th scope="col">제품명</th>
+      <th scope="col">매장</th>
+      <th scope="col">
+        <select class="form-select form-select-sm" name="category" id="category-filter" onchange="filterCategory()">
+          <option value="" style="text-align: center;">카테고리</option>
+          <option value="bread" style="text-align: center;" {% if request.GET.category == "bread" %}selected{% endif %}>빵류</option>
+          <option value="dessert" style="text-align: center;" {% if request.GET.category == "dessert" %}selected{% endif %}>디저트류</option>
+        </select>
+      </th>
+      <th scope="col" onclick="sortTable()">▲ 재고수량 ▼<i class="bi bi-sort-down-alt"></i></th>
+      <th>관리</th>
+    </tr>
+  </thead>
       <tbody>
         {% for item in page_obj %}
         <tr>
@@ -108,8 +111,8 @@
 {#    </div>#}
 {#  </div>#}
 {#</div>#}
-    
-    
+
+
     <div class="d-flex justify-content-between align-items-center mt-3">
         <!-- 페이지 네비게이션 (중앙) -->
         <nav aria-label="Page navigation">

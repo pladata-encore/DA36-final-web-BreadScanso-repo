@@ -13,12 +13,17 @@ def stock_main(request):
     return render(request, 'stock/stock_main.html')  # 메인
 
 def stock_product(request):
+    search_query = request.GET.get('search', '')
     category_filter = request.GET.get('category', '')
     sort_by = request.GET.get('sort', 'item_name')  # 정렬 기준 (기본값: item_id)
     order = request.GET.get('order', 'asc')  # 오름차순/내림차순 (기본값: asc)
+    items = Item.objects.all()
+
+    # 검색
+    if search_query:
+        items = items.filter(item_name__icontains=search_query)
 
     # 필터링
-    items = Item.objects.all()
     if category_filter:  # 카테고리 필터링
         items = items.filter(category=category_filter)
 
@@ -42,17 +47,7 @@ def stock_product(request):
     except EmptyPage:
         # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
-
-    # GET 요청 처리 (member 데이터 가져오기)
-    member = request.user.member
-
-    # 하나의 딕셔너리로 합쳐서 전달
-    context = {
-        'page_obj': page_obj,
-        'member': member
-    }
-
-    return render(request, 'stock/stock_product.html', context)
+    return render(request, 'stock/stock_product.html', {'page_obj': page_obj, 'search_query':search_query})
 
 
 @csrf_exempt
@@ -81,10 +76,15 @@ def stock_product_new(request):
     return render(request, 'stock/stock_product_new.html')  # 제품 신규등록
 
 def stock_ingredient(request):
+    search_query = request.GET.get('search', '')
     sort_by = request.GET.get('sort', 'ingredient_name')  # 정렬 기준 (기본값: ingredient_name)
     order = request.GET.get('order', 'asc')  # 오름차순/내림차순 (기본값: asc)
 
     ingredients = Ingredient.objects.all()
+
+    # 검색
+    if search_query:
+        ingredients = ingredients.filter(ingredient_name__icontains=search_query)
 
     # 정렬 처리
     if order == 'desc':
@@ -105,16 +105,7 @@ def stock_ingredient(request):
     except EmptyPage:
         # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
-    # GET 요청 처리 (member 데이터 가져오기)
-    member = request.user.member
-
-    # 하나의 딕셔너리로 합쳐서 전달
-    context = {
-        'page_obj': page_obj,
-        'member': member
-    }
-
-    return render(request, 'stock/stock_ingredient.html', context)
+    return render(request, 'stock/stock_ingredient.html', {'page_obj': page_obj, 'search_query':search_query})
 
 @csrf_exempt  # CSRF 인증을 비활성화하거나 활성화하는 방식
 def update_stock_ingredient(request):
