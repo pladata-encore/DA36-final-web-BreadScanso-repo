@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const captureBtn = document.getElementById("capture-btn");
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    const NGROK_URL = "https://7868-175-121-129-72.ngrok-free.app/predict/";
+    const NGROK_URL = "https://dbc3-175-121-129-72.ngrok-free.app/predict/";
 
     let productDictionary = {};
 
