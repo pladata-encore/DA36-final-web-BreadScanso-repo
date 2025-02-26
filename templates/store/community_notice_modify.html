@@ -1,32 +1,38 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | Community Modify {% endblock %}
-{% block store_id %}store_id{% endblock %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}시스템설정{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
 
 {% block content %}
-<style>
-/* 버튼 컨테이너 전체 */
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-    width: 100%;
-}
+    <style>
+    /* 버튼 컨테이너 전체 */
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        width: 100%;
+    }
 
-/* 목록 버튼 위치 (왼쪽 정렬) */
-.left-buttons {
-    align-self: flex-start;
-}
+    /* 목록 버튼 위치 (왼쪽 정렬) */
+    .left-buttons {
+        align-self: flex-start;
+    }
 
-/* 수정 & 삭제 버튼 위치 (오른쪽 정렬) */
-.right-buttons {
-    display: flex;
-    gap: 10px;
-}
-</style>
+    /* 수정 & 삭제 버튼 위치 (오른쪽 정렬) */
+    .right-buttons {
+        display: flex;
+        gap: 10px;
+    }
+    </style>
     
     <!-- 공지사항  -->
     <h3 style="margin-bottom: 50px;" class="text-center">공지사항</h3>
@@ -63,6 +69,3 @@
     
 {% endblock content %}
 
-{% block script %}
-
-{% endblock script %}

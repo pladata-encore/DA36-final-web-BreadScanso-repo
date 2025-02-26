@@ -1,9 +1,15 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | Community_notice {% endblock %}
-{% block store_id %}store_id{% endblock %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}시스템설정{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
 
 {% block content %}
     <h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">공지사항</h3>
@@ -84,11 +90,12 @@
 {% endblock content %}
 
 {% block script %}
-<script>
-    document.getElementById("finalConfirmButton").addEventListener("click", function () {
-        // 실제 삭제 요청을 서버에 보낼 수 있도록 수정 필요
-        alert("삭제가 완료되었습니다.");
-        window.location.href = "{% url 'store:community_notice' %}"; // 삭제 후 이동할 페이지 설정
-    });
-</script>
+    <script>
+        document.getElementById("finalConfirmButton").addEventListener("click", function () {
+            // 실제 삭제 요청을 서버에 보낼 수 있도록 수정 필요
+            alert("삭제가 완료되었습니다.");
+            window.location.href = "{% url 'store:community_notice' %}"; // 삭제 후 이동할 페이지 설정
+        });
+    </script>
 {% endblock script %}
+

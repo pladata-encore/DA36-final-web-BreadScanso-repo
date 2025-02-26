@@ -1,140 +1,144 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | Menu Edit {% endblock %}
-{% block store_id %}store_id{% endblock %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}메뉴관리{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
 
 {% block content %}
     <form method="POST" action="{% url 'menu_store_menu_edit' item.item_id %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    
-    <div class="image-area">
-        <label for="item_image">제품사진</label>
-        <input type="file" id="file-input" name="item_image" accept="image/*">
-        <img id="preview" src="{{ item.item_image }}" alt="Uploaded image preview">
-    </div>
+        {% csrf_token %}
+        <div class="image-area">
+            <label for="item_image">제품사진</label>
+            <input type="file" id="file-input" name="item_image" accept="image/*">
+            <img id="preview" src="{{ item.item_image }}" alt="Uploaded image preview">
+        </div>
 
         
         <!-- 상태 체크박스 -->
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="best" name="best" {% if item.best %}checked{% endif %}>
-        <label class="form-check-label" for="best">Best</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="new" name="new" {% if item.new %}checked{% endif %}>
-        <label class="form-check-label" for="new">New</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="show" name="show" {% if item.show %}checked{% endif %}>
-        <label class="form-check-label" for="show">노출중</label>
-    </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="best" name="best" {% if item.best %}checked{% endif %}>
+            <label class="form-check-label" for="best">Best</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="new" name="new" {% if item.new %}checked{% endif %}>
+            <label class="form-check-label" for="new">New</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="show" name="show" {% if item.show %}checked{% endif %}>
+            <label class="form-check-label" for="show">노출중</label>
+        </div>
 
-    <!-- 제품명 -->
-    <div>
-        <label for="item_name">제품명:</label>
-        <input type="text" id="item_name" name="item_name" value="{{ item.item_name }}" required>
-    </div>
+        <!-- 제품명 -->
+        <div>
+            <label for="item_name">제품명:</label>
+            <input type="text" id="item_name" name="item_name" value="{{ item.item_name }}" required>
+        </div>
 
-    <!-- 카테고리 선택 -->
-    <label for="category">카테고리</label>
-    <select id="category" name="category" class="form-control">
-        <option value="bread" {% if item.category == "bread" %}selected{% endif %}>빵</option>
-        <option value="dessert" {% if item.category == "dessert" %}selected{% endif %}>디저트</option>
-    </select>
+        <!-- 카테고리 선택 -->
+        <label for="category">카테고리</label>
+        <select id="category" name="category" class="form-control">
+            <option value="bread" {% if item.category == "bread" %}selected{% endif %}>빵</option>
+            <option value="dessert" {% if item.category == "dessert" %}selected{% endif %}>디저트</option>
+        </select>
+
+        <!-- 매장 선택 -->
+        <label for="store"><strong>매장</strong></label>
+        <select id="store" name="store" class="form-control">
+            <option value="A" {% if item.store == "A" %}selected {% endif %}>서초점 (A)</option>
+            <option value="B" {% if item.store == "A" %}selected {% endif %}>강남점 (B)</option>
+        </select>
+
+        <!-- 제품 설명 -->
+        <label for="item_info">제품설명</label>
+        <input type="text" name="item_info" id="item_info" class="form-control" value="{{ item.description }}" required>
+
+        <!-- 영양 정보 -->
+        <label for="nutrition_weight">총 내용량 (g):</label>
+        <input type="number" name="nutrition_weight" id="nutrition_weight" class="form-control" value="{{ nutrition.nutrition_weight }}" required>
+
+        <label for="nutrition_calories">총 칼로리 (kcal):</label>
+        <input type="number" name="nutrition_calories" id="nutrition_calories" class="form-control" value="{{ nutrition.nutrition_calories }}" required>
+
+        <label for="nutrition_sodium">나트륨 (mg):</label>
+        <input type="number" name="nutrition_sodium" id="nutrition_sodium" class="form-control" value="{{ nutrition.nutrition_sodium }}">
+
+        <label for="nutrition_sugar">당류 (g):</label>
+        <input type="number" name="nutrition_sugar" id="nutrition_sugar" class="form-control" value="{{ nutrition.nutrition_sugar }}">
+
+        <label for="nutrition_carbohydrates">탄수화물 (g):</label>
+        <input type="number" name="nutrition_carbohydrates" id="nutrition_carbohydrates" class="form-control" value="{{ nutrition.nutrition_carbohydrates }}">
+
+        <label for="nutrition_saturated_fat">포화지방 (g):</label>
+        <input type="number" name="nutrition_saturated_fat" id="nutrition_saturated_fat" class="form-control" value="{{ nutrition.nutrition_saturated_fat }}">
+
+        <label for="nutrition_trans_fat">트랜스지방 (g):</label>
+        <input type="number" name="nutrition_trans_fat" id="nutrition_trans_fat" class="form-control" value="{{ nutrition.nutrition_trans_fat }}">
+
+        <label for="nutrition_protein">단백질 (g):</label>
+        <input type="number" name="nutrition_protein" id="nutrition_protein" class="form-control" value="{{ nutrition.nutrition_protein }}">
+
+        <!-- 알레르기 정보 -->
+        <label for="allergy_wheat">밀:</label>
+        <input type="checkbox" name="allergy_wheat" id="allergy_wheat" {% if allergy.allergy_wheat %}checked{% endif %}>
+
+        <label for="allergy_milk">우유:</label>
+        <input type="checkbox" name="allergy_milk" id="allergy_milk" {% if allergy.allergy_milk %}checked{% endif %}>
+
+        <label for="allergy_egg">계란:</label>
+        <input type="checkbox" name="allergy_egg" id="allergy_egg" {% if allergy.allergy_egg %}checked{% endif %}>
+
+        <label for="allergy_soybean">대두:</label>
+        <input type="checkbox" name="allergy_soybean" id="allergy_soybean" {% if allergy.allergy_soybean %}checked{% endif %}>
+
+        <label for="allergy_nuts">견과류:</label>
+        <input type="checkbox" name="allergy_nuts" id="allergy_nuts" {% if allergy.allergy_nuts %}checked{% endif %}>
+
+        <label for="allergy_etc">기타:</label>
+        <input type="text" name="allergy_etc" id="allergy_etc" class="form-control" value="{{ allergy.allergy_etc }}">
+
+        <!-- 원가 및 판매가 -->
+        <label for="cost">원가</label>
+        <input type="number" name="cost" id="cost" class="form-control" value="{{ item.cost_price }}">
+
+        <label for="price">판매가</label>
+        <input type="number" name="price" id="price" class="form-control" value="{{ item.sale_price }}">
+    </form>
     
-    <!-- 매장 선택 -->
-    <label for="store"><strong>매장</strong></label>
-    <select id="store" name="store" class="form-control">
-        <option value="A" {% if item.store == "A" %}selected {% endif %}>서초점 (A)</option>
-        <option value="B" {% if item.store == "A" %}selected {% endif %}>강남점 (B)</option>
-    </select>
-
-    <!-- 제품 설명 -->
-    <label for="item_info">제품설명</label>
-    <input type="text" name="item_info" id="item_info" class="form-control" value="{{ item.description }}" required>
-
-    <!-- 영양 정보 -->
-    <label for="nutrition_weight">총 내용량 (g):</label>
-    <input type="number" name="nutrition_weight" id="nutrition_weight" class="form-control" value="{{ nutrition.nutrition_weight }}" required>
-
-    <label for="nutrition_calories">총 칼로리 (kcal):</label>
-    <input type="number" name="nutrition_calories" id="nutrition_calories" class="form-control" value="{{ nutrition.nutrition_calories }}" required>
-
-    <label for="nutrition_sodium">나트륨 (mg):</label>
-    <input type="number" name="nutrition_sodium" id="nutrition_sodium" class="form-control" value="{{ nutrition.nutrition_sodium }}">
-
-    <label for="nutrition_sugar">당류 (g):</label>
-    <input type="number" name="nutrition_sugar" id="nutrition_sugar" class="form-control" value="{{ nutrition.nutrition_sugar }}">
-
-    <label for="nutrition_carbohydrates">탄수화물 (g):</label>
-    <input type="number" name="nutrition_carbohydrates" id="nutrition_carbohydrates" class="form-control" value="{{ nutrition.nutrition_carbohydrates }}">
-
-    <label for="nutrition_saturated_fat">포화지방 (g):</label>
-    <input type="number" name="nutrition_saturated_fat" id="nutrition_saturated_fat" class="form-control" value="{{ nutrition.nutrition_saturated_fat }}">
-
-    <label for="nutrition_trans_fat">트랜스지방 (g):</label>
-    <input type="number" name="nutrition_trans_fat" id="nutrition_trans_fat" class="form-control" value="{{ nutrition.nutrition_trans_fat }}">
-
-    <label for="nutrition_protein">단백질 (g):</label>
-    <input type="number" name="nutrition_protein" id="nutrition_protein" class="form-control" value="{{ nutrition.nutrition_protein }}">
-
-    <!-- 알레르기 정보 -->
-    <label for="allergy_wheat">밀:</label>
-    <input type="checkbox" name="allergy_wheat" id="allergy_wheat" {% if allergy.allergy_wheat %}checked{% endif %}>
-
-    <label for="allergy_milk">우유:</label>
-    <input type="checkbox" name="allergy_milk" id="allergy_milk" {% if allergy.allergy_milk %}checked{% endif %}>
-
-    <label for="allergy_egg">계란:</label>
-    <input type="checkbox" name="allergy_egg" id="allergy_egg" {% if allergy.allergy_egg %}checked{% endif %}>
-
-    <label for="allergy_soybean">대두:</label>
-    <input type="checkbox" name="allergy_soybean" id="allergy_soybean" {% if allergy.allergy_soybean %}checked{% endif %}>
-
-    <label for="allergy_nuts">견과류:</label>
-    <input type="checkbox" name="allergy_nuts" id="allergy_nuts" {% if allergy.allergy_nuts %}checked{% endif %}>
-
-    <label for="allergy_etc">기타:</label>
-    <input type="text" name="allergy_etc" id="allergy_etc" class="form-control" value="{{ allergy.allergy_etc }}">
-
-    <!-- 원가 및 판매가 -->
-    <label for="cost">원가</label>
-    <input type="number" name="cost" id="cost" class="form-control" value="{{ item.cost_price }}">
-
-    <label for="price">판매가</label>
-    <input type="number" name="price" id="price" class="form-control" value="{{ item.sale_price }}">
-</form>
-    
-<!-- modal -->    
-<div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="saveConfirmModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        수정 내용을 저장하시겠습니까?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary" id="confirm-save-btn">확인</button>
+    <!-- modal -->
+    <div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="saveConfirmModalLabel"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            수정 내용을 저장하시겠습니까?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            <button type="button" class="btn btn-primary" id="confirm-save-btn">확인</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>    
-    
-<!-- 저장 버튼 -->
-<button type="button" class="btn btn-success" id="save-btn" data-bs-toggle="modal" data-bs-target="#saveConfirmModal">저장</button>
 
-<!-- 취소 버튼 -->
-<button type="button" class="btn btn-warning" id="cancel-btn" data-item-id="{{ item.item_id }}">취소</button>
+    <!-- 저장 버튼 -->
+    <button type="button" class="btn btn-success" id="save-btn" data-bs-toggle="modal" data-bs-target="#saveConfirmModal">저장</button>
+
+    <!-- 취소 버튼 -->
+    <button type="button" class="btn btn-warning" id="cancel-btn" data-item-id="{{ item.item_id }}">취소</button>
     
 {% endblock content%}
 
 {% block script %}
-{{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
-<script src="{% static 'js/menu_edit.js' %}"></script>
-
+    {{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
+    <script src="{% static 'js/menu_edit.js' %}"></script>
 {% endblock script %}

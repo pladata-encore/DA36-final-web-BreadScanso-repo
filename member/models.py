@@ -27,9 +27,14 @@ class Member(models.Model):
     last_visited = models.DateTimeField(null=True, blank=True)  # 마지막 방문일
     visit_count = models.IntegerField(default=0)  # 방문 횟수
     profile_image = models.ImageField(upload_to='', null=True, blank=True)  # 프로필 사진
-    store = models.CharField(max_length=50, null=True, choices=[("A", "Store A"), ("B", "Store B")])
+
+    # 여기부터 매장 정보 ❗
+    store = models.CharField(max_length=50, null=True, choices=[("A", "서초점"), ("B", "강남점")])
     store_num = models.CharField(max_length=13, null=True, blank=True, validators=[MinLengthValidator(10)])  # 매장 전화번호
     earning_rate = models.DecimalField(null=True, max_digits=5, decimal_places=2, default=0)  # 적립 비율
+    store_address = models.TextField(null=True, blank=True)   # 매장 주소
+    store_time = models.TextField(null=True, blank=True)   # 운영 시간
+    store_notes = models.TextField(null=True, blank=True)  # 기타 사항
 
     def __str__(self):
         return f"회원 {self.member_id} - {self.name}"
