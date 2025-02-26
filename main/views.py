@@ -64,7 +64,7 @@ def user_login(request):
 
                 # 로그인한 사용자 정보를 세션에 저장
                 request.session['member_type'] = member.member_type
-                # request.session['earning_rate'] = member.earning_rate
+                request.session['earning_rate'] = member.earning_rate
                 return redirect("main:index")
 
             except Member.DoesNotExist:
