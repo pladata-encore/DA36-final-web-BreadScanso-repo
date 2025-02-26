@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator, MinLeng
 class Item(models.Model):
     item_id=models.AutoField(primary_key=True)
     item_name = models.CharField(max_length=50)
-    store = models.CharField(max_length=50, choices=[("A", "Store A"), ("B", "Store B")])
+    store = models.CharField(max_length=50, choices=[("A", "서초점"), ("B", "강남점")])
     sale_price = models.IntegerField(null=True)
     cost_price = models.IntegerField(null=True)
     description = models.TextField()
