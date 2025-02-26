@@ -76,6 +76,7 @@ def menu_store_menu_info(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
     nutrition_info = NutritionInfo.objects.filter(item_id=item_id).first()
     allergy_info = Allergy.objects.filter(item_id=item_id).first()
+
     return render(request, 'menu/menu_info.html', {'item': item, 'nutrition': nutrition_info, 'allergy': allergy_info})
 
 # 점주 메뉴 관리 수정 페이지
@@ -224,10 +225,6 @@ def menu_save(request):
         allergy_nuts = request.POST.get("allergy_nuts") == "on"
         allergy_etc = request.POST.get("allergy_etc", "")
 
-        # 이미지 업로드
-        # item_image = None
-        # if 'item_image' in request.FILES:
-        #     item_image = request.FILES['item_image']
         # S3
         item_image_url = None
         if 'item_image' in request.FILES:
