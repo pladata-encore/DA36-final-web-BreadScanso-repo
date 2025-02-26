@@ -36,7 +36,18 @@ def menu_store(request):
     except EmptyPage:
         # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
-    return render(request, 'menu/menu_store.html',{'items': items, "page_obj": page_obj})
+
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+
+    # 하나의 딕셔너리로 합쳐서 전달
+    context = {
+        'items': items,
+        'page_obj': page_obj,
+        'member': member
+    }
+        
+    return render(request, 'menu/menu_store.html',context)
 
 # 소비자 화면 제품 상세 페이지
 def product_detail(request, item_id):
