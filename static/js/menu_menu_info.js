@@ -13,7 +13,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // 수정 버튼
     if (editMenuBtn) {
         editMenuBtn.addEventListener("click", function () {
-            window.location.href = "/menu/store/menu_edit";
+            const itemId = editMenuBtn.getAttribute("data-item-id");  // 버튼의 data-item-id 값 가져오기
+            if (itemId) {
+                window.location.href = `/menu/store/menu_edit/${itemId}`;
+            }
         });
     }
 
