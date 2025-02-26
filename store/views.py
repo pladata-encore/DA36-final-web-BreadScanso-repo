@@ -59,10 +59,16 @@ def member_store(request):
         # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
 
-    return render(request, 'member/member_store.html', {
-        'members': page_obj,  # 페이지네이션된 객체만 전달
-        'page_obj': page_obj
-    })
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+
+    # 하나의 딕셔너리로 합쳐서 전달
+    context = {
+        'page_obj': page_obj,
+        'member': member
+    }
+
+    return render(request, 'member/member_store.html', context)
 
 
 # 회원 정보 업데이트

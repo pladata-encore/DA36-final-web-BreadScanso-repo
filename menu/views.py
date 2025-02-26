@@ -76,7 +76,8 @@ def menu_main_dessert(request):
 
 # 점주 신규 메뉴 등록 페이지
 def menu_add(request):
-    return render(request, 'menu/new_menu.html')
+    member = request.user.member
+    return render(request, 'menu/new_menu.html', {'member': member})
 
 # 점주 메뉴 관리 상세 페이지
 def menu_store_menu_info(request, item_id):
@@ -84,7 +85,16 @@ def menu_store_menu_info(request, item_id):
     nutrition_info = NutritionInfo.objects.filter(item_id=item_id).first()
     allergy_info = Allergy.objects.filter(item_id=item_id).first()
 
-    return render(request, 'menu/menu_info.html', {'item': item, 'nutrition': nutrition_info, 'allergy': allergy_info})
+    member = request.user.member
+
+    context = {
+        'item': item,
+        'nutrition': nutrition_info,
+        'allergy': allergy_info,
+        'member': member
+    }
+
+    return render(request, 'menu/menu_info.html', context)
 
 # 점주 메뉴 관리 수정 페이지
 @require_http_methods(["GET", "POST"])
@@ -149,12 +159,16 @@ def menu_store_menu_edit(request, item_id):
     # **기존 데이터 불러오기**
     nutrition_info = NutritionInfo.objects.filter(item=item).first()
     allergy_info = Allergy.objects.filter(item=item).first()
+    member = request.user.member
 
-    return render(request, "menu/menu_edit.html", {
-        "item": item,
-        "nutrition": nutrition_info,
-        "allergy": allergy_info
-    })
+    context = {
+        'item': item,
+        'nutrition': nutrition_info,
+        'allergy': allergy_info,
+        'member': member
+    }
+
+    return render(request, "menu/menu_edit.html", context)
 
 
 # 점주 메뉴 관리에서 메뉴 삭제 기능
