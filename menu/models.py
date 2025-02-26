@@ -9,7 +9,7 @@ class Item(models.Model):
     sale_price = models.IntegerField(null=True)
     cost_price = models.IntegerField(null=True)
     description = models.TextField()
-    category = models.CharField(max_length=50, choices=[("desert", "디저트류"), ("bread", "빵류"), ("cake", "케이크류")])
+    category = models.CharField(max_length=50, choices=[("dessert", "디저트류"), ("bread", "빵류")])
     best = models.BooleanField(default=False)
     new = models.BooleanField(default=False)
     show = models.BooleanField(default=False)
