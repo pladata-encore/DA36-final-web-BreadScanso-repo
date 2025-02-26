@@ -6,15 +6,15 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% block content %}
-    <form method="POST" action="{% url 'menu_store_menu_edit' item.item_id %}">
+    <form method="POST" action="{% url 'menu_store_menu_edit' item.item_id %}" enctype="multipart/form-data">
     {% csrf_token %}
     
-<!-- 왼쪽: 이미지 업로드 영역 -->
-<div class="image-area">
-    <label for="item_image">제품사진</label>
-    <input type="file" id="file-input" accept="image/*">
-    <img id="preview" src="" alt="Uploaded image preview">
-</div>
+    <div class="image-area">
+        <label for="item_image">제품사진</label>
+        <input type="file" id="file-input" name="item_image" accept="image/*">
+        <img id="preview" src="{{ item.item_image|default:'' }}" alt="Uploaded image preview">
+    </div>
+
         
         <!-- 상태 체크박스 -->
     <div class="form-check">
