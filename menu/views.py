@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Item, NutritionInfo, Allergy
 import json
+from .utils import upload_product_image_to_s3
 
 # 소비자 화면 메뉴 정보 페이지
 def menu_main(request):
@@ -88,15 +89,30 @@ def menu_store_menu_edit(request, item_id):
         item.description = request.POST.get("item_info", item.description)
         item.cost_price = request.POST.get("cost", item.cost_price)
         item.sale_price = request.POST.get("price", item.sale_price)
-        item.category = request.POST.get("category")
-        item.store = request.POST.get("store")
+        item.category = request.POST.get("category", item.category)
+        item.store = request.POST.get("store", item.store)
 
         # Best, New, 노출 여부 업데이트
         item.best = request.POST.get("best") == "on"
         item.new = request.POST.get("new") == "on"
         item.show = request.POST.get("show") == "on"
 
-        # 영양 정보 업데이트 (새로 생성 X, 기존 데이터만 수정)
+        # **이미지 업로드 로직 추가**
+        if 'item_image' in request.FILES:  # 새 이미지 업로드 확인
+            try:
+                new_image_url = upload_product_image_to_s3(request.FILES['item_image'])
+                item.item_image = new_image_url  # S3 URL로 업데이트
+            except Exception as e:
+                return render(request, "menu/menu_edit.html", {
+                    "item": item,
+                    "nutrition": NutritionInfo.objects.filter(item=item).first(),
+                    "allergy": Allergy.objects.filter(item=item).first(),
+                    "error": f"이미지 업로드 중 오류 발생: {str(e)}"
+                })
+
+        item.save()  # 제품 정보 저장
+
+        # **영양 정보 업데이트 (있으면 수정, 없으면 추가하지 않음)**
         nutrition_info = NutritionInfo.objects.filter(item=item).first()
         if nutrition_info:
             nutrition_info.nutrition_weight = request.POST.get("nutrition_weight", nutrition_info.nutrition_weight)
@@ -109,7 +125,7 @@ def menu_store_menu_edit(request, item_id):
             nutrition_info.nutrition_protein = request.POST.get("nutrition_protein", nutrition_info.nutrition_protein)
             nutrition_info.save()
 
-        # 알레르기 정보 업데이트 (새로 생성 X, 기존 데이터만 수정)
+        # **알레르기 정보 업데이트 (있으면 수정, 없으면 추가하지 않음)**
         allergy_info = Allergy.objects.filter(item=item).first()
         if allergy_info:
             allergy_info.allergy_wheat = request.POST.get("allergy_wheat") == "on"
@@ -120,17 +136,18 @@ def menu_store_menu_edit(request, item_id):
             allergy_info.allergy_etc = request.POST.get("allergy_etc", allergy_info.allergy_etc)
             allergy_info.save()
 
-        # 변경 사항 저장
-        item.save()
-
-        # 저장 후 상세 페이지로 이동
         return redirect("menu_store_menu_info", item_id=item.item_id)
 
-    # 기존 데이터 가져오기
+    # **기존 데이터 불러오기**
     nutrition_info = NutritionInfo.objects.filter(item=item).first()
     allergy_info = Allergy.objects.filter(item=item).first()
 
-    return render(request, "menu/menu_edit.html", {"item": item, "nutrition": nutrition_info, "allergy": allergy_info})
+    return render(request, "menu/menu_edit.html", {
+        "item": item,
+        "nutrition": nutrition_info,
+        "allergy": allergy_info
+    })
+
 
 # 점주 메뉴 관리에서 메뉴 삭제 기능
 @require_http_methods(["POST"])
@@ -173,6 +190,7 @@ def menu_delete(request):
 
 
 # 신규 제품 등록 기능
+# @require_http_methods(["POST"])
 def menu_save(request):
     if request.method == "POST":
         # best, new, show 체크박스 여부
@@ -207,9 +225,18 @@ def menu_save(request):
         allergy_etc = request.POST.get("allergy_etc", "")
 
         # 이미지 업로드
-        item_image = None
+        # item_image = None
+        # if 'item_image' in request.FILES:
+        #     item_image = request.FILES['item_image']
+        # S3
+        item_image_url = None
         if 'item_image' in request.FILES:
-            item_image = request.FILES['item_image']
+            try:
+                item_image_url = upload_product_image_to_s3(request.FILES['item_image'])
+            except Exception as e:
+                return render(request, 'menu/new_menu.html', {
+                    'error': f'이미지 업로드 중 오류가 발생했습니다: {str(e)}'
+                })
 
         # 제품 정보 입력 검수
         if not all([item_name, category, description, cost_price, sale_price, store]):
@@ -228,7 +255,7 @@ def menu_save(request):
                 description=description,
                 cost_price=cost_price,
                 sale_price=sale_price,
-                item_image=item_image
+                item_image=item_image_url
             )
             menu.save()
 
@@ -266,7 +293,7 @@ def menu_save(request):
             )
             allergy.save()
 
-            return redirect('menu_store_menu_info', item_id=menu.item_id)
+            return redirect('menu_store_menu_info')
 
         except Exception as e:
             return render(request, 'menu/new_menu.html', {
@@ -274,3 +301,6 @@ def menu_save(request):
             })
     else:
         return render(request, 'menu/new_menu.html')
+
+
+
