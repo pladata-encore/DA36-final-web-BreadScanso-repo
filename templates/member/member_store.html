@@ -46,24 +46,17 @@
           <th scope="col">이메일</th>
           <th scope="col">방문횟수</th>
           <th scope="col">총 결제액(원)</th>
-{#          <th scope="col">회원가입일</th>#}
           <th scope="col">마지막 방문일</th>
           <th scope="col">포인트</th>
-{#          <th scope="col">프로필사진</th>#}
           <th scope="col">수정</th>
           <th scope="col">
-    {#        <select class="form-select form-select-sm" name="store" id="store-filter" onchange="filterStore()">#}
-    {#          <option value="" style="text-align: center;">전체 매장</option>#}
-    {#          <option value="A" style="text-align: center;" {% if request.GET.store == "A" %}selected{% endif %}>서초점 (A)</option>#}
-    {#          <option value="B" style="text-align: center;" {% if request.GET.store == "B" %}selected{% endif %}>강남점 (B)</option>#}
-    {#        </select>#}
           </th>
         </tr>
       </thead>
       <tbody>
         {% for member in page_obj %}
         <tr>
-            <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+            <td class="checkbox-column"><input type="checkbox" class="row-checkbox" value="{{ member.id }}"></td>
             <td>{{ member.name }}</td> <!-- 회원명 -->
             <td>{{ member.member_id }}</td> <!-- 회원아이디 -->
             <td>{{ member.phone_num}}</td> <!-- 연락처 -->
@@ -72,10 +65,8 @@
             <td>{{ member.email}}</td> <!-- 이메일 -->
             <td>{{ member.visit_count}}</td> <!-- 방문일수 -->
             <td>{{ member.total_spent|intcomma }}</td> <!-- 총 결제액(천단위에 콤마 붙이기) -->
-{#            <td>{{ member.membership_date}}</td> <!-- 회원가입일 -->#}
             <td>{{ member.last_visited|date:"Y/n/j" }}</td> <!-- 마지막 방문일(년/월/일 출력) -->
             <td>{{ member.points|intcomma }}</td> <!-- 총 포인트(천단위에 콤마 붙이기) -->
-{#            <td>{{ member.profile_image}}</td> <!-- 프로필사진 -->#}
             <td><button class="btn btn-warning btn-sm edit-member-btn">수정</button></td>
         </tr>
         {% endfor %}
