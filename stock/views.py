@@ -42,7 +42,17 @@ def stock_product(request):
     except EmptyPage:
         # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
-    return render(request, 'stock/stock_product.html', {'page_obj': page_obj})
+
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+
+    # 하나의 딕셔너리로 합쳐서 전달
+    context = {
+        'page_obj': page_obj,
+        'member': member
+    }
+
+    return render(request, 'stock/stock_product.html', context)
 
 
 @csrf_exempt
@@ -95,7 +105,16 @@ def stock_ingredient(request):
     except EmptyPage:
         # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
-    return render(request, 'stock/stock_ingredient.html', {'page_obj': page_obj})
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+
+    # 하나의 딕셔너리로 합쳐서 전달
+    context = {
+        'page_obj': page_obj,
+        'member': member
+    }
+
+    return render(request, 'stock/stock_ingredient.html', context)
 
 @csrf_exempt  # CSRF 인증을 비활성화하거나 활성화하는 방식
 def update_stock_ingredient(request):

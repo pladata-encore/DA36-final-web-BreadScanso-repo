@@ -69,17 +69,15 @@
 <!-- 메인 컨테이너 -->
    <div class="product-detail-container">
         <div class="product-content">
+          {% csrf_token %}
             <!-- 이미지 영역 -->
                 <div class="product-image">
-                    <!-- S3 이미지 사용 -->
                     {% if item.item_image %}
                         <img src="{{ item.item_image }}" alt="{{ item.item_name }}">
                     {% else %}
-                        <img src="{% static 'images/default.png' %}">
+                        <img src="{% static 'images/default.jpg' %}" alt="기본 이미지">
                     {% endif %}
                 </div>
-{#  <div class="image-area">#}
-{#    <img src="{% static 'images/saltbread.jpg' %}" alt="image">#}
 
             <!-- 제품 정보 -->
             <div class="product-info">
@@ -154,10 +152,27 @@
             </div>
             <div class="right-buttons">
                 <button type="button" class="btn btn-primary" id="edit-menu-btn" data-item-id="{{ item.item_id }}">수정</button>
-                <button type="button" class="btn btn-danger" id="cancel-btn">삭제</button>
+                <button type="button" class="btn btn-danger" id="delete-btn">삭제</button>
             </div>
         </div>
    </div>
+    
+<!-- 삭제 확인 모달 -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">삭제 확인</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">선택한 항목을 삭제하시겠습니까?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete-btn" data-item-id="{{ item.item_id }}">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     
 {% endblock content%}

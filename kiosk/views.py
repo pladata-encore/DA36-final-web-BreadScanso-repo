@@ -3,8 +3,8 @@ from django.http import JsonResponse
 from member.models import Member
 from django.views.decorators.csrf import csrf_exempt
 from menu.models import Item
-from .models import OrderInfo, PaymentInfo  # 모델 import 추가
-from django.utils import timezone  # timezone 추가
+from .models import OrderInfo, PaymentInfo, OrderItem  # OrderItem 추가
+from django.utils import timezone
 import json
 
 
@@ -100,6 +100,7 @@ def complete_payment(request):
             phone_num = data.get("phone_num")
             final_amount = data.get("final_amount")
             payment_method = data.get("payment_method", "credit")
+            products = data.get("products", {})  # 상품 정보 가져오기
 
             if not phone_num or not final_amount:
                 return JsonResponse({"success": False, "message": "필수 데이터가 부족합니다."}, status=400)
@@ -110,8 +111,22 @@ def complete_payment(request):
             # OrderInfo 생성
             order = OrderInfo.objects.create(
                 total_amount=final_amount,
-                store=request.session.get('store')
+                store=request.session.get('store', 'A')
             )
+
+            # OrderItem 생성 - 이 부분 추가
+            for product_name, product_data in products.items():
+                try:
+                    item = Item.objects.get(item_name_eng=product_name)
+                    OrderItem.objects.create(
+                        order=order,
+                        item=item,
+                        item_count=product_data.get('quantity', 0),
+                        item_price=product_data.get('price', 0),
+                        item_total=product_data.get('totalAmount', 0)
+                    )
+                except Item.DoesNotExist:
+                    continue
 
             # PaymentInfo 생성
             payment = PaymentInfo.objects.create(
