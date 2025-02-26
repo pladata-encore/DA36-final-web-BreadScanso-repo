@@ -286,7 +286,7 @@ def menu_save(request):
             )
             allergy.save()
 
-            return redirect('menu_store_menu_info')
+            return redirect('menu_store_menu_info', item_id=menu.item_id)
 
         except Exception as e:
             return render(request, 'menu/new_menu.html', {

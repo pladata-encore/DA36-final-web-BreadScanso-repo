@@ -56,28 +56,28 @@
 
     <!-- 영양 정보 -->
     <label for="nutrition_weight">총 내용량 (g):</label>
-    <input type="text" name="nutrition_weight" id="nutrition_weight" class="form-control" value="{{ nutrition.nutrition_weight|default:'' }}" required>
+    <input type="number" name="nutrition_weight" id="nutrition_weight" class="form-control" value="{{ nutrition.nutrition_weight }}" required>
 
     <label for="nutrition_calories">총 칼로리 (kcal):</label>
-    <input type="text" name="nutrition_calories" id="nutrition_calories" class="form-control" value="{{ nutrition.nutrition_calories|default:'' }}" required>
+    <input type="number" name="nutrition_calories" id="nutrition_calories" class="form-control" value="{{ nutrition.nutrition_calories }}" required>
 
     <label for="nutrition_sodium">나트륨 (mg):</label>
-    <input type="text" name="nutrition_sodium" id="nutrition_sodium" class="form-control" value="{{ nutrition.nutrition_sodium|default:'' }}">
+    <input type="number" name="nutrition_sodium" id="nutrition_sodium" class="form-control" value="{{ nutrition.nutrition_sodium }}">
 
     <label for="nutrition_sugar">당류 (g):</label>
-    <input type="text" name="nutrition_sugar" id="nutrition_sugar" class="form-control" value="{{ nutrition.nutrition_sugar|default:'' }}">
+    <input type="number" name="nutrition_sugar" id="nutrition_sugar" class="form-control" value="{{ nutrition.nutrition_sugar }}">
 
     <label for="nutrition_carbohydrates">탄수화물 (g):</label>
-    <input type="text" name="nutrition_carbohydrates" id="nutrition_carbohydrates" class="form-control" value="{{ nutrition.nutrition_carbohydrates|default:'' }}">
+    <input type="number" name="nutrition_carbohydrates" id="nutrition_carbohydrates" class="form-control" value="{{ nutrition.nutrition_carbohydrates }}">
 
     <label for="nutrition_saturated_fat">포화지방 (g):</label>
-    <input type="text" name="nutrition_saturated_fat" id="nutrition_saturated_fat" class="form-control" value="{{ nutrition.nutrition_saturated_fat|default:'' }}">
+    <input type="number" name="nutrition_saturated_fat" id="nutrition_saturated_fat" class="form-control" value="{{ nutrition.nutrition_saturated_fat }}">
 
     <label for="nutrition_trans_fat">트랜스지방 (g):</label>
-    <input type="text" name="nutrition_trans_fat" id="nutrition_trans_fat" class="form-control" value="{{ nutrition.nutrition_trans_fat|default:'' }}">
+    <input type="number" name="nutrition_trans_fat" id="nutrition_trans_fat" class="form-control" value="{{ nutrition.nutrition_trans_fat }}">
 
     <label for="nutrition_protein">단백질 (g):</label>
-    <input type="text" name="nutrition_protein" id="nutrition_protein" class="form-control" value="{{ nutrition.nutrition_protein|default:'' }}">
+    <input type="number" name="nutrition_protein" id="nutrition_protein" class="form-control" value="{{ nutrition.nutrition_protein }}">
 
     <!-- 알레르기 정보 -->
     <label for="allergy_wheat">밀:</label>
@@ -96,14 +96,14 @@
     <input type="checkbox" name="allergy_nuts" id="allergy_nuts" {% if allergy.allergy_nuts %}checked{% endif %}>
 
     <label for="allergy_etc">기타:</label>
-    <input type="text" name="allergy_etc" id="allergy_etc" class="form-control" value="{{ allergy.allergy_etc|default:'' }}">
+    <input type="text" name="allergy_etc" id="allergy_etc" class="form-control" value="{{ allergy.allergy_etc }}">
 
     <!-- 원가 및 판매가 -->
     <label for="cost">원가</label>
-    <input type="text" name="cost" id="cost" class="form-control" value="{{ item.cost_price|default:'' }}">
+    <input type="number" name="cost" id="cost" class="form-control" value="{{ item.cost_price }}">
 
     <label for="price">판매가</label>
-    <input type="text" name="price" id="price" class="form-control" value="{{ item.sale_price|default:'' }}">
+    <input type="number" name="price" id="price" class="form-control" value="{{ item.sale_price }}">
 </form>
     
 <!-- modal -->    
