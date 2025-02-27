@@ -26,25 +26,36 @@
             <tr>
                 <th>결제일시</th>
                 <th>매장명</th>
-                <th>제품명</th>
+                <th>총수량</th>
                 <th>총금액</th>
+                <th>적립포인트</th>
                 <th>결제수단</th>
+                <th>회원여부</th>
             </tr>
         </thead>
         <tbody>
             {% for cancel in cancels %}
-            <tr style="color: red;">
+            {# 🔥<tr style="color: red;">#}
+            <tr>
                 <td class="clickable" data-payment-id="{{ cancel.payment_id }}">
                     <a href="{% url 'pay:pay_details' cancel.payment_id %}">{{ cancel.pay_at|date:"Y-m-d H:i" }}</a>
                 </td>
                 <td>{{ cancel.order.store }}</td>
-                <td>{{ cancel.order.orderitem_set.first.item.item_name }}</td>
+                🔥<td>{{ cancel.order.총수량 }}</td>
                 <td>{{ cancel.order.total_amount }}</td>
+                <td>{{ cancel.order.earned_points }}</td>
                 <td>
                     {% if cancel.payment_method == "credit" %}
                         <span class="badge bg-danger">카드</span>
                     {% elif cancel.payment_method == "cash" %}
                         <span class="badge bg-success">현금</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if cancel.member %}
+                        <span class="badge bg-primary">회원</span>
+                    {% else %}
+                        <span class="badge bg-warning">비회원</span>
                     {% endif %}
                 </td>
             </tr>
