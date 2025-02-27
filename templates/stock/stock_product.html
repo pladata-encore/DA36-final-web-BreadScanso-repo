@@ -70,7 +70,20 @@
           <option value="dessert" style="text-align: center;" {% if request.GET.category == "dessert" %}selected{% endif %}>디저트류</option>
         </select>
       </th>
-      <th scope="col" onclick="sortTable()">▲ 재고수량 ▼<i class="bi bi-sort-down-alt"></i></th>
+      <th scope="col">
+          <a href="?sort=stock{% if request.GET.sort == 'stock' and request.GET.order == 'asc' %}&order=desc{% else %}&order=asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}" style="color: black; text-decoration: none;">
+            ▲ 재고수량 ▼
+            {% if request.GET.sort == 'stock' %}
+              {% if request.GET.order == 'desc' %}
+                <i class="bi bi-sort-down-alt"></i>
+              {% else %}
+                <i class="bi bi-sort-up-alt"></i>
+              {% endif %}
+            {% else %}
+              <i class="bi bi-sort-down-alt"></i>
+            {% endif %}
+          </a>
+        </th>
       <th>관리</th>
     </tr>
   </thead>
@@ -82,13 +95,12 @@
             <td>{{ item.store }}</td>
             <td>{{ item.category }}</td>
             <td id="stock-{{ item.item_id }}">{{ item.stock }}</td>
-    {#        <td><button class="btn btn-warning btn-sm edit-stock-btn">수정</button></td>#}
             <td><button class="btn btn-warning btn-sm edit-stock-btn">수정</button></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    
+
 <!-- 테이블 아래, 페이지네이션 위에 총 항목 수 표시 -->
 <div class="text-muted small mb-2 mt-2">
     총 <strong>{{ total_items }}</strong>개의 제품이 있습니다.
@@ -98,32 +110,6 @@
     <!-- 페이지 네비게이션 (중앙) -->
     <nav aria-label="Page navigation">
         <!-- 기존 페이지네이션 코드 -->
-    
-    
-{#<!-- 수정용 모달 -->#}
-{#<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel">#}
-{#  <div class="modal-dialog">#}
-{#    <div class="modal-content">#}
-{#      <div class="modal-header">#}
-{#        <h5 class="modal-title" id="editModalLabel">제품 재고 수정</h5>#}
-{#        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>#}
-{#      </div>#}
-{#      <div class="modal-body">#}
-{#        <!-- 재고 입력 폼 -->#}
-{#        <div class="mb-3">#}
-{#          <label for="editStock" class="form-label">정확한 수량을 입력하세요.</label>#}
-{#          <input type="number" class="form-control" id="editStock" required>#}
-{#        </div>#}
-{#      </div>#}
-{#      <div class="modal-footer">#}
-{#        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>#}
-{#        <button type="button" class="btn btn-primary" id="saveChangesButton">저장</button>#}
-{#      </div>#}
-{#    </div>#}
-{#  </div>#}
-{#</div>#}
-
-
     <div class="d-flex justify-content-between align-items-center mt-3">
         <!-- 페이지 네비게이션 (중앙) -->
         <nav aria-label="Page navigation">
@@ -140,14 +126,14 @@
                         </span>
                     {% endif %}
                 </li>
-                
+
                 <!-- 페이지 번호들 -->
                 {% for num in page_range %}
                     <li class="page-product {% if page_obj.number == num %}active{% endif %}">
                         <a class="page-link" href="?page={{ num }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}">{{ num }}</a>
                     </li>
                 {% endfor %}
-                
+
                 <!-- 다음 버튼 -->
                 <li class="page-product {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
                     {% if page_obj.has_next %}
@@ -162,8 +148,9 @@
                 </li>
             </ul>
         </nav>
-
     </div>
+    </nav>
+</div>
 
 {% endblock content %}
 

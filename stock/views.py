@@ -31,9 +31,15 @@ def stock_product(request):
     if category_filter:
         items = items.filter(category=category_filter)
     # 정렬 처리
-    if order == 'desc':
-        sort_by = f"-{sort_by}"
-    items = items.order_by(sort_by)
+    if sort_by == 'stock':  # 재고 수량으로 정렬할 경우
+        if order == 'desc':
+            items = items.order_by('-stock')
+        else:
+            items = items.order_by('stock')
+    else:  # 다른 필드로 정렬
+        if order == 'desc':
+            sort_by = f"-{sort_by}"
+        items = items.order_by(sort_by)
 
     # 나머지 코드는 동일
     items_per_page = 10
