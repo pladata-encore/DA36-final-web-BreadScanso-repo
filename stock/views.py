@@ -12,29 +12,32 @@ import json
 def stock_main(request):
     return render(request, 'stock/stock_main.html')  # 메인
 
+
 def stock_product(request):
+    member = request.user.member
+    store = member.store
     search_query = request.GET.get('search', '')
     category_filter = request.GET.get('category', '')
-    sort_by = request.GET.get('sort', 'item_name')  # 정렬 기준 (기본값: item_id)
-    order = request.GET.get('order', 'asc')  # 오름차순/내림차순 (기본값: asc)
-    items = Item.objects.all()
+    sort_by = request.GET.get('sort', 'item_name')
+    order = request.GET.get('order', 'asc')
+
+    # 여기를 수정: 모든 아이템이 아닌 멤버의 스토어에 속한 아이템만 가져오기
+    items = Item.objects.filter(store=store)
 
     # 검색
     if search_query:
         items = items.filter(item_name__icontains=search_query)
-
     # 필터링
-    if category_filter:  # 카테고리 필터링
+    if category_filter:
         items = items.filter(category=category_filter)
-
     # 정렬 처리
     if order == 'desc':
         sort_by = f"-{sort_by}"
     items = items.order_by(sort_by)
 
-    # 페이지네이션 처리 (10개씩)
-    paginator = Paginator(items, 10)
-    # 페이지 번호 가져오기, 유효하지 않으면 1 페이지로 설정
+    # 나머지 코드는 동일
+    items_per_page = 10
+    paginator = Paginator(items, items_per_page)
     page_number = request.GET.get('page', 1)
     try:
         page_number = int(page_number)
@@ -42,22 +45,32 @@ def stock_product(request):
             page_number = 1
     except ValueError:
         page_number = 1
+
     try:
         page_obj = paginator.get_page(page_number)
     except EmptyPage:
-        # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
 
-    member = request.user.member
+    max_pages = 5
+    current_page = page_obj.number
+    total_pages = paginator.num_pages
 
-    # member.store과 같은 store 값을 가진 항목 필터링 후 상위 10개만 가져오기
-    filtered_items = Item.objects.filter(store=member.store)[:10]
+    start_page = max(1, current_page - 2)
+    end_page = min(total_pages, start_page + max_pages - 1)
+
+    if end_page - start_page + 1 < max_pages and start_page > 1:
+        start_page = max(1, end_page - max_pages + 1)
+
+    page_range = range(start_page, end_page + 1)
 
     context = {
+        'items': page_obj,
         'page_obj': page_obj,
+        'page_range': page_range,
         'search_query': search_query,
+        'category_filter': category_filter,  # HTML에서 사용되므로 추가
         'member': member,
-        'filtered_items': filtered_items
+        'total_items': items.count(),
     }
 
     return render(request, 'stock/stock_product.html', context)
