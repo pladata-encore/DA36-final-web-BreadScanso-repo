@@ -1,7 +1,7 @@
 {% extends 'layout/main/main_base.html' %}
 {% load static %}
 
-{% block title %}매장안내{% endblock title %}
+{% block title %}매장위치{% endblock title %}
 
 {% block header %}
     {% include 'layout/main/main_header.html' %}
@@ -63,7 +63,7 @@
 
     <!-- 매장 안내 정보 -->
     <div class="store-map-container">
-        <h2 class="store-title">매장 안내 설정</h2>
+        <h2 class="store-title">매장 위치</h2>
         <div class="store-map-content">
             <!-- 매장 지도 -->
             <div class="map-section">
@@ -112,3 +112,8 @@
         };
     </script>
 {% endblock script %}
+
+{% block footer %}
+    {% include 'layout/main/main_footer.html' %}
+{% endblock footer %}
+
