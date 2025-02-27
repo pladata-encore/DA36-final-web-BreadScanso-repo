@@ -80,47 +80,47 @@
     <!-- 지점명 -->
     <div class="store-name">서초동점</div>
 
-<div class="container">
-    <!-- 웹캠 -->
-    <div class="video-container">
-        <video id="webcam" autoplay playsinline></video>
-        <button id="capture-btn">📸촬영</button>
-    </div>
+    <div class="container">
+        <!-- 웹캠 -->
+        <div class="video-container">
+            <video id="webcam" autoplay playsinline></video>
+            <button id="capture-btn">📸촬영</button>
+        </div>
 
-    <!-- 주문 목록 -->
-    <div class="order-list">
-        <h3>메뉴 목록</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>메뉴이름</th>
-                    <th>단가</th>
-                    <th>수량</th>
-                    <th>금액</th>
-                </tr>
-            </thead>
-            <tbody id="order-table">
-            </tbody>
-        </table>
-        <div class="total-container">
-            <div class="total-info">
-                <p>총 수량: <strong id="total-quantity">0개</strong></p>
-                <p>총 금액: <strong id="total-price">0원</strong></p>
-            </div>
-            <div class="reset-button-container">
-                <button id="reset-order-btn" class="reset-button">초기화</button>
+        <!-- 주문 목록 -->
+        <div class="order-list">
+            <h3>메뉴 목록</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>메뉴이름</th>
+                        <th>단가</th>
+                        <th>수량</th>
+                        <th>금액</th>
+                    </tr>
+                </thead>
+                <tbody id="order-table">
+                </tbody>
+            </table>
+            <div class="total-container">
+                <div class="total-info">
+                    <p>총 수량: <strong id="total-quantity">0개</strong></p>
+                    <p>총 금액: <strong id="total-price">0원</strong></p>
+                </div>
+                <div class="reset-button-container">
+                    <button id="reset-order-btn" class="reset-button">초기화</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- 버튼 -->
-<div class="button-container">
-    <button class="blue-button">직원 호출</button>
-    <a href="{% url 'member' %}">
-        <button class="black-button">결제</button>
-    </a>
-</div>
+    <!-- 버튼 -->
+    <div class="button-container">
+        <button class="blue-button">직원 호출</button>
+        <a href="{% url 'member' %}">
+            <button class="black-button">결제</button>
+        </a>
+    </div>
 
     <!-- Django 데이터를 JavaScript에 전달 -->
     <script>
