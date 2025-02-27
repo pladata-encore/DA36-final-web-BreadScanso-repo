@@ -393,6 +393,27 @@ body.kiosk-member {
     text-align: center; /* 텍스트 가운데 정렬 */
 }
 
+body.kiosk-member header {
+    position: fixed; /* 화면에 고정 */
+    top: 20px;
+    left: 20px;
+    height: 60px;
+}
+/* 브랜드 로고 이미지 스타일 */
+body.kiosk-member .brand-logo {
+    width: 150px; /* 로고 크기 조정 */
+    height: auto; /* 비율 유지 */
+}
+/* 지점명 (오른쪽 상단) */
+body.kiosk-member .store-name {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 24px;
+    color: yellowgreen;
+    font-weight: bold;
+}
+
 
 /* 버튼 스타일 */
 body.kiosk-member .button-container {
@@ -425,6 +446,27 @@ body.kiosk-point .keypad-container {
     justify-content: center;
     height: 100vh;
     width: 100vw;
+}
+
+body.kiosk-point header {
+    position: fixed; /* 화면에 고정 */
+    top: 20px;
+    left: 20px;
+    height: 60px;
+}
+/* 브랜드 로고 이미지 스타일 */
+body.kiosk-point .brand-logo {
+    width: 150px; /* 로고 크기 조정 */
+    height: auto; /* 비율 유지 */
+}
+/* 지점명 (오른쪽 상단) */
+body.kiosk-point .store-name {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 24px;
+    color: yellowgreen;
+    font-weight: bold;
 }
 
 body.kiosk-point .keypad {
@@ -490,6 +532,27 @@ body.kiosk-usepoint .keypad-container {
     justify-content: center;
     height: 100vh;
     width: 100vw;
+}
+
+body.kiosk-usepoint header {
+    position: fixed; /* 화면에 고정 */
+    top: 20px;
+    left: 20px;
+    height: 60px;
+}
+/* 브랜드 로고 이미지 스타일 */
+body.kiosk-usepoint .brand-logo {
+    width: 150px; /* 로고 크기 조정 */
+    height: auto; /* 비율 유지 */
+}
+/* 지점명 (오른쪽 상단) */
+body.kiosk-usepoint .store-name {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 24px;
+    color: yellowgreen;
+    font-weight: bold;
 }
 
 
