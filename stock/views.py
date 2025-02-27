@@ -18,10 +18,10 @@ def stock_product(request):
     store = member.store
     search_query = request.GET.get('search', '')
     category_filter = request.GET.get('category', '')
-    sort_by = request.GET.get('sort', 'item_name')
+    sort_by = request.GET.get('sort', 'item_name')  # 기본 정렬 (아이템 이름으로 정렬)
     order = request.GET.get('order', 'asc')
 
-    # 여기를 수정: 모든 아이템이 아닌 멤버의 스토어에 속한 아이템만 가져오기
+    # 로그인한 회원(점장)의 매장에 속한 아이템만 가져오기
     items = Item.objects.filter(store=store)
 
     # 검색
@@ -41,7 +41,6 @@ def stock_product(request):
             sort_by = f"-{sort_by}"
         items = items.order_by(sort_by)
 
-    # 나머지 코드는 동일
     items_per_page = 10
     paginator = Paginator(items, items_per_page)
     page_number = request.GET.get('page', 1)
@@ -74,7 +73,7 @@ def stock_product(request):
         'page_obj': page_obj,
         'page_range': page_range,
         'search_query': search_query,
-        'category_filter': category_filter,  # HTML에서 사용되므로 추가
+        'category_filter': category_filter, 
         'member': member,
         'total_items': items.count(),
     }
@@ -108,23 +107,32 @@ def stock_product_new(request):
     return render(request, 'stock/stock_product_new.html')  # 제품 신규등록
 
 def stock_ingredient(request):
+    member = request.user.member
+    store = member.store
     search_query = request.GET.get('search', '')
     sort_by = request.GET.get('sort', 'ingredient_name')  # 정렬 기준 (기본값: ingredient_name)
     order = request.GET.get('order', 'asc')  # 오름차순/내림차순 (기본값: asc)
 
-    ingredients = Ingredient.objects.all()
+    ingredients = Ingredient.objects.filter(store=store)
 
     # 검색
     if search_query:
         ingredients = ingredients.filter(ingredient_name__icontains=search_query)
 
     # 정렬 처리
-    if order == 'desc':
-        sort_by = f"-{sort_by}"
-    ingredients = ingredients.order_by(sort_by)
+    if sort_by == 'stock':  # 재고 수량으로 정렬할 경우
+        if order == 'desc':
+            ingredients = ingredients.order_by('-stock')
+        else:
+            ingredients = ingredients.order_by('stock')
+    else:  # 다른 필드로 정렬
+        if order == 'desc':
+            sort_by = f"-{sort_by}"
+        ingredients = ingredients.order_by(sort_by)
 
     # 페이지네이션
-    paginator = Paginator(ingredients, 10)
+    ingredients_per_page = 10
+    paginator = Paginator(ingredients, ingredients_per_page)
     page_number = request.GET.get('page', 1)
     try:
         page_number = int(page_number)
@@ -132,14 +140,35 @@ def stock_ingredient(request):
             page_number = 1
     except ValueError:
         page_number = 1
+
     try:
         page_obj = paginator.get_page(page_number)
     except EmptyPage:
-        # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
-    return render(request, 'stock/stock_ingredient.html', {'page_obj': page_obj, 'search_query':search_query})
 
-@csrf_exempt  # CSRF 인증을 비활성화하거나 활성화하는 방식
+    max_pages = 5
+    current_page = page_obj.number
+    total_pages = paginator.num_pages
+
+    start_page = max(1, current_page - 2)
+    end_page = min(total_pages, start_page + max_pages - 1)
+
+    if end_page - start_page + 1 < max_pages and start_page > 1:
+        start_page = max(1, end_page - max_pages + 1)
+
+    page_range = range(start_page, end_page + 1)
+
+    context = {
+        'ingredients': page_obj,
+        'page_obj': page_obj,
+        'page_range': page_range,
+        'search_query': search_query,
+        'member': member,
+        'total_ingredients': ingredients.count(),
+    }
+    return render(request, 'stock/stock_ingredient.html', context)
+
+@csrf_exempt  
 def update_stock_ingredient(request):
     if request.method == 'POST':
         try:
