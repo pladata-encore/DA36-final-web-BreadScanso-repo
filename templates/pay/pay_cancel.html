@@ -34,11 +34,19 @@
         <tbody>
             {% for cancel in cancels %}
             <tr style="color: red;">
-                <td>{{ cancel.date|date:"Y-m-d H:i" }}</td>
-                <td>{{ cancel.store_name }}</td>
-                <td>{{ cancel.product_name }}</td>
-                <td>{{ cancel.total_price }}</td>
-                <td>{{ cancel.payment_method }}</td>
+                <td class="clickable" data-payment-id="{{ cancel.payment_id }}">
+                    <a href="{% url 'pay:pay_details' cancel.payment_id %}">{{ cancel.pay_at|date:"Y-m-d H:i" }}</a>
+                </td>
+                <td>{{ cancel.order.store }}</td>
+                <td>{{ cancel.order.orderitem_set.first.item.item_name }}</td>
+                <td>{{ cancel.order.total_amount }}</td>
+                <td>
+                    {% if cancel.payment_method == "credit" %}
+                        <span class="badge bg-danger">카드</span>
+                    {% elif cancel.payment_method == "cash" %}
+                        <span class="badge bg-success">현금</span>
+                    {% endif %}
+                </td>
             </tr>
             {% empty %}
             <tr>
@@ -46,6 +54,7 @@
             </tr>
             {% endfor %}
         </tbody>
+
     </table>
 {% endblock content %}
 
