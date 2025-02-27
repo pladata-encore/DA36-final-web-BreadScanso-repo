@@ -44,7 +44,7 @@ def notice_main(request):
         'notices': notices,
         'page_obj': page_obj,
         'page_range': page_range,
-        'total_items': notices.count(),  # 총 공지사항 수
+        'total_notices': notices.count(),  # 총 공지사항 수
     }
 
     return render(request, 'notice/notice_main.html', context)

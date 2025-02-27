@@ -19,7 +19,7 @@
     <!-- 공지사항 테이블 -->
     <table class="table">
         <thead>
-            <tr>
+            <tr class="table-dark">
                 <th scope="col"></th>
                 <th scope="col">번호</th>
                 <th scope="col">제목</th>
@@ -72,7 +72,8 @@
             </tr>
         </tbody>
     </table>
-    <nav aria-label="Page navigation" style="display: flex; justify-content: center;">
+    <br><br><br><br>
+    <nav aria-label="Page navigation" style="margin-bottom: 20px; display: flex; justify-content: center;">
             <ul class="pagination mb-0">
                 <!-- 이전 버튼 -->
                 <li class="page-product {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
