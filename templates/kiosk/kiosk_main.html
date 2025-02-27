@@ -9,8 +9,13 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body class="kiosk-main">
-    <!-- 지점명 -->
-    <div class="store-name">서초동점</div>
+    <div class="store-container">
+        <!-- 지점명 -->
+        <a href="/">
+            <img src="{% static 'images/bread_im_text.png' %}" alt="text" class="logo-img" width="200">
+        </a>
+        <div class="store-name">서초동점</div>
+    </div>
 
     <!-- 시작하기 버튼 -->
     <a href="{% url 'products' %}">

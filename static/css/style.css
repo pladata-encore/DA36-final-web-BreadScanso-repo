@@ -209,13 +209,20 @@ body.kiosk-main body {
     position: relative;
 }
 
-/* 지점명 (오른쪽 상단) */
+/* 로고+지점명 (왼쪽 상단) */
+body.kiosk-main .store-container {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 10px; /* 이미지와 텍스트 사이 간격 조정 */
+}
+
+/* 지점명 */
 body.kiosk-main .store-name {
-    position: absolute;
+    /*position: ;*/
     top: 20px;
     right: 30px;
     font-size: 24px;
-    color: yellowgreen;
+    color: white;
     font-weight: bold;
 }
 
