@@ -21,7 +21,14 @@ document.addEventListener("DOMContentLoaded", function () {
         row.addEventListener("click", function (event) {
             const target = event.target;
 
-            // 체크박스 클릭 시 체크 상태 변경 후 이벤트 전파 방지
+            // 체크박스 자체를 클릭한 경우
+            if (target.classList.contains("row-checkbox")) {
+                // 체크박스 클릭 시 기본 동작 유지 (자동으로 체크 상태 변경됨)
+                event.stopPropagation(); // tr 클릭 이벤트 방지
+                return;
+            }
+
+            // 체크박스 열(컬럼)을 클릭한 경우
             if (target.closest(".checkbox-column")) {
                 const checkbox = target.closest(".checkbox-column").querySelector(".row-checkbox");
                 if (checkbox) {
@@ -33,9 +40,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // 체크박스 열이 아닌 경우에만 페이지 이동
             const item_id = row.querySelector("td:nth-child(2)").textContent.trim();
-
             // 해당 제품 정보로 이동
             window.location.href = `/menu/store/menu_info/${item_id}/`;
+        });
+    });
+
+    // 필터링 기능
+    let filters = ["category-filter", "show-filter", "best-filter", "new-filter"];
+
+    filters.forEach(function (filterId) {
+        document.getElementById(filterId).addEventListener("input", function () {
+            let url = new URL(window.location.href);
+            let filterValue = this.value;
+
+            if (filterValue) {
+                url.searchParams.set(this.name, filterValue);
+            } else {
+                url.searchParams.delete(this.name);
+            }
+
+            window.location.href = url;
         });
     });
 

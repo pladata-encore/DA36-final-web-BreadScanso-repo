@@ -42,30 +42,29 @@
             </tr>
         </thead>
         <tbody>
-            {% for purchase in purchases %}
-            <tr {% if purchase.is_cancelled %} style="color: red;" {% endif %}>
-{#                        <td class="clickable" data-id="{{ purchase.id }}">{{ purchase.date }}</td>#}
-                <td class="clickable" data-payment-id="{{ purchase.id }}">
-                    <a href="{% url 'pay_details' purchase.id %}">{{ purchase.date }}</a>
+            {% for payment in page_obj %}
+            <tr {% if not payment.payment_status %} style="color: red;" {% endif %}>
+                <td class="clickable" data-payment-id="{{ payment.payment_id }}">
+                    <a href="{% url 'pay:pay_details' payment.payment_id %}">{{ payment.pay_at|date:"Y-m-d H:i" }}</a>
                 </td>
-                <td>{{ purchase.store_name }}</td>
-                <td>{{ purchase.product_name }}</td>
-                <td>{{ purchase.quantity }}</td>
-                <td>{{ purchase.unit_price }}</td>
-                <td>{{ purchase.total_quantity }}</td>
-                <td>{{ purchase.total_price }}</td>
-                <td>{{ purchase.reward_points }}</td>
+                <td>{{ payment.order.store }}</td>
+                <td>{{ payment.order.orderitem_set.first.item.item_name }}</td>
+                <td>{{ payment.order.orderitem_set.first.item_count }}</td>
+                <td>{{ payment.order.orderitem_set.first.item_price }}</td>
+                <td>{{ payment.order.orderitem_set.count }}</td>
+                <td>{{ payment.order.total_amount }}</td>
+                <td>{{ payment.order.earned_points }}</td>
                 <td>
-                    <a href="?payment_method={{ purchase.payment_method }}">
-                        {% if purchase.payment_method == "card" %}
+                    <a href="?payment_method={{ payment.payment_method }}">
+                        {% if payment.payment_method == "credit" %}
                             <span class="badge bg-danger">카드</span>
-                        {% elif purchase.payment_method == "simple" %}
-                            <span class="badge bg-success">간편결제</span>
+                        {% elif payment.payment_method == "cash" %}
+                            <span class="badge bg-success">현금</span>
                         {% endif %}
                     </a>
                 </td>
                 <td>
-                    {% if purchase.member_status == "member" %}
+                    {% if payment.member %}
                         <span class="badge bg-primary">회원</span>
                     {% else %}
                         <span class="badge bg-warning">비회원</span>
@@ -81,22 +80,51 @@
 
     </table>
     
+    <!-- 페이지네이션 -->
+<nav aria-label="Page navigation" style="margin-top:10%;">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">« First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">‹ Prev</a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next ›</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last »</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+
+    
     {#  하단 페이지 넘김 버튼  #}
-    <nav aria-label="..." style="margin-top:10%;">
-      <ul class="pagination">
-        <li class="page-item disabled">
-          <a class="page-link">Previous</a>
-        </li>
-        <li class="page-item active" aria-current="page">
-            <a class="page-link" href="#">1</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-next">
-          <a class="page-link" href="#">Next</a>
-        </li>
-      </ul>
-    </nav>
+{#    <nav aria-label="..." style="margin-top:10%;">#}
+{#      <ul class="pagination">#}
+{#        <li class="page-item disabled">#}
+{#          <a class="page-link">Previous</a>#}
+{#        </li>#}
+{#        <li class="page-item active" aria-current="page">#}
+{#            <a class="page-link" href="#">1</a>#}
+{#        </li>#}
+{#        <li class="page-item"><a class="page-link" href="#">2</a></li>#}
+{#        <li class="page-item"><a class="page-link" href="#">3</a></li>#}
+{#        <li class="page-next">#}
+{#          <a class="page-link" href="#">Next</a>#}
+{#        </li>#}
+{#      </ul>#}
+{#    </nav>#}
 {% endblock content %}
 
 {% block script %}

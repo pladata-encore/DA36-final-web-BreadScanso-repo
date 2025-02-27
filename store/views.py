@@ -12,24 +12,7 @@ from django.core.paginator import Paginator, EmptyPage
 
 
 def store_main(request):
-    if not request.user.is_authenticated:
-        return redirect("main:login")
-
-    try:
-        member = Member.objects.get(user=request.user)
-
-        # member_type이 none이면 'normal'로 간주
-        member_type = member.member_type if member.member_type else "normal"
-
-        # owner 또는 manager일 경우 매장페이지 첫화면(매출관리)으로 이동
-        if member_type in ["owner", "manager"]:
-            return redirect("sales:sales_main")
-
-        else:
-            return redirect("member:member_page")  # normal 회원은 마이페이지로 이동
-
-    except Member.DoesNotExist:
-        return redirect("main:index")
+    return render(request, 'store/store_main_map.html' )
 
 # 매장페이지 - 회원관리
 def member_store(request):
@@ -104,49 +87,111 @@ def update_member_store(request):
             return JsonResponse({'success': False, 'error': str(e)})
 
     return JsonResponse({'success': False, 'error': '잘못된 요청입니다.'})
+
 def member_store_edit(request):
     return render(request, 'store/member_store_edit.html')  # 회원 정보 수정
 
-# 회원 삭제
+from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
+from django.db import connection
+import json
+import traceback
+
 @require_http_methods(["POST"])
-def delete_member(request):
-    try:
-        # 요청 데이터 파싱
-        data = json.loads(request.body)
-        member_ids = data.get("member_ids", [])
+def delete_member_store(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)  # JSON 데이터 파싱
+            member_ids = data.get("member_ids", [])
 
-        if not member_ids:
-            return JsonResponse({
-                "success": False,
-                "message": "삭제할 항목이 없습니다."
-            })
+            if not member_ids:
+                return JsonResponse({
+                    "success": False,
+                    "message": "삭제할 회원을 선택해주세요."
+                })
 
-        # 선택된 회원 삭제
-        deleted_count, _ = Member.objects.filter(member_id__in=member_ids).delete()
+            with connection.cursor() as cursor:
+                # 먼저 member_member 테이블에서 삭제
+                sql_member = "DELETE FROM member_member WHERE member_id IN (%s)" % ','.join(['%s'] * len(member_ids))
+                cursor.execute(sql_member, member_ids)
+                deleted_from_member = cursor.rowcount
 
-        # 삭제 결과 반환
-        if deleted_count > 0:
+                # auth_user 테이블에서도 삭제
+                sql_user = "DELETE FROM auth_user WHERE username IN (%s)" % ','.join(['%s'] * len(member_ids))
+                cursor.execute(sql_user, member_ids)
+                deleted_from_user = cursor.rowcount
+
             return JsonResponse({
                 "success": True,
-                "message": f"{deleted_count}명의 회원이 삭제되었습니다."
-            })
-        else:
-            return JsonResponse({
-                "success": False,
-                "message": "삭제할 회원을 찾을 수 없습니다."
+                "message": f"{deleted_from_member}명의 회원 정보 및 {deleted_from_user}명의 사용자 계정이 삭제되었습니다."
             })
 
-    except json.JSONDecodeError:
-        return JsonResponse({
-            "success": False,
-            "message": "잘못된 요청 데이터입니다."
-        })
-    except Exception as e:
-        print(f"Error deleting members: {str(e)}")
-        return JsonResponse({
-            "success": False,
-            "message": f"서버 오류가 발생했습니다: {str(e)}"
-        })
+        except Exception as e:
+            error_details = traceback.format_exc()
+            return JsonResponse({
+                "success": False,
+                "message": f"삭제 실패: {str(e)}",
+                "details": error_details
+            })
+
+    return JsonResponse({"success": False, "message": "잘못된 요청입니다."})
+
+
+# @require_http_methods(["POST"])
+# def delete_member_store(request):
+#     if request.method == "POST":
+#         try:
+#             data = json.loads(request.body)  # JSON 데이터 파싱
+#             member_ids = data.get("member_ids", [])
+#
+#             if not member_ids:
+#                 return JsonResponse({
+#                     "success": False,
+#                     "message": "삭제할 회원을 선택해주세요."
+#                 })
+#
+#             # 직접 SQL 쿼리 실행하여 member_member 테이블에서만 삭제
+#             from django.db import connection
+#
+#             with connection.cursor() as cursor:
+#                 # 테이블 이름과 필드 이름을 정확하게 사용
+#                 # 여러 회원을 삭제할 때는 IN 절 사용
+#                 sql = "DELETE FROM member_member WHERE member_id IN (%s)" % ','.join(['%s'] * len(member_ids))
+#                 cursor.execute(sql, member_ids)
+#                 row_count = cursor.rowcount
+#
+#             return JsonResponse({"success": True, "message": f"{row_count}명의 회원이 삭제되었습니다."})
+#         except Exception as e:
+#             import traceback
+#             error_details = traceback.format_exc()
+#             return JsonResponse({
+#                 "success": False,
+#                 "message": f"삭제 실패: {str(e)}",
+#                 "details": error_details
+#             })
+#
+#     return JsonResponse({"success": False, "message": "잘못된 요청입니다."})
+# # 회원 삭제
+# @require_http_methods(["POST"])
+# def delete_member_store(request):
+#     if request.method == "POST":
+#         try:
+#             data = json.loads(request.body)  # JSON 데이터 파싱
+#             member_ids = data.get("member_ids", [])
+#
+#             if not member_ids:
+#                 return JsonResponse({
+#                     "success": False,
+#                     "message": "삭제할 회원을 선택해주세요."
+#                 })
+#
+#             deleted_count, _ = Member.objects.filter(member_id__in=member_ids).delete()
+#
+#             return JsonResponse({"success": True, "message": f"선택한 회원이 삭제되었습니다."})
+#         except Exception as e:
+#             return JsonResponse({"success": False, "message": f"삭제 실패: {str(e)}"})
+#
+#     return JsonResponse({"success": False, "message": "잘못된 요청입니다."})
 
 def store_home_edit(request):
     # GET 요청 처리 (member 데이터 가져오기)
