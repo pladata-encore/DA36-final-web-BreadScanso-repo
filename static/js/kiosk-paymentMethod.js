@@ -72,21 +72,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return cookieValue;
     }
 
-    // 결제 버튼 클릭 이벤트 추가
+// 결제 버튼 클릭 이벤트 추가
     document.querySelectorAll('.blue-button').forEach(button => {
-        button.addEventListener('click', function(e) {
+        button.addEventListener('click', function (e) {
             e.preventDefault();
 
             // 세션 스토리지에서 데이터 가져오기
             const productDictionary = JSON.parse(sessionStorage.getItem("productDictionary") || "{}");
             const phoneNum = sessionStorage.getItem("phone_num") || "";
             const finalAmount = parseInt(document.getElementById("final_amount").textContent.replace(/[^0-9]/g, ""));
+            const usedPoints = parseInt(sessionStorage.getItem("usedPoints") || "0"); // 사용 포인트 가져오기
             const paymentMethod = this.textContent.includes("카드") ? "credit" : "simple";
 
             // 서버로 전송할 데이터
             const paymentData = {
                 phone_num: phoneNum,
                 final_amount: finalAmount,
+                used_points: usedPoints, // 사용 포인트 추가
                 payment_method: paymentMethod,
                 products: productDictionary
             };
@@ -102,25 +104,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify(paymentData)
             })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => {
-                        throw new Error(data.message || "서버 오류가 발생했습니다.");
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    window.location.href = "/kiosk/payment_completed/";
-                } else {
-                    alert("결제 처리 중 오류가 발생했습니다: " + data.message);
-                }
-            })
-            .catch(error => {
-                console.error("결제 처리 중 오류:", error);
-                alert("결제 처리 중 오류가 발생했습니다: " + error.message);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.message || "서버 오류가 발생했습니다.");
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // 적립 포인트 정보 저장
+                        if (data.earned_points) {
+                            sessionStorage.setItem("earnedPoints", data.earned_points);
+                        }
+                        window.location.href = "/kiosk/payment_completed/";
+                    } else {
+                        alert("결제 처리 중 오류가 발생했습니다: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("결제 처리 중 오류:", error);
+                    alert("결제 처리 중 오류가 발생했습니다: " + error.message);
+                });
         });
     });
 });

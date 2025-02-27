@@ -98,12 +98,13 @@ def complete_payment(request):
         try:
             data = json.loads(request.body)
             phone_num = data.get("phone_num", "")  # 기본값을 빈 문자열로 설정
-            final_amount = data.get("final_amount")
+            total_amount = data.get("final_amount")  # 총 결제 금액
+            used_points = data.get("used_points", 0)  # 사용 포인트 추가
             payment_method = data.get("payment_method", "credit")
             products = data.get("products", {})
 
-            # final_amount만 필수로 체크
-            if not final_amount:
+            # total_amount만 필수로 체크
+            if not total_amount:
                 return JsonResponse({"success": False, "message": "결제 금액이 필요합니다."}, status=400)
 
             # 회원 정보 조회 (비회원은 None)
@@ -113,9 +114,18 @@ def complete_payment(request):
 
             # OrderInfo 생성
             order = OrderInfo.objects.create(
-                total_amount=final_amount,
+                total_amount=total_amount,
                 store=request.session.get('store', 'A')
             )
+
+            # 최종 결제 금액 계산 (포인트 사용 적용)
+            order.calculate_final_amount(used_points)
+
+            # 적립 포인트 계산
+            earned_points = order.calculate_earned_points()
+
+            # 변경사항 저장
+            order.save()
 
             # OrderItem 생성
             for product_name, product_data in products.items():
@@ -138,14 +148,16 @@ def complete_payment(request):
             payment = PaymentInfo.objects.create(
                 order=order,
                 member=member,  # 비회원은 None
-                payment_method=payment_method
+                payment_method=payment_method,
+                used_points=used_points  # 사용 포인트 저장
             )
 
             return JsonResponse({
                 "success": True,
                 "message": "결제가 완료되었습니다.",
                 "order_id": order.order_id,
-                "payment_id": payment.payment_id
+                "payment_id": payment.payment_id,
+                "earned_points": order.earned_points  # 적립 포인트 반환
             })
 
         except json.JSONDecodeError:
