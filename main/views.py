@@ -141,3 +141,38 @@ def login_find(request):
             return render(request, "main/login_find.html")
 
     return render(request, "main/login_find.html")
+
+
+def store_signup(request):
+    if request.method == "POST":
+        member_id = request.POST.get('user_id')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        name = request.POST.get('name')
+        phone_num = request.POST.get('phone_num')
+        email = request.POST.get('email')
+        age_group = request.POST.get('age_group')
+        sex = request.POST.get('sex')
+        profile = request.FILES.get("profile")
+
+        # User 모델에 회원 생성
+        user = User.objects.create_user(username=member_id, email=email, password=password1)
+
+        # S3에 프로필 이미지 업로드 후 URL 저장
+        profile_url = upload_profile_image_to_s3(profile) if profile else None
+
+        # Member 모델에 회원 정보 저장 + User 연결
+        member = Member.objects.create(
+            user=user,
+            member_id=member_id,
+            name=name,
+            phone_num=phone_num,
+            email=email,
+            age_group=age_group,
+            sex=sex,
+            profile_image=profile_url
+        )
+        return redirect('store:member_store')
+    member = request.user.member
+
+    return render(request, "main/store_signup.html", {'member': member})
