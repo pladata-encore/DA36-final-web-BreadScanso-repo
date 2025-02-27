@@ -3,7 +3,8 @@
 body.main-index {
     background-color: #F2D0A9;  /* 원하는 배경색 */
 }
-
+/* ----------------------------------------------------------------------- */
+/* 브랜드소개 로고 */
 .brand-logo {
     display: flex; /* flexbox를 사용하여 중앙 정렬 */
     justify-content: center; /* 가로 중앙 정렬 */
@@ -20,7 +21,8 @@ body.main-index {
     width: 1000px;  /* 이미지 크기 조정 */
     height: auto;  /* 원본 비율 유지 */
 }
-
+/* ----------------------------------------------------------------------- */
+/* 브랜드소대 하단 4개의 네모박스(카드) */
 .card-container {
     display: flex;
     justify-content: center; /* 가운데 정렬 */
@@ -62,7 +64,6 @@ body.main-index {
     text-align: center;
 }
 
-
 /* ----------------------------------------------------------------------- */
 /* 최상단 텍스트 로고 이미지 설정 */
 header .logo-container {
@@ -88,7 +89,7 @@ body.main-index .center-text {
     text-align: center;  /* 텍스트 가운데 정렬 */
 }
 /* ----------------------------------------------------------------------- */
-/* 슬라이드 설정 */
+/* 메인홈 케러셀 설정 */
 .carousel-item {
     /*position: relative; !* 기본값 유지 *!*/
     display: flex;
