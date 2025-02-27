@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from kiosk.models import PaymentInfo
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from member.models import Member
+
 
 def kiosk_main(request):
     return render(request, 'kiosk/kiosk_main.html')  # kiosk_main 템플릿 파일 경로 지정
@@ -37,10 +39,15 @@ def pay_main(request):
 #     # return render(request, 'pay/pay_details.html', {'payment': payment})
 
 def pay_details(request, payment_id):
-    payment = get_object_or_404(PaymentInfo, payment_id=payment_id)
-    return render(request, 'pay/pay_details.html', {'payment': payment})
+    payment = get_object_or_404(PaymentInfo, pk=payment_id)
 
+    # 결제한 매장의 대표자 가져오기 (변수명 변경: store_owner)
+    store_owner = Member.objects.filter(store=payment.order.store, member_type="manager").first()
 
+    return render(request, 'pay/pay_details.html', {
+        'payment': payment,
+        'store_owner': store_owner
+    })
 
 
 # def pay_cancel(request):

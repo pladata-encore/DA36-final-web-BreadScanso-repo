@@ -1,38 +1,77 @@
-<div class="receipt-container">
+{% extends 'layout/store/base_store.html' %}
+{% load static %}
+
+{% block title %}결제관리{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
+
+{% block content %}
+    <h3 style="margin-bottom: 50px;" class="text-center">전자영수증</h3>
+    <div class="receipt-container d-flex justify-content-between" style="margin-bottom: 30px; width: 70%;">
     <div class="left-section">
-        <div class="receipt-header">{{ payment.order.total_amount }}원</div>
+        <p>결제수단: {{ payment.payment_method }}</p>
+        <p>승인금액: {{ payment.order.total_amount }}원</p>
+        <p>승인번호: {{ payment.approval_code }}</p>
+        <p>승인일시: {{ payment.pay_at|date:"Y-m-d H:i:s" }}</p>
         <hr>
-        <p><strong>결제수단:</strong> {{ payment.payment_method }}</p>
-        <p><strong>승인금액:</strong> {{ payment.order.total_amount }}원</p>
-        <p><strong>승인번호:</strong> {{ payment.approval_code }}</p>
-        <p><strong>승인일시:</strong> {{ payment.pay_at|date:"Y-m-d H:i:s" }}</p>
-        <hr>
-        <p><strong>매장명:</strong> {{ payment.order.store }}</p>
+        <p>매장명: {{ payment.order.store }}</p>
+        <p>
+            {% if store_owner %}
+                대표자: {{ store_owner.name }}
+            {% else %}
+                대표자 정보 없음
+            {% endif %}
+        </p>
+        <p>사업자번호 : 1234-5678</p>
+        <p>
+            {% if store_owner %}
+                전화번호 : {{ store_owner.store_num }}
+            {% else %}
+                전화번호 없음
+            {% endif %}
+        </p>
+        <p>
+            {% if store_owner %}
+                주소 : {{ store_owner.store_address }}</p>
+            {% else %}
+                주소 없음
+            {% endif %}
     </div>
     <div class="right-section">
         <table class="table receipt-table">
             <thead>
                 <tr>
-                    <th>상품명</th>
-                    <th>수량</th>
-                    <th>금액</th>
+                    <th>상품</th>
+                    <th>개별수량</th>
+                    <th>개별금액</th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in payment.order.orderitem_set.all %}
+                {% for order_item in payment.order.orderitem_set.all %}
                 <tr>
-                    <td>{{ item.item.item_name }}</td>
-                    <td>{{ item.item_count }}</td>
-                    <td>{{ item.item_total }}</td>
+                    <td>{{ order_item.item.item_name }}</td>
+                    <td>{{ order_item.item_count }}</td>
+                    <td>{{ order_item.item_price }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
-            <tfoot>
-                <tr>
-                    <th colspan="2">합계</th>
-                    <th>{{ payment.order.total_amount }}</th>
-                </tr>
-            </tfoot>
         </table>
+        <div>
+            <p>적립포인트 : {{ payment.order.earned_points }}</p>
+            <p>사용포인트 : {{ payment.order.used_points }}</p>
+            <p>총 포인트 : {{ payment.member.points }}</p>
+            <p class="d-inline">합계</p>
+            <h1 class="d-inline">{{ payment.order.total_amount }}원</h1>
+        </div>
     </div>
-</div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}
