@@ -7,13 +7,14 @@ import random
 
 
 # OrderInfo 주문정보
-
 class OrderInfo(models.Model):
     order_id = models.AutoField(primary_key=True)
     order_at = models.DateTimeField(auto_now_add=True)  # 주문 일시
     total_amount = models.IntegerField(default=0)  # 주문 총액
     store = models.CharField(max_length=50, choices=[("A", "Store A"), ("B", "Store B")])  # 매장
     earned_points = models.IntegerField(default=0)  # 적립 포인트
+    used_points = models.IntegerField(default=0)  # 사용 포인트
+    final_amount = models.IntegerField(default=0)  # 최종 결제 금액
 
     def calculate_earned_points(self):  # 적립 포인트 계산
         store_name = Member.objects.get(store=self.store)
@@ -21,9 +22,16 @@ class OrderInfo(models.Model):
             self.earned_points = int(self.total_amount * store_name.earning_rate)
         else:
             self.earned_points = 0
+        return self.earned_points
+
+    def calculate_final_amount(self, used_points=0):
+        self.used_points = used_points
+        self.final_amount = max(self.total_amount - used_points, 0)
+        return self.final_amount
 
     def save(self, *args, **kwargs):
-        self.calculate_earned_points()
+        if self._state.adding:  # 새로운 객체인 경우에만 계산
+            self.calculate_earned_points()
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -31,7 +39,6 @@ class OrderInfo(models.Model):
 
 
 # OrderItem 주문항목
-
 class OrderItem(models.Model):
     order_item_id = models.AutoField(primary_key=True)
     order = models.ForeignKey(OrderInfo, on_delete=models.CASCADE)  # OrderInfo와 1:N 관계
@@ -43,7 +50,7 @@ class OrderItem(models.Model):
     def save(self, *args, **kwargs):
         if self.item:
             self.item_price = self.item.sale_price   # 제품 가격 가져오기
-            self.item.stock-=self.item_count         # 제품 재고 차감
+            self.item.stock -= self.item_count    # 제품 재고 차감
             self.item.save()
 
         self.item_total = self.item_count * self.item_price  # 제품당 총액 계산
@@ -58,7 +65,6 @@ class OrderItem(models.Model):
 
 
 # PaymentInfo 결제정보
-
 class PaymentInfo(models.Model):
     payment_id = models.AutoField(primary_key=True)
     order = models.ForeignKey(OrderInfo, on_delete=models.CASCADE)  # OrderInfo와 1:N 관계
@@ -68,7 +74,7 @@ class PaymentInfo(models.Model):
     card_name = models.CharField(max_length=20, null=True, blank=True)  # 카드 이름
     pay_at = models.DateTimeField(default=timezone.now)
     approval_code = models.CharField(max_length=5, null=True, blank=True)  # 승인 번호
-
+    used_points = models.IntegerField(default=0)  # 사용 포인트 필드 추가
 
     def save(self, *args, **kwargs):
         is_new = self._state.adding
@@ -93,8 +99,10 @@ class PaymentInfo(models.Model):
 
             if self.member:
                 if is_new and self.payment_status:
+                    # 회원 정보 업데이트
                     self.member.total_spent += self.order.total_amount
-                    self.member.points += self.order.earned_points
+                    # 포인트 계산: 기존 포인트 + 적립 포인트 - 사용 포인트
+                    self.member.points = self.member.points + self.order.earned_points - self.used_points
                     self.member.last_visited = self.order.order_at
                     self.member.visit_count += 1
                     self.member.save()
@@ -102,7 +110,8 @@ class PaymentInfo(models.Model):
                 # 결제 취소 시
                 elif not is_new and prev_status is True and self.payment_status is False:
                     self.member.total_spent -= self.order.total_amount
-                    self.member.points -= self.order.earned_points
+                    # 포인트 계산: 기존 포인트 - 적립 포인트 + 사용 포인트
+                    self.member.points = self.member.points - self.order.earned_points + self.used_points
                     self.member.save()
 
     def __str__(self):

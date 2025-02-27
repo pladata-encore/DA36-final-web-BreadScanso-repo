@@ -88,7 +88,7 @@ function confirmPoints() {
     sessionStorage.setItem("finalPrice", finalPrice);
     
     // 최종 보유 포인트 계산 (기존 포인트 - 사용 포인트)
-    const finalPoints = memberPoints - pointsInput;
+    const finalPoints = memberPoints - pointsInput; // earnedPoints 더해줘야됨
     sessionStorage.setItem("finalPoints", finalPoints);
     
     alert(`${pointsInput.toLocaleString()}P를 사용합니다.`);
