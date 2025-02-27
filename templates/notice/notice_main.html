@@ -28,48 +28,21 @@
             </tr>
         </thead>
         <tbody class="table-group-divider">
-{#            {% for notice in page_obj %}#}
-{#                    {% if forloop.counter <= 10 %}#}
-{#                        <tr>#}
-{#                            <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>#}
-{#                            <td>{{ notice.notice_id }}</td>#}
-{#                            <td>{{ notice.title }}</td>#}
-{#                            <td>{{ notice.created_at }}</td>#}
-{#                        </tr>#}
-{#                    {% endif %}#}
-{#            {% empty %}#}
-{#                <tr>#}
-{#                    <td colspan="11">등록된 공지가 없습니다.</td>#}
-{#                </tr>#}
-{#            {% endfor %}#}
-            <tr>
-                <td><input type="checkbox" class="member-checkbox"></td>
-                <th scope="row">1</th> <!-- 번호 -->
-                <td>멤버십 서비스 정책 변경 안내</td> <!-- 제목 -->
-                <td>지점 A</td> <!-- 작성자 -->
-                <td>2025-02-18</td> <!-- 등록일 -->
-            </tr>
-            <tr>
-                <td><input type="checkbox" class="member-checkbox"></td>
-                <th scope="row">2</th> <!-- 번호 -->
-                <td>🎉빅이벤트 Coming soon🎉</td> <!-- 제목 -->
-                <td>지점 A</td> <!-- 작성자 -->
-                <td>2025-02-15</td> <!-- 등록일 -->
-            </tr>
-            <tr>
-                <td><input type="checkbox" class="member-checkbox"></td>
-                <th scope="row">3</th> <!-- 번호 -->
-                <td>🥨2월 신제품 안내🥨</td> <!-- 제목 -->
-                <td>전체</td> <!-- 작성자 -->
-                <td>2025-02-01</td> <!-- 등록일 -->
-            </tr>
-            <tr>
-                <td><input type="checkbox" class="member-checkbox"></td>
-                <th scope="row">4</th> <!-- 번호 -->
-                <td>🎂2월 생일자 혜택 안내🎂</td> <!-- 제목 -->
-                <td>전체</td> <!-- 작성자 -->
-                <td>2025-02-01</td> <!-- 등록일 -->
-            </tr>
+            {% for notice in page_obj %}
+                    {% if forloop.counter <= 10 %}
+                        <tr>
+                            <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+                            <td>{{ notice.notice_id }}</td>
+                            <td>{{ notice.title }}</td>
+                            <td>{{ notice.store }}</td>
+                            <td>{{ notice.created_at }}</td>
+                        </tr>
+                    {% endif %}
+            {% empty %}
+                <tr>
+                    <td colspan="11">등록된 공지가 없습니다.</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
     <br><br><br><br>
