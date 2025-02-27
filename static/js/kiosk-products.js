@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
     sessionStorage.removeItem("totalPrice");
     sessionStorage.removeItem("usedPoints");
     sessionStorage.removeItem("finalPrice");
+    sessionStorage.removeItem("earnedPoints");
+    sessionStorage.removeItem("phone_num");
+    sessionStorage.removeItem("points");
+    sessionStorage.removeItem("finalPoints");
     console.log('세션 스토리지가 초기화되었습니다.');
 
 // 웹캠 설정
@@ -12,7 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const captureBtn = document.getElementById("capture-btn");
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    const NGROK_URL = "https://dbc3-175-121-129-72.ngrok-free.app/predict/";
+// ngrok(터널링 서비스) url 설정
+    const NGROK_URL = "https://e290-175-121-129-72.ngrok-free.app/predict/";
 
     let productDictionary = {};
 

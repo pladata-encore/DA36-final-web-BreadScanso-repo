@@ -8,8 +8,123 @@
 {% endblock header %}
 
 {% block content %}
-    <h1>Q&A 화면 입니다.</h1>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">QnA</h3>
+    {# 검색어 자동완성 #}
+    <div class="container d-flex justify-content-end mb-1">
+        <form class="d-flex col-6" role="search">
+            <input class="form-control" type="search" id="question-search" placeholder="제목/내용을 검색하세요..." aria-label="Search" autocomplete="off">
+        </form>
+    </div>
+    <br>
+    <div class="container my-1">
+{#        table.table>thead>tr.table-dark>th*4#}
+        <table class="table table-striped">
+            <thead>
+            <tr class="table-dark">
+                <th scope="col"></th>
+                <th scope="col">번호</th>
+                <th scope="col">제목</th>
+                <th scope="col">작성자</th>
+                <th scope="col">등록일</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+{#            {% for qna in page_obj %}#}
+{#                    {% if forloop.counter <= 10 %}#}
+{#                        <tr>#}
+{#                            <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>#}
+{#                            <td>{{ qna.qna_id }}</td>#}
+{#                            <td>{{ qna.title }}</td>#}
+{#                            <td>{{ qna.member_id }}</td>#}
+{#                            <td>{{ qna.created_at }}</td>#}
+{#                        </tr>#}
+{#                    {% endif %}#}
+{#            {% empty %}#}
+{#                <tr>#}
+{#                    <td colspan="11">등록된 공지가 없습니다.</td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
+            <tr>
+                <td><input type="checkbox" class="member-checkbox"></td>
+                <th scope="row">1</th> <!-- 번호 -->
+                <td>포인트 적립 문의</td> <!-- 제목 -->
+                <td>shqkel</td> <!-- 작성자 -->
+                <td>2025-02-26</td> <!-- 등록일 -->
+            </tr>
+            <tr>
+                <td><input type="checkbox" class="member-checkbox"></td>
+                <th scope="row">2</th> <!-- 번호 -->
+                <td>B점에서도 생일자 혜택 받을수 있나요?</td> <!-- 제목 -->
+                <td>mark99</td> <!-- 작성자 -->
+                <td>2025-02-21</td> <!-- 등록일 -->
+            </tr>
+            <tr>
+                <td><input type="checkbox" class="member-checkbox"></td>
+                <th scope="row">3</th> <!-- 번호 -->
+                <td>신제품 중에 뭐가 맛있어요?</td> <!-- 제목 -->
+                <td>lottewin</td> <!-- 작성자 -->
+                <td>2025-02-02</td> <!-- 등록일 -->
+            </tr>
+            <tr>
+                <td><input type="checkbox" class="member-checkbox"></td>
+                <th scope="row">4</th> <!-- 번호 -->
+                <td>망곰이랑 콜라보 계획은 없으세요?ㅜㅜ</td> <!-- 제목 -->
+                <td>odrishin</td> <!-- 작성자 -->
+                <td>2025-01-22</td> <!-- 등록일 -->
+            </tr>
+        </tbody>
+        </table>
+    </div>
+    <!-- 페이징 처리 시작 -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <!-- 이전페이지 영역 시작 -->
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'qna:index' %}?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">Previous</a>
+                </li>
+            {% endif %}
+            <!-- 이전페이지 영역 끝 -->
+
+            <!-- 페이지넘버 영역 시작 -->
+            {% for page_number in page_obj.paginator.page_range %}
+                {# 현재페이지 기준 앞뒤 3개까지만 표시 (4 ~ 7 링크 표시) #}
+                {% if page_number >= page_obj.number|add:-3 and page_number <= page_obj.number|add:3 %}
+                    {% if page_number == page_obj.number %}
+                        {# 현재페이지인 경우 #}
+                        <li class="page-item active"><a class="page-link" href="#">{{ page_number }}</a></li>
+                    {% else %}
+                        {# 현재페이지가 아닌 경우 #}
+                        <li class="page-item">
+                            <a class="page-link" href="{% url 'qna:index' %}?page={{ page_number }}">{{ page_number }}</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+
+            {% endfor %}
+            <!-- 페이지넘버 영역 끝 -->
+
+            <!-- 다음페이지 영역 시작 -->
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'qna:index' %}?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            {% endif %}
+            <!-- 다음페이지 영역 끝 -->
+        </ul>
+    </nav>
+    <!-- 페이징 처리 끝 -->
+
+    <a href="{% url 'store:question_create' %}" class="btn btn-primary" style="margin-bottom: 20px;">질문 등록</a>
+
 {% endblock content %}
 
 {% block footer %}
