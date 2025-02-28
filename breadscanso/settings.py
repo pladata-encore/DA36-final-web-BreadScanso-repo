@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     # "allauth.account",
     # "allauth.socialaccount",
     # "allauth.socialaccount.providers.google",
-    # 'corsheaders',  # ♦️지우지마세요♦️
+    'corsheaders',  # ♦️지우지마세요♦️
 ]
 
 MIDDLEWARE = [
@@ -67,8 +67,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+
+CORS_ALLOWED_ORIGINS = [
+    "https://www.breadscanso.shop",
+    "https://breadscanso.shop"
+]
+
+
 
 ROOT_URLCONF = ('breadscanso.urls')
 
