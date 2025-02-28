@@ -7,7 +7,6 @@ from member.models import Member
 def kiosk_main(request):
     return render(request, 'kiosk/kiosk_main.html')  # kiosk_main 템플릿 파일 경로 지정
 
-
 def pay_main(request):
     member = request.user.member
 
@@ -26,6 +25,10 @@ def pay_main(request):
     else:
         payment_infos = PaymentInfo.objects.none()  # 안전하게 빈 쿼리셋 반환
 
+    # 결제 내역에 '취소' 여부 추가
+    for payment in payment_infos:
+        payment.is_canceled = not payment.payment_status
+
     # 페이지네이션 (10개씩 표시)
     paginator = Paginator(payment_infos, 10)  # 한 페이지당 10개씩
     page_number = request.GET.get("page")  # 현재 페이지 번호 가져오기
@@ -36,7 +39,6 @@ def pay_main(request):
         page_obj = paginator.get_page(1)  # 유효하지 않은 페이지 번호라면 첫 페이지로 이동
 
     return render(request, "pay/pay_main.html", {"member": member, "page_obj": page_obj})
-
 
 # def pay_details(request, payment_id):
 # def pay_details(request):
@@ -55,15 +57,6 @@ def pay_details(request, payment_id):
         'store_owner': store_owner
     })
 
-
-# def pay_cancel(request):
-#     # cancels = Purchase.objects.filter(is_cancelled=True).order_by("-date")
-#     # GET 요청 처리 (member 데이터 가져오기)
-#     member = request.user.member
-#
-#     return render(request, 'pay/pay_cancel.html', {"member": member})
-#     # return render(request, "pay/pay_cancel.html", {"cancels": cancels})
-
 def pay_cancel(request):
     member = request.user.member
     store = member.store if member.member_type == "manager" else None
@@ -75,7 +68,6 @@ def pay_cancel(request):
         canceled_payments = []
 
     return render(request, "pay/pay_cancel.html", {"member": member, "cancels": canceled_payments})
-
 
 def pay_member(request):
     # GET 요청 처리
