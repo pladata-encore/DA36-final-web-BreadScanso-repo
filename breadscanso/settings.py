@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     # "allauth.account",
     # "allauth.socialaccount",
     # "allauth.socialaccount.providers.google",
+    # 'corsheaders',  # ♦️지우지마세요♦️
 ]
 
 MIDDLEWARE = [
@@ -66,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = ('breadscanso.urls')
