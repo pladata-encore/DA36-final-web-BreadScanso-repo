@@ -9,28 +9,28 @@
 {% block content %}
     <div class="container my-3">
         <!-- 질문 -->
-        <h1 class="display-6 border-bottom py-2">#{{ question.id }} {{ question.subject }}</h1>
+        <h1 class="display-6 border-bottom py-2">#{{ question.qna_id }} {{ question.title }}</h1>
         <div class="card mt-3">
             <div class="card-body">
                 <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
                 <div class="d-flex justify-content-end">
                     <div class="badge bg-light text-dark p-2 text-start">
-                        <div class="mb-2">{{ question.author.username }}</div>
+                        <div class="mb-2">{{ question.member_id }}</div>
                         <div class="mb-2">{{ question.created_at }}</div>
                         {# 편집된 경우만 출력 #}
-                        {% if question.created_at < question.modified_at %}
-                            <div>{{ question.modified_at }}(편집됨)</div>
+                        {% if question.created_at < question.updated_at %}
+                            <div>{{ question.updated_at }}(편집됨)</div>
                         {% endif %}
                     </div>
                 </div>
                 {# 질문 수정/삭제 #}
                 <div class="my-3">
                     {# 질문 추천 #}
-                    <a href="javascript:void(0)"
-                       data-uri="{% url 'qna:question_vote' question.id  %}"
-                       class="recommend btn btn-sm btn-outline-secondary"> 추천
+{#                    <a href="javascript:void(0)"#}
+{#                       data-uri="{% url 'qna:question_vote' question.id  %}"#}
+{#                       class="recommend btn btn-sm btn-outline-secondary"> 추천#}
 {#                        <span class="badge rounded-pill bg-success">{{question.voter.count}}</span>#}
-                    </a>
+{#                    </a>#}
                     {# 작성자 본인에게만 버튼 노출 #}
                     {% if question.author == request.user %}
                         <a href="{% url 'qna:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">수정</a>
@@ -40,10 +40,10 @@
             </div>
         </div>
         <div class="my-3">
-            <a class="link-primary" href="{% url 'qna:index' %}">목록</a>
+            <a class="link-primary" href="{% url 'store:community_qna' %}">목록</a>
         </div>
         <!-- 답변 목록 시작 -->
-        {% for answer in question.answer_set.all %}
+        {% for answer in answers %}
             <div id="answer_{{ answer.id }}" class="card my-3">
                 <div class="card-body">
                     <span class="badge text-bg-secondary">{{ forloop.counter }}</span>
@@ -52,18 +52,22 @@
                     </div>
                     <div class="d-flex justify-content-end">
                         <div class="badge bg-light text-dark p-2 text-start">
-                            <div class="mb-2">{{ answer.author.username }}</div>
-                            <div>{{ answer.created_at }}</div>
+                            <div class="mb-2">{{ answer.author_id }}</div>
+                            <div class="mb-2">{{ answer.created_at }}</div>
+                            {# 편집된 경우만 출력 #}
+                            {% if answer.created_at < answer.updated_at %}
+                                <div>{{ answer.updated_at }}(편집됨)</div>
+                            {% endif %}
                         </div>
                     </div>
                     {# 답변 수정/삭제 #}
                     <div class="my-3">
                         {# 답변 추천 #}
-                        <a href="javascript:void(0)"
-                           data-uri="{% url 'qna:answer_vote' answer.id  %}"
-                           class="recommend btn btn-sm btn-outline-secondary"> 추천
+{#                        <a href="javascript:void(0)"#}
+{#                           data-uri="{% url 'qna:answer_vote' answer.id  %}"#}
+{#                           class="recommend btn btn-sm btn-outline-secondary"> 추천#}
 {#                            <span class="badge rounded-pill bg-success">{{answer.voter.count}}</span>#}
-                        </a>
+{#                        </a>#}
                         {# 작성자 본인에게만 버튼 노출 #}
                         {% if answer.author == request.user %}
                             <a href="javascript:void(0)"
@@ -84,7 +88,7 @@
 
         <!-- 답변 등록 시작 -->
         {# /qna/answer/create/2 #}
-        <form name="answerCreateFrm" action="{% url 'qna:answer_create' question.id %}" method="post" class="my-3">
+        <form name="answerCreateFrm" action="{% url 'store:answer_create' question.qna_id %}" method="post" class="my-3">
             <div class="mb-3">
                 {# csrf 검증처리 : cross-site request forgery 서버가 생성한 정상적인 폼페이지 검증 #}
                 {% csrf_token %}

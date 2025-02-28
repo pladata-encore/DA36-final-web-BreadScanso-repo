@@ -2,8 +2,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 from datetime import datetime
-
-from django.forms import forms
+from django import forms
+# from django.forms import forms
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
@@ -88,6 +88,17 @@ class QnAReply(models.Model):
     def __str__(self):
         return f"답변 - {self.qna.title}"
 
+### Forms ###
+class QuestionForm(forms.ModelForm):
+
+    class Meta:
+        model = QnA
+        fields = ['title', 'content'] # Form클래스에서 사용할 Model클래스 속성
+        # template에서 사용자에게 노출할 필드명
+        labels = {
+            'title': '제목',
+            'content': '내용',
+        }
 
 # 회원정보수정
 class CustomUser(models.Model):

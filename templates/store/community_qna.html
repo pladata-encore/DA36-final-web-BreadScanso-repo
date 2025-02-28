@@ -12,47 +12,47 @@
 {% endblock sidebar %}
 
 {% block content %}
-	<h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">QnA</h3>
+    <h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">QnA</h3>
     {# 검색어 자동완성 #}
     <div class="container d-flex justify-content-end mb-1">
         <form class="d-flex col-6" role="search">
             <input class="form-control" type="search" id="question-search" placeholder="제목/내용을 검색하세요..." aria-label="Search" autocomplete="off">
         </form>
     </div>
+    <br>
     <div class="container my-1">
 {#        table.table>thead>tr.table-dark>th*4#}
         <table class="table table-striped">
             <thead>
             <tr class="table-dark">
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>작성일시</th>
+                <th scope="col"></th>
+                <th scope="col">번호</th>
+                <th scope="col">제목</th>
+                <th scope="col">작성자</th>
+                <th scope="col">등록일</th>
             </tr>
             </thead>
-            <tbody>
-            {% for question in page_obj %}
-                <tr>
-                    <td>{{ question.id }}</td>
-                    <td>
-                        {# /qna/question/2/ #}
-                        <a href="{% url 'store:question_detail' question_id=question.id %}">{{ question.subject }}</a>
-                        {# 질문별 답변개수 출력 #}
-                        {% if question.answer_set.count > 0 %}
-                            <span class="badge text-bg-info">{{ question.answer_set.count }}</span>
-                        {% endif %} 
-                    </td>
-                    <td>{{ question.author|default:'' }}</td>
-                    <td>{{ question.created_at }}</td>
-                </tr>
+            <tbody class="table-group-divider">
+            {% for qna in page_obj %}
+                {% if forloop.counter <= 10 %}
+                    <tr>
+                        <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+                        <td>{{ qna.qna_id }}</td>
+                        <td>
+                            <a href="{% url 'store:question_detail' qna.qna_id %}" class="text-decoration-none">
+                                {{ qna.title }}
+                            </a>
+                        </td>
+                        <td>{{ qna.member_id }}</td>
+                        <td>{{ qna.created_at }}</td>
+                    </tr>
+                {% endif %}
             {% empty %}
                 <tr>
-                    <td colspan="4" class="text-center">질문이 존재하지 않습니다.</td>
+                    <td colspan="11">등록된 Q&A가 없습니다.</td>
                 </tr>
             {% endfor %}
-
-
-            </tbody>
+        </tbody>
         </table>
     </div>
     <!-- 페이징 처리 시작 -->
@@ -69,7 +69,7 @@
                 </li>
             {% endif %}
             <!-- 이전페이지 영역 끝 -->
-        
+
             <!-- 페이지넘버 영역 시작 -->
             {% for page_number in page_obj.paginator.page_range %}
                 {# 현재페이지 기준 앞뒤 3개까지만 표시 (4 ~ 7 링크 표시) #}
@@ -81,10 +81,10 @@
                         {# 현재페이지가 아닌 경우 #}
                         <li class="page-item">
                             <a class="page-link" href="{% url 'qna:index' %}?page={{ page_number }}">{{ page_number }}</a>
-                        </li>		
-                    {% endif %} 
+                        </li>
+                    {% endif %}
                 {% endif %}
-                
+
             {% endfor %}
             <!-- 페이지넘버 영역 끝 -->
 
@@ -103,33 +103,34 @@
     </nav>
     <!-- 페이징 처리 끝 -->
 
-    <a href="{% url 'store:question_create' %}" class="btn btn-primary">질문 등록</a>
+    <a href="{% url 'store:question_create' %}" class="btn btn-primary" style="margin-bottom: 20px;">질문 등록</a>
+
 {% endblock content %}
 
 {% block script %}
     <!-- 검색어 자동완성 관련 jquery.js, bootstrap-autocomplete.js -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="{% static 'js/bootstrap-autocomplete.js' %}"></script>
-    <script>
-        let results;
-        /**
-         * bootstrap-autocomplete api
-         * https://iqbalfn.github.io/bootstrap-autocomplete/
-         */
-        $('#question-search').autocomplete({
-            filter: '{% url 'store:question_search' %}?query=#QUERY#',
-            preProcess(response){
-                // 검색결과를 autocomplete형식에 맞게 가공
-                results = response.results; // 전연변수 results에 임시로 저장해두고, onPick에서 사용
-                return response.results.map((item) => item.text); // text만 추출해서 배열로 리턴
-            },
-            onPick(input, item) {
-                // 사용자가 주어진 결과를 선택했을때, 해당 질문의 상세페이지로 이동
-                console.log('onPick', input, item); // input#question-search, item(드랍다운으로 제공된 a태그객체)
-                const {id} = results.find((result) => result.text === item.textContent);
-                console.log('id = ', id);
-                location.href = `/qna/question/${id}/`;
-            }
-        });
-    </script>
+{#    <script>#}
+{#        let results;#}
+{#        /**#}
+{#         * bootstrap-autocomplete api#}
+{#         * https://iqbalfn.github.io/bootstrap-autocomplete/#}
+{#         */#}
+{#        $('#question-search').autocomplete({#}
+{#            filter: '{% url 'store:question_search' %}?query=#QUERY#',#}
+{#            preProcess(response){#}
+{#                // 검색결과를 autocomplete형식에 맞게 가공#}
+{#                results = response.results; // 전연변수 results에 임시로 저장해두고, onPick에서 사용#}
+{#                return response.results.map((item) => item.text); // text만 추출해서 배열로 리턴#}
+{#            },#}
+{#            onPick(input, item) {#}
+{#                // 사용자가 주어진 결과를 선택했을때, 해당 질문의 상세페이지로 이동#}
+{#                console.log('onPick', input, item); // input#question-search, item(드랍다운으로 제공된 a태그객체)#}
+{#                const {id} = results.find((result) => result.text === item.textContent);#}
+{#                console.log('id = ', id);#}
+{#                location.href = `/qna/question/${id}/`;#}
+{#            }#}
+{#        });#}
+{#    </script>#}
 {% endblock script %}
