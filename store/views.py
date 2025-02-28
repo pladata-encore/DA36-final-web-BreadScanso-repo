@@ -9,6 +9,8 @@ from member.models import Member
 import json
 from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator, EmptyPage
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 
 def store_main(request):
@@ -222,9 +224,40 @@ def store_map(request):
     }
     return render(request, 'store/store_map.html', context)  # 매장 안내
 
+@csrf_exempt  # CSRF 검사를 비활성화
+@login_required  # 로그인한 사용자만 접근 가능
 def store_map_edit(request):
+    # POST 요청 처리 (AJAX로 받은 데이터를 저장)
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            store_address = data.get('store_address')
+            store_time = data.get('store_time')
+            store_notes = data.get('store_notes')
+
+            member = request.user.member
+            member.store_address = store_address
+            member.store_time = store_time
+            member.store_notes = store_notes
+            member.save()
+
+            return JsonResponse({'status': 'success', 'message': '변경사항이 저장되었습니다.'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    # GET 요청 시 기존 매장의 정보 제공!
     member = request.user.member
-    return render(request, 'store/store_map_edit.html', {"member": member})  # 매장 안내 수정
+    store_address = member.store_address
+    store_time = member.store_time
+    store_notes = member.store_notes
+
+    context = {
+        'member': member,
+        'store_address': store_address,
+        'store_time': store_time,
+        'store_notes': store_notes,
+    }
+    return render(request, 'store/store_map_edit.html', context)
 
 def store_event(request):
     member = request.user.member
