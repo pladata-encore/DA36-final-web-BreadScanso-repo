@@ -42,44 +42,36 @@
     <div class="mb-3">
         <label for="email_id" class="w-100 text-start">* 이메일</label>
         <div class="d-flex">
-            <input type="text" id="email_id" class="form-control"
-                   value="{% if member.email %}{{ member.email}}{% endif %}">
+            <input type="text" id="email_id" class="form-control" value="{{ email_parts.id }}">
             <span class="mx-2">@</span>
-            <select id="email_domain" class="form-control">
-                <option value="naver.com">naver.com</option>
-                <option value="gmail.com">gmail.com</option>
-                <option value="daum.net">daum.net</option>
-                <option value="직접입력">직접입력</option>
-            </select>
-            <input type="text" id="email_custom" class="form-control d-none" placeholder="직접입력">
-        </div>
-        <input type="hidden" name="email" id="email_full">
+             <select id="email_domain" class="form-control">
+            <option value="" disabled selected>도메인 선택</option>
+            <option value="naver.com" {% if email_parts.domain == 'naver.com' %}selected{% endif %}>naver.com</option>
+            <option value="gmail.com" {% if email_parts.domain == 'gmail.com' %}selected{% endif %}>gmail.com</option>
+            <option value="daum.net" {% if email_parts.domain == 'daum.net' %}selected{% endif %}>daum.net</option>
+            <option value="직접입력" {% if email_parts.domain and email_parts.domain not in 'naver.com,gmail.com,daum.net' %}selected{% endif %}>직접입력</option>
+        </select>
+        <input type="text" id="email_custom" class="form-control {% if not email_parts.domain or email_parts.domain in 'naver.com,gmail.com,daum.net' %}d-none{% endif %}"
+               placeholder="직접입력" value="{% if email_parts.domain and email_parts.domain not in 'naver.com,gmail.com,daum.net' %}{{ email_parts.domain }}{% endif %}">
     </div>
+    <input type="hidden" name="email" id="email_full" value="{{ member.email }}">
+</div>
     <br>
-    <div class="d-flex">
-            <div class="dropdown me-1">
-                <button id="ageDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    {% if member.age_group %}{{ member.age_group }}{% else %}연령대{% endif %}
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#" onclick="setAge('10대')">10대</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="setAge('20대')">20대</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="setAge('30대')">30대</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="setAge('40대')">40대</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="setAge('50대')">50대</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="setAge('60대 이상')">60대 이상</a></li>
-                </ul>
-            </div>
-            <div class="dropdown">
-                <button id="sexDropdownBtn" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    {% if member.sex %}{{ member.sex }}{% else %}성별{% endif %}
-                </button>
-
-            </div>
+        <div class="mb-3 text-start">
+            <label class="w-100 text-start">연령대</label><br>
+            <input type="radio" name="age_group" value="10" {% if member.age_group == '10' or member.age_group == 10 or member.age_group == '10대' %}checked{% endif %}> 10대 &nbsp;
+            <input type="radio" name="age_group" value="10" {% if member.age_group == '20' or member.age_group == 20 or member.age_group == '20대' %}checked{% endif %}> 20대 &nbsp;
+            <input type="radio" name="age_group" value="10" {% if member.age_group == '30' or member.age_group == 30 or member.age_group == '30대' %}checked{% endif %}> 30대 &nbsp;
+            <input type="radio" name="age_group" value="10" {% if member.age_group == '40' or member.age_group == 40 or member.age_group == '40대' %}checked{% endif %}> 40대 &nbsp;
+            <input type="radio" name="age_group" value="10" {% if member.age_group == '50' or member.age_group == 50 or member.age_group == '50대' %}checked{% endif %}> 50대 &nbsp;
+            <input type="radio" name="age_group" value="10" {% if member.age_group == '60' or member.age_group == 60 or member.age_group == '60대' %}checked{% endif %}> 60대 이상 &nbsp;
         </div>
 
-        <input type="hidden" name="age_group" id="age_group" value="{% if member %}{{ member.age_group }}{% endif %}">
-        <input type="hidden" name="sex" id="sex" value="{% if member %}{{ member.sex }}{% endif %}">
+        <div class="mb-3 text-start">
+            <label class="w-100 text-start">성별</label><br>
+                <input type="radio" name="sex" value="M" {% if member.sex == 'M' %}checked{% endif %}> 남성
+                <input type="radio" name="sex" value="F" {% if member.sex == 'F' %}checked{% endif %}> 여성
+        </div>
 
         {% if error %}
             <div class="alert alert-danger">{{ error }}</div>
@@ -87,6 +79,7 @@
 
         <br>
         <button type="submit" id="signupButton" class="btn btn-primary">수정하기</button>
+        <br><br>
 
         <div class="modal fade" id="signupSuccessModal" tabindex="-1" aria-labelledby="signupSuccessLabel" aria-hidden="true">
             <div class="modal-dialog">

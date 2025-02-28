@@ -1,0 +1,34 @@
+{% extends 'layout/main/main_base.html' %}
+{% load static %}
+
+{% block title %}이벤트{% endblock title %}
+
+{% block header %}
+    {% include 'layout/main/main_header.html' %}
+{% endblock header %}
+
+{% block content %}
+    <body class="text-dark py-3" style="background-color: #ffffff;">
+    <form method="POST" action="{% url 'main:signup' %}" enctype="multipart/form-data">
+    <br><br>
+    <div class="brand-logo">
+        <img src="{% static 'images/event_text.png' %}" class="rounded mx-auto d-block" alt="이벤트">
+    </div>
+    <br><br>
+    <div>
+      <img src="{% static 'images/event_detail.png' %}" class="card-img-top" alt="이벤트상세이미지">
+    </div>
+    <br><br>
+    {# 목록 왼쪽 버튼 정렬 #}
+    <div style="flex-shrink: 0;">
+        <button class="btn btn-warning" type="button" onclick="location.href='{% url 'event_main' %}'">목록</button>
+    </div>
+    <br><br>
+    </form>
+{% endblock content %}
+
+{% block footer %}
+    {% include 'layout/main/main_footer.html' %}
+{% endblock footer %}
+
+

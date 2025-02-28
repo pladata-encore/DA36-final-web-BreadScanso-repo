@@ -56,12 +56,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function setAge(age) {
-    document.getElementById('ageDropdownBtn').textContent = age;
-    document.getElementById('age_group').value = age;
-}
+document.addEventListener("DOMContentLoaded", function() {
+    // 연령대 설정
+    var ageGroup = "{{ member.age_group }}";
+    var ageRadios = document.getElementsByName("age_group");
 
-function setSex(sex) {
-    document.getElementById('sexDropdownBtn').textContent = sex;
-    document.getElementById('gender').value = sex;
-}
+    ageRadios.forEach(function(radio) {
+        if (radio.value === ageGroup) {
+            radio.checked = true;
+        }
+    });
+
+    // 성별 설정
+    var sex = "{{ member.sex }}";
+    var sexRadios = document.getElementsByName("sex");
+
+    sexRadios.forEach(function(radio) {
+        if (radio.value === sex) {
+            radio.checked = true;
+        }
+    });
+});

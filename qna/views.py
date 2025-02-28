@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage
-from member.models import QnAReply
+from member.models import QnA
 
 
 def qna_main(request):
-    qnas = QnAReply.objects.all().order_by('-created_at')
+    qnas = QnA.objects.all().order_by('-created_at')
 
     # 페이지당 항목 수 (고정)
     qnas_per_page = 10

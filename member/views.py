@@ -34,7 +34,6 @@ def member_edit(request):
     if request.method == "POST":
         try:
             member = request.user.member  # 현재 로그인한 회원 정보 가져오기
-            email_id = member.email.split('@')[0] if member.email else ''
 
             # 회원 정보 업데이트
             member.name = request.POST.get('name')
@@ -43,11 +42,9 @@ def member_edit(request):
             member.age_group = request.POST.get('age_group')
             member.sex = request.POST.get('sex')
 
-            # **프로필 이미지 S3 업로드**
+            # 프로필 이미지 처리
             if 'profile_image' in request.FILES:
-                uploaded_image = request.FILES['profile_image']
-                s3_url = upload_profile_image_to_s3(uploaded_image)  # ✅ S3에 업로드하고 URL 받기
-                member.profile_image = s3_url  # ✅ DB에 S3 URL 저장
+                member.profile_image = request.FILES['profile_image']
 
             member.save()  # 변경 사항 저장
 
@@ -64,7 +61,17 @@ def member_edit(request):
 
     # GET 요청 처리 (회원 정보 페이지 렌더링)
     member = request.user.member
-    return render(request, 'member/member_edit.html', {'member': member})
+
+    # 이메일 주소 분리하기
+    email_parts = {'id': '', 'domain': ''}
+    if member.email and '@' in member.email:
+        email_id, email_domain = member.email.split('@', 1)
+        email_parts = {'id': email_id, 'domain': email_domain}
+
+    return render(request, 'member/member_edit.html', {
+        'member': member,
+        'email_parts': email_parts
+    })
 
 
 # 아이디 중복확인

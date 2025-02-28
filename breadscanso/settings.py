@@ -50,7 +50,12 @@ INSTALLED_APPS = [
     'stock',
     'store',
     'store_info',
-    'ebhealthcheck.apps.EBHealthCheckConfig' # eb 상태 관리(CI/CD 안정화)
+    'ebhealthcheck.apps.EBHealthCheckConfig', # eb 상태 관리(CI/CD 안정화)
+    # allauth 앱 추가
+    # "allauth",
+    # "allauth.account",
+    # "allauth.socialaccount",
+    # "allauth.socialaccount.providers.google",
 ]
 
 MIDDLEWARE = [

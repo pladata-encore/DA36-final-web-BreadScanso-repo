@@ -9,13 +9,11 @@
 
 {% block content %}
     <h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">QnA</h3>
-    {# 검색어 자동완성 #}
-    <div class="container d-flex justify-content-end mb-1">
-        <form class="d-flex col-6" role="search">
-            <input class="form-control" type="search" id="question-search" placeholder="제목/내용을 검색하세요..." aria-label="Search" autocomplete="off">
-        </form>
+    <!-- 검색 -->
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; justify-content: flex-end;">
+        <input type="search" id="searchMember" placeholder="검색어를 입력해주세요" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+        <button id="search_button" type="button" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
     </div>
-    <br>
     <div class="container my-1">
 {#        table.table>thead>tr.table-dark>th*4#}
         <table class="table table-striped">
@@ -29,49 +27,21 @@
             </tr>
             </thead>
             <tbody class="table-group-divider">
-{#            {% for qna in page_obj %}#}
-{#                    {% if forloop.counter <= 10 %}#}
-{#                        <tr>#}
-{#                            <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>#}
-{#                            <td>{{ qna.qna_id }}</td>#}
-{#                            <td>{{ qna.title }}</td>#}
-{#                            <td>{{ qna.member_id }}</td>#}
-{#                            <td>{{ qna.created_at }}</td>#}
-{#                        </tr>#}
-{#                    {% endif %}#}
-{#            {% empty %}#}
-{#                <tr>#}
-{#                    <td colspan="11">등록된 공지가 없습니다.</td>#}
-{#                </tr>#}
-{#            {% endfor %}#}
-            <tr>
-                <td><input type="checkbox" class="member-checkbox"></td>
-                <th scope="row">1</th> <!-- 번호 -->
-                <td>포인트 적립 문의</td> <!-- 제목 -->
-                <td>shqkel</td> <!-- 작성자 -->
-                <td>2025-02-26</td> <!-- 등록일 -->
-            </tr>
-            <tr>
-                <td><input type="checkbox" class="member-checkbox"></td>
-                <th scope="row">2</th> <!-- 번호 -->
-                <td>B점에서도 생일자 혜택 받을수 있나요?</td> <!-- 제목 -->
-                <td>mark99</td> <!-- 작성자 -->
-                <td>2025-02-21</td> <!-- 등록일 -->
-            </tr>
-            <tr>
-                <td><input type="checkbox" class="member-checkbox"></td>
-                <th scope="row">3</th> <!-- 번호 -->
-                <td>신제품 중에 뭐가 맛있어요?</td> <!-- 제목 -->
-                <td>lottewin</td> <!-- 작성자 -->
-                <td>2025-02-02</td> <!-- 등록일 -->
-            </tr>
-            <tr>
-                <td><input type="checkbox" class="member-checkbox"></td>
-                <th scope="row">4</th> <!-- 번호 -->
-                <td>망곰이랑 콜라보 계획은 없으세요?ㅜㅜ</td> <!-- 제목 -->
-                <td>odrishin</td> <!-- 작성자 -->
-                <td>2025-01-22</td> <!-- 등록일 -->
-            </tr>
+            {% for qna in page_obj %}
+                {% if forloop.counter <= 10 %}
+                    <tr>
+                        <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+                        <td>{{ qna.qna_id }}</td>
+                        <td>{{ qna.title }}</td>
+                        <td>{{ qna.member_id }}</td>
+                        <td>{{ qna.created_at }}</td>
+                    </tr>
+                {% endif %}
+            {% empty %}
+                <tr>
+                    <td colspan="11">등록된 Q&A가 없습니다.</td>
+                </tr>
+            {% endfor %}
         </tbody>
         </table>
     </div>

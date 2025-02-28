@@ -4,6 +4,102 @@ body.main-index {
     background-color: #F2D0A9;  /* 원하는 배경색 */
 }
 /* ----------------------------------------------------------------------- */
+/* 브랜드소개 로고 */
+.brand-logo {
+    display: flex; /* flexbox를 사용하여 중앙 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    width: 100%;  /* 부모 요소의 100% 너비로 설정 */
+    height: 100px; /* 원하는 높이로 설정 */
+}
+
+.brand-logo img {
+    width: 400px;  /* 이미지 크기 조정 */
+    height: auto;  /* 원본 비율 유지 */
+}
+.brand-logo-img img{
+    width: 1000px;  /* 이미지 크기 조정 */
+    height: 500px;  /* 원본 비율 유지 */
+}
+
+.brand-text img {
+    width: 1000px;  /* 이미지 크기 조정 */
+    height: 300px;  /* 원본 비율 유지 */
+}
+/* ----------------------------------------------------------------------- */
+/* 브랜드소개 하단 4개의 네모박스(카드) */
+.card-container {
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    gap: 40px; /* 카드 간격 */
+    flex-wrap: wrap; /* 여러 줄 정렬 */
+}
+
+.card {
+    width: 13rem; /* 카드 너비 조절 */
+    height: auto; /* 높이 자동 조절 */
+    text-align: center; /* 내부 텍스트 중앙 정렬 */
+    /*padding: 10px; !* 카드 내부 여백 *!*/
+    border-radius: 10px; /* 둥근 테두리 */
+    background-color: #f8f9fa; /* 카드 배경 색상 */
+    /*box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); !* 카드 그림자 *!*/
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 내부 요소 중앙 정렬 */
+}
+
+.card-img {
+    width: 50px; /* 이미지 크기 줄이기 */
+    height: 50px;
+    margin-bottom: 10px; /* 이미지와 텍스트 사이 간격 */
+    object-fit: contain; /* 비율 유지하면서 축소 */
+}
+
+.card-title {
+    font-size: 0.9rem; /* 제목 크기 줄이기 */
+    font-weight: bold;
+}
+
+.card-subtitle {
+    font-size: 0.75rem; /* 부제목 크기 줄이기 */
+    color: #6c757d;
+    text-align: center;
+}
+/* ----------------------------------------------------------------------- */
+/* 이벤트 이미지 설정 */
+/*.event-img img {*/
+/*    width: 100px; !* 이미지 크기 줄이기 *!*/
+/*    height: auto;*/
+/*    margin-bottom: 10px; !* 이미지와 텍스트 사이 간격 *!*/
+/*    object-fit: contain; !* 비율 유지하면서 축소 *!*/
+/*    border-radius: 10px; !* 둥근 테두리 *!*/
+
+/* 이벤트 제목 설정 */
+.event-card-title {
+    font-size: 1rem; /* 제목 크기 줄이기 */
+    font-weight: bold;
+    border-radius: 10px; /* 둥근 테두리 */
+
+}
+
+.event-card-container {
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    gap: 20px; /* 카드 간격 */
+    flex-wrap: wrap; /* 여러 줄 정렬 */
+    align-items: flex-start; /* 세로 정렬을 윗줄에 맞춤 */
+
+}
+
+.event-card {
+    width: 18rem; /* 카드 너비 조절 */
+    height: auto; /* 카드 높이 자동 조절 */
+}
+
+/* ----------------------------------------------------------------------- */
 /* 최상단 텍스트 로고 이미지 설정 */
 header .logo-container {
     display: flex;         /* 플렉스박스로 정렬 */
@@ -28,7 +124,7 @@ body.main-index .center-text {
     text-align: center;  /* 텍스트 가운데 정렬 */
 }
 /* ----------------------------------------------------------------------- */
-/* 슬라이드 설정 */
+/* 메인홈 케러셀 설정 */
 .carousel-item {
     /*position: relative; !* 기본값 유지 *!*/
     display: flex;
@@ -779,42 +875,69 @@ body.kiosk-payment-completed {
 /*--정석 start--*/
 /* ----------------------------------------------------------------------- */
 /*-- 메인 메뉴 carousel 설정 --*/
-body.menu-main.best-carousel-item {
+/* 공통 캐러셀 스타일 */
+.new-carousel-container,
+.product-carousel-container,
+.best-carousel-container {
+    position: relative;
+    justify-content: center;
+    margin: auto;
+    overflow: visible;
+}
+
+.carousel-wrapper {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-track,
+.new-carousel-track,
+.product-carousel-track,
+.best-carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.product-name {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* new & 제품 캐러셀 */
+.new-carousel-item,
+.product-carousel-item {
     flex: 0 0 20%; /* 5개씩 보이도록 설정 */
     padding: 10px;
     text-align: center;
     display: flex;
-    flex-direction: column; /* 세로로 정렬 */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: transform 0.3s ease, z-index 0.3s;
+    cursor: pointer;
 }
 
-.best-carousel-container {
-    position: relative;
-    max-width: 1000px;
-    margin: auto;
-    overflow: visible;  /* 버튼이 잘리지 않도록 변경 */
-}
-
-.best-carousel-wrapper {
-    display: flex;
+.new-carousel-item img,
+.product-carousel-item img {
     width: 100%;
-    overflow: hidden;  /* 캐러셀 이미지 부분만 잘리도록 유지 */
-    position: relative;  /* 버튼 위치 기준 */
+    height: auto;
+    border-radius: 10px;
 }
 
-.best-carousel-track {
-    display: flex;
-}
-
+/* best 캐러셀 (초기화 때문에 따로 설정) */
 .best-carousel-item {
-    flex: 0 0 20%; /* 한 번에 5개만 보이도록 설정 */
+    flex: 0 0 20%; /* 5개씩 보이도록 설정 */
     padding: 10px;
     text-align: center;
     display: flex;
-    flex-direction: column; /* 세로로 정렬 */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: transform 0.3s ease, z-index 0.3s;
+    cursor: pointer;
 }
 
 .best-carousel-item img {
@@ -823,32 +946,42 @@ body.menu-main.best-carousel-item {
     border-radius: 10px;
 }
 
-.product-name {
-    margin-top: 12px; /* 이미지와 이름 사이에 여백 추가 */
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center; /* 이름 가운데 정렬 */
-}
-
+/* 버튼 스타일 (각 캐러셀별 구분) */
+.new-carousel-btn,
+.product-carousel-btn,
 .best-carousel-btn {
     position: absolute;
     top: 50%;
-    transform: translateY(-70%); /* 수직 중앙 정렬 */
+    transform: translateY(-80%);
     color: black;
     border: none;
     padding: 10px;
+    font-size: 24px;
     cursor: pointer;
-    z-index: 10;
-    font-size: 24px; /* 버튼 크기 조정 */
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    background-color: unset;
 }
 
+.new-carousel-btn.left,
+.product-carousel-btn.left,
 .best-carousel-btn.left {
-    left: -50px; /* 왼쪽 버튼을 캐러셀 바깥으로 이동 */
+    left: -50px;
 }
 
+.new-carousel-btn.right,
+.product-carousel-btn.right,
 .best-carousel-btn.right {
-    right: -50px; /* 오른쪽 버튼을 캐러셀 바깥으로 이동 */
+    right: -50px;
 }
+
+.new-carousel-btn:hover,
+.product-carousel-btn:hover,
+.best-carousel-btn:hover {
+    background: lightgray;
+}
+
 /* ----------------------------------------------------------------------- */
 /* 메뉴 메인 전체 제품 grid styling */
 .product-grid {
@@ -857,11 +990,39 @@ body.menu-main.best-carousel-item {
     gap: 20px;
 }
 
+/* 제품 그리드 스타일 */
+.product-grid .card {
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.product-grid .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.product-grid .card-img-top {
+    height: 100%;
+    object-fit: cover;
+}
+
+#load-more-btn {
+    padding: 8px 20px;
+    background-color: #007bff;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+#load-more-btn:hover {
+    background-color: #0056b3;
+}
+
 /* ----------------------------------------------------------------------- */
 /* 제품 상세 페이지 */
 /* 전체 컨테이너 중앙 정렬 */
 .product-detail-container {
-    max-width: 80%;
+    max-width: 100%;
     margin: 20px auto;
     padding: 20px;
 }

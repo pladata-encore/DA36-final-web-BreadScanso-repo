@@ -2,8 +2,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 from datetime import datetime
-
-from django.forms import forms
+from django import forms
+# from django.forms import forms
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
@@ -47,7 +47,7 @@ class EventPost(models.Model):  # 이벤트 게시판 글 테이블
     title = models.CharField(max_length=30)  # 제목
     created_at = models.DateTimeField(auto_now_add=True)  # 등록일시
     updated_at = models.DateTimeField(auto_now=True)  # 수정일시
-    content = models.TextField()  # 내용
+    content = models.ImageField(upload_to='', null=True, blank=True) # 이미지 내용
     view_count = models.PositiveIntegerField(default=0)  # 조회수
     is_pinned = models.BooleanField(default=False)  # 상단 고정 여부
     store = models.CharField(max_length=50, null=True, choices=[("A", "Store A"), ("B", "Store B")])  # 매장
@@ -76,6 +76,7 @@ class QnAReply(models.Model):
     content = models.TextField()  # 답변 내용
     created_at = models.DateTimeField(auto_now_add=True)  # 등록일시, 처음 생성되면 변경 X
     updated_at = models.DateTimeField(auto_now=True)  # 수정일시, 수정될 때마다 업데이트
+    author_id = models.CharField(max_length=50, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.qna:
@@ -86,6 +87,23 @@ class QnAReply(models.Model):
 
     def __str__(self):
         return f"답변 - {self.qna.title}"
+
+### Forms ###
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = QnA
+        # fields = ['title', 'content', 'store']  # store 필드는 Model에서 자동으로 가져옴
+        fields = ['title', 'content']
+        labels = {
+            'title': '제목',
+            'content': '내용',
+            # 'store': '매장선택'
+        }
+
+    # def __init__(self, *args, **kwargs):
+    #     stores = kwargs.pop('stores', [])  # 🔥 추가: 전달된 stores 가져오기
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['store'].choices = [("전체", "전체")] + [(store["id"], store["name"]) for store in stores]
 
 
 # 회원정보수정

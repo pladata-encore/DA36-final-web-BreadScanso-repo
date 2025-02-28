@@ -30,19 +30,8 @@
         width: 50px;
     }
 
-    /* 검색창 위치 */
-    #search-container {
-        position: absolute;
-        top: 150px;
-        right: 20px;
-    }
-
     .store-menu-table tbody tr {
         cursor: pointer;
-    }
-
-    .store-menu-table tbody tr:hover {
-        background-color: gray;
     }
 
     /* 반응형 레이아웃 */
@@ -54,7 +43,26 @@
             margin: 10px 0; /* 버튼 간 간격 추가 */
         }
     }
-    </style>
+
+    /* 정렬 버튼 스타일 */
+    .sort-container {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        margin-left: 5px;
+    }
+    .sort-btn {
+        cursor: pointer;
+        font-size: 12px;
+        text-decoration: none;
+        color: #000;
+        line-height: 1;
+    }
+    .sort-btn.active {
+        color: #007bff;
+        font-weight: bold;
+    }
+</style>
 
     <h3 style="margin-bottom: 50px;" class="text-center">메뉴관리</h3>
 
@@ -68,26 +76,35 @@
         </form>
       </div>
     </div>
-    {##}
-    {#        <form method="POST" enctype="multipart/form-data" action="{% url 'menu:menu_store_new_menu' %}">#}
-    {#    {% csrf_token %}#}
 
     <!-- 테이블 -->
-    <table class="table store-menu-table">
+    <table class="table store-menu-table table-hover">
         <thead>
             <tr>
                 <th class="checkbox-column"><label for="select-all"></label><input type="checkbox" id="select-all"></th>
                 <th scope="col">제품 아이디</th>
-                <th scope="col">제품명</th>
-                <th scope="col">매장
-{#                    <select class="form-select form-select-sm" name="store" id="store-filter" onchange="filterStore()">#}
-{#                        <option value="" style="text-align: center;">전체 매장</option>#}
-{#                        <option value="A" style="text-align: center;" {% if request.GET.store == "A" %}selected{% endif %}>서초점 (A)</option>#}
-{#                        <option value="B" style="text-align: center;" {% if request.GET.store == "B" %}selected{% endif %}>강남점 (B)</option>#}
-{#                    </select>#}
+                <th scope="col">
+                    제품명
+                    <span class="sort-container">
+                        <a href="{% if sort_by == 'item_name' and sort_order == 'asc' %}?sort_by=none{% else %}?sort_by=item_name&sort_order=asc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'item_name' and sort_order == 'asc' %}active{% endif %}">▲</a>
+                        <a href="{% if sort_by == 'item_name' and sort_order == 'desc' %}?sort_by=none{% else %}?sort_by=item_name&sort_order=desc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'item_name' and sort_order == 'desc' %}active{% endif %}">▼</a>
+                    </span>
                 </th>
-                <th scope="col">판매가</th>
-                <th scope="col">원가</th>
+                <th scope="col">매장</th>
+                <th scope="col">
+                    판매가
+                    <span class="sort-container">
+                        <a href="{% if sort_by == 'sale_price' and sort_order == 'asc' %}?sort_by=none{% else %}?sort_by=sale_price&sort_order=asc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'sale_price' and sort_order == 'asc' %}active{% endif %}">▲</a>
+                        <a href="{% if sort_by == 'sale_price' and sort_order == 'desc' %}?sort_by=none{% else %}?sort_by=sale_price&sort_order=desc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'sale_price' and sort_order == 'desc' %}active{% endif %}">▼</a>
+                    </span>
+                </th>
+                <th scope="col">
+                    원가
+                    <span class="sort-container">
+                        <a href="{% if sort_by == 'cost_price' and sort_order == 'asc' %}?sort_by=none{% else %}?sort_by=cost_price&sort_order=asc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'cost_price' and sort_order == 'asc' %}active{% endif %}">▲</a>
+                        <a href="{% if sort_by == 'cost_price' and sort_order == 'desc' %}?sort_by=none{% else %}?sort_by=cost_price&sort_order=desc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'cost_price' and sort_order == 'desc' %}active{% endif %}">▼</a>
+                    </span>
+                </th>
                 <th scope="col">제품 설명</th>
                 <th scope="col">
                     <select class="form-select form-select-sm" name="category" id="category-filter">
@@ -146,6 +163,11 @@
         </tbody>
     </table>
 
+    <!-- 총 항목 수 표시 -->
+    <div class="text-muted small mb-2 mt-2">
+        총 <strong>{{ total_items }}</strong>개의 제품이 있습니다.
+    </div>
+    
     <!-- 삭제 및 신규등록 버튼 -->
     <div class="d-flex justify-content-between align-items-center mt-3" style="width: 100%;">
         <button id="delete-btn" class="btn btn-danger">삭제</button>
@@ -154,32 +176,30 @@
                 <!-- 이전 버튼 -->
                 <li class="page-product {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
                     {% if page_obj.has_previous %}
-                        <a class="page-link rounded-start-2" href="?page={{ page_obj.previous_page_number }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo; 이전</span>
+                        <a class="page-link rounded-start-2" href="?page={{ page_obj.previous_page_number }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" aria-label="Previous">
+                            <span aria-hidden="true">« 이전</span>
                         </a>
                     {% else %}
                         <span class="page-link rounded-start-2" aria-label="Previous">
-                            <span aria-hidden="true">&laquo; 이전</span>
+                            <span aria-hidden="true">« 이전</span>
                         </span>
                     {% endif %}
                 </li>
-    
                 <!-- 페이지 번호들 -->
                 {% for num in page_range %}
                     <li class="page-product {% if page_obj.number == num %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}">{{ num }}</a>
+                        <a class="page-link" href="?page={{ num }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}">{{ num }}</a>
                     </li>
                 {% endfor %}
-    
                 <!-- 다음 버튼 -->
                 <li class="page-product {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
                     {% if page_obj.has_next %}
-                        <a class="page-link rounded-end-2" href="?page={{ page_obj.next_page_number }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" aria-label="Next">
-                            <span aria-hidden="true">다음 &raquo;</span>
+                        <a class="page-link rounded-end-2" href="?page={{ page_obj.next_page_number }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" aria-label="Next">
+                            <span aria-hidden="true">다음 »</span>
                         </a>
                     {% else %}
                         <span class="page-link rounded-end-2" aria-label="Next">
-                            <span aria-hidden="true">다음 &raquo;</span>
+                            <span aria-hidden="true">다음 »</span>
                         </span>
                     {% endif %}
                 </li>
@@ -213,13 +233,3 @@
     {{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
     <script src="{% static 'js/menu_store_main.js' %}"></script>
 {% endblock script %}
-
-{##}
-{#    <div class="mb-3">#}
-{#        <label for="item_image">제품 이미지</label>#}
-{#        <input type="file" name="item_image" class="form-control">#}
-{#    </div>#}
-{#    <button type="submit" class="btn btn-primary">등록</button>#}
-{#</form>#}
-{##}
-{#{% endblock %}#}
