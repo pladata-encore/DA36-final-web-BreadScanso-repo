@@ -23,7 +23,7 @@ body.main-index {
 }
 
 .brand-text img {
-    width: 800px;  /* 이미지 크기 조정 */
+    width: 1000px;  /* 이미지 크기 조정 */
     height: 300px;  /* 원본 비율 유지 */
 }
 /* ----------------------------------------------------------------------- */
@@ -67,6 +67,27 @@ body.main-index {
     font-size: 0.75rem; /* 부제목 크기 줄이기 */
     color: #6c757d;
     text-align: center;
+}
+/* ----------------------------------------------------------------------- */
+/* 이벤트 이미지 설정 */
+/*.event-img img {*/
+/*    width: 100px; !* 이미지 크기 줄이기 *!*/
+/*    height: auto;*/
+/*    margin-bottom: 10px; !* 이미지와 텍스트 사이 간격 *!*/
+/*    object-fit: contain; !* 비율 유지하면서 축소 *!*/
+/*    border-radius: 10px; !* 둥근 테두리 *!*/
+
+/* 이벤트 제목 설정 */
+.event-card-title {
+    font-size: 1rem; /* 제목 크기 줄이기 */
+    font-weight: bold;
+}
+
+.event-card-container {
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    gap: 20px; /* 카드 간격 */
+    flex-wrap: wrap; /* 여러 줄 정렬 */
 }
 
 /* ----------------------------------------------------------------------- */
