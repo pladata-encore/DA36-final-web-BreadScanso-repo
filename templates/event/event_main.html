@@ -26,17 +26,14 @@
 
     <br><br><br><br><br>
     <div class="event-card-container">
-        <div class="row row-cols-1 row-cols-md-4 g-3">
-          <div class="col">
-            <div class="card h-100">
-              <img src="{% static 'images/event1.jpg' %}" class="card-img-top" alt="이벤트1">
-              <div class="card-body">
-                <h6 class="event-card-title">🥐 크루아상 & 크림 크루아상 ☁️</h6>
-              </div>
+        <a href="{% url 'event_detail'%}" class="card event-card text-decoration-none">
+            <img src="{% static 'images/event1.jpg' %}" class="card-img-top" alt="이벤트1">
+            <div class="card-body">
+                <h6 class="event-card-title">🍓 베리스페셜 🍰 상큼달콤한 딸기 케이크 ❤️</h6>
             </div>
-          </div>
+        </a>
           <div class="col">
-            <div class="card h-100">
+            <div class="card h-100 event-card">
               <img src="{% static 'images/event2.jpg' %}" class="card-img-top" alt="이벤트2">
               <div class="card-body">
                 <h6 class="event-card-title">🍞 부드럽고 촉촉한 식빵 🧡</h6>
@@ -44,7 +41,7 @@
             </div>
           </div>
           <div class="col">
-            <div class="card h-100">
+            <div class="card h-100 event-card">
               <img src="{% static 'images/event3.jpg' %}" class="card-img-top" alt="이벤트3">
               <div class="card-body">
                 <h6 class="event-card-title">🥖 겉바속촉 라라나 바게트 🥖</h6>
@@ -52,7 +49,7 @@
             </div>
           </div>
           <div class="col">
-            <div class="card h-100">
+            <div class="card h-100 event-card">
               <img src="{% static 'images/event4.jpg' %}" class="card-img-top" alt="이벤트4">
               <div class="card-body">
                 <h6 class="event-card-title">🍫 달콤 촉촉한 초코 컵케이크 🤎</h6>
@@ -60,7 +57,7 @@
             </div>
           </div>
           <div class="col">
-            <div class="card h-100">
+            <div class="card h-100 event-card">
               <img src="{% static 'images/event5.jpg' %}" class="card-img-top" alt="이벤트5">
               <div class="card-body">
                 <h6 class="event-card-title">🤎 이것이 까눌레 🤎</h6>
@@ -68,15 +65,15 @@
             </div>
           </div>
           <div class="col">
-            <div class="card h-100">
-              <img src="{% static 'images/event6.jpg' %}" class="card-img-top" alt="이벤트6">
+            <div class="card h-100 event-card">
+              <img src="{% static 'images/event9.jpg' %}" class="card-img-top" alt="이벤트6">
               <div class="card-body">
-                <h5 class="event-card-title">🫓 포근 쫀득한 효모빵 💛</h5>
+                <h5 class="event-card-title">🥐 크루아상 & 크림 크루아상 ☁️</h5>
               </div>
             </div>
           </div>
           <div class="col">
-            <div class="card h-100">
+            <div class="card h-100 event-card">
               <img src="{% static 'images/event7.jpg' %}" class="card-img-top" alt="이벤트7">
               <div class="card-body">
                 <h5 class="event-card-title">🍓 새콤달콤 딸기 케이크 🍰</h5>
@@ -84,7 +81,7 @@
             </div>
           </div>
           <div class="col">
-            <div class="card h-100">
+            <div class="card h-100 event-card">
               <img src="{% static 'images/event8.jpg' %}" class="card-img-top" alt="이벤트8">
               <div class="card-body">
                 <h5 class="event-card-title">🥯 앙버터 베이글 🧈</h5>
@@ -95,22 +92,6 @@
     <br><br>
     </div>
 
-    {#  하단 페이지 넘김 버튼  #}
-    <nav aria-label="Page navigation" style="margin-top:10%;">
-        <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-                <a class="page-link">Previous</a>
-            </li>
-            <li class="page-item active" aria-current="page">
-                <a class="page-link" href="#">1</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-            </li>
-        </ul>
-    </nav>
 
 </form>
 {% endblock content %}
