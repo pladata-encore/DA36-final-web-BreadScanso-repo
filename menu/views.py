@@ -11,13 +11,61 @@ from .utils import upload_product_image_to_s3
 
 # 소비자 화면 메뉴 정보 페이지
 def menu_main(request):
-    items = Item.objects.filter(show='1')
-    best_items = []  # best=1인 아이템을 저장할 리스트
-    for item in items:
-        if item.best == 1 and item.show == 1:
-            best_items.append(item)  # best 컬럼이 1인 아이템만 저장
-    return render(request, 'menu/menu_main.html', {'items': items, 'best_items': best_items})
+    selected_store = request.GET.get('store', '')
+    category_filter = request.GET.get('category', '')
 
+    # 기본 쿼리: show=1인 아이템
+    items_query = Item.objects.filter(show=1)
+    new_items_query = Item.objects.filter(show=1, new=1)
+
+    # 매장이 선택되었다면 필터링
+    if selected_store:
+        items_query = items_query.filter(store=selected_store).order_by('item_name')
+        new_items_query = new_items_query.filter(store=selected_store)
+
+    # 카테고리 필터링 추가
+    if category_filter:
+        items_query = items_query.filter(category=category_filter)
+
+    # 중복된 item_name 제거 로직 (매장 선택 전용)
+    def get_unique_items(query):
+        seen_names = set()
+        unique_items = []
+        for item in query:
+            if item.item_name not in seen_names:
+                seen_names.add(item.item_name)
+                unique_items.append(item)
+        return unique_items
+
+    # 매장 선택 여부에 따라 처리
+    if not selected_store:
+        items = get_unique_items(items_query)
+        new_items = get_unique_items(new_items_query)
+        best_items = []  # 매장 미선택 시 Best는 표시 안 함
+    else:
+        items = items_query.distinct()
+        new_items = new_items_query.distinct()
+        best_items = items_query.filter(best=1).distinct()
+
+    context = {
+        'items': items,
+        'new_items': new_items,
+        'best_items': best_items,
+        'selected_store': selected_store,
+        'category_filter': category_filter,
+    }
+    return render(request, 'menu/menu_main.html', context)
+
+# ---------------------------------------------------------------------------- #
+# 소비자 화면 제품 상세 페이지
+def product_detail(request, item_id):
+    item = get_object_or_404(Item, pk=item_id)  # 해당 item_id의 제품을 가져옴
+    nutrition_info = NutritionInfo.objects.filter(item_id=item_id).first() # NutritionInfo에서 해당 item_id의 영양 정보 가져오기
+    allergy_info = Allergy.objects.filter(item_id=item_id).first() # AllergyInfo에서 해당 item_id의 영양 정보 가져오기
+    return render(request, 'menu/product_detail.html', {'item': item, 'nutrition': nutrition_info, 'allergy': allergy_info})
+
+
+# ---------------------------------------------------------------------------- #
 # 점주의 메뉴관리 메인 페이지
 def menu_store(request):
     # 현재 로그인한 멤버의 가게 정보 가져오기
@@ -90,31 +138,7 @@ def menu_store(request):
 
     return render(request, 'menu/menu_store.html', context)
 
-# 소비자 화면 제품 상세 페이지
-def product_detail(request, item_id):
-    item = get_object_or_404(Item, pk=item_id)  # 해당 item_id의 제품을 가져옴
-    nutrition_info = NutritionInfo.objects.filter(item_id=item_id).first() # NutritionInfo에서 해당 item_id의 영양 정보 가져오기
-    allergy_info = Allergy.objects.filter(item_id=item_id).first() # AllergyInfo에서 해당 item_id의 영양 정보 가져오기
-    return render(request, 'menu/product_detail.html', {'item': item, 'nutrition': nutrition_info, 'allergy': allergy_info})
-
-# 소비자 화면 빵 카테고리 페이지
-def menu_main_bread(request):
-    items = Item.objects.filter(category='bread', show=1)  # 빵(bread) 이면서 노출중 컬럼이 1인 항목만 필터링
-    best_items = []  # best=1인 아이템을 저장할 리스트
-    for item in items:
-        if item.best == 1 and item.show == 1:  # best 컬럼이 1이고 show가 1인 아이템만 저장
-            best_items.append(item)  # best 컬럼이 1인 아이템만 저장
-    return render(request, 'menu/menu_main_bread.html', {'items': items, 'best_items': best_items})
-
-# 소비자 화면 디저트 카테고리 페이지
-def menu_main_dessert(request):
-    items = Item.objects.filter(category='dessert', show=1)  # 디저트(dessert) 이면서 노출중 컬럼이 1인 항목만 필터링
-    best_items = []  # best=1인 아이템을 저장할 리스트
-    for item in items:
-        if item.best == 1 and item.show == 1:  # best 컬럼이 1이고 show가 1인 아이템만 저장
-            best_items.append(item)  # best 컬럼이 1인 아이템만 저장
-    return render(request, 'menu/menu_main_dessert.html', {'items': items, 'best_items': best_items})
-
+# ---------------------------------------------------------------------------- #
 # 점주 신규 메뉴 등록 페이지
 def menu_add(request):
     member = request.user.member

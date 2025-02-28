@@ -41,10 +41,6 @@
         cursor: pointer;
     }
 
-    .store-menu-table tbody tr:hover {
-        background-color: gray;
-    }
-
     /* 반응형 레이아웃 */
     @media (max-width: 768px) {
         .d-flex {
@@ -73,7 +69,7 @@
     {#    {% csrf_token %}#}
 
     <!-- 테이블 -->
-    <table class="table store-menu-table">
+    <table class="table store-menu-table table-hover">
         <thead>
             <tr>
                 <th class="checkbox-column"><label for="select-all"></label><input type="checkbox" id="select-all"></th>
