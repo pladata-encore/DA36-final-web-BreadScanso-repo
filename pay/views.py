@@ -40,6 +40,29 @@ def pay_main(request):
 
     return render(request, "pay/pay_main.html", {"member": member, "page_obj": page_obj})
 
+def pay_cancel(request):
+
+    member = request.user.member
+    store = member.store if member.member_type == "manager" else None
+    payment_method = request.GET.get("payment_method")
+    if store:
+        canceled_payments = PaymentInfo.objects.filter(order__store=store, payment_status=False).order_by("-pay_at")
+
+        if payment_method in ["credit", "epay"]:
+            canceled_payments = canceled_payments.filter(payment_method=payment_method)
+    else:
+        canceled_payments = PaymentInfo.objects.none()
+
+    paginator = Paginator(canceled_payments, 10)
+    page_number = request.GET.get("page")
+
+    try:
+        page_obj = paginator.get_page(page_number)
+    except (PageNotAnInteger, EmptyPage):
+        page_obj = paginator.get_page(1)
+
+    return render(request, "pay/pay_cancel.html", {"member": member, "page_obj": page_obj, "canceled_payments": canceled_payments})
+
 # def pay_details(request, payment_id):
 # def pay_details(request):
 #     # payment = get_object_or_404(Purchase, id=payment_id)
@@ -56,18 +79,6 @@ def pay_details(request, payment_id):
         'payment': payment,
         'store_owner': store_owner
     })
-
-def pay_cancel(request):
-    member = request.user.member
-    store = member.store if member.member_type == "manager" else None
-
-    # 취소된 결제 내역 가져오기 (payment_status=False)
-    if store:
-        canceled_payments = PaymentInfo.objects.filter(order__store=store, payment_status=False).order_by("-pay_at")
-    else:
-        canceled_payments = []
-
-    return render(request, "pay/pay_cancel.html", {"member": member, "cancels": canceled_payments})
 
 def pay_member(request):
     # GET 요청 처리
