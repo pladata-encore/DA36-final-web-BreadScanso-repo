@@ -81,6 +81,8 @@ body.main-index {
 .event-card-title {
     font-size: 1rem; /* 제목 크기 줄이기 */
     font-weight: bold;
+    border-radius: 10px; /* 둥근 테두리 */
+
 }
 
 .event-card-container {
@@ -88,6 +90,13 @@ body.main-index {
     justify-content: center; /* 가운데 정렬 */
     gap: 20px; /* 카드 간격 */
     flex-wrap: wrap; /* 여러 줄 정렬 */
+    align-items: flex-start; /* 세로 정렬을 윗줄에 맞춤 */
+
+}
+
+.event-card {
+    width: 18rem; /* 카드 너비 조절 */
+    height: auto; /* 카드 높이 자동 조절 */
 }
 
 /* ----------------------------------------------------------------------- */
