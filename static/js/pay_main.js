@@ -19,6 +19,8 @@ document.getElementById("date_button").addEventListener("click", function() {
         }
     });
 });
+
+
 // 결제일자 누르면 상세 페이지 - 새탭으로
 document.querySelectorAll(".clickable").forEach(cell => {
     cell.addEventListener("click", function () {
@@ -35,6 +37,8 @@ document.querySelectorAll(".clickable").forEach(cell => {
 document.getElementById("cancel").addEventListener("click", function () {
     window.location.href = "cancel/";
 });
+
+
 // 결제수단 '카드' '간편결제' 중에 선택하면 해당 내역이 나오게 하는 기능 구현 추가 필요. DB 만들어진 뒤에 설정할 예정.
 document.querySelectorAll(".dropdown-item").forEach(item => {
 item.addEventListener("click", function () {
