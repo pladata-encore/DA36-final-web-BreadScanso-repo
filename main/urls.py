@@ -15,4 +15,5 @@ urlpatterns = [
     path("login_find/", views.login_find, name="login_find"),  # ID/PW 찾기 경로
     path("check_user_id/", views.check_user_id, name="check_user_id"), # AJAX 요청 받는 아이디 중복 확인용
     path("sales/", include("sales.urls")), # sales 앱 URL 포함하기
+    path("store_signup/", views.store_signup, name="store_signup"),  # 매장페이지-회원가입 경로
 ]

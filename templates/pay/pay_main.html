@@ -31,9 +31,6 @@
             <tr>
                 <th>결제일시</th>
                 <th>매장명</th>
-                <th>제품명</th>
-                <th>개별수량</th>
-                <th>개별금액</th>
                 <th>총수량</th>
                 <th>총금액</th>
                 <th>적립포인트</th>
@@ -48,10 +45,7 @@
                     <a href="{% url 'pay:pay_details' payment.payment_id %}">{{ payment.pay_at|date:"Y-m-d H:i" }}</a>
                 </td>
                 <td>{{ payment.order.store }}</td>
-                <td>{{ payment.order.orderitem_set.first.item.item_name }}</td>
-                <td>{{ payment.order.orderitem_set.first.item_count }}</td>
-                <td>{{ payment.order.orderitem_set.first.item_price }}</td>
-                <td>{{ payment.order.orderitem_set.count }}</td>
+                <td>{{ payment.order.total_count }}</td>
                 <td>{{ payment.order.total_amount }}</td>
                 <td>{{ payment.order.earned_points }}</td>
                 <td>
