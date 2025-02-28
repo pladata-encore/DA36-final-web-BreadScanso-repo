@@ -14,9 +14,15 @@ def pay_main(request):
     # 로그인한 사용자의 store 값 가져오기
     store = member.store if member.member_type == "manager" else None
 
+    # 결제수단
+    payment_method = request.GET.get("payment_method")
+
     # 해당 store의 결제 내역 가져오기 (store가 없으면 빈 쿼리셋 반환)
     if store:
         payment_infos = PaymentInfo.objects.filter(order__store=store).order_by("-pay_at")
+        # 결제수단 - 토글
+        if payment_method in ["credit", "epay"]:
+            payment_infos = payment_infos.filter(payment_method=payment_method)
     else:
         payment_infos = PaymentInfo.objects.none()  # 안전하게 빈 쿼리셋 반환
 
