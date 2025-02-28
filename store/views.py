@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
+from enum import member
+
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, resolve_url
@@ -528,9 +531,12 @@ def question_detail(request, qna_id):
     # 질문에 달린 답변들을 가져옴
     answers = QnAReply.objects.filter(qna_id=qna_id)
 
+    member = request.user.member
+
     context = {
         'question': question,
         'answers': answers,
+        'member': member,
     }
     return render(request, 'store/question_detail.html', context)
 
@@ -538,11 +544,18 @@ def question_detail(request, qna_id):
 
 # @login_required(login_url='login')
 def question_create(request):
+    # stores = [
+    #     {"id": "A", "name": "Store A"},
+    #     {"id": "B", "name": "Store B"}
+    # ]  # 매장 목록을 리스트 형태로 제공
+
     if request.method == 'POST':
         form = QuestionForm(request.POST)
         if form.is_valid():
+            # store = request.POST.get('store', '전체')  # 선택된 매장
             qna = form.save(commit=False)
-            qna.author = request.user
+            qna.member_id = request.user
+            # qna.store = store
             qna = question_service.create(qna)
             return redirect('store:question_detail', qna_id=qna.qna_id)
         else:
@@ -553,33 +566,41 @@ def question_create(request):
     member = request.user.member
     context = {
         'form': form,
-        'member': member
+        'member': member,
+        # 'stores': stores,  # 🔥 stores 추가
     }
 
     return render(request, 'store/question_form.html', context)
 
-# @login_required(login_url='login')
+
+
+# @login_required(login_url='uauth:login')
 def question_modify(request, qna_id):
     qna = question_service.find_by_id(qna_id)
-    if request.user != qna.author:
-        messages.error(request, '수정권한이 없습니다.')
+
+    # 인가 확인(작성자 본인 여부)
+    if request.user != qna.member_id:
+        from django.contrib import messages
+        messages.error(request, '수정 권한이 없습니다.') # 논필드오류
         return redirect('store:question_detail', qna_id=qna_id)
 
+    # GET/POST 요청 분기
     if request.method == 'POST':
-        form = QuestionForm(request.POST, instance=qna)
+        form = QuestionForm(request.POST, instance=qna)  # 기존 qna에 사용자입력값 덮어쓰기
         if form.is_valid():
-            qna = form.save(commit=False)
+            qna = form.save(commit=False)  # form -> model 변환만
             qna = question_service.modify(qna)
-            return redirect('store:question_detail', qna_id=qna.qna_id)
+            return redirect('qna:question_detail', qna_id=qna_id)
     else:
         form = QuestionForm(instance=qna)
 
+    form = QuestionForm(instance=qna)
     return render(request, 'store/question_form.html', {'form': form})
 
 # @login_required(login_url='login')
 def question_delete(request, qna_id):
     qna = question_service.find_by_id(qna_id)
-    if request.user != qna.author:
+    if request.user != qna.member_id:
         messages.error(request, '삭제 권한이 없습니다.')
         return redirect('store:question_detail', qna_id=qna_id)
 
@@ -590,7 +611,7 @@ def question_delete(request, qna_id):
 def question_search(request):
     query = request.GET.get('query')
     qna = question_service.find_by_title(query)
-    results = [{'qna_id': qna.qna_id, 'text': qna.title} for question in qna]
+    results = [{'qna_id': qna.qna_id, 'text': qna.title} for qna in qna]
     return JsonResponse({"results": results})
 
 # @login_required(login_url='login')

@@ -13,13 +13,11 @@
 
 {% block content %}
     <h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">QnA</h3>
-    {# 검색어 자동완성 #}
-    <div class="container d-flex justify-content-end mb-1">
-        <form class="d-flex col-6" role="search">
-            <input class="form-control" type="search" id="question-search" placeholder="제목/내용을 검색하세요..." aria-label="Search" autocomplete="off">
-        </form>
+    <!-- 검색 -->
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; justify-content: flex-end;">
+        <input type="search" id="searchMember" placeholder="검색어를 입력해주세요" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+        <button id="search_button" type="button" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
     </div>
-    <br>
     <div class="container my-1">
 {#        table.table>thead>tr.table-dark>th*4#}
         <table class="table table-striped">
@@ -102,9 +100,9 @@
         </ul>
     </nav>
     <!-- 페이징 처리 끝 -->
-
-    <a href="{% url 'store:question_create' %}" class="btn btn-primary" style="margin-bottom: 20px;">질문 등록</a>
-
+    <div style="display: flex; justify-content: flex-start;">
+        <a href="{% url 'store:question_create' %}" class="btn btn-primary" style="margin-bottom: 20px; display: inline-block;">질문 등록</a>
+    </div>
 {% endblock content %}
 
 {% block script %}

@@ -90,15 +90,21 @@ class QnAReply(models.Model):
 
 ### Forms ###
 class QuestionForm(forms.ModelForm):
-
     class Meta:
         model = QnA
-        fields = ['title', 'content'] # Form클래스에서 사용할 Model클래스 속성
-        # template에서 사용자에게 노출할 필드명
+        # fields = ['title', 'content', 'store']  # store 필드는 Model에서 자동으로 가져옴
+        fields = ['title', 'content']
         labels = {
             'title': '제목',
             'content': '내용',
+            # 'store': '매장선택'
         }
+
+    # def __init__(self, *args, **kwargs):
+    #     stores = kwargs.pop('stores', [])  # 🔥 추가: 전달된 stores 가져오기
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['store'].choices = [("전체", "전체")] + [(store["id"], store["name"]) for store in stores]
+
 
 # 회원정보수정
 class CustomUser(models.Model):

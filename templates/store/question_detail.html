@@ -1,15 +1,20 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}Store | Question Detail {% endblock %}
-{% block store_id %}store_id{% endblock %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}Q&A{% endblock title %}
 
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
 
 {% block content %}
     <div class="container my-3">
         <!-- 질문 -->
-        <h1 class="display-6 border-bottom py-2">#{{ question.qna_id }} {{ question.title }}</h1>
+        <h1 class="display-6 border-bottom py-2">Q{{ question.qna_id }}. {{ question.title }}</h1>
         <div class="card mt-3">
             <div class="card-body">
                 <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
@@ -23,30 +28,29 @@
                         {% endif %}
                     </div>
                 </div>
-                {# 질문 수정/삭제 #}
-                <div class="my-3">
-                    {# 질문 추천 #}
-{#                    <a href="javascript:void(0)"#}
-{#                       data-uri="{% url 'qna:question_vote' question.id  %}"#}
-{#                       class="recommend btn btn-sm btn-outline-secondary"> 추천#}
-{#                        <span class="badge rounded-pill bg-success">{{question.voter.count}}</span>#}
-{#                    </a>#}
-                    {# 작성자 본인에게만 버튼 노출 #}
-                    {% if question.author == request.user %}
-                        <a href="{% url 'qna:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">수정</a>
-                        <a href="javascript:void(0)" data-uri="{% url 'qna:question_delete' question.id %}" class="remove btn btn-sm btn-outline-danger">삭제</a>
-                    {% endif %}
+                <div class="d-flex justify-content-end">
+                    {# 질문 수정/삭제 #}
+                    <div class="my-3">
+                        {# 질문 추천 #}
+    {#                    <a href="javascript:void(0)"#}
+    {#                       data-uri="{% url 'qna:question_vote' question.id  %}"#}
+    {#                       class="recommend btn btn-sm btn-outline-secondary"> 추천#}
+    {#                        <span class="badge rounded-pill bg-success">{{question.voter.count}}</span>#}
+    {#                    </a>#}
+                        {# 작성자 본인에게만 버튼 노출 #}
+                        {% if question.member_id == member.member_id %}
+                            <a href="{% url 'store:question_modify' question.qna_id %}" class="btn btn-sm btn-outline-secondary">수정</a>
+                            <a href="javascript:void(0)" data-uri="{% url 'store:question_delete' question.qna_id %}" class="remove btn btn-sm btn-outline-danger">삭제</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="my-3">
-            <a class="link-primary" href="{% url 'store:community_qna' %}">목록</a>
         </div>
         <!-- 답변 목록 시작 -->
         {% for answer in answers %}
             <div id="answer_{{ answer.id }}" class="card my-3">
                 <div class="card-body">
-                    <span class="badge text-bg-secondary">{{ forloop.counter }}</span>
+                    <span class="badge text-bg-secondary" style="margin-right: 1500px;">{{ forloop.counter }}</span>
                     <div class="card-text" style="white-space: pre-line;">
                         {{ answer.content }}
                     </div>
@@ -95,7 +99,14 @@
                 <label for="content" class="form-label">답변내용</label>
                 <textarea name="content" id="content" class="form-control" rows="10" required {% if user.is_anonymous %} disabled {% endif %}></textarea>
             </div>
-            <input type="submit" value="답변등록" class="btn btn-primary">
+            <div class="my-3" style="display: flex; justify-content: space-between; width: 100%;">
+                <!-- 목록 버튼 왼쪽 정렬 -->
+                <a class="btn btn-primary" href="{% url 'store:community_qna' %}" style="background-color: black; color: white;">목록</a>
+
+                <!-- 답변 등록 버튼 오른쪽 정렬 -->
+                <input type="submit" value="답변등록" class="btn btn-primary">
+            </div>
+
         </form>
         <!-- 답변 등록 끝 -->
     </div>
