@@ -34,13 +34,7 @@
             justify-content: center;
             align-items: center;
         }
-        .map-section img {
-            width: 100%;  /* 이미지가 가로로 꽉 차도록 설정 */
-            max-width: 600px; /* 최대 너비 설정 */
-            height: auto;
-            object-fit: cover; /* 비율 유지하면서 이미지 잘라내기 */
-            object-position: center; /* 이미지의 중앙을 기준으로 잘라내기 */
-        }
+
         .store-info-section {
             text-align: left;
         }
@@ -61,56 +55,118 @@
         }
     </style>
 
-    <!-- 매장 안내 정보 -->
-    <div class="store-map-container">
-        <h2 class="store-title">매장 위치</h2>
-        <div class="store-map-content">
-            <!-- 매장 지도 -->
-            <div class="map-section">
-                <img src="{% static 'images/store_map.png' %}" alt="Store Map">
-            </div>
-
-            <!-- 매장 정보 -->
-            <div class="store-info-section">
-                <h3>| 주소</h3>
-                <p id="address-display">서울 서초구 효령로 335</p>
-
-                <h3>| 대중교통 안내</h3>
-                <p id="transportation-display">3호선 남부터미널역 2번 출구 도보 10분</p>
-
-                <h3>| 자가용 이용 시</h3>
-                <p id="parking-display">매장 건너편 공영주차장 이용 (10분 이상 주차 시 유료)</p>
-            </div>
-
+<!-- 매장 안내 정보 -->
+<div class="store-map-container">
+    <h2 class="store-title">매장 위치</h2>
+    <div class="store-map-content">
+        <div class="map-section">
+            <div id="map" style="width: 450px; height: 450px;"></div>
         </div>
 
-        <!-- 버튼 섹션 -->
-        <div class="button-container">
-            {% if user.is_authenticated %}
-                {% if request.session.member_type == "manager" %}
-                    <a href="{% url 'store:store_map_edit' %}" class="btn btn-primary">수정</a>
-                {% endif %}
+        <div class="store-info-section">
+            <h3>| 주소</h3>
+            <p id="address-display"></p>
+            <h3>| 운영 시간</h3>
+            <p id="store-time-display"></p>
+            <h3>| 매장 전화번호</h3>
+            <p id="store-num-display"></p><br><br> 
+            <p id="transportation-display"></p>
+        </div>
+    </div>
+
+    <!-- 매장 변경 버튼 -->
+    <div class="button-container">
+        <button id="prev-store" class="btn btn-secondary">이전</button>
+        <button id="next-store" class="btn btn-secondary">다음</button>
+    </div>
+</div>
+
+    <!-- 버튼 섹션 -->
+    <div class="button-container">
+        {% if user.is_authenticated %}
+            {% if request.session.member_type == "manager" %}
+                <a href="{% url 'store:store_map_edit' %}" class="btn btn-primary">수정</a>
             {% endif %}
-        </div>
+        {% endif %}
     </div>
 
 {% endblock content %}
 
 {% block script %}
     {{ block.super }}
+    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=zsn0ti7kcl&submodules=geocoder"></script>
     <script>
-        window.onload = function() {
-            // 로컬 스토리지에서 저장된 값 읽기
-            const address = localStorage.getItem('store_address') || '서울 서초구 효령로 335';  // 기본값
-            const transportation = localStorage.getItem('store_transportation') || '3호선 남부터미널역 2번 출구 도보 10분';  // 기본값
-            const parking = localStorage.getItem('store_parking') || '매장 건너편 공영주차장 이용 (10분 이상 주차 시 유료)';  // 기본값
-
-            // 페이지에 표시하기
-            document.getElementById('address-display').innerText = address;
-            document.getElementById('transportation-display').innerText = transportation;
-            document.getElementById('parking-display').innerText = parking;
-        };
+        document.addEventListener('DOMContentLoaded', function() {
+            var stores = JSON.parse('{{ stores|escapejs }}');  // JSON 문자열 파싱
+            var storeName = "{{ store_name }}";  // 초기 storeName은 첫 번째 매장 이름
+            var currentIndex = 0;
+        
+            function updateStoreInfo(index) {
+                var store = stores[index];
+                // 현재 선택된 매장 이름으로 storeName 업데이트
+                storeName = store.store_name;
+                
+                document.getElementById("address-display").innerText = store.store_address;
+                document.getElementById("store-time-display").innerText = store.store_time;
+                document.getElementById("store-num-display").innerText = store.store_num;
+                document.getElementById("transportation-display").innerHTML = store.store_notes;  // HTML 적용
+        
+                // 지도 업데이트
+                updateMap(store.store_address);
+            }
+        
+            function updateMap(address) {
+                naver.maps.Service.geocode({query: address}, function(status, response) {
+                    if (status !== naver.maps.Service.Status.OK) {
+                        return alert('주소를 찾을 수 없습니다!');
+                    }
+                    var items = response.v2.addresses;
+                    var location = new naver.maps.LatLng(items[0].y, items[0].x);
+            
+                    var map = new naver.maps.Map('map', {
+                        center: location,
+                        zoom: 16
+                    });
+            
+                    // 매장에 따라 다른 아이콘 사용
+                    var iconUrl = "{% static 'images/pink.png' %}";  // 기본 아이콘
+                    if (storeName === "강남점") {
+                        iconUrl = "{% static 'images/milk.png' %}";
+                    }
+            
+                    var marker = new naver.maps.Marker({
+                        position: location,
+                        map: map,
+                        icon: {
+                            url: iconUrl,
+                            scaledSize: new naver.maps.Size(60, 60),
+                            origin: new naver.maps.Point(0, 0),
+                            anchor: new naver.maps.Point(25, 26)
+                        }
+                    });
+            
+                    var infowindow = new naver.maps.InfoWindow({
+                        content: '<div style="padding:7px;min-width:150px;line-height:100%;"><h5 style="margin-top:3px;">브레드스캔소 ' + storeName + '</h5></div>'
+                    });
+                    infowindow.open(map, marker);
+                });
+            }
+            // 초기에 첫 번째 매장 정보 표시
+            updateStoreInfo(currentIndex);
+        
+            // 다음 매장 버튼
+            document.getElementById("next-store").addEventListener("click", function() {
+                currentIndex = (currentIndex + 1) % stores.length;
+                updateStoreInfo(currentIndex);
+            });
+            // 이전 매장 버튼
+            document.getElementById("prev-store").addEventListener("click", function() {
+                currentIndex = (currentIndex - 1 + stores.length) % stores.length;
+                updateStoreInfo(currentIndex);
+            });
+        });
     </script>
+
 {% endblock script %}
 
 {% block footer %}
