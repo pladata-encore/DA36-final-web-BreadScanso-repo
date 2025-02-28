@@ -204,9 +204,23 @@ def about_breadscanso_edit(request):
     return render(request, 'store/about_breadscanso_edit.html', {"member": member})  # 브랜드 소개
 
 def store_map(request):
-    # GET 요청 처리 (member 데이터 가져오기)
     member = request.user.member
-    return render(request, 'store/store_map.html', {"member": member})  # 매장 안내
+
+    store = member.store,
+    store_name = dict(member._meta.get_field('store').choices).get(store[0], '')
+    store_address = member.store_address
+    store_time = member.store_time
+    store_notes = member.store_notes
+
+    context = {
+        'member': member,
+        'store_address': store_address,
+        'store_time': store_time,
+        'store_notes': store_notes,
+        'store' : store,
+        'store_name' : store_name,
+    }
+    return render(request, 'store/store_map.html', context)  # 매장 안내
 
 def store_map_edit(request):
     member = request.user.member

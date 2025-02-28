@@ -9,6 +9,7 @@ urlpatterns = [
     path('delete_member_store/', views.delete_member_store, name='delete_member_store'),  # 회원 삭제
     path('store_home_edit', views.store_home_edit, name='store_home_edit'),  # 홈 화면 수정
     path('about_breadscanso_edit', views.about_breadscanso_edit, name='about_breadscanso_edit'),  # 브랜드 소개
+    path('store_map/', views.store_map, name='store_map'),  # 매장 안내
     path('store_map', views.store_map, name='store_map'),  # 매장 안내
     path('store_map/edit', views.store_map_edit, name='store_map_edit'),  # 매장 안내 수정
     path('store_event', views.store_event, name='store_event'),  # 이벤트
