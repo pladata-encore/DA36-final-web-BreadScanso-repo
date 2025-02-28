@@ -47,7 +47,7 @@ class EventPost(models.Model):  # 이벤트 게시판 글 테이블
     title = models.CharField(max_length=30)  # 제목
     created_at = models.DateTimeField(auto_now_add=True)  # 등록일시
     updated_at = models.DateTimeField(auto_now=True)  # 수정일시
-    content = models.TextField()  # 내용
+    content = models.ImageField(upload_to='', null=True, blank=True) # 이미지 내용
     view_count = models.PositiveIntegerField(default=0)  # 조회수
     is_pinned = models.BooleanField(default=False)  # 상단 고정 여부
     store = models.CharField(max_length=50, null=True, choices=[("A", "Store A"), ("B", "Store B")])  # 매장
@@ -76,6 +76,7 @@ class QnAReply(models.Model):
     content = models.TextField()  # 답변 내용
     created_at = models.DateTimeField(auto_now_add=True)  # 등록일시, 처음 생성되면 변경 X
     updated_at = models.DateTimeField(auto_now=True)  # 수정일시, 수정될 때마다 업데이트
+    author_id = models.CharField(max_length=50, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.qna:
