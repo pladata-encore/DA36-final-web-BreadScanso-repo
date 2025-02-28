@@ -866,42 +866,69 @@ body.kiosk-payment-completed {
 /*--정석 start--*/
 /* ----------------------------------------------------------------------- */
 /*-- 메인 메뉴 carousel 설정 --*/
-body.menu-main.best-carousel-item {
+/* 공통 캐러셀 스타일 */
+.new-carousel-container,
+.product-carousel-container,
+.best-carousel-container {
+    position: relative;
+    justify-content: center;
+    margin: auto;
+    overflow: visible;
+}
+
+.carousel-wrapper {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-track,
+.new-carousel-track,
+.product-carousel-track,
+.best-carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.product-name {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* new & 제품 캐러셀 */
+.new-carousel-item,
+.product-carousel-item {
     flex: 0 0 20%; /* 5개씩 보이도록 설정 */
     padding: 10px;
     text-align: center;
     display: flex;
-    flex-direction: column; /* 세로로 정렬 */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: transform 0.3s ease, z-index 0.3s;
+    cursor: pointer;
 }
 
-.best-carousel-container {
-    position: relative;
-    max-width: 1000px;
-    margin: auto;
-    overflow: visible;  /* 버튼이 잘리지 않도록 변경 */
-}
-
-.best-carousel-wrapper {
-    display: flex;
+.new-carousel-item img,
+.product-carousel-item img {
     width: 100%;
-    overflow: hidden;  /* 캐러셀 이미지 부분만 잘리도록 유지 */
-    position: relative;  /* 버튼 위치 기준 */
+    height: auto;
+    border-radius: 10px;
 }
 
-.best-carousel-track {
-    display: flex;
-}
-
+/* best 캐러셀 (초기화 때문에 따로 설정) */
 .best-carousel-item {
-    flex: 0 0 20%; /* 한 번에 5개만 보이도록 설정 */
+    flex: 0 0 20%; /* 5개씩 보이도록 설정 */
     padding: 10px;
     text-align: center;
     display: flex;
-    flex-direction: column; /* 세로로 정렬 */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: transform 0.3s ease, z-index 0.3s;
+    cursor: pointer;
 }
 
 .best-carousel-item img {
@@ -910,32 +937,42 @@ body.menu-main.best-carousel-item {
     border-radius: 10px;
 }
 
-.product-name {
-    margin-top: 12px; /* 이미지와 이름 사이에 여백 추가 */
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center; /* 이름 가운데 정렬 */
-}
-
+/* 버튼 스타일 (각 캐러셀별 구분) */
+.new-carousel-btn,
+.product-carousel-btn,
 .best-carousel-btn {
     position: absolute;
     top: 50%;
-    transform: translateY(-70%); /* 수직 중앙 정렬 */
+    transform: translateY(-80%);
     color: black;
     border: none;
     padding: 10px;
+    font-size: 24px;
     cursor: pointer;
-    z-index: 10;
-    font-size: 24px; /* 버튼 크기 조정 */
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    background-color: unset;
 }
 
+.new-carousel-btn.left,
+.product-carousel-btn.left,
 .best-carousel-btn.left {
-    left: -50px; /* 왼쪽 버튼을 캐러셀 바깥으로 이동 */
+    left: -50px;
 }
 
+.new-carousel-btn.right,
+.product-carousel-btn.right,
 .best-carousel-btn.right {
-    right: -50px; /* 오른쪽 버튼을 캐러셀 바깥으로 이동 */
+    right: -50px;
 }
+
+.new-carousel-btn:hover,
+.product-carousel-btn:hover,
+.best-carousel-btn:hover {
+    background: lightgray;
+}
+
 /* ----------------------------------------------------------------------- */
 /* 메뉴 메인 전체 제품 grid styling */
 .product-grid {
@@ -944,11 +981,39 @@ body.menu-main.best-carousel-item {
     gap: 20px;
 }
 
+/* 제품 그리드 스타일 */
+.product-grid .card {
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.product-grid .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.product-grid .card-img-top {
+    height: 100%;
+    object-fit: cover;
+}
+
+#load-more-btn {
+    padding: 8px 20px;
+    background-color: #007bff;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+#load-more-btn:hover {
+    background-color: #0056b3;
+}
+
 /* ----------------------------------------------------------------------- */
 /* 제품 상세 페이지 */
 /* 전체 컨테이너 중앙 정렬 */
 .product-detail-container {
-    max-width: 80%;
+    max-width: 100%;
     margin: 20px auto;
     padding: 20px;
 }

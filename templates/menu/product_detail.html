@@ -8,6 +8,8 @@
 {% endblock header %}
 
 {% block content %}
+    <body class="text-dark py-3" style="background-color: #ffffff;">
+    
     <!-- 제품 상세 정보 -->
     <div class="product-detail-container">
         <div class="product-content">
@@ -76,8 +78,8 @@
                 <p class="product-price"><strong>판매가:</strong> {{ item.sale_price|default:"가격 미정" }}원</p>
             </div>
         </div>
-        <!-- 목록 버튼 하단 왼쪽에 위치 -->
-        <button class="back-button" onclick="location.href='{% url 'menu_main' %}'">◀ 목록으로</button>
+        <!-- 목록 버튼 하단 왼쪽에 위치 (이전 페이지로 이동) -->
+        <button class="back-button" onclick="history.back();">◀ 목록으로</button> 
     </div>
 {% endblock content %}
 

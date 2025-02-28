@@ -14,19 +14,19 @@
 {% block content %}
     <h3 style="margin-bottom: 50px;" class="text-center">구매/취소내역</h3>
 
-    <div style="display: flex; gap:30px; margin-bottom: 20px;">
+    <div style="display: flex; gap:20px; margin-bottom: 20px;">
     <input type="datetime-local" name="startDate" id="startDate">
         <p>-</p>
     <input type="datetime-local" name="endDate" id="endDate">
-        <div style="margin-left: 30px;">
-            <button id="date_button" type="button" name="date_button" style="background-color:lightgoldenrodyellow;">검색</button>
+        <div style="margin-left: 10px;">
+            <button id="date_button" type="button" name="date_button" class="btn btn-success">검색</button>
         </div>
         <div>
-        <button id="cancel" style="margin-left: 90px; border:solid; border-color:red;">취소내역만 보러가기</button>
+        <button id="cancel" class="btn btn-secondary" style="margin-left:200px;" >취소내역만 보러가기</button>
         </div>
     </div>
 
-    <table class="table table-bordered text-center">
+    <table class="table table-bordered text-center" style="width: 100%;">
         <thead class="table-light">
             <tr>
                 <th>결제일시</th>
@@ -34,15 +34,31 @@
                 <th>총수량</th>
                 <th>총금액</th>
                 <th>적립포인트</th>
-                <th>결제수단</th>
+                <th class="btn btn-secondary dropdown-toggle" id="payment_method_toggle"
+                    data-bs-toggle="dropdown" role="button"
+                    style="width:100%;">
+                    결제수단
+                  <ul class="dropdown-menu dropdown-menu-dark">
+                    <li>
+                        <a class="dropdown-item" href="?payment_method=credit">카드</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?payment_method=epay">간편결제</a>
+                    </li>
+                  </ul>
+                </th>
                 <th>회원여부</th>
             </tr>
         </thead>
         <tbody>
             {% for payment in page_obj %}
-            <tr {% if not payment.payment_status %} style="color: red;" {% endif %}>
+            <tr>
                 <td class="clickable" data-payment-id="{{ payment.payment_id }}">
-                    <a href="{% url 'pay:pay_details' payment.payment_id %}">{{ payment.pay_at|date:"Y-m-d H:i" }}</a>
+                    {% if payment.is_canceled %}
+                    <a class="btn btn-danger btn-sm" role="button" href="{% url 'pay:pay_details' payment.payment_id %}">{{ payment.pay_at|date:"Y-m-d H:i" }}</a>
+                    {% else %}
+                    <a class="btn btn-secondary btn-sm" role="button" href="{% url 'pay:pay_details' payment.payment_id %}">{{ payment.pay_at|date:"Y-m-d H:i" }}</a>
+                    {% endif %}
                 </td>
                 <td>{{ payment.order.store }}</td>
                 <td>{{ payment.order.total_count }}</td>
@@ -52,8 +68,8 @@
                     <a href="?payment_method={{ payment.payment_method }}">
                         {% if payment.payment_method == "credit" %}
                             <span class="badge bg-danger">카드</span>
-                        {% elif payment.payment_method == "cash" %}
-                            <span class="badge bg-success">현금</span>
+                        {% elif payment.payment_method == "epay" %}
+                            <span class="badge bg-success">간편결제</span>
                         {% endif %}
                     </a>
                 </td>
@@ -75,7 +91,7 @@
     </table>
     
     <!-- 페이지네이션 -->
-<nav aria-label="Page navigation" style="margin-top:10%;">
+<nav aria-label="Page navigation" style="margin-top:2%;">
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
             <li class="page-item">
@@ -161,5 +177,11 @@
             window.location.href = "cancel/";
         });
     // 결제수단 '카드' '간편결제' 중에 선택하면 해당 내역이 나오게 하는 기능 구현 추가 필요. DB 만들어진 뒤에 설정할 예정.
+    document.querySelectorAll(".dropdown-item").forEach(item => {
+        item.addEventListener("click", function () {
+            const selectedMethod = this.textContent.trim() === "카드" ? "credit" : "epay";
+            window.location.href = `?payment_method=${selectedMethod}`;
+        });
+    });
     </script>
 {% endblock script %}
