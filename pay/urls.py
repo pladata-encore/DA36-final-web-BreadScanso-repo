@@ -15,7 +15,7 @@ urlpatterns = [
 
     path('member/cancel/', views.pay_member_cancel, name='pay_member_cancel'),
 
-    path('member/details/', views.pay_member_details, name='pay_member_details'),
+    path('member/details/<int:payment_id>/', views.pay_member_details, name='pay_member_details'),
     # path('member/details/<int:payment_id>/', views.pay_member_details, name='pay_member_details'),
 
 ]
