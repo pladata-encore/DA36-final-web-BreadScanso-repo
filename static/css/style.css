@@ -19,10 +19,15 @@ body.main-index {
 }
 .brand-logo-img img{
     width: 1000px;  /* 이미지 크기 조정 */
-    height: auto;  /* 원본 비율 유지 */
+    height: 500px;  /* 원본 비율 유지 */
+}
+
+.brand-text img {
+    width: 800px;  /* 이미지 크기 조정 */
+    height: 300px;  /* 원본 비율 유지 */
 }
 /* ----------------------------------------------------------------------- */
-/* 브랜드소대 하단 4개의 네모박스(카드) */
+/* 브랜드소개 하단 4개의 네모박스(카드) */
 .card-container {
     display: flex;
     justify-content: center; /* 가운데 정렬 */
@@ -31,7 +36,7 @@ body.main-index {
 }
 
 .card {
-    width: 12rem; /* 카드 너비 줄이기 */
+    width: 13rem; /* 카드 너비 조절 */
     height: auto; /* 높이 자동 조절 */
     text-align: center; /* 내부 텍스트 중앙 정렬 */
     /*padding: 10px; !* 카드 내부 여백 *!*/
