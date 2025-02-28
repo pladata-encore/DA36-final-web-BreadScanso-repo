@@ -34,7 +34,20 @@
                 <th>총수량</th>
                 <th>총금액</th>
                 <th>적립포인트</th>
-                <th>결제수단</th>
+                <th class="btn btn-secondary dropdown-toggle" id="payment_method_toggle" 
+                    data-bs-toggle="dropdown" role="button"
+                    style="width:100%;">
+                    결제수단
+                  <ul class="dropdown-menu dropdown-menu-dark">
+                    <li class="dropdown-item">
+                        <a href="?payment_method=credit">카드</a>
+                    </li>
+                    <li class="dropdown-item">
+                        <a href="?payment_method=epay">간편결제</a>
+                    </li>
+                </ul>
+                </div>
+                </th>
                 <th>회원여부</th>
             </tr>
         </thead>
@@ -52,8 +65,8 @@
                     <a href="?payment_method={{ payment.payment_method }}">
                         {% if payment.payment_method == "credit" %}
                             <span class="badge bg-danger">카드</span>
-                        {% elif payment.payment_method == "cash" %}
-                            <span class="badge bg-success">현금</span>
+                        {% elif payment.payment_method == "epay" %}
+                            <span class="badge bg-success">간편결제</span>
                         {% endif %}
                     </a>
                 </td>
@@ -161,5 +174,11 @@
             window.location.href = "cancel/";
         });
     // 결제수단 '카드' '간편결제' 중에 선택하면 해당 내역이 나오게 하는 기능 구현 추가 필요. DB 만들어진 뒤에 설정할 예정.
+    document.querySelectorAll(".dropdown-item").forEach(item => {
+        item.addEventListener("click", function () {
+            const selectedMethod = this.textContent.trim() === "카드" ? "credit" : "epay";
+            window.location.href = `?payment_method=${selectedMethod}`;
+        });
+    });
     </script>
 {% endblock script %}
