@@ -249,6 +249,7 @@ def store_map(request):
         'store_time': store_time,
         'store_num': store_num,
         'store_notes': store_notes,
+    }
 
     return render(request, 'store/store_map.html', context)  # 매장 안내
 
