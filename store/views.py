@@ -16,8 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
 
-def store_main(request):
-    return render(request, 'store/store_main_map.html' )
+# def store_main(request):    // 밑으로 옮길게요 ~~
+#     return render(request, 'store/store_main_map.html' )
 
 # 매장페이지 - 회원관리
 def member_store(request):
@@ -208,22 +208,48 @@ def about_breadscanso_edit(request):
     member = request.user.member
     return render(request, 'store/about_breadscanso_edit.html', {"member": member})  # 브랜드 소개
 
+
+def store_main(request):
+    members = Member.objects.filter(member_type='manager')
+
+    stores = [
+        {
+            'store': member.store,
+            'store_name': dict(member._meta.get_field('store').choices).get(member.store, ''),
+            'store_address': member.store_address,
+            'store_time': member.store_time,
+            'store_num' : member.store_num,
+            'store_notes': member.store_notes,  # HTML 포함
+        }
+        for member in members
+    ]
+    first_store_name = stores[0]['store_name'] if stores else ''
+    context = {
+        'stores': json.dumps(stores, ensure_ascii=False),  # JSON 변환 후 전달
+        # 'store_name': [store['store_name'] for store in stores],
+        'store_name': first_store_name,
+    }
+    return render(request, 'store/store_main_map.html', context)
+
+
 def store_map(request):
     member = request.user.member
-    store = member.store,
+    store = member.store
     store_name = dict(member._meta.get_field('store').choices).get(store[0], '')
     store_address = member.store_address
     store_time = member.store_time
+    store_num = member.store_num
     store_notes = member.store_notes
 
     context = {
         'member': member,
-        'store_address': store_address,
-        'store_time': store_time,
-        'store_notes': store_notes,
         'store': store,
         'store_name': store_name,
-    }
+        'store_address': store_address,
+        'store_time': store_time,
+        'store_num': store_num,
+        'store_notes': store_notes,
+
     return render(request, 'store/store_map.html', context)  # 매장 안내
 
 @csrf_exempt  # CSRF 검사를 비활성화
@@ -235,14 +261,15 @@ def store_map_edit(request):
             data = json.loads(request.body)
             store_address = data.get('store_address')
             store_time = data.get('store_time')
+            store_num = data.get('store_num')
             store_notes = data.get('store_notes')
 
             member = request.user.member
             member.store_address = store_address
             member.store_time = store_time
+            member.store_num = store_num
             member.store_notes = store_notes
             member.save()
-
             return JsonResponse({'status': 'success', 'message': '변경사항이 저장되었습니다.'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
@@ -251,12 +278,14 @@ def store_map_edit(request):
     member = request.user.member
     store_address = member.store_address
     store_time = member.store_time
+    store_num = member.store_num
     store_notes = member.store_notes
 
     context = {
         'member': member,
         'store_address': store_address,
         'store_time': store_time,
+        'store_num': store_num,
         'store_notes': store_notes,
     }
     return render(request, 'store/store_map_edit.html', context)

@@ -76,7 +76,9 @@
                 <h3>| 주소</h3>
                 <p id="address-display" data-address="{{ store_address }}">{{ store_address }}</p>
                 <h3>| 운영 시간</h3>
-                <p id="store_time-display">{{ store_time }}</p><br>
+                <p id="store_time-display">{{ store_time }}</p>
+                <h3>| 매장 전화번호</h3>
+                <p id="store_num-display">{{ store_num }}</p><br>                
                 <p id="transportation-display">{{ store_notes|safe }}</p>
             </div>
         </div>
@@ -115,7 +117,7 @@
             var location = new naver.maps.LatLng(items[0].y, items[0].x);
             var map = new naver.maps.Map('map', {
                 center: location,
-                zoom: 16,
+                zoom: 17,
             });
             var marker = new naver.maps.Marker({
                 position: location,
@@ -130,7 +132,6 @@
             var infowindow = new naver.maps.InfoWindow({
                 content: '<div style="padding:7px;min-width:150px;line-height:100%;"><h5 style="margin-top:3px;">브레드스캔소 ' + storeName + '</h5></div>'
             });
-    
             infowindow.open(map, marker);
         });
     });
