@@ -2,8 +2,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 from datetime import datetime
-
-from django.forms import forms
+from django import forms
+# from django.forms import forms
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
@@ -87,6 +87,23 @@ class QnAReply(models.Model):
 
     def __str__(self):
         return f"답변 - {self.qna.title}"
+
+### Forms ###
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = QnA
+        # fields = ['title', 'content', 'store']  # store 필드는 Model에서 자동으로 가져옴
+        fields = ['title', 'content']
+        labels = {
+            'title': '제목',
+            'content': '내용',
+            # 'store': '매장선택'
+        }
+
+    # def __init__(self, *args, **kwargs):
+    #     stores = kwargs.pop('stores', [])  # 🔥 추가: 전달된 stores 가져오기
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['store'].choices = [("전체", "전체")] + [(store["id"], store["name"]) for store in stores]
 
 
 # 회원정보수정
