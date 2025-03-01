@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const storeData = {
             store_address: document.getElementById("address").value,
             store_time: document.getElementById("store_time").value,
+            store_num: document.getElementById("store_num").value,
             store_notes: document.getElementById("transportation").innerHTML
         };
 
@@ -14,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
-                // X-CSRFToken 헤더 제거됨
             },
             body: JSON.stringify(storeData)
         })

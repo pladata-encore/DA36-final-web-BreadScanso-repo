@@ -231,7 +231,6 @@ def store_main(request):
 
 def store_map(request):
     member = request.user.member
-
     store = member.store
     store_name = dict(member._meta.get_field('store').choices).get(store[0], '')
     store_address = member.store_address
@@ -241,12 +240,12 @@ def store_map(request):
 
     context = {
         'member': member,
+        'store': store,
+        'store_name': store_name,
         'store_address': store_address,
         'store_time': store_time,
         'store_num': store_num,
         'store_notes': store_notes,
-        'store' : store,
-        'store_name' : store_name,
     }
     return render(request, 'store/store_map.html', context)  # 매장 안내
 
@@ -259,14 +258,14 @@ def store_map_edit(request):
             data = json.loads(request.body)
             store_address = data.get('store_address')
             store_time = data.get('store_time')
-            store_notes = data.get('store_notes')
             store_num = data.get('store_num')
+            store_notes = data.get('store_notes')
 
             member = request.user.member
             member.store_address = store_address
             member.store_time = store_time
-            member.store_notes = store_notes
             member.store_num = store_num
+            member.store_notes = store_notes
             member.save()
             return JsonResponse({'status': 'success', 'message': '변경사항이 저장되었습니다.'})
         except Exception as e:
@@ -276,15 +275,15 @@ def store_map_edit(request):
     member = request.user.member
     store_address = member.store_address
     store_time = member.store_time
-    store_notes = member.store_notes
     store_num = member.store_num
+    store_notes = member.store_notes
 
     context = {
         'member': member,
         'store_address': store_address,
         'store_time': store_time,
-        'store_notes': store_notes,
         'store_num': store_num,
+        'store_notes': store_notes,
     }
     return render(request, 'store/store_map_edit.html', context)
 

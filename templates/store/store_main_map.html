@@ -1,3 +1,5 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 {% extends 'layout/main/main_base.html' %}
 {% load static %}
 
@@ -10,19 +12,18 @@
 {% block content %}
     <style>
         .store-map-container {
-            text-align: center;
             margin: 30px auto;
             max-width: 1200px;
             display: flex;
-            flex-direction: column;  /* 세로로 배치 */
-            justify-content: space-between;  /* 위와 아래에 요소들이 배치되도록 설정 */
-            position: relative;  /* 버튼을 내부에서 자유롭게 배치할 수 있게 설정 */
+            flex-direction: column;
+            position: relative;
+            padding: 0 50px;
         }
-        /* 제목 크기 & 위치 설정 */
         .store-title {
             font-size: 30px;
             font-weight: bold;
             margin-bottom: 30px;
+            text-align: center;
         }
         .store-map-content {
             display: grid;
@@ -33,10 +34,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding-right: 20px;
         }
-
         .store-info-section {
             text-align: left;
+            padding-left: 20px;
         }
         .store-info-section h3 {
             font-size: 20px;
@@ -47,48 +49,82 @@
             font-size: 16px;
             margin: 5px 0;
         }
-
-        /* 수정 버튼을 오른쪽 아래로 배치 */
         .button-container {
             margin-top: 20px;
             align-self: flex-end;
         }
+        .carousel-item {
+            padding: 20px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            will-change: transform, opacity;
+        }
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+        }
+        .map-container {
+            width: 450px;
+            height: 450px;
+            margin: 0 auto;
+            background-color: #f8f9fa;
+            position: relative;
+        }
+        .map-container.loading::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(248, 249, 250, 0.7);
+            z-index: 1;
+        }
+        .carousel-control-prev, 
+        .carousel-control-next {
+            width: 40px;
+        }
+        #storeCarousel {
+            position: relative;
+            overflow: visible;
+        }
+        .naver-info-window {
+            padding: 7px;
+            min-width: 150px;
+            max-width: 200px;
+            word-break: keep-all;
+            line-height: 1.4;
+        }
+        .naver-info-window h5 {
+            margin: 3px 0;
+            font-size: 14px;
+            white-space: normal;
+        }
     </style>
 
-<!-- 매장 안내 정보 -->
 <div class="store-map-container">
     <h2 class="store-title">매장 위치</h2>
-    <div class="store-map-content">
-        <div class="map-section">
-            <div id="map" style="width: 450px; height: 450px;"></div>
-        </div>
-
-        <div class="store-info-section">
-            <h3>| 주소</h3>
-            <p id="address-display"></p>
-            <h3>| 운영 시간</h3>
-            <p id="store-time-display"></p>
-            <h3>| 매장 전화번호</h3>
-            <p id="store-num-display"></p><br><br> 
-            <p id="transportation-display"></p>
-        </div>
+    
+    <div id="storeCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators" id="carousel-indicators"></div>
+        <div class="carousel-inner" id="carousel-inner"></div>
+        
+        <button class="carousel-control-prev" type="button" data-bs-target="#storeCarousel" data-bs-slide="prev" style="left: -50px;">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#storeCarousel" data-bs-slide="next" style="right: -50px;">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 
-    <!-- 매장 변경 버튼 -->
     <div class="button-container">
-        <button id="prev-store" class="btn btn-secondary">이전</button>
-        <button id="next-store" class="btn btn-secondary">다음</button>
-    </div>
-</div>
-
-    <!-- 버튼 섹션 -->
-    <div class="button-container">
-        {% if user.is_authenticated %}
-            {% if request.session.member_type == "manager" %}
-                <a href="{% url 'store:store_map_edit' %}" class="btn btn-primary">수정</a>
-            {% endif %}
+        {% if user.is_authenticated and request.session.member_type == "manager" %}
+            <a href="{% url 'store:store_map_edit' %}" class="btn btn-primary">수정</a>
         {% endif %}
     </div>
+</div>
 
 {% endblock content %}
 
@@ -96,80 +132,212 @@
     {{ block.super }}
     <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=zsn0ti7kcl&submodules=geocoder"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var stores = JSON.parse('{{ stores|escapejs }}');  // JSON 문자열 파싱
-            var storeName = "{{ store_name }}";  // 초기 storeName은 첫 번째 매장 이름
-            var currentIndex = 0;
+    document.addEventListener('DOMContentLoaded', function() {
+        const stores = JSON.parse('{{ stores|escapejs }}');
+        const indicatorsContainer = document.getElementById('carousel-indicators');
+        const carouselInner = document.getElementById('carousel-inner');
+        const maps = new Array(stores.length);
+        const markers = new Array(stores.length);
+        const infowindows = new Array(stores.length);
+        const mapCache = new Map(); 
         
-            function updateStoreInfo(index) {
-                var store = stores[index];
-                // 현재 선택된 매장 이름으로 storeName 업데이트
-                storeName = store.store_name;
+        function createCarouselItems() {
+            const fragment = document.createDocumentFragment();
+            const indicatorFragment = document.createDocumentFragment();
+            
+            stores.forEach((store, index) => {
+                const indicator = document.createElement('button');
+                indicator.type = 'button';
+                indicator.dataset.bsTarget = '#storeCarousel';
+                indicator.dataset.bsSlideTo = index;
+                indicator.setAttribute('aria-label', `Slide ${index + 1}`);
                 
-                document.getElementById("address-display").innerText = store.store_address;
-                document.getElementById("store-time-display").innerText = store.store_time;
-                document.getElementById("store-num-display").innerText = store.store_num;
-                document.getElementById("transportation-display").innerHTML = store.store_notes;  // HTML 적용
+                if (index === 0) {
+                    indicator.classList.add('active');
+                    indicator.setAttribute('aria-current', 'true');
+                }
+                indicatorFragment.appendChild(indicator);
+                
+                const carouselItem = document.createElement('div');
+                carouselItem.classList.add('carousel-item');
+                if (index === 0) carouselItem.classList.add('active');
+                
+                const content = document.createElement('div');
+                content.className = 'store-map-content';
+                content.innerHTML = `
+                    <div class="map-section">
+                        <div id="map-${index}" class="map-container loading"></div>
+                    </div>
+                    <div class="store-info-section">
+                        <h3>| 주소</h3>
+                        <p>${store.store_address}</p>
+                        <h3>| 운영 시간</h3>
+                        <p>${store.store_time}</p>
+                        <h3>| 매장 전화번호</h3>
+                        <p>${store.store_num}</p><br><br> 
+                        <p>${store.store_notes}</p>
+                    </div>
+                `;
+                
+                carouselItem.appendChild(content);
+                fragment.appendChild(carouselItem);
+            });
+            
+            indicatorsContainer.appendChild(indicatorFragment);
+            carouselInner.appendChild(fragment);
+        }
         
-                // 지도 업데이트
-                updateMap(store.store_address);
-            }
-        
-            function updateMap(address) {
-                naver.maps.Service.geocode({query: address}, function(status, response) {
+        // 지도 초기화 함수
+        function initMap(store, index) {
+            return new Promise((resolve) => {
+                const cacheKey = store.store_address;
+                if (mapCache.has(cacheKey)) {
+                    const cachedData = mapCache.get(cacheKey);
+                    createMapWithData(cachedData, store, index);
+                    resolve();
+                    return;
+                }
+                
+                // geocode 이용해서 좌표로 변환!
+                naver.maps.Service.geocode({
+                    query: store.store_address
+                }, function(status, response) {
                     if (status !== naver.maps.Service.Status.OK) {
-                        return alert('주소를 찾을 수 없습니다!');
+                        console.error('주소를 찾을 수 없습니다:', store.store_address);
+                        resolve();
+                        return;
                     }
-                    var items = response.v2.addresses;
-                    var location = new naver.maps.LatLng(items[0].y, items[0].x);
-            
-                    var map = new naver.maps.Map('map', {
-                        center: location,
-                        zoom: 16
-                    });
-            
-                    // 매장에 따라 다른 아이콘 사용
-                    var iconUrl = "{% static 'images/pink.png' %}";  // 기본 아이콘
-                    if (storeName === "강남점") {
-                        iconUrl = "{% static 'images/milk.png' %}";
-                    }
-            
-                    var marker = new naver.maps.Marker({
-                        position: location,
-                        map: map,
-                        icon: {
-                            url: iconUrl,
-                            scaledSize: new naver.maps.Size(60, 60),
-                            origin: new naver.maps.Point(0, 0),
-                            anchor: new naver.maps.Point(25, 26)
-                        }
-                    });
-            
-                    var infowindow = new naver.maps.InfoWindow({
-                        content: '<div style="padding:7px;min-width:150px;line-height:100%;"><h5 style="margin-top:3px;">브레드스캔소 ' + storeName + '</h5></div>'
-                    });
-                    infowindow.open(map, marker);
+                    
+                    const item = response.v2.addresses[0];
+                    const position = new naver.maps.LatLng(item.y, item.x);
+                    const mapData = { position, item };
+                    
+                    mapCache.set(cacheKey, mapData);
+                    createMapWithData(mapData, store, index);
+                    resolve();
                 });
-            }
-            // 초기에 첫 번째 매장 정보 표시
-            updateStoreInfo(currentIndex);
+            });
+        }
         
-            // 다음 매장 버튼
-            document.getElementById("next-store").addEventListener("click", function() {
-                currentIndex = (currentIndex + 1) % stores.length;
-                updateStoreInfo(currentIndex);
+        // 지도 생성
+        function createMapWithData(mapData, store, index) {
+            const mapElement = document.getElementById(`map-${index}`);
+            if (!mapElement) return;
+            
+            const position = mapData.position;
+            
+            // 지도 생성 시 중심점 조정
+            const adjustedPosition = new naver.maps.LatLng(
+                position.lat() - 0.0007,
+                position.lng()
+            );
+            
+            const map = new naver.maps.Map(mapElement, {
+                center: adjustedPosition,
+                zoom: 16,
+                scaleControl: false,
+                logoControl: false,
+                mapDataControl: false,
+                zoomControl: true,
+                minZoom: 14,
+                draggable: true
             });
-            // 이전 매장 버튼
-            document.getElementById("prev-store").addEventListener("click", function() {
-                currentIndex = (currentIndex - 1 + stores.length) % stores.length;
-                updateStoreInfo(currentIndex);
+            
+            maps[index] = map;
+            
+            const iconUrl = store.store_name === "강남점" 
+                ? "{% static 'images/milk.png' %}" 
+                : "{% static 'images/pink.png' %}";
+            
+            const marker = new naver.maps.Marker({
+                position: position,
+                map: map,
+                icon: {
+                    url: iconUrl,
+                    scaledSize: new naver.maps.Size(60, 60),
+                    origin: new naver.maps.Point(0, 0),
+                    anchor: new naver.maps.Point(25, 26)
+                }
             });
-        });
-    </script>
+            markers[index] = marker;
 
+            const infowindow = new naver.maps.InfoWindow({
+                content: '<div class="naver-info-window"><h5>브레드스캔소 ' + store.store_name + '</h5></div>',
+                borderWidth: 1,
+                anchorSize: new naver.maps.Size(10, 10),
+                pixelOffset: new naver.maps.Point(0, -5),
+                backgroundColor: "#fff",
+                borderColor: "#ccc",
+                disableAnchor: false,
+                hideContent: false
+            });
+            
+            infowindows[index] = infowindow;
+            mapElement.classList.remove('loading');
+            
+            if (index === 0) {
+                infowindow.open(map, marker);
+            }
+        }
+        async function initializeMaps() {
+            await initMap(stores[0], 0);
+
+            if (stores.length > 1) {
+                Promise.all(
+                    stores.slice(1).map((store, idx) => initMap(store, idx + 1))
+                ).catch(err => console.error('지도 로드 중 오류 발생:', err));
+            }
+        }
+
+        function setupEventListeners() {
+            const carouselElement = document.getElementById('storeCarousel');
+
+            carouselElement.addEventListener('slide.bs.carousel', function(event) {
+                const nextIndex = parseInt(event.to);
+
+                if (infowindows[currentActiveIndex]) {
+                    infowindows[currentActiveIndex].close();
+                }
+                if (!maps[nextIndex] && stores[nextIndex]) {
+                    initMap(stores[nextIndex], nextIndex);
+                }
+            });
+            
+            carouselElement.addEventListener('slid.bs.carousel', function(event) {
+                const activeIndex = parseInt(event.to);
+                currentActiveIndex = activeIndex;
+                
+                if (maps[activeIndex]) {
+                    setTimeout(() => {
+                        if (maps[activeIndex].refresh) {
+                            maps[activeIndex].refresh();
+                        } else {
+                            naver.maps.Event.trigger(maps[activeIndex], 'resize');
+                        }
+
+                        if (infowindows[activeIndex] && markers[activeIndex]) {
+                            infowindows[activeIndex].open(maps[activeIndex], markers[activeIndex]);
+                        }
+                    }, 100);
+                }
+            });
+        }
+        function init() {
+            createCarouselItems();
+            setupEventListeners();
+
+            setTimeout(initializeMaps, 50);
+
+            new bootstrap.Carousel(document.getElementById('storeCarousel'), {
+                interval: 5000,
+                wrap: true
+            });
+        }
+        init();
+    });
+</script>
 {% endblock script %}
 
 {% block footer %}
     {% include 'layout/main/main_footer.html' %}
 {% endblock footer %}
-
