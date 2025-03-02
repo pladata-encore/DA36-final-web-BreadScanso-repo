@@ -1,35 +1,26 @@
-{% extends 'layout/store/base_store.html' %}
+{% extends 'layout/main/main_base.html' %}
 {% load static %}
 
 {% block title %}Q&A{% endblock title %}
 
 {% block header %}
-    {% include 'layout/store/header_store.html' %}
+    {% include 'layout/main/main_header.html' %}
 {% endblock header %}
 
-{% block sidebar %}
-    {% include 'layout/store/sidebar_store.html' %}
-{% endblock sidebar %}
-
 {% block content %}
-{#    <div class="container my-3">#}
-{#        <!-- 질문 -->#}
-{#        <h1 class="display-6 border-bottom py-2">Q{{ question.qna_id }}. {{ question.title }}</h1>#}
-{#        <div class="card mt-3" style="width: 1500px;">#}
-{#            <div class="card-body" style="width: 1500px;">#}
-{#                <div class="card-text" style="white-space: pre-line; width: 1500px;">{{ question.content }}</div>#}
     <div class="qna-detail-container my-3">
-        <h1 class="display-6 border-bottom py-2">Q{{ question.qna_id }}. {{ question.title }}</h1>
-        <div class="qna-detail-card-container mt-3">
-            <div class="card-body">
-                <div class="card-text">{{ question.content }}</div>
+        <!-- 질문 -->
+        <h1 class="display-6 border-bottom py-2">Q{{ qna.qna_id }}. {{ qna.title }}</h1>
+        <div class="qna-detail-card mt-3">
+            <div class="qna-detail-card-body">
+                <div class="qna-detail-card-text">{{ qna.content }}</div>
                 <div class="d-flex justify-content-end">
-                    <div class="badge bg-secondary text-dark p-2 text-start">
-                        <div class="mb-2">{{ question.member_id }}</div>
-                        <div class="mb-2">{{ question.created_at }}</div>
+                    <div class="badge bg-light text-dark p-2 text-start">
+                        <div class="mb-2">{{ qna.member_id }}</div>
+                        <div class="mb-2">{{ qna.created_at }}</div>
                         {# 편집된 경우만 출력 #}
-                        {% if question.created_at < question.updated_at %}
-                            <div>{{ question.updated_at }}(편집됨)</div>
+                        {% if qna.created_at < qna.updated_at %}
+                            <div>{{ qna.updated_at }}(편집됨)</div>
                         {% endif %}
                     </div>
                 </div>
@@ -43,9 +34,10 @@
     {#                        <span class="badge rounded-pill bg-success">{{question.voter.count}}</span>#}
     {#                    </a>#}
                         {# 작성자 본인에게만 버튼 노출 #}
-                        {% if question.member_id == member.member_id %}
-                            <a href="{% url 'store:question_modify' question.qna_id %}" class="btn btn-sm btn-outline-secondary">수정</a>
-                            <a href="javascript:void(0)" data-uri="{% url 'store:question_delete' question.qna_id %}" class="remove btn btn-sm btn-outline-danger">삭제</a>
+{#                        {% if qna.member_id == member.member_id %}#}
+                        {% if qna.member_id == request.user.member.member_id %}
+                            <a href="{% url 'qna:qna_modify' qna.qna_id %}" class="btn btn-sm btn-outline-secondary">수정</a>
+                            <a href="javascript:void(0)" data-uri="{% url 'qna:qna_delete' qna.qna_id %}" class="remove btn btn-sm btn-outline-danger">삭제</a>
                         {% endif %}
                     </div>
                 </div>
@@ -53,10 +45,10 @@
         </div>
         <!-- 답변 목록 시작 -->
         {% for answer in answers %}
-            <div id="answer_{{ answer.id }}" class="card my-3">
-                <div class="card-body">
-                    <span class="badge text-bg-secondary" style="margin-right: 1500px;">{{ forloop.counter }}</span>
-                    <div class="card-text" style="white-space: pre-line;">
+            <div id="answer_{{ answer.id }}" class="qna-detail-card my-3">
+                <div class="qna-detail-card-body">
+                    <span class="badge text-bg-secondary" style="margin-right: 95%">{{ forloop.counter }}</span>
+                    <div class="qna-detail-card-text">
                         {{ answer.content }}
                     </div>
                     <div class="d-flex justify-content-end">
@@ -86,7 +78,7 @@
                                data-answer-content="{{ answer.content }}"
                                class="btn btn-sm btn-outline-secondary">수정</a>
                             <a href="javascript:void(0)"
-                               data-uri="{% url 'qna:answer_delete' answer.id %}?question_id={{ question.id }}"
+                               data-uri="{% url 'qna:answer_delete' answer.id %}?question_id={{ qna.qna_id }}"
                                class="remove btn btn-sm btn-outline-danger">삭제</a>
                         {% endif %}
                     </div>
@@ -97,7 +89,7 @@
 
         <!-- 답변 등록 시작 -->
         {# /qna/answer/create/2 #}
-        <form name="answerCreateFrm" action="{% url 'store:answer_create' question.qna_id %}" method="post" class="my-3">
+        <form name="answerCreateFrm" action="{% url 'qna:answer_create' qna.qna_id %}" method="post" class="my-3">
             <div class="mb-3">
                 {# csrf 검증처리 : cross-site request forgery 서버가 생성한 정상적인 폼페이지 검증 #}
                 {% csrf_token %}
@@ -106,7 +98,7 @@
             </div>
             <div class="my-3" style="display: flex; justify-content: space-between; width: 100%;">
                 <!-- 목록 버튼 왼쪽 정렬 -->
-                <a class="btn btn-primary" href="{% url 'store:community_qna' %}" style="background-color: black; color: white;">목록</a>
+                <a class="btn btn-primary" href="{% url 'qna:qna_main' %}" style="background-color: black; color: white;">목록</a>
 
                 <!-- 답변 등록 버튼 오른쪽 정렬 -->
                 <input type="submit" value="답변등록" class="btn btn-primary">
@@ -142,6 +134,12 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block footer %}
+    {% include 'layout/main/main_footer.html' %}
+{% endblock footer %}
+
+
 
 {% block script %}
     <script>
@@ -205,7 +203,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRFToken': '{{ csrf_token }}',
                 },
-                body: JSON.stringify({'question_id': {{ question.id }}}),
+                body: JSON.stringify({'question_id': {{ qna.qna_id }}}),
             });
             const data = await response.json();
             // 예외처리
@@ -223,3 +221,4 @@
     });
     </script>
 {% endblock script %}
+

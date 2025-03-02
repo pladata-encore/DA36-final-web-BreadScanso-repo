@@ -32,7 +32,11 @@
                     <tr>
                         <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
                         <td>{{ qna.qna_id }}</td>
-                        <td>{{ qna.title }}</td>
+                        <td>
+                            <a href="{% url 'qna:qna_detail' qna.qna_id %}" class="text-decoration-none">
+                                {{ qna.title }}
+                            </a>
+                        </td>
                         <td>{{ qna.member_id }}</td>
                         <td>{{ qna.created_at }}</td>
                     </tr>
@@ -51,7 +55,7 @@
             <!-- 이전페이지 영역 시작 -->
             {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="{% url 'qna:index' %}?page={{ page_obj.previous_page_number }}">Previous</a>
+                    <a class="page-link" href="{% url 'qna:qna_main' %}?page={{ page_obj.previous_page_number }}">Previous</a>
                 </li>
             {% else %}
                 <li class="page-item disabled">
@@ -70,7 +74,7 @@
                     {% else %}
                         {# 현재페이지가 아닌 경우 #}
                         <li class="page-item">
-                            <a class="page-link" href="{% url 'qna:index' %}?page={{ page_number }}">{{ page_number }}</a>
+                            <a class="page-link" href="{% url 'qna:qna_main' %}?page={{ page_number }}">{{ page_number }}</a>
                         </li>
                     {% endif %}
                 {% endif %}
@@ -81,7 +85,7 @@
             <!-- 다음페이지 영역 시작 -->
             {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="{% url 'qna:index' %}?page={{ page_obj.next_page_number }}">Next</a>
+                    <a class="page-link" href="{% url 'qna:qna_main' %}?page={{ page_obj.next_page_number }}">Next</a>
                 </li>
             {% else %}
                 <li class="page-item disabled">
@@ -92,12 +96,41 @@
         </ul>
     </nav>
     <!-- 페이징 처리 끝 -->
-
-    <a href="{% url 'store:question_create' %}" class="btn btn-primary" style="margin-bottom: 20px;">질문 등록</a>
-
+    <div style="display: flex; justify-content: flex-start;">
+        <a href="{% url 'qna:qna_create' %}" class="btn btn-primary" style="margin-bottom: 20px; display: inline-block;">질문 등록</a>
+    </div>
 {% endblock content %}
 
 {% block footer %}
     {% include 'layout/main/main_footer.html' %}
 {% endblock footer %}
+
+{% block script %}
+    <!-- 검색어 자동완성 관련 jquery.js, bootstrap-autocomplete.js -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="{% static 'js/bootstrap-autocomplete.js' %}"></script>
+    <script>
+        let results;
+        /**
+         * bootstrap-autocomplete api
+         * https://iqbalfn.github.io/bootstrap-autocomplete/
+         */
+        $('#question-search').autocomplete({
+            filter: '{% url 'qna:qna_search' %}?query=#QUERY#',
+            preProcess(response){
+                // 검색결과를 autocomplete형식에 맞게 가공
+                results = response.results; // 전연변수 results에 임시로 저장해두고, onPick에서 사용
+                return response.results.map((item) => item.text); // text만 추출해서 배열로 리턴
+            },
+            onPick(input, item) {
+                // 사용자가 주어진 결과를 선택했을때, 해당 질문의 상세페이지로 이동
+                console.log('onPick', input, item); // input#question-search, item(드랍다운으로 제공된 a태그객체)
+                const {id} = results.find((result) => result.text === item.textContent);
+                console.log('id = ', id);
+                location.href = `/qna/${id}/`;
+            }
+        });
+    </script>
+{% endblock script %}
+
 

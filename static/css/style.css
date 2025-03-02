@@ -35,6 +35,34 @@ body.main-index {
     flex-wrap: wrap; /* 여러 줄 정렬 */
 }
 
+.qna-detail-card {
+    width: 100%; /* 카드 너비 조절 */
+    height: auto; /* 높이 자동 조절 */
+    text-align: center; /* 내부 텍스트 중앙 정렬 */
+    padding: 10px; /* 카드 내부 여백 */
+    border-radius: 10px; /* 둥근 테두리 */
+    background-color: #ffffff; /* 카드 배경 색상 */
+    /*box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); !* 카드 그림자 *!*/
+}
+
+/*.qna-detail-card.card {*/
+/*    width: 100% !important; !* 카드 너비 강제 적용 *!*/
+/*    max-width: 800px !important;*/
+/*    height: auto !important; !* 필요하면 높이 자동 조절 *!*/
+/*}*/
+
+.qna-detail-card-text {
+    white-space: pre-line;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.qna-detail-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* 내부 요소를 가득 차게 */
+}
+
 .card {
     width: 13rem; /* 카드 너비 조절 */
     height: auto; /* 높이 자동 조절 */
@@ -44,6 +72,7 @@ body.main-index {
     background-color: #f8f9fa; /* 카드 배경 색상 */
     /*box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); !* 카드 그림자 *!*/
 }
+
 
 .card-body {
     display: flex;
@@ -288,6 +317,12 @@ body {
 /*--정아 end--*/
 
 /*--예진 start--*/
+
+
+
+
+
+
 /* kiosk-main.html에만 적용되는 헤더 스타일 ----------------------------------------------------------*/
 .kiosk-main {
     background: url('/static/images/kiosk_main.png') no-repeat center center/cover;
