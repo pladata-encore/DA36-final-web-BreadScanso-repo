@@ -6,7 +6,7 @@ load_dotenv()
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '3.34.46.30']
+ALLOWED_HOSTS = ['localhost', '3.34.46.30', '127.0.0.1']
 
 # 개발 db
 DATABASES = {
@@ -35,7 +35,8 @@ AWS_S3_CUSTOM_DOMAIN = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAM
 # 미디어 파일을 S3에 저장하도록 설정
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-
+# OpenAI API 키 추가
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 
 
