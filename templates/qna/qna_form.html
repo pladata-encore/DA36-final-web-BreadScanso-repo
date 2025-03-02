@@ -10,67 +10,38 @@
 {% block content %}
     <div class="container">
         <h5 class="my-3 border-bottom pb-2">
-            {% if '/question/create' in request.path %}
+            {% if '/qna/create' in request.path %}
                 질문 등록
             {% else %}
             	질문 수정
             {% endif %}
         </h5>
-{#        <div class="mb-3">#}
-{#            <label for="store" class="form-label">매장 선택</label>#}
-{#            <select class="form-select" name="store" id="store">#}
-{#                <option value="전체" {% if form.store.value == "전체" %}selected{% endif %}>전체</option>#}
-{#                <option value="A" {% if form.store.value == "A" %}selected{% endif %}>A</option>#}
-{#                <option value="B" {% if form.store.value == "B" %}selected{% endif %}>B</option>#}
-{#                {% for store in stores %}#}
-{#                    <option value="{{ store.id }}" {% if form.store.value == store.id %}selected{% endif %}>#}
-{#                        {{ store.name }}#}
-{#                    </option>#}
-{#                {% endfor %}#}
-{#            </select>#}
-{#        </div>#}
 
         <form method="post">
-            <!-- 오류메시지 시작 -->
-{#            {% if form.errors %}#}
-{#                <div class="alert alert-danger alert-dismissible fade show" role="alert">#}
-{#                    {% for field in form %}#}
-{#                    	{% if field.errors %}#}
-{#                            <div>#}
-{#                                <strong>{{ field.label }}</strong>#}
-{#                                {{ field.errors }}#}
-{#                            </div>#}
-{#                    	{% endif %}#}
-{#                    {% endfor %}#}
-{#                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>#}
-{#                </div>#}
-{#            {% endif %}#}
-            <!-- 오류메시지 끝 -->
-
             {% csrf_token %}
             <div class="mb-3">
-                <label for="subject" class="form-label">{{ form.title.label }}</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    name="title"
-                    id="title"
-                    value="{{ form.title.value | default_if_none:'' }}">
+                <label for="store" class="form-label">{{ form.store.label }}</label>
+                <select class="form-select" name="store" id="store">
+                    {% for store_id, store_name in stores %}
+                        <option value="{{ store_id }}" {% if form.store.value == store_id %}selected{% endif %}>
+                            {{ store_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="title" class="form-label">{{ form.title.label }}</label>
+                <input type="text" class="form-control" name="title" id="title" value="{{ form.title.value|default_if_none:'' }}">
             </div>
             <div class="mb-3">
                 <label for="content" class="form-label">{{ form.content.label }}</label>
-                <textarea
-                        class="form-control"
-                        name="content"
-                        id="content"
-                        rows="10">{{ form.content.value|default_if_none:'' }}</textarea>
+                <textarea class="form-control" name="content" id="content" rows="10">{{ form.content.value|default_if_none:'' }}</textarea>
             </div>
             <div class="my-3" style="display: flex; justify-content: space-between; width: 100%;">
-                <!-- 목록 버튼 왼쪽 정렬 -->
                 <a class="btn btn-primary" href="{% url 'qna:qna_main' %}" style="background-color: black; color: white;">목록</a>
                 <input type="submit" value="저장" class="btn btn-primary">
             </div>
-{#            <button type="submit" class="btn btn-primary">저장하기</button>#}
         </form>
     </div>
 {% endblock content %}
@@ -78,6 +49,3 @@
 {% block footer %}
     {% include 'layout/main/main_footer.html' %}
 {% endblock footer %}
-
-
-

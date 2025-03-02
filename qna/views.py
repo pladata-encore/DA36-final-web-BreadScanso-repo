@@ -205,56 +205,7 @@ class QuestionServiceImpl(QuestionService):
 # Views
 question_service = QuestionServiceImpl.get_instance()
 
-# def qna_main(request):
-#     qnas = QnA.objects.all().order_by('-created_at')
-#
-#     # 페이지당 항목 수 (고정)
-#     qnas_per_page = 10
-#
-#     # 페이지네이션 처리
-#     paginator = Paginator(qnas, qnas_per_page)
-#
-#     # 페이지 번호 가져오기
-#     page_number = request.GET.get("page", 1)
-#     try:
-#         page_number = int(page_number)
-#         if page_number < 1:
-#             page_number = 1
-#     except ValueError:
-#         page_number = 1
-#
-#     # 페이지 객체 가져오기
-#     try:
-#         page_obj = paginator.page(page_number)
-#     except EmptyPage:
-#         page_obj = paginator.page(paginator.num_pages)
-#
-#     # 페이지 범위 계산
-#     max_pages = 5
-#     current_page = page_obj.number
-#     total_pages = paginator.num_pages
-#
-#     start_page = max(1, current_page - 2)
-#     end_page = min(total_pages, start_page + max_pages - 1)
-#
-#     if end_page - start_page + 1 < max_pages and start_page > 1:
-#         start_page = max(1, end_page - max_pages + 1)
-#
-#     page_range = range(start_page, end_page + 1)
-#
-#     context = {
-#         'qnas': qnas,
-#         'page_obj': page_obj,
-#         'page_range': page_range,
-#         'total_qnas': qnas.count(),  # 총 공지사항 수
-#     }
-#
-#     return render(request, 'store/qna_main.html', context)  # 템플릿 파일 경로 지정
 
-
-# def question_detail(request, qna_id):
-#     question = question_service.find_by_id(qna_id)
-#     return render(request, 'store/question_detail.html', {"question": question})
 def qna_detail(request, qna_id):
     qna = question_service.find_by_id(qna_id)
     # 질문에 달린 답변들을 가져옴
@@ -272,20 +223,47 @@ def qna_detail(request, qna_id):
 
 
 # @login_required(login_url='login')
+# def qna_create(request):
+#     # stores = [
+#     #     {"id": "A", "name": "Store A"},
+#     #     {"id": "B", "name": "Store B"}
+#     # ]  # 매장 목록을 리스트 형태로 제공
+#
+#     if request.method == 'POST':
+#         form = QuestionForm(request.POST)
+#         if form.is_valid():
+#             # store = request.POST.get('store', '전체')  # 선택된 매장
+#             qna = form.save(commit=False)
+#             qna.member_id = request.user
+#             # qna.store = store
+#             qna = question_service.create(qna)
+#             return redirect('qna:qna_detail', qna_id=qna.qna_id)
+#         else:
+#             print('form.errors =', form.errors)
+#     else:
+#         form = QuestionForm()
+#
+#     member = request.user.member
+#     context = {
+#         'form': form,
+#         'member': member,
+#         # 'stores': stores,  # 🔥 stores 추가
+#     }
+#
+#     return render(request, 'qna/qna_form.html', context)
+# views.py에서 stores 매핑
 def qna_create(request):
-    # stores = [
-    #     {"id": "A", "name": "Store A"},
-    #     {"id": "B", "name": "Store B"}
-    # ]  # 매장 목록을 리스트 형태로 제공
+    stores = [
+        ('A', '서초점'),
+        ('B', '강남점'),
+    ]  # 매장 코드와 이름 매핑
 
     if request.method == 'POST':
-        form = QuestionForm(request.POST)
+        form = QuestionForm(request.POST, stores=stores)  # stores를 폼에 전달
         if form.is_valid():
-            # store = request.POST.get('store', '전체')  # 선택된 매장
-            qna = form.save(commit=False)
-            qna.member_id = request.user
-            # qna.store = store
-            qna = question_service.create(qna)
+            qna = form.save(commit=False)  # 커밋하지 않고 임시 객체로 저장
+            qna.member_id = request.user  # 현재 사용자 정보 설정
+            qna.save()  # 저장
             return redirect('qna:qna_detail', qna_id=qna.qna_id)
         else:
             print('form.errors =', form.errors)
@@ -296,11 +274,10 @@ def qna_create(request):
     context = {
         'form': form,
         'member': member,
-        # 'stores': stores,  # 🔥 stores 추가
+        'stores': stores,  # 매장 목록을 context에 추가
     }
 
     return render(request, 'qna/qna_form.html', context)
-
 
 
 # @login_required(login_url='uauth:login')
@@ -308,10 +285,10 @@ def qna_modify(request, qna_id):
     qna = question_service.find_by_id(qna_id)
 
     # 인가 확인(작성자 본인 여부)
-    if request.user != qna.member_id:
-        from django.contrib import messages
-        messages.error(request, '수정 권한이 없습니다.') # 논필드오류
-        return redirect('qna:qna_detail', qna_id=qna_id)
+    # if request.user != qna.member_id:
+    #     from django.contrib import messages
+    #     messages.error(request, '수정 권한이 없습니다.') # 논필드오류
+    #     return redirect('qna:qna_detail', qna_id=qna_id)
 
     # GET/POST 요청 분기
     if request.method == 'POST':
@@ -500,9 +477,9 @@ def answer_modify(request, answer_id):
     qna_id = request.GET['qna_id']
     answer = answer_service.find_by_id(answer_id)
 
-    if request.user != answer.author_id:
-        messages.error(request, '수정 권한이 없습니다.')
-        return redirect('qna:qna_detail', qna_id=qna_id)
+    # if request.user != answer.author_id:
+    #     messages.error(request, '수정 권한이 없습니다.')
+    #     return redirect('qna:qna_detail', qna_id=qna_id)
 
     if request.method == 'POST':
         new_content = request.POST['content']
