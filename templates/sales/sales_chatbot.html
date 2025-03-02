@@ -1,0 +1,186 @@
+{% extends 'layout/store/base_store.html' %}
+{% load static %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
+
+{% block title %}chatbot{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <p><strong>🍞브레드스캔소🍞</strong> 매출&판매 관련 질문을 해주세요.</p>
+
+    <form id="chat-form">
+        {% csrf_token %}
+        <div id="chat-box" class="border p-3 mb-3" style="height: 350px; overflow-y: auto; background-color: whitesmoke;"></div>
+
+        <div class="input-group mb-3">
+            <input type="text" id="user-input" class="form-control" placeholder="질문을 입력해 주세요.">
+            <button class="btn btn-primary" id="send-btn">▶️</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+    // 챗봇 시작 안내 메시지
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML = `<div class="mb-3 p-2 bg-secondary text-white rounded">
+            <strong>🤖:</strong> 매장의 기간별 총 매출액, 판매량 또는 제품의 기간별 매출액, 판매량을 질문해 주세요.
+        </div>`;
+    });
+
+    function playTTS(filePath) {
+        if (!filePath || filePath === "TTS 변환 실패") {
+            console.error("TTS 파일 경로가 유효하지 않습니다:", filePath);
+            alert("음성 파일을 재생할 수 없습니다.");
+            return;
+        }
+        
+        try {
+            console.log("TTS 재생 시도:", filePath);
+            const audio = new Audio(filePath);
+            
+            audio.addEventListener('error', function(e) {
+                console.error("오디오 재생 오류:", e);
+                alert("음성 파일을 재생하는 중 오류가 발생했습니다.");
+            });
+            
+            audio.play().catch(err => {
+                console.error("오디오 재생 Promise 오류:", err);
+                alert("음성 파일을 재생하는 중 오류가 발생했습니다.");
+            });
+        } catch (error) {
+            console.error("TTS 재생 중 예외 발생:", error);
+            alert("음성 재생 중 오류가 발생했습니다.");
+        }
+    }
+
+    function sendMessage(event) {
+        event.preventDefault(); // 기본 제출 방지
+        const userInput = document.getElementById("user-input");
+        const question = userInput.value.trim();
+        
+        // 사용자가 입력하지 않았으면 return
+        if (!question) {
+            alert("질문을 입력하세요!");
+            return;
+        }
+
+        // 사용자 메시지 표시
+        const chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML += `<div class="mb-2"><strong>🗣:</strong> ${question}</div>`;
+        
+        // 입력 필드 초기화
+        userInput.value = "";
+
+        // 로딩 표시
+        chatBox.innerHTML += `<div id="loading" class="mb-2"><strong>🤖:</strong> 분석 중... 잠시만 기다려 주세요.😊 </div>`;
+        
+        // 스크롤 아래로 이동
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // CSRF 토큰 가져오기
+        const csrftoken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+        // 서버에 요청
+        fetch("{% url 'sales:sales_chatbot' %}", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json", 
+                "X-CSRFToken": csrftoken
+            },
+            body: JSON.stringify({ question: question })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("서버 응답:", data);
+            
+            // 로딩 메시지 제거
+            const loadingElement = document.getElementById("loading");
+            if (loadingElement) {
+                loadingElement.remove();
+            }
+            
+            if (data.answer) {
+                // 챗봇 응답 표시
+                chatBox.innerHTML += `<div class="mb-3 p-2 bg-light rounded"><strong>🤖:</strong> ${data.answer}</div>`;
+                
+                // TTS 재생 버튼 추가
+                if (data.tts_file) {
+                    console.log("TTS 파일 경로:", data.tts_file);
+                    chatBox.innerHTML += `
+                        <div class="mb-3">
+                            <button class="btn btn-sm btn-secondary" onclick="playTTS('${data.tts_file}')">
+                                🎙️ 음성으로 듣기
+                            </button>
+                        </div>`;
+                }
+            } else if (data.error) {
+                // 오류 메시지 표시
+                chatBox.innerHTML += `<div class="mb-2 text-danger"><strong>오류:</strong> ${data.error}</div>`;
+            } else {
+                // 기타 예상치 못한 응답 처리
+                chatBox.innerHTML += `<div class="mb-2 text-warning"><strong>알림:</strong> 서버에서 예상치 못한 응답이 왔습니다.</div>`;
+            }
+            
+            // 스크롤 아래로 이동
+            chatBox.scrollTop = chatBox.scrollHeight;
+        })
+        .catch(error => {
+            console.error("서버 요청 오류:", error);
+            
+            // 로딩 메시지가 존재하는 경우에만 제거
+            const loadingElement = document.getElementById("loading");
+            if (loadingElement) {
+                loadingElement.remove();
+            }
+            
+            chatBox.innerHTML += `<div class="mb-2 text-danger">
+                <strong>오류:</strong> 서버 요청 중 오류가 발생했습니다.<br>
+                <small>${error.message || '알 수 없는 오류'}</small>
+            </div>`;
+            
+            // 스크롤 아래로 이동
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    }
+
+    // DOM 요소를 안전하게 참조
+    document.addEventListener('DOMContentLoaded', function() {
+        // 폼 submit 방지 및 메시지 전송
+        const chatForm = document.getElementById("chat-form");
+        if (chatForm) {
+            chatForm.addEventListener("submit", sendMessage);
+        }
+        // Enter 키로도 메시지 전송
+        const userInput = document.getElementById("user-input");
+        if (userInput) {
+            userInput.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault(); // 기본 제출 방지
+                    sendMessage();
+                }
+            });
+        }
+
+        // 전송 버튼 이벤트 리스너
+        const sendBtn = document.getElementById("send-btn");
+        if (sendBtn) {
+            sendBtn.addEventListener("click", sendMessage);
+        }
+    });
+</script>
+{% endblock %}

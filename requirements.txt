@@ -5,3 +5,9 @@ blacknoise
 mysqlclient
 django-ebhealthcheck
 boto3
+gTTS
+fastapi
+openai
+pydantic
+requests
+python-dotenv
