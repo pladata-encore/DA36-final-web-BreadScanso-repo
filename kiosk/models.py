@@ -15,6 +15,7 @@ class OrderInfo(models.Model):
     earned_points = models.IntegerField(default=0)  # 적립 포인트
     used_points = models.IntegerField(default=0)  # 사용 포인트
     final_amount = models.IntegerField(default=0)  # 최종 결제 금액
+    total_count = models.IntegerField(default=0)
 
     def calculate_earned_points(self):  # 적립 포인트 계산
         store_name = Member.objects.get(store=self.store)
