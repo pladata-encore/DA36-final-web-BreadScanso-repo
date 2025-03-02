@@ -99,6 +99,46 @@
 <div class="text-muted small mb-2 mt-2">
     총 <strong>{{ total_ingredients }}</strong>개의 제품이 있습니다.
 </div>
+
+<!-- 페이지 네비게이션 (중앙) -->
+<div class="d-flex justify-content-center mt-2 mb-4">
+    <nav aria-label="Page navigation">
+        <ul class="pagination mb-0">
+            <!-- 이전 버튼 -->
+            <li class="page-product {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
+                {% if page_obj.has_previous %}
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo; 이전</span>
+                    </a>
+                {% else %}
+                    <span class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo; 이전</span>
+                    </span>
+                {% endif %}
+            </li>
+
+            <!-- 페이지 번호들 -->
+            {% for num in page_range %}
+                <li class="page-product {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}">{{ num }}</a>
+                </li>
+            {% endfor %}
+
+            <!-- 다음 버튼 -->
+            <li class="page-product {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
+                {% if page_obj.has_next %}
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">다음 &raquo;</span>
+                    </a>
+                {% else %}
+                    <span class="page-link" aria-label="Next">
+                        <span aria-hidden="true">다음 &raquo;</span>
+                    </span>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+</div>
     
     <!-- 수정용 모달 -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel">
@@ -144,44 +184,6 @@
         <button class="btn btn-success" type="button" id="new-register-btn">신규등록</button>
     </div>
     </div>
-    
-    <!-- 페이지 네비게이션 (중앙) -->
-    <nav aria-label="Page navigation">
-        <ul class="pagination mb-0">
-            <!-- 이전 버튼 -->
-            <li class="page-product {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
-                {% if page_obj.has_previous %}
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo; 이전</span>
-                    </a>
-                {% else %}
-                    <span class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">&laquo; 이전</span>
-                    </span>
-                {% endif %}
-            </li>
-
-            <!-- 페이지 번호들 -->
-            {% for num in page_range %}
-                <li class="page-product {% if page_obj.number == num %}active{% endif %}">
-                    <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}">{{ num }}</a>
-                </li>
-            {% endfor %}
-
-            <!-- 다음 버튼 -->
-            <li class="page-product {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
-                {% if page_obj.has_next %}
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" aria-label="Next">
-                        <span aria-hidden="true">다음 &raquo;</span>
-                    </a>
-                {% else %}
-                    <span class="page-link" aria-label="Next">
-                        <span aria-hidden="true">다음 &raquo;</span>
-                    </span>
-                {% endif %}
-            </li>
-        </ul>
-    </nav>
 
 {% endblock content %}
 
