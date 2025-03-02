@@ -101,7 +101,9 @@
                 <a class="btn btn-primary" href="{% url 'qna:qna_main' %}" style="background-color: black; color: white;">목록</a>
 
                 <!-- 답변 등록 버튼 오른쪽 정렬 -->
-                <input type="submit" value="답변등록" class="btn btn-primary">
+                {% if user.is_authenticated and request.session.member_type == "manager" %}
+                    <input type="submit" value="답변등록" class="btn btn-primary">
+                {% endif %}
             </div>
 
         </form>

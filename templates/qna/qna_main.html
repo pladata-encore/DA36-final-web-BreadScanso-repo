@@ -22,6 +22,7 @@
                 <th scope="col"></th>
                 <th scope="col">번호</th>
                 <th scope="col">제목</th>
+                <th scope="col">매장</th>
                 <th scope="col">작성자</th>
                 <th scope="col">등록일</th>
             </tr>
@@ -37,6 +38,7 @@
                                 {{ qna.title }}
                             </a>
                         </td>
+                        <td>{{ qna.store }}</td>
                         <td>{{ qna.member_id }}</td>
                         <td>{{ qna.created_at }}</td>
                     </tr>
@@ -97,7 +99,9 @@
     </nav>
     <!-- 페이징 처리 끝 -->
     <div style="display: flex; justify-content: flex-start;">
-        <a href="{% url 'qna:qna_create' %}" class="btn btn-primary" style="margin-bottom: 20px; display: inline-block;">질문 등록</a>
+        {% if user.is_authenticated and request.session.member_type != "manager" %}
+            <a href="{% url 'qna:qna_create' %}" class="btn btn-primary" style="margin-bottom: 20px; display: inline-block;">질문 등록</a>
+        {% endif %}
     </div>
 {% endblock content %}
 
