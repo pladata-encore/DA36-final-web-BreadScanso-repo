@@ -19,32 +19,26 @@
                     <label for="product-select">제품 선택:</label>
                     <select id="product-select">
                         <option value="all">전체</option>
-                        <option value="1">단팥빵</option>
-                        <option value="2">소금빵</option>
-                        <option value="3">식빵</option>
-                        <option value="4">커스터드크림빵</option>
-                        <option value="5">피자빵</option>
+                        {% for item in items %}
+                            <option value="{{ item.item_id }}" {% if item.item_id == selected_item %}selected{% endif %}>{{ item.item_name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
-                
-                <div>
-                    <label for="time-select">기간 선택:</label>
-                    <select id="time-select">
-                        <option value="daily">최근 7일</option>
-                        <option value="weekly">최근 4주</option>
-                        <option value="monthly">최근 4개월</option>
-                    </select>
-                </div>
-                
+
                 <div>
                     <label for="start-date">기간 설정:</label>
-                    <input type="date" id="start-date"> ~ <input type="date" id="end-date">
+                    <input type="date" id="start-date" value="2025-02-23" /> ~
+                    <input type="date" id="end-date" value="2025-03-02" />
+                </div>
+
+                <div>
+                    <button id="update-button">확인</button>
                 </div>
             </div>
-            
+
             <canvas id="salesChart" style="width: 100%; height: 400px; margin-top: 20px;"></canvas>
         </div>
-        
+
         <div style="flex: 3.5; align-self: flex-end; margin-bottom: 50px;">
             <h4>판매량 TOP5 제품</h4>
             <table class="table table-bordered">
@@ -57,12 +51,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in sales_data.top5 %}
+                    {% for item in top5 %}
                     <tr>
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>{{ item.total_price }}</td>
+                        <td>{{ item.item_id }}</td>
+                        <td>{{ item.item_name }}</td>
+                        <td>{{ item.total_quantity }}</td>
+                        <td>₩{{ item.total_price }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -74,32 +68,73 @@
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    let salesData = {{ sales_data.daily|safe }};
+    // 기본값: 어제부터 5일간의 매출 데이터
+    let salesData = {{ sales_data | safe }};
     let ctx = document.getElementById('salesChart').getContext('2d');
+
     let salesChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: salesData.map(data => data.date),
             datasets: [{
                 label: '매출 금액',
-                data: salesData.map(data => data.sales),
+                data: salesData.map(data => data.total_price),
                 borderWidth: 1
             }]
         },
         options: {
             responsive: true,
             scales: {
-                y: {beginAtZero: true}
+                y: { beginAtZero: true }
             }
         }
     });
 
-    document.getElementById('time-select').addEventListener('change', function() {
-        updateChart(this.value);
+    // "확인" 버튼 클릭 시 그래프 업데이트
+    document.getElementById('update-button').addEventListener('click', function() {
+        updateChart();
     });
 
-    function updateChart(period) {
-        console.log(period + ' 데이터 업데이트');
+
+    const salesUrl = "/sales/";  // 템플릿 태그로 URL을 미리 렌더링하여 변수에 저장
+
+    function updateChart(type, value) {
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+        const productId = document.getElementById('product-select').value;
+
+        let params = {
+            start_date: startDate,
+            end_date: endDate,
+            item_id: productId
+        };
+
+        const url = new URL(salesUrl);  // 미리 렌더링된 URL을 사용
+
+        url.searchParams.append('start_date', startDate);
+        url.searchParams.append('end_date', endDate);
+        url.searchParams.append('item_id', productId);
+
+        fetch(url, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        })
+        .then(response => response.json())
+        .then(jsonData => {
+            let salesData = jsonData.salesData;
+
+            // 차트 데이터 업데이트
+            salesChart.data.labels = salesData.map(item => item.date);
+            salesChart.data.datasets[0].data = salesData.map(item => item.total_price);
+            salesChart.update();
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+        });
     }
+
+
+
+
 </script>
 {% endblock script %}
