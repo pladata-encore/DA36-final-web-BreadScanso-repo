@@ -8,6 +8,8 @@ import re
 from .utils import upload_profile_image_to_s3
 import random
 import string
+from menu.models import Item
+
 
 def index(request):
     return render(request, "main/index.html")
@@ -177,3 +179,13 @@ def store_signup(request):
     member = request.user.member
 
     return render(request, "main/store_signup.html", {'member': member})
+
+
+# 메인홈-product 신제품 가져오기 코드 - 안나옴/일단보류
+# def product(request):
+#         new_items = Item.objects.filter(is_new=True)[:3]  # 신제품 중 3개만 가져오기
+#
+#         context = {
+#             'new_items': new_items,
+#         }
+#         return render(request, "menu/menu_main.html", context)
