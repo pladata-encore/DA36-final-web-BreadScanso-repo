@@ -32,6 +32,7 @@
     <div class="brand-home-img">
         <img src="{% static 'images/home_text2.png' %}" class="rounded mx-auto d-block" alt="메인홈인사말1">
     </div>
+    <br>
 {#    <p class="center-text" style="font-size: {{ font_size }};">따뜻한 빵의 향기로 가득한 브레드 스캔소에 오신 것을 환영합니다!</p>#}
     <!-- 슬라이드 -->
     <div id="carouselExampleIndicators" class="carousel slide">
@@ -103,6 +104,17 @@
             </div>
         </div>
     </div>
+    {# 메뉴에서 신제품 끌어오기했는데 잘 안됌. 코드는 일단 보류 #}
+{#        <div class="new-container">#}
+{#            {% for item in new_items|slice:":3" %}#}
+{#            <div class="new-item">#}
+{#                {% if item.item_image %}#}
+{#                    <img src="{{ item.item_image }}" class="product-img" alt="{{ item.item_name }}">#}
+{#                {% else %}#}
+{#                    <img src="{% static 'images/default.jpg' %}" class="product-img" alt="{{ item.item_name }}">#}
+{#                {% endif %}#}
+{#            </div>#}
+{#        </div>#}
 <br><br>
 
 {% endblock content %}
