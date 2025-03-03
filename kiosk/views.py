@@ -13,10 +13,11 @@ def kiosk_main(request):
     return render(request, 'kiosk/kiosk_main.html')
 
 def products(request):
-    items = Item.objects.values('item_name', 'item_name_eng', 'sale_price')
+    items = Item.objects.values('item_name', 'item_name_eng', 'sale_price', 'item_id')
     menu_dict = {item['item_name_eng']: {
         'name': item['item_name'],
-        'price': item['sale_price']/
+        'price': item['sale_price'],
+        'item_id': item['item_id']
     } for item in items}
 
     return render(request, 'kiosk/kiosk_products.html', {
