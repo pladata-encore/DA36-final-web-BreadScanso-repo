@@ -1,0 +1,51 @@
+{% extends 'layout/main/main_base.html' %}
+{% load static %}
+
+{% block title %}Q&A{% endblock title %}
+
+{% block header %}
+    {% include 'layout/main/main_header.html' %}
+{% endblock header %}
+
+{% block content %}
+    <div class="container">
+        <h5 class="my-3 border-bottom pb-2">
+            {% if '/qna/create' in request.path %}
+                질문 등록
+            {% else %}
+            	질문 수정
+            {% endif %}
+        </h5>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="store" class="form-label">{{ form.store.label }}</label>
+                <select class="form-select" name="store" id="store">
+                    {% for store_id, store_name in stores %}
+                        <option value="{{ store_id }}" {% if form.store.value == store_id %}selected{% endif %}>
+                            {{ store_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="title" class="form-label">{{ form.title.label }}</label>
+                <input type="text" class="form-control" name="title" id="title" value="{{ form.title.value|default_if_none:'' }}">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">{{ form.content.label }}</label>
+                <textarea class="form-control" name="content" id="content" rows="10">{{ form.content.value|default_if_none:'' }}</textarea>
+            </div>
+            <div class="my-3" style="display: flex; justify-content: space-between; width: 100%;">
+                <a class="btn btn-primary" href="{% url 'qna:qna_main' %}" style="background-color: black; color: white;">목록</a>
+                <input type="submit" value="저장" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+{% endblock content %}
+
+{% block footer %}
+    {% include 'layout/main/main_footer.html' %}
+{% endblock footer %}

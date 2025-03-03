@@ -18,25 +18,25 @@ urlpatterns = [
     path('community_notice', views.community_notice, name='community_notice'),  # 커뮤니티/공지사항
     path('community_notice/write', views.community_notice_write, name='community_notice_write'),  # 커뮤니티/공지사항 글쓰기
     path('community_notice/modify/<int:notice_id>', views.community_notice_modify, name='community_notice_modify'),  # 커뮤니티/공지사항 수정
-    path('community_qna', views.community_qna, name='community_qna'),  # 커뮤니티/Q&A
+    # path('community_qna', views.community_qna, name='community_qna'),  # 커뮤니티/Q&A
 
-    # question관련 view
-    path('community_qna/question/<int:qna_id>/', views.question_detail, name='question_detail'),
-    path('community_qna/question/create/', views.question_create, name='question_create'),
-    path('community_qna/question/modify/<int:qna_id>/', views.question_modify, name='question_modify'),
-    path('community_qna/question/delete/<int:qna_id>/', views.question_delete, name='question_delete'),
-
-    # question관련 view - ajax
-    # path('community_qna/question/search/', views.question_search, name='question_search'),
-    # path('community_qna/question/vote/<int:question_id>/', views.question_vote, name='question_vote'),
-
-    # answer관련 view
-    path('community_qna/answer/create/<int:qna_id>/',views.answer_create, name='answer_create'),
-    path('community_qna/answer/delete/<int:answer_id>/', views.answer_delete, name='answer_delete'),
-    path('community_qna/answer/modify/<int:answer_id>/', views.answer_modify, name='answer_modify'),
-
-    # answer관련 view - ajax
-    # path('community_qna/answer/vote/<int:answer_id>/', views.answer_vote, name='answer_vote'),
+    # # question관련 view
+    # path('community_qna/question/<int:qna_id>/', views.question_detail, name='question_detail'),
+    # path('community_qna/question/create/', views.question_create, name='question_create'),
+    # path('community_qna/question/modify/<int:qna_id>/', views.question_modify, name='question_modify'),
+    # path('community_qna/question/delete/<int:qna_id>/', views.question_delete, name='question_delete'),
+    #
+    # # question관련 view - ajax
+    # # path('community_qna/question/search/', views.question_search, name='question_search'),
+    # # path('community_qna/question/vote/<int:question_id>/', views.question_vote, name='question_vote'),
+    #
+    # # answer관련 view
+    # path('community_qna/answer/create/<int:qna_id>/',views.answer_create, name='answer_create'),
+    # path('community_qna/answer/delete/<int:answer_id>/', views.answer_delete, name='answer_delete'),
+    # path('community_qna/answer/modify/<int:answer_id>/', views.answer_modify, name='answer_modify'),
+    #
+    # # answer관련 view - ajax
+    # # path('community_qna/answer/vote/<int:answer_id>/', views.answer_vote, name='answer_vote'),
 
 
     path('store_account', views.store_account, name='store_account'),  # 매장정보

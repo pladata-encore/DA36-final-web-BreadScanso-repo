@@ -92,18 +92,19 @@ class QnAReply(models.Model):
 class QuestionForm(forms.ModelForm):
     class Meta:
         model = QnA
-        # fields = ['title', 'content', 'store']  # store 필드는 Model에서 자동으로 가져옴
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'store']
         labels = {
             'title': '제목',
             'content': '내용',
-            # 'store': '매장선택'
+            'store': '매장선택'
         }
 
-    # def __init__(self, *args, **kwargs):
-    #     stores = kwargs.pop('stores', [])  # 🔥 추가: 전달된 stores 가져오기
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['store'].choices = [("전체", "전체")] + [(store["id"], store["name"]) for store in stores]
+    def __init__(self, *args, **kwargs):
+        stores = kwargs.pop('stores', [])
+        super().__init__(*args, **kwargs)
+        # 매장 선택 필드에 매장 목록을 설정
+        self.fields['store'].choices = [('', '매장 선택')] + stores
+
 
 
 # 회원정보수정

@@ -3,7 +3,7 @@ from .settings import *
 import os
 
 # 운영환경에서는 반드시 False로 설정
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
   'eb-breadscanso2-env.eba-ivnsims9.ap-northeast-2.elasticbeanstalk.com', # eb 도메인
@@ -46,7 +46,8 @@ AWS_S3_CUSTOM_DOMAIN = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAM
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 
-
+# OpenAI API 키 추가
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 
 

@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // 페이지 로드시 세션 스토리지 초기화
     sessionStorage.removeItem("productDictionary");
     sessionStorage.removeItem("totalQuantity");
-    sessionStorage.removeItem("totalPrice");
+    sessionStorage.removeItem("totalAmount");
     sessionStorage.removeItem("usedPoints");
-    sessionStorage.removeItem("finalPrice");
+    sessionStorage.removeItem("finalAmount");
     sessionStorage.removeItem("earnedPoints");
     sessionStorage.removeItem("phone_num");
     sessionStorage.removeItem("points");
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 // ngrok(터널링 서비스) url 설정
-    const NGROK_URL = "https://e290-175-121-129-72.ngrok-free.app/predict/";
+    const NGROK_URL = "https://de58-175-121-129-72.ngrok-free.app/predict/";
 
     let productDictionary = {};
 
@@ -52,49 +52,50 @@ document.addEventListener('DOMContentLoaded', function() {
 // 주문 테이블 비우기
         document.getElementById('order-table').innerHTML = '';
 // 총 수량과 총 금액 초기화
-        document.getElementById('total-quantity').textContent = '0개';
-        document.getElementById('total-price').textContent = '0원';
+        document.getElementById('totalQuantity').textContent = '0개';
+        document.getElementById('totalAmount').textContent = '0원';
 // 제품 딕셔너리 초기화
         productDictionary = {};
 // 세션 스토리지 초기화
         sessionStorage.removeItem("productDictionary");
         sessionStorage.removeItem("totalQuantity");
-        sessionStorage.removeItem("totalPrice");
+        sessionStorage.removeItem("totalAmount");
     });
 
 // 테이블 업데이트 함수
     function updateOrderTable() {
         const orderTable = document.getElementById("order-table");
-        const totalQuantityElement = document.getElementById("total-quantity");
-        const totalPriceElement = document.getElementById("total-price");
+        const totalQuantityElement = document.getElementById("totalQuantity");
+        const totalAmountElement = document.getElementById("totalAmount");
         // 테이블 초기화
         orderTable.innerHTML = "";
         let totalQuantity = 0;
-        let totalPrice = 0;
+        let totalAmount = 0;
 
         Object.keys(productDictionary).forEach(itemName => {
             const product = productDictionary[itemName];
             totalQuantity += product.quantity;
-            totalPrice += product.totalAmount;
+            totalAmount += product.totalPrice;
             const row = `
             <tr>
                 <td>${product.korName}</td>
                 <td>${product.price.toLocaleString()}원</td>
                 <td>${product.quantity}</td>
-                <td>${product.totalAmount.toLocaleString()}원</td>
+                <td>${product.totalPrice.toLocaleString()}원</td>
             </tr>
         `;
             orderTable.innerHTML += row;
         });
-
+        // 디버깅
+        console.log("totalQuantity", totalQuantity);
         // 총 수량과 금액 업데이트
         totalQuantityElement.innerHTML = `${totalQuantity}개`;
-        totalPriceElement.innerHTML = `${totalPrice.toLocaleString()}원`;
-
+        totalAmountElement.innerHTML = `${totalAmount.toLocaleString()}원`;
+        console.log("SAdjhgjhgjha",productDictionary);
         // 세션 스토리지에 데이터 저장
         sessionStorage.setItem("productDictionary", JSON.stringify(productDictionary));
         sessionStorage.setItem("totalQuantity", totalQuantity);
-        sessionStorage.setItem("totalPrice", totalPrice);
+        sessionStorage.setItem("totalAmount", totalAmount.toString());
 
     }
 
@@ -125,28 +126,29 @@ document.addEventListener('DOMContentLoaded', function() {
             const results = JSON.parse(responseText);
             console.log("📌 추론 결과:", results);
 
-            // 상품 데이터를 테이블에 추가
-            results.forEach(result => {
-                if (result?.name && result?.confidence) {
-                    const engName = result.name;
-                    const korName = getKoreanName(engName);
-                    const price = menu_data[engName]?.price || 0;
-
-
-                    if (productDictionary[engName]) {
-                        productDictionary[engName].quantity += 1;
-                        productDictionary[engName].totalAmount =
-                            productDictionary[engName].quantity * productDictionary[engName].price;
-                    } else {
-                        productDictionary[engName] = {
-                            korName: korName,
-                            price: price,
-                            quantity: 1,
-                            totalAmount: price
-                        };
-                    }
-                }
-            });
+// 상품 데이터를 테이블에 추가 (결과 처리 부분)
+results.forEach(result => {
+    if (result?.name && result?.confidence) {
+        const engName = result.name;
+        const korName = getKoreanName(engName);
+        const price = menu_data[engName]?.price || 0;
+        const item_id = menu_data[engName]?.item_id || null; // item_id 추가
+    console.log("llllllllkkkkkkkkll",engName);
+        if (productDictionary[engName]) {
+            productDictionary[engName].quantity += 1;
+            productDictionary[engName].totalPrice =
+                productDictionary[engName].quantity * productDictionary[engName].price;
+        } else {
+            productDictionary[engName] = {
+                korName: korName,
+                price: price,
+                quantity: 1,
+                totalPrice: price,
+                item_id: item_id // item_id 저장
+            };
+        }
+    }
+});
 
             // 테이블 업데이트
             updateOrderTable();

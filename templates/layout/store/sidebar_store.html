@@ -14,7 +14,7 @@
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                     <li><a href="{% url 'sales:sales_main' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">그래프</a></li>
                     <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">매출</a></li>
-                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">AI챗봇</a></li>
+                    <li><a href="{% url 'sales:sales_chatbot' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">AI챗봇</a></li>
                 </ul>
             </div>
         </li>
@@ -56,11 +56,11 @@
                         <li><a href="{% url 'store:about_breadscanso_edit' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">브랜드 소개</a></li>
                         <li><a href="{% url 'store:store_map' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">매장 안내</a></li>
                         <li><a href="{% url 'store:store_event' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">이벤트</a></li>
-                        <li>▪️ 커뮤니티</li>
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
-                            <li><a href="{% url 'store:community_notice' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항</a></li>
-                            <li><a href="{% url 'store:community_qna' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Q&A</a></li>
-                        </ul>
+                        <li><a href="{% url 'store:community_notice' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항</a></li>
+{#                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">#}
+{#                            <li><a href="{% url 'store:community_notice' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항</a></li>#}
+{#                            <li><a href="{% url 'store:community_qna' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Q&A</a></li>#}
+{#                        </ul>#}
                     </ul>
                     <li><a href="{% url 'store:store_account' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">⚙️매장 정보</a></li>
                 </ul>

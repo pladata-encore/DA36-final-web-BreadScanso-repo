@@ -15,27 +15,7 @@ class OrderInfo(models.Model):
     earned_points = models.IntegerField(default=0)  # 적립 포인트
     used_points = models.IntegerField(default=0)  # 사용 포인트
     final_amount = models.IntegerField(default=0)  # 최종 결제 금액
-
-    def calculate_earned_points(self):  # 적립 포인트 계산
-        store_name = Member.objects.get(store=self.store)
-        if store_name and store_name.earning_rate is not None:
-            self.earned_points = int(self.total_amount * store_name.earning_rate)
-        else:
-            self.earned_points = 0
-        return self.earned_points
-
-    def calculate_final_amount(self, used_points=0):
-        self.used_points = used_points
-        self.final_amount = max(self.total_amount - used_points, 0)
-        return self.final_amount
-
-    def save(self, *args, **kwargs):
-        if self._state.adding:  # 새로운 객체인 경우에만 계산
-            self.calculate_earned_points()
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"Order {self.order_id}"
+    total_count = models.IntegerField(default=0) # 주문당 상품 수
 
 
 # OrderItem 주문항목
@@ -57,24 +37,23 @@ class OrderItem(models.Model):
         super().save(*args, **kwargs)
 
         # 주문이 저장된 후, 해당 주문에 속한 모든 OrderItem을 기반으로 OrderInfo의 총액을 갱신함
-        self.order.total_amount = sum(item.item_total for item in self.order.orderitem_set.all())
+        self.order.total_count = sum(item.item_count for item in self.order.orderitem_set.all())
         self.order.save()
 
     def __str__(self):
         return f"Item {self.item} in Order {self.order.order_id}"
-
 
 # PaymentInfo 결제정보
 class PaymentInfo(models.Model):
     payment_id = models.AutoField(primary_key=True)
     order = models.ForeignKey(OrderInfo, on_delete=models.CASCADE)  # OrderInfo와 1:N 관계
     member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True, blank=True)  # 회원 정보 추가
-    payment_method = models.CharField(max_length=20, choices=[("credit", "카드"), ("cash", "현금")])  # 결제 방법
+    payment_method = models.CharField(max_length=20, choices=[("credit", "카드"), ("epay", "간편결제")])  # 결제 방법
     payment_status = models.BooleanField(default=True)  # 결제 상태
     card_name = models.CharField(max_length=20, null=True, blank=True)  # 카드 이름
     pay_at = models.DateTimeField(default=timezone.now)
     approval_code = models.CharField(max_length=5, null=True, blank=True)  # 승인 번호
-    used_points = models.IntegerField(default=0)  # 사용 포인트 필드 추가
+    used_points = models.IntegerField(default=0)  # 사용 포인트
 
     def save(self, *args, **kwargs):
         is_new = self._state.adding
@@ -88,11 +67,16 @@ class PaymentInfo(models.Model):
         else:
             prev_status = None
 
+        # 카드 이름 리스트
+        card_list = ['samsung', 'shinhan', 'hyundai', 'woori', 'kb', 'nh', 'etc']
         # 카드 결제 승인번호
         if self.payment_method == "credit" and not self.approval_code:
             self.approval_code = str(random.randint(10000, 99999))
-        elif self.payment_method == "cash":
+            # 카드 이름 랜덤으로 생성
+            self.card_name = random.choice(card_list)
+        elif self.payment_method == "epay":
             self.approval_code = None
+            self.card_name = None
 
         with transaction.atomic():
             super().save(*args, **kwargs)
@@ -100,9 +84,6 @@ class PaymentInfo(models.Model):
             if self.member:
                 if is_new and self.payment_status:
                     # 회원 정보 업데이트
-                    self.member.total_spent += self.order.total_amount
-                    # 포인트 계산: 기존 포인트 + 적립 포인트 - 사용 포인트
-                    self.member.points = self.member.points + self.order.earned_points - self.used_points
                     self.member.last_visited = self.order.order_at
                     self.member.visit_count += 1
                     self.member.save()

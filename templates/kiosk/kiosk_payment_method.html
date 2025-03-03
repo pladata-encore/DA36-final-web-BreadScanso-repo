@@ -104,9 +104,9 @@
             <!-- 박스 없이 표 아래 오른쪽 정렬 -->
             <div class="total-info">
                 <p>총 수량: <strong id="totalQuantity">0개</strong></p>
-                <p>총 금액: <strong id="totalPrice">0원</strong></p>
+                <p>총 금액: <strong id="totalAmount">0원</strong></p>
                 <p>사용 포인트: <strong id="usedPoints">0원</strong></p>
-                <p>최종 결제 금액: <strong id="final_amount">0원</strong></p>
+                <p>최종 결제 금액: <strong id="finalAmount">0원</strong></p>
             </div>
         </div>
     </div>
@@ -120,7 +120,9 @@
             <button class="blue-button">간편 결제<br>(삼성페이, 애플페이 등)</button>
         </a>
     </div>
-    
+    <script>
+    const earningRate = parseFloat("{{ request.session.earning_rate }}") || 0;
+    </script>
     <!-- JavaScript 파일 불러오기 -->
     <script src="{% static 'js/kiosk-paymentMethod.js' %}"></script>
 
