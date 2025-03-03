@@ -20,7 +20,7 @@
 
     <div class="keypad-container">
         <h5 class="mb-3">포인트를 사용하시겠습니까?</h5>
-        <p class="mb-3">총 결제 금액 <strong id="totalPrice">0</strong>원</p>
+        <p class="mb-3">총 결제 금액 <strong id="totalAmount">0</strong>원</p>
 
         <p class="mb-3">잔여 포인트 <strong id="points">0</strong>P</p>
 
@@ -47,9 +47,9 @@
 
         <div class="button-container">
             <a href="{% url 'payment_method' %}">
-                <button class="btn btn-outline-danger btn-lg">사용 안 함</button>
+                <button class="btn btn-outline-danger btn-lg" onclick ="confirmPoints()">사용 안 함</button>
             </a>
-            <button class="btn btn-primary btn-lg" onclick="confirmPoints()">확인</button>
+            <button class="btn btn-primary btn-lg" onclick="confirmPoints(true)">확인</button>
         </div>
     </div>
 

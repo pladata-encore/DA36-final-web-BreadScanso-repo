@@ -43,7 +43,7 @@ function confirm() {
         .then(response => response.json())
         .then(data => {
             console.log("서버 응답:", data);
-            if (data.is_member) {
+            if (data.phone_num) {
                 alert("입력한 번호 : " + phoneNumber + " 로 포인트가 적립됩니다.");
 
                 console.log("전화번호:", data.phone_num);  // 🔹 회원 전화번호 출력

@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    // console.log('DOMContentLoaded@kiosk-usePoint.js totalAmount:', totalAmount);
     // 세션 스토리지에서 데이터 가져오기
     const totalPrice = parseInt(sessionStorage.getItem("totalPrice") || "0");
+    const totalAmount = parseInt(sessionStorage.getItem("totalAmount") || "0");
     const memberPoints = parseInt(sessionStorage.getItem("points") || "0");
     const phoneNum = sessionStorage.getItem("phone_num") || "";
     
@@ -12,11 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 페이지에 정보 표시
-    document.getElementById('totalPrice').textContent = totalPrice.toLocaleString();
+    const $totalAmount = document.getElementById('totalAmount');
+    $totalAmount.textContent = totalAmount.toLocaleString();
     document.getElementById('points').textContent = memberPoints.toLocaleString();
     
     // 최대 사용 가능 포인트 계산 (총 결제 금액과 보유 포인트 중 작은 값)
-    const maxPoints = Math.min(memberPoints, totalPrice);
+    const maxPoints = Math.min(memberPoints, totalAmount);
     document.getElementById('max-points').textContent = maxPoints.toLocaleString();
     
     console.log("세션 저장된 포인트:", memberPoints);
@@ -57,39 +61,44 @@ function deleteLast() {
 }
 
 // 포인트 사용 확인 함수
-function confirmPoints() {
+function confirmPoints(usePoints = false) {
+    console.log("포인트 사용 여부:", usePoints);
+
     const pointsInput = parseInt(document.getElementById('points-input').value.replace(/,/g, ''));
     const memberPoints = parseInt(sessionStorage.getItem("points") || "0");
-    const totalPrice = parseInt(sessionStorage.getItem("totalPrice") || "0");
+    const totalAmount = parseInt(sessionStorage.getItem("totalAmount") || "0");
     const maxPoints = parseInt(document.getElementById('max-points').textContent.replace(/,/g, ''));
     const minPoints = parseInt(document.getElementById('min-points').textContent.replace(/,/g, ''));
     
-    // 입력값 검증
-    if (isNaN(pointsInput) || pointsInput < minPoints) {
-        alert(`최소 ${minPoints.toLocaleString()}P 이상 사용해야 합니다.`);
-        return;
+    sessionStorage.setItem("usedPoints", 0); // 기본값
+    
+    if(usePoints){
+
+        // 입력값 검증
+        if (isNaN(pointsInput) || pointsInput < minPoints) {
+            alert(`최소 ${minPoints.toLocaleString()}P 이상 사용해야 합니다.`);
+            return;
+        }
+
+        if (pointsInput > maxPoints) {
+            alert(`최대 ${maxPoints.toLocaleString()}P까지만 사용 가능합니다.`);
+            return;
+        }
+
+        if (pointsInput > totalAmount) {
+            alert(`결제 금액을 초과했습니다.`);
+            return;
+        }
+        // 사용할 포인트 세션 스토리지에 저장
+        sessionStorage.setItem("usedPoints", pointsInput.toString());
     }
     
-    if (pointsInput > maxPoints) {
-        alert(`최대 ${maxPoints.toLocaleString()}P까지만 사용 가능합니다.`);
-        return;
-    }
     
-    if (pointsInput > totalPrice) {
-        alert(`결제 금액을 초과했습니다.`);
-        return;
-    }
-    
-    // 사용할 포인트 세션 스토리지에 저장
-    sessionStorage.setItem("usedPoints", pointsInput);
-    
-    // 최종 결제 금액 계산 (총 결제 금액 - 사용 포인트)
-    const finalPrice = totalPrice - pointsInput;
-    sessionStorage.setItem("finalPrice", finalPrice);
-    
-    // 최종 보유 포인트 계산 (기존 포인트 - 사용 포인트)
-    const finalPoints = memberPoints - pointsInput; // earnedPoints 더해줘야됨
-    sessionStorage.setItem("finalPoints", finalPoints);
+    // 최종 결제 금액 계산 (주문 총액 - 사용 포인트)
+    const finalAmount = totalAmount - pointsInput;
+    console.log("최종 결제 금액:", finalAmount);
+    sessionStorage.setItem("finalAmount", finalAmount.toString());
+    console.log(sessionStorage.getItem("finalAmount"));
     
     alert(`${pointsInput.toLocaleString()}P를 사용합니다.`);
     
