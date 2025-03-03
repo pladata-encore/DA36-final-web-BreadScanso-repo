@@ -8,7 +8,8 @@
 {% endblock header %}
 
 {% block content %}
-    <div class="container" style="background-color: #FFFFFF">
+    <body style="background-color: #ffffff;">
+    <div class="container">
         <img src="{% static 'images/signup_text.png' %}" alt="회원가입" class="logo-img">
         <form method="POST" action="{% url 'main:signup' %}" enctype="multipart/form-data">
             {% csrf_token %}
@@ -223,8 +224,9 @@
         <p class="d-inline">이미 계정이 있으신가요?</p>
         <a href="{% url 'main:login' %}" class="btn btn-outline-secondary d-inline" role="button">로그인</a>
         </form>
-    <br><br><br><br><br><br><br>
+    <br><br><br><br><br>
     </div>
+    </body>
 {% endblock content %}
 
 {% block footer %}
