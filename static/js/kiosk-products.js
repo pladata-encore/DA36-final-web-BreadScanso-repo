@@ -133,7 +133,7 @@ results.forEach(result => {
         const korName = getKoreanName(engName);
         const price = menu_data[engName]?.price || 0;
         const item_id = menu_data[engName]?.item_id || null; // item_id 추가
-    console.log("llllllllkkkkkkkkll",engName);
+
         if (productDictionary[engName]) {
             productDictionary[engName].quantity += 1;
             productDictionary[engName].totalPrice =
