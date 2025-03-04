@@ -14,6 +14,16 @@ body.main-index {
     width: 50%;  /* 이미지 크기 조정 */
     height: 220px;  /* 원본 비율 유지 */
 }
+
+.design1 img {
+    width: 100%;  /* 이미지 크기 조정 */
+    height: auto;  /* 원본 비율 유지 */
+}
+
+.design2 img {
+    width: 100%;  /* 이미지 크기 조정 */
+    height: auto;  /* 원본 비율 유지 */
+}
 /* ----------------------------------------------------------------------- */
 /* 브랜드소개 로고 */
 .brand-logo {
@@ -294,6 +304,13 @@ body.main-index .event-img, body.main-index .product-img {
     padding: 10px 0; /* 위아래 여백 */
 }
 
+/* 매장페이지 - 회원관리 테이블 설정 */
+.member-edit-table {
+    width: 100%; /* 테이블 너비 설정 */
+    min-width: 800px; /* 최소 너비 설정 */
+    /*border-collapse: collapse;*/
+}
+
 .delete-btn {
     margin-left: 10px; /* 왼쪽 여백 추가 */
 }
@@ -353,12 +370,6 @@ body {
     cursor: pointer;
 }
 /* ----------------------------------------------------------------------- */
-/* 매장페이지 - 회원관리 */
-.member-edit-table {
-    width: 100%; /* 테이블 너비 설정 */
-    min-width: 800px; /* 최소 너비 설정 */
-    /*border-collapse: collapse;*/
-}
 
 /*--정아 end--*/
 
