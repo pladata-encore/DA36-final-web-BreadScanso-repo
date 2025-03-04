@@ -1097,6 +1097,19 @@ body.kiosk-payment-completed {
     background-color: #0056b3;
 }
 
+.new-tag-main {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #FFEE8C;
+    color: black;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
 /* ----------------------------------------------------------------------- */
 /* 제품 상세 페이지 */
 /* 전체 컨테이너 중앙 정렬 */
