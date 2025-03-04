@@ -20,7 +20,7 @@ def menu_main(request):
 
     # 매장이 선택되었다면 필터링
     if selected_store:
-        items_query = items_query.filter(store=selected_store).order_by('item_name')
+        items_query = items_query.filter(store=selected_store)
         new_items_query = new_items_query.filter(store=selected_store)
 
     # 카테고리 필터링 추가
@@ -39,12 +39,13 @@ def menu_main(request):
 
     # 매장 선택 여부에 따라 처리
     if not selected_store:
-        items = get_unique_items(items_query)
-        new_items = get_unique_items(new_items_query)
+        items = get_unique_items(items_query.order_by('item_name'))
+        new_items = get_unique_items(new_items_query.order_by('item_name'))
         best_items = []  # 매장 미선택 시 Best는 표시 안 함
     else:
-        items = items_query.distinct()
-        new_items = new_items_query.distinct()
+        # new 태그가 있는 제품을 먼저 정렬하고, 나머지는 가나다 순 정렬
+        items = items_query.order_by('-new', 'item_name').distinct()
+        new_items = new_items_query.order_by('item_name').distinct()
         best_items = items_query.filter(best=1).distinct()
 
     context = {
@@ -151,15 +152,16 @@ def menu_store(request):
         'sort_by': sort_by,  # 변환 전 값 유지 (예: 'item_name')
         'sort_order': sort_order,  # 'asc' 또는 'desc' 그대로 전달
     }
-    print(f"sort_by: {sort_by}, sort_order: {sort_order}")
+
     return render(request, 'menu/menu_store.html', context)
 
 # ---------------------------------------------------------------------------- #
 # 점주 신규 메뉴 등록 페이지
 def menu_add(request):
     member = request.user.member
-    return render(request, 'menu/new_menu.html', {'member': member})
+    return render(request, 'menu/menu_add.html', {'member': member, 'stores': member.store})
 
+# ---------------------------------------------------------------------------- #
 # 점주 메뉴 관리 상세 페이지
 def menu_store_menu_info(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
@@ -177,6 +179,7 @@ def menu_store_menu_info(request, item_id):
 
     return render(request, 'menu/menu_info.html', context)
 
+# ---------------------------------------------------------------------------- #
 # 점주 메뉴 관리 수정 페이지
 @require_http_methods(["GET", "POST"])
 def menu_store_menu_edit(request, item_id):
@@ -189,7 +192,7 @@ def menu_store_menu_edit(request, item_id):
         item.cost_price = request.POST.get("cost", item.cost_price)
         item.sale_price = request.POST.get("price", item.sale_price)
         item.category = request.POST.get("category", item.category)
-        item.store = request.POST.get("store", item.store)
+        item.store = request.user.member.store # 로그인한 사용자의 member.store 정보 가져옴
 
         # Best, New, 노출 여부 업데이트
         item.best = request.POST.get("best") == "on"
@@ -251,7 +254,7 @@ def menu_store_menu_edit(request, item_id):
 
     return render(request, "menu/menu_edit.html", context)
 
-
+# ---------------------------------------------------------------------------- #
 # 점주 메뉴 관리에서 메뉴 삭제 기능
 @require_http_methods(["POST"])
 def menu_delete(request):
@@ -291,9 +294,9 @@ def menu_delete(request):
             "message": "서버 오류가 발생했습니다."
         })
 
-
+# ---------------------------------------------------------------------------- #
 # 신규 제품 등록 기능
-# @require_http_methods(["POST"])
+@require_http_methods(["POST"])
 def menu_save(request):
     if request.method == "POST":
         # best, new, show 체크박스 여부
@@ -304,7 +307,7 @@ def menu_save(request):
         # 기본 제품 정보
         item_name = request.POST.get("item_name")
         category = request.POST.get("category")
-        store = request.POST.get("store")
+        store = request.user.member.store # 로그인한 사용자의 member.store 정보 가져옴
         description = request.POST.get("description")
         cost_price = request.POST.get("cost_price")
         sale_price = request.POST.get("sale_price")
@@ -333,13 +336,13 @@ def menu_save(request):
             try:
                 item_image_url = upload_product_image_to_s3(request.FILES['item_image'])
             except Exception as e:
-                return render(request, 'menu/new_menu.html', {
+                return render(request, 'menu/menu_add.html', {
                     'error': f'이미지 업로드 중 오류가 발생했습니다: {str(e)}'
                 })
 
         # 제품 정보 입력 검수
         if not all([item_name, category, description, cost_price, sale_price, store]):
-            return render(request, 'menu/new_menu.html', {
+            return render(request, 'menu/menu_add.html', {
                 'error': '기본 정보의 모든 필드를 입력해주세요.'
             })
 
@@ -376,7 +379,7 @@ def menu_save(request):
             else:
                 # 영양 정보 입력 검수
                 menu.delete()
-                return render(request, 'menu/new_menu.html', {
+                return render(request, 'menu/menu_add.html', {
                     'error': '영양 정보의 모든 필드를 입력해주세요.'
                 })
 
@@ -395,8 +398,8 @@ def menu_save(request):
             return redirect('menu_store_menu_info', item_id=menu.item_id)
 
         except Exception as e:
-            return render(request, 'menu/new_menu.html', {
+            return render(request, 'menu/menu_add.html', {
                 'error': f'저장 중 오류가 발생했습니다: {str(e)}'
             })
     else:
-        return render(request, 'menu/new_menu.html')
+        return render(request, 'menu/menu_add.html')
