@@ -154,7 +154,7 @@
         </div>
     </div>
     
-    <!-- 전체 제품 표시 -->
+    <!-- 전체 제품 표시 (매장 선택시) -->
     <div class="container mt-5">
         <div class="category-block">
             <h2 class="category-title">전체 메뉴</h2>
@@ -162,7 +162,11 @@
                 {% for item in items %}
                 <div class="col">
                     <div class="card shadow-sm h-100 product-card" data-id="{{ item.item_id }}">
-                        <!-- 🔥 S3 이미지 사용 -->
+                        <!-- New 태그 -->
+                        {% if item.new == 1 %}
+                            <div class="new-tag-main">NEW</div>
+                        {% endif %}
+                        <!-- S3 이미지 사용 -->
                         {% if item.item_image %}
                             <img src="{{ item.item_image }}" class="card-img-top" alt="{{ item.item_name }}">
                         {% else %}

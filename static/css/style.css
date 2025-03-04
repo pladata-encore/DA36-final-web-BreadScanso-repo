@@ -1,7 +1,8 @@
 /*--정아 start--*/
 /* 전체 배경색 설정 */
 body.main-index {
-    background-color: #F2D0A9;  /* 원하는 배경색 */
+    /*background-color: #F2D0A9;  !* 원하는 배경색 *!*/
+    background-color: #FFFFFF;  /* 원하는 배경색 */
 }
 
 .brand-home-img img{
@@ -11,7 +12,7 @@ body.main-index {
 
 .brand-home2-img img{
     width: 50%;  /* 이미지 크기 조정 */
-    height: 200px;  /* 원본 비율 유지 */
+    height: 220px;  /* 원본 비율 유지 */
 }
 /* ----------------------------------------------------------------------- */
 /* 브랜드소개 로고 */
@@ -34,7 +35,7 @@ body.main-index {
 
 .brand-text img {
     width: 1000px;  /* 이미지 크기 조정 */
-    height: 300px;  /* 원본 비율 유지 */
+    height: 350px;  /* 원본 비율 유지 */
 }
 /* ----------------------------------------------------------------------- */
 /* 브랜드소개 하단 4개의 네모박스(카드) */
@@ -71,6 +72,8 @@ body.main-index {
     display: flex;
     flex-direction: column;
     align-items: stretch; /* 내부 요소를 가득 차게 */
+    /*border: 2px solid black; !* 검정색 윤곽선 *!*/
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* 검정색 그림자 */
 }
 
 .card {
@@ -1094,6 +1097,19 @@ body.kiosk-payment-completed {
 
 #load-more-btn:hover {
     background-color: #0056b3;
+}
+
+.new-tag-main {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #FFEE8C;
+    color: black;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-transform: uppercase;
 }
 
 /* ----------------------------------------------------------------------- */

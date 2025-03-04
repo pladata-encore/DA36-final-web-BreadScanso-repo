@@ -191,4 +191,4 @@ async def get_tts_file(file_name: str):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("fastapi_server:app", host="0.0.0.0", port=8001, reload=True)
+    uvicorn.run("fastapi_server:app", host="0.0.0.0", port=8002, reload=True)

@@ -13,16 +13,25 @@ def kiosk_main(request):
     return render(request, 'kiosk/kiosk_main.html')
 
 def products(request):
-    items = Item.objects.values('item_name', 'item_name_eng', 'sale_price', 'item_id')
-    menu_dict = {item['item_name_eng']: {
-        'name': item['item_name'],
-        'price': item['sale_price'],
-        'item_id': item['item_id']
-    } for item in items}
+    store = request.session.get('store')
+
+    # store 값이 없으면 빈 dictionary로 반환
+    if not store:
+        menu_dict = {}
+    else:
+        # store 값에 해당하는 항목만 필터링
+        items = Item.objects.filter(store=store).values('item_name', 'item_name_eng', 'sale_price', 'item_id')
+
+        menu_dict = {item['item_name_eng']: {
+            'name': item['item_name'],
+            'price': item['sale_price'],
+            'item_id': item['item_id']
+        } for item in items}
 
     return render(request, 'kiosk/kiosk_products.html', {
         'menu_data': menu_dict
     })
+
 
 def member(request):
     return render(request, 'kiosk/kiosk_member.html')
