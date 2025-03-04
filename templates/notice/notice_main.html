@@ -8,84 +8,113 @@
 {% endblock header %}
 
 {% block content %}
+<style>
+        .notice-title {
+            cursor: pointer; /* 마우스 올리면 포인터로 변경 */
+        }
+        .notice-title:hover {
+            color: #007bff; /* hover 시 파란색으로 변경 (선택적) */
+            text-decoration: underline; /* 밑줄 추가 (선택적) */
+        }
+</style>
+    
+    <body class="text-dark py-3" style="background-color: #ffffff;">
     <h3 style="margin-top: 20px; font-weight: bold" class="text-center">공지사항</h3>
 
-    <!-- 검색 -->
-    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; justify-content: flex-end;">
-        <input type="search" id="searchMember" placeholder="검색어를 입력해주세요" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
-        <button id="search_button" type="button" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
+    <!-- 검색 버튼 -->
+    <div style="flex-grow: 1; display: flex; justify-content: flex-end;">
+        <form method="get" class="d-flex mb-3" role="search" id="search-form">
+            <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="제목을 입력하세요" aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+            <button type="submit" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
+        </form>
     </div>
-
 
     <!-- 공지사항 테이블 -->
     <table class="table">
         <thead>
             <tr class="table-dark">
-                <th scope="col"></th>
-                <th scope="col">번호</th>
+                <th scope="col" class="text-center">번호</th>
                 <th scope="col">제목</th>
-                <th scope="col">작성자</th>
-                <th scope="col">등록일</th>
+                <th scope="col" class="text-center">작성자</th>
+                <th scope="col" class="text-center">등록일</th>
             </tr>
         </thead>
         <tbody class="table-group-divider">
             {% for notice in page_obj %}
-                    {% if forloop.counter <= 10 %}
-                        <tr>
-                            <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
-                            <td>{{ notice.notice_id }}</td>
-                            <td>{{ notice.title }}</td>
-                            <td>{{ notice.store }}</td>
-                            <td>{{ notice.created_at }}</td>
-                        </tr>
-                    {% endif %}
+                {% if forloop.counter <= 10 %}
+                    <tr>
+                        <td class="text-center">
+                            {% if notice.pinned == 1 %}
+                                [공지]
+                            {% else %}
+                                {{ notice.notice_id }}
+                            {% endif %}
+                        </td>
+                        <td class="notice-title" data-notice-id="{{ notice.notice_id }}">{{ notice.title }}</td>
+                        <td class="text-center">
+                            {% if notice.store == 'A' %}
+                                서초점
+                            {% elif notice.store == 'B' %}
+                                강남점
+                            {% else %}
+                                {{ notice.store }}
+                            {% endif %}
+                        </td>
+                        <td class="text-center">{{ notice.created_at|date:"Y-m-d" }}</td>
+                    </tr>
+                {% endif %}
             {% empty %}
                 <tr>
-                    <td colspan="11">등록된 공지가 없습니다.</td>
+                    <td colspan="4">등록된 공지가 없습니다.</td> <!-- colspan 수정: 5 -> 4 -->
                 </tr>
             {% endfor %}
         </tbody>
     </table>
     <br><br><br><br>
     <nav aria-label="Page navigation" style="margin-bottom: 20px; display: flex; justify-content: center;">
-            <ul class="pagination mb-0">
-                <!-- 이전 버튼 -->
-                <li class="page-product {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
-                    {% if page_obj.has_previous %}
-                        <a class="page-link rounded-start-2" href="?page={{ page_obj.previous_page_number }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo; 이전</span>
-                        </a>
-                    {% else %}
-                        <span class="page-link rounded-start-2" aria-label="Previous">
-                            <span aria-hidden="true">&laquo; 이전</span>
-                        </span>
-                    {% endif %}
-                </li>
+        <ul class="pagination mb-0">
+            <!-- 이전 버튼 -->
+            <li class="page-product {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
+                {% if page_obj.has_previous %}
+                    <a class="page-link rounded-start-2" href="?page={{ page_obj.previous_page_number }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">« 이전</span>
+                    </a>
+                {% else %}
+                    <span class="page-link rounded-start-2" aria-label="Previous">
+                        <span aria-hidden="true">« 이전</span>
+                    </span>
+                {% endif %}
+            </li>
 
-                <!-- 페이지 번호들 -->
-                {% for num in page_range %}
-                    <li class="page-product {% if page_obj.number == num %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}">{{ num }}</a>
-                    </li>
-                {% endfor %}
-
-                <!-- 다음 버튼 -->
-                <li class="page-product {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
-                    {% if page_obj.has_next %}
-                        <a class="page-link rounded-end-2" href="?page={{ page_obj.next_page_number }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" aria-label="Next">
-                            <span aria-hidden="true">다음 &raquo;</span>
-                        </a>
-                    {% else %}
-                        <span class="page-link rounded-end-2" aria-label="Next">
-                            <span aria-hidden="true">다음 &raquo;</span>
-                        </span>
-                    {% endif %}
+            <!-- 페이지 번호들 -->
+            {% for num in page_range %}
+                <li class="page-product {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}">{{ num }}</a>
                 </li>
-            </ul>
-        </nav>
+            {% endfor %}
+
+            <!-- 다음 버튼 -->
+            <li class="page-product {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
+                {% if page_obj.has_next %}
+                    <a class="page-link rounded-end-2" href="?page={{ page_obj.next_page_number }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">다음 »</span>
+                    </a>
+                {% else %}
+                    <span class="page-link rounded-end-2" aria-label="Next">
+                        <span aria-hidden="true">다음 »</span>
+                    </span>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
 {% endblock content %}
 
 {% block footer %}
     {% include 'layout/main/main_footer.html' %}
 {% endblock footer %}
+
+{% block script %}
+    {{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
+    <script src="{% static 'js/notice_main.js' %}"></script>
+{% endblock script %}
 

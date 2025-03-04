@@ -1,14 +1,18 @@
-{% extends 'layout/main/main_base.html' %}
+{% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}공지사항{% endblock title %}
+{% block title %}시스템설정{% endblock title %}
 
 {% block header %}
-    {% include 'layout/main/main_header.html' %}
+    {% include 'layout/store/header_store.html' %}
 {% endblock header %}
 
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
+
 {% block content %}
-    <body class="text-dark py-3" style="background-color: #ffffff;">
+    <h3 style="margin-top: 20px; font-weight: bold" class="text-center">공지사항</h3>
     
     <div class="container my-5">
         <div class="row justify-content-center">
@@ -28,13 +32,15 @@
                     </table>
 
                     <!-- 공지사항 제목과 내용 -->
-                    <h2 class="text-center mb-3">{{ notice.title }}</h2>
-                    <p class="text-center">{{ notice.content|safe }}</p>
+{#                    <h2 class="text-center mb-3">{{ notice.title }}</h2>#}
+{#                    <p class="text-center">{{ notice.content|safe }}</p>#}
+                        <h3>{{ notice.title }}</h3>
+                        <div>{{ notice.content|safe }}</div>
                 </div>
 
                 <!-- 목록 버튼 -->
                 <div class="d-flex justify-content-start mt-4">
-                    <a href="{% url 'notice_main' %}" class="btn btn-secondary">목록으로</a>
+                    <a href="{% url 'notice_store' %}" class="btn btn-secondary">목록으로</a>
                 </div>
             </div>
         </div>

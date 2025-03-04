@@ -27,6 +27,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),  # 소셜로그인 추가, allauth 관련 url 추가
     path('google-login/', google_login, name='google_login'),
     path('naver-login/', naver_login, name='naver_login'),
+    path('summernote/', include('django_summernote.urls')),  # summernote 텍스트 에디터 추가
 
 ]
 
