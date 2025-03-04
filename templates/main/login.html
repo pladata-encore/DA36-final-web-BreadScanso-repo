@@ -8,8 +8,6 @@
 {% endblock header %}
 
 {% block content %}
-{#{% load socialaccount %}#}
-
     <body style="background-color: #ffffff;">
     <div class="container">
         <img src="{% static 'images/login_text.png' %}" alt="text" class="logo-img">
@@ -41,7 +39,10 @@
         </form>
         <br>
         {# 아래 구글로 로그인하기자리에 넣기 - 지금은 임시로 비번찾기 링크 걸어놓음 #}
-        <a href="{% url 'main:login_find' %}" class="btn btn-outline-danger d-inline" role="button">구글로 로그인하기</a>
+        {#        <a href="{% url 'main:login_find' %}" class="btn btn-outline-danger d-inline" role="button">구글로 로그인하기</a>#}
+        {% load socialaccount %}
+        <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger d-inline" role="button">구글로 로그인하기</a>
+        <a href="{% provider_login_url 'naver' %}" class="btn btn-outline-success d-inline" role="button">네이버로 로그인하기</a>
 
 {#        <a href="{% provider_login_url 'google' %}">구글로 로그인하기</a>#}
         <br><br>
