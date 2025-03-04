@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.naver',
     # 'corsheaders',  # ♦️지우지마세요♦️
+    'django_summernote',  # 텍스트 에디터 summernote 추가
 ]
 
 MIDDLEWARE = [
@@ -205,7 +206,31 @@ ACCOUNT_EMAIL_VERIFICATION = 'none' # none | optional | mandatory
 # LOGOUT_REDIRECT_URL = '/app/'  # 기본값 /
 ACCOUNT_LOGOUT_ON_GET = True # 기본값 False
 
-
+#---------------------------------------#
+# Summernote 설정
+SUMMERNOTE_CONFIG = {
+    'summernote': {
+        'width': '100%',
+        'height': '400',
+        'lang': 'ko-KR',
+        'toolbar': [
+            ['style', ['style']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+            ['color', ['color']],
+            ['table', ['table']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['picture', 'link', 'video']],
+            ['view', ['fullscreen', 'help']],
+        ],
+        'fontNames': ['Arial', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '돋음체', '바탕체'],
+        'fontSizes': ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72', '96'],
+    },
+    'attachment_upload_to': '',  # 기본 업로드 경로 비활성화 (S3로 처리할 것이므로)
+    'attachment_require_authentication': True,  # 인증된 사용자만 업로드 가능
+}
 
 
 

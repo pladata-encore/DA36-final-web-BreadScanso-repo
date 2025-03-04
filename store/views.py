@@ -299,18 +299,6 @@ def store_event_edit(request):
     member = request.user.member
     return render(request, 'store/store_event_edit.html', {"member": member})  # 이벤트 수정
 
-def community_notice(request):
-    member = request.user.member
-    return render(request, 'store/community_notice.html', {"member": member})  # 커뮤니티/공지사항
-
-def community_notice_write(request):
-    member = request.user.member
-    return render(request, 'store/community_notice_write.html', {"member": member})  # 커뮤니티/공지사항 글쓰기
-
-def community_notice_modify(request, notice_id):
-    member = request.user.member
-    return render(request, 'store/community_notice_modify.html', {'notice_id': notice_id, "member": member})  # 커뮤니티/공지사항 글쓰기
-
 def store_account(request):
     member = request.user.member
     return render(request, 'store/store_account.html', {"member": member})  # 매장정보
