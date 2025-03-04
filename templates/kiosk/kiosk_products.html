@@ -57,38 +57,102 @@
             border-collapse: collapse;
         }
 
-th, td {
-    padding: 4px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
+        th, td {
+            padding: 4px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
 
-.order-list table th:nth-child(5), .order-list table td:nth-child(5) {
-    width: 30px; /* 20px → 15px로 더 작게 */
-    min-width: 30px;
-    max-width: 30px;
-    padding: 0; /* 패딩 완전 제거 */
-}
+        .order-list table th:nth-child(5), .order-list table td:nth-child(5) {
+            width: 30px;
+            min-width: 30px;
+            max-width: 30px;
+            padding: 0;
+        }
 
-.order-list .del-btn {
-    background-color: red !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 2px !important;
-    cursor: pointer !important;
-    padding: 0 !important;
-    font-size: 14px !important;
-    width: 20px !important;
-    height: 20px !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    line-height: 1 !important;
-    margin: 0 auto !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    box-sizing: border-box !important;
-}
+        .order-list .del-btn {
+            background-color: red !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 2px !important;
+            cursor: pointer !important;
+            padding: 0 !important;
+            font-size: 14px !important;
+            width: 20px !important;
+            height: 20px !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            line-height: 1 !important;
+            margin: 0 auto !important;
+            min-width: 0 !important;
+            min-height: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        #edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        #edit-modal > div {
+            background: white;
+            width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #edit-modal h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #search-input, #item-select, #quantity-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            -webkit-appearance: textfield; /* 기본 스핀 버튼 스타일 초기화 */
+        }
+
+        #quantity-input::-webkit-inner-spin-button,
+        #quantity-input::-webkit-outer-spin-button {
+            -webkit-appearance: inner-spin-button; /* 스핀 버튼 유지 */
+            width: 30px; /* 스핀 버튼 너비 키움 */
+            height: 30px; /* 스핀 버튼 높이 키움 */
+            opacity: 1; /* 투명도 조정 */
+            background-color: #f0f0f0; /* 배경색 추가 */
+            border-radius: 3px; /* 둥글게 */
+        }
+
+        #save-item-btn, #close-modal-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #save-item-btn {
+            background-color: blue;
+            color: white;
+            border: none;
+        }
+
+        #close-modal-btn {
+            background-color: gray;
+            color: white;
+            border: none;
+        }
     </style>
 </head>
 
@@ -118,7 +182,8 @@ th, td {
                 <th>단가</th>
                 <th>수량</th>
                 <th>금액</th>
-<th style="width: 15px; padding: 0;">삭제</th>            </tr>
+                <th style="width: 15px; padding: 0;">삭제</th>
+            </tr>
             </thead>
             <tbody id="order-table">
             </tbody>
@@ -144,16 +209,21 @@ th, td {
 <!-- 모달 창 -->
 <div id="edit-modal"
      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
-    <div style="background:white; width:400px; margin:100px auto; padding:20px; border-radius:5px;">
+    <div style="background:white; width:500px; margin:50px auto; padding:30px; border-radius:10px;">
         <h3>품목 수정/추가</h3>
-        <input type="text" id="search-input" placeholder="품목 검색" style="width:100%; padding:5px; margin-bottom:10px;">
-        <select id="item-select" size="5" style="width:100%; margin-bottom:10px;"></select>
-        <input type="number" id="quantity-input" min="1" value="1" style="width:100%; padding:5px; margin-bottom:10px;">
+        <input type="text" id="search-input" placeholder="품목 검색"
+               style="width:100%; padding:10px; margin-bottom:15px; font-size:16px; border-radius:5px; border:1px solid #ddd;">
+        <select id="item-select" size="5"
+                style="width:100%; padding:10px; margin-bottom:15px; font-size:16px; border-radius:5px; border:1px solid #ddd;"></select>
+        <input type="number" id="quantity-input" min="1" value="1"
+               style="width:100%; padding:10px; margin-bottom:15px; font-size:16px; border-radius:5px; border:1px solid #ddd;">
         <button id="save-item-btn"
-                style="background-color:blue; color:white; padding:5px 10px; border:none; border-radius:5px;">저장
+                style="background-color:blue; color:white; padding:12px 24px; font-size:16px; border:none; border-radius:5px; cursor:pointer; margin-right:10px;">
+            저장
         </button>
         <button id="close-modal-btn"
-                style="background-color:gray; color:white; padding:5px 10px; border:none; border-radius:5px;">닫기
+                style="background-color:gray; color:white; padding:12px 24px; font-size:16px; border:none; border-radius:5px; cursor:pointer;">
+            닫기
         </button>
     </div>
 </div>
@@ -165,9 +235,6 @@ th, td {
         <button class="black-button">결제</button>
     </a>
 </div>
-</div>
-</div>
-
 
 <!-- Django 데이터를 JavaScript에 전달 -->
 <script>
@@ -178,7 +245,5 @@ th, td {
 <!-- JavaScript 파일 불러오기 -->
 <script src="{% static 'js/kiosk-products.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
 </body>
 </html>

@@ -70,9 +70,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const product = productDictionary[itemName];
             totalQuantity += product.quantity;
             totalAmount += product.totalPrice;
+
+            // confidence 값이 70% 미만이면 붉은 글씨로 표시
+            const textColor = (product.confidence < 0.7) ? 'style="color: red;"' : '';
             const row = `
                 <tr>
-                    <td>${product.korName}</td>
+                    <td ${textColor}>${product.korName}</td>
                     <td>${product.price.toLocaleString()}원</td>
                     <td>${product.quantity}</td>
                     <td>${product.totalPrice.toLocaleString()}원</td>
@@ -131,18 +134,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     const korName = getKoreanName(engName);
                     const price = menu_data[engName]?.price || 0;
                     const item_id = menu_data[engName]?.item_id || null;
+                    const confidence = result.confidence; // confidence 값 저장
 
                     if (productDictionary[engName]) {
                         productDictionary[engName].quantity += 1;
                         productDictionary[engName].totalPrice =
                             productDictionary[engName].quantity * productDictionary[engName].price;
+                        // confidence 값이 더 낮은 경우 갱신
+                        if (confidence < productDictionary[engName].confidence) {
+                            productDictionary[engName].confidence = confidence;
+                        }
                     } else {
                         productDictionary[engName] = {
                             korName: korName,
                             price: price,
                             quantity: 1,
                             totalPrice: price,
-                            item_id: item_id
+                            item_id: item_id,
+                            confidence: confidence // confidence 값 추가
                         };
                     }
                 }
@@ -208,7 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     price: menu_data[selectedItem].price,
                     quantity: quantity,
                     totalPrice: menu_data[selectedItem].price * quantity,
-                    item_id: menu_data[selectedItem].item_id
+                    item_id: menu_data[selectedItem].item_id,
+                    confidence: 1.0 // 수동 추가 시 confidence 값 기본 100%
                 };
             } else {
                 productDictionary[selectedItem].quantity += quantity;
