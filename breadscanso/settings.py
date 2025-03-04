@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 print("BASE_DIR = ", BASE_DIR)
@@ -51,11 +52,13 @@ INSTALLED_APPS = [
     'store',
     'store_info',
     'ebhealthcheck.apps.EBHealthCheckConfig', # eb 상태 관리(CI/CD 안정화)
+    'django.contrib.sites', #추가한것
     # allauth 앱 추가
-    # "allauth",
-    # "allauth.account",
-    # "allauth.socialaccount",
-    # "allauth.socialaccount.providers.google",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.naver',
     # 'corsheaders',  # ♦️지우지마세요♦️
 ]
 
@@ -68,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'corsheaders.middleware.CorsMiddleware',
+    "allauth.account.middleware.AccountMiddleware", # allauth middleware 추가
 ]
 
 # CORS_ALLOW_ALL_ORIGINS = True
@@ -100,6 +104,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'breadscanso.wsgi.application'
+
+
+
 
 
 # Password validation
@@ -157,6 +164,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # 기본 인증 백엔드
+    # 'allauth' 이메일 로그인과 같은 특정 인증 방법
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 # AUTH_USER_MODEL = 'member.Member'
@@ -164,6 +173,12 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL = '/main/login/'  # 실제 로그인 URL에 맞게 수정
 
 
+SITE_ID = 1 # django.contrib.sites 프레임워크 다중 사이트 지원 관련, SITE_ID값 1은 기본 사이트를 지정한다. (django_site 테이블의 첫 번째 레코드)
+ACCOUNT_EMAIL_REQUIRED = True # 회원가입시 email 필수입력
+ACCOUNT_EMAIL_VERIFICATION = 'none' # none | optional | mandatory
+# LOGIN_REDIRECT_URL = '/app/' # 기본값 /accounts/profile/
+# LOGOUT_REDIRECT_URL = '/app/'  # 기본값 /
+ACCOUNT_LOGOUT_ON_GET = True # 기본값 False
 
 
 

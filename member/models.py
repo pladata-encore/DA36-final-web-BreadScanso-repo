@@ -11,9 +11,7 @@ from django.contrib.auth.hashers import check_password
 class Member(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     member_id = models.CharField(validators=[MinLengthValidator(4)], max_length=12, primary_key=True)  # 회원 ID (PK)
-    member_type = models.CharField(max_length=20,
-                                   choices=[("admin", "관리자"), ("owner", "대표"),
-                                            ("manager", "점주"), ("normal", "일반회원")])  # 회원 유형
+    member_type = models.CharField(max_length=20, choices=[("admin", "관리자"), ("manager", "점주"), ("normal", "일반회원")], default='normal')  # 회원 유형
     name = models.CharField(validators=[MinLengthValidator(2)], max_length=50)
     sex = models.CharField(max_length=1, choices=[('M', '남성'), ('F', '여성')], null=True, blank=True)  # 성별 (M/F)
     age_group = models.PositiveSmallIntegerField(

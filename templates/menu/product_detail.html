@@ -9,7 +9,7 @@
 
 {% block content %}
     <body class="text-dark py-3" style="background-color: #ffffff;">
-    
+
     <!-- 제품 상세 정보 -->
     <div class="product-detail-container">
         <div class="product-content">
@@ -38,7 +38,7 @@
 
                 <div class="product-meta">
                     <hr>
-                    <p><strong>영양정보:</strong></p>
+                    <h4><strong>영양정보:</strong></h4>
                 
                     {% if nutrition %}
                             <p>● 총 내용량: {{ nutrition.nutrition_weight }}g</p>
@@ -58,7 +58,7 @@
                     {% endif %}
 
                 <hr>
-                    <p><strong>알레르기 정보:</strong></p>
+                    <h4><strong>알레르기 정보:</strong></h4>
                 
                     {% if allergy %}
                         <div class="nutrition-row">
@@ -79,7 +79,7 @@
             </div>
         </div>
         <!-- 목록 버튼 하단 왼쪽에 위치 (이전 페이지로 이동) -->
-        <button class="back-button" onclick="history.back();">◀ 목록으로</button> 
+        <button class="back-button" onclick="history.back();">◀ 목록으로</button>
     </div>
 {% endblock content %}
 

@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // 제품 클릭 이벤트는 공통으로 추가
+    // 제품 클릭시 제품 상세 페이지로 이동
     document.querySelectorAll(".new-carousel-item, .product-carousel-item, .best-carousel-item, .product-card").forEach(element => {
         element.addEventListener("click", function() {
             const item_id = this.getAttribute("data-id");

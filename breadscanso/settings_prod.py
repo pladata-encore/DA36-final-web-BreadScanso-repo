@@ -20,6 +20,9 @@ DATABASES = {
         'PASSWORD': os.getenv('DATABASE_PROD_PASSWORD'),
         'HOST': os.getenv('DATABASE_PROD_HOST'),
         'PORT': os.getenv('DATABASE_PROD_PORT'),
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        }
     }
 }
 
@@ -28,7 +31,8 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',] # 인�
 # CSRF(Cross-Site Request Forgery) 보호 정책
 CSRF_TRUSTED_ORIGINS = [
     "https://www.breadscanso.shop",
-    "https://breadscanso.shop"
+    "https://breadscanso.shop",
+    "http://eb-breadscanso2-env.eba-ivnsims9.ap-northeast-2.elasticbeanstalk.com"
 ]
 
 CSRF_COOKIE_SECURE = True
