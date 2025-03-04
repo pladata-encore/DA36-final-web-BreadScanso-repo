@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // console.log('DOMContentLoaded@kiosk-usePoint.js totalAmount:', totalAmount);
     // 세션 스토리지에서 데이터 가져오기
     const totalPrice = parseInt(sessionStorage.getItem("totalPrice") || "0");
     const totalAmount = parseInt(sessionStorage.getItem("totalAmount") || "0");

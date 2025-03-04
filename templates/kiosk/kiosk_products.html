@@ -57,80 +57,127 @@
             border-collapse: collapse;
         }
 
-        th, td {
-            padding: 8px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
+th, td {
+    padding: 4px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
 
-        .total {
-            margin-top: 10px;
-            text-align: center;
-            font-weight: bold;
-        }
+.order-list table th:nth-child(5), .order-list table td:nth-child(5) {
+    width: 30px; /* 20px → 15px로 더 작게 */
+    min-width: 30px;
+    max-width: 30px;
+    padding: 0; /* 패딩 완전 제거 */
+}
+
+.order-list .del-btn {
+    background-color: red !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 2px !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    font-size: 14px !important;
+    width: 20px !important;
+    height: 20px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    line-height: 1 !important;
+    margin: 0 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+}
     </style>
 </head>
 
 <body class="kiosk-products">
-    <!-- 헤더 -->
-    <header>
-        <img src="{% static 'images/brand_logo.png' %}" alt="브랜드 로고" class="brand-logo">
-    </header>
+<!-- 헤더 -->
+<header>
+    <img src="{% static 'images/brand_logo.png' %}" alt="브랜드 로고" class="brand-logo">
+</header>
 
-    <!-- 지점명 -->
-    <div class="store-name">서초동점</div>
+<!-- 지점명 -->
+<div class="store-name">서초동점</div>
 
-    <div class="container">
-        <!-- 웹캠 -->
-        <div class="video-container">
-            <video id="webcam" autoplay playsinline></video>
-            <button id="capture-btn">📸촬영</button>
-        </div>
+<div class="container">
+    <!-- 웹캠 -->
+    <div class="video-container">
+        <video id="webcam" autoplay playsinline></video>
+        <button id="capture-btn">📸촬영</button>
+    </div>
 
-        <!-- 주문 목록 -->
-        <div class="order-list">
-            <h3>메뉴 목록</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>메뉴이름</th>
-                        <th>단가</th>
-                        <th>수량</th>
-                        <th>금액</th>
-                    </tr>
-                </thead>
-                <tbody id="order-table">
-                </tbody>
-            </table>
-            <div class="total-container">
-                <div class="total-info">
-                    <p>총 수량: <strong id="totalQuantity">0개</strong></p>
-                    <p>총 금액: <strong id="totalAmount">0원</strong></p>
-                </div>
-                <div class="reset-button-container">
-                    <button id="reset-order-btn" class="reset-button">초기화</button>
-                </div>
+    <!-- 주문 목록 -->
+    <div class="order-list">
+        <h3>메뉴 목록</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>메뉴이름</th>
+                <th>단가</th>
+                <th>수량</th>
+                <th>금액</th>
+<th style="width: 15px; padding: 0;">삭제</th>            </tr>
+            </thead>
+            <tbody id="order-table">
+            </tbody>
+        </table>
+
+        <div class="total-container">
+            <div class="total-info">
+                <p>총 수량: <strong id="totalQuantity">0개</strong></p>
+                <p>총 금액: <strong id="totalAmount">0원</strong></p>
             </div>
+            <div class="reset-button-container">
+                <button id="reset-order-btn" class="reset-button">초기화</button>
+            </div>
+            <!-- 품목 추가 버튼 -->
+            <button id="add-item-btn"
+                    style="margin-top:10px; padding:5px 10px; background-color:green; color:white; border:none; border-radius:5px;">
+                품목 추가
+            </button>
         </div>
     </div>
+</div>
 
-    <!-- 버튼 -->
-    <div class="button-container">
-        <button class="blue-button">직원 호출</button>
-        <a href="{% url 'member' %}">
-            <button class="black-button">결제</button>
-        </a>
+<!-- 모달 창 -->
+<div id="edit-modal"
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+    <div style="background:white; width:400px; margin:100px auto; padding:20px; border-radius:5px;">
+        <h3>품목 수정/추가</h3>
+        <input type="text" id="search-input" placeholder="품목 검색" style="width:100%; padding:5px; margin-bottom:10px;">
+        <select id="item-select" size="5" style="width:100%; margin-bottom:10px;"></select>
+        <input type="number" id="quantity-input" min="1" value="1" style="width:100%; padding:5px; margin-bottom:10px;">
+        <button id="save-item-btn"
+                style="background-color:blue; color:white; padding:5px 10px; border:none; border-radius:5px;">저장
+        </button>
+        <button id="close-modal-btn"
+                style="background-color:gray; color:white; padding:5px 10px; border:none; border-radius:5px;">닫기
+        </button>
     </div>
+</div>
 
-    <!-- Django 데이터를 JavaScript에 전달 -->
-    <script>
-        const menu_data = {{ menu_data|safe|default:"{}" }};
-        console.log("Loaded menu_data:", menu_data);
-    </script>
+<!-- 버튼 -->
+<div class="button-container">
+    <button class="blue-button">직원 호출</button>
+    <a href="{% url 'member' %}">
+        <button class="black-button">결제</button>
+    </a>
+</div>
+</div>
+</div>
 
-    <!-- JavaScript 파일 불러오기 -->
-    <script src="{% static 'js/kiosk-products.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Django 데이터를 JavaScript에 전달 -->
+<script>
+    const menu_data = {{ menu_data|safe|default:"{}" }};
+    console.log("Loaded menu_data:", menu_data);
+</script>
+
+<!-- JavaScript 파일 불러오기 -->
+<script src="{% static 'js/kiosk-products.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
 </body>

@@ -11,17 +11,16 @@ document.addEventListener('DOMContentLoaded', function() {
     sessionStorage.removeItem("finalPoints");
     console.log('세션 스토리지가 초기화되었습니다.');
 
-// 웹캠 설정
+    // 웹캠 설정
     const video = document.getElementById("webcam");
     const captureBtn = document.getElementById("capture-btn");
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-// ngrok(터널링 서비스) url 설정
-    const NGROK_URL = "https://de58-175-121-129-72.ngrok-free.app/predict/";
+    const NGROK_URL = "https://4100-175-121-129-72.ngrok-free.app/predict/";
 
     let productDictionary = {};
 
-// 한글명 매핑 함수
+    // 한글명 매핑 함수
     function getKoreanName(engName) {
         const nameMapping = {
             "bagel": "베이글",
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return nameMapping[engName] || engName;
     }
 
-// 웹캠 시작
+    // 웹캠 시작
     async function startWebcam() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({video: true});
@@ -47,27 +46,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-// 리셋 버튼 이벤트
+    // 리셋 버튼 이벤트
     document.getElementById('reset-order-btn').addEventListener('click', function () {
-// 주문 테이블 비우기
         document.getElementById('order-table').innerHTML = '';
-// 총 수량과 총 금액 초기화
         document.getElementById('totalQuantity').textContent = '0개';
         document.getElementById('totalAmount').textContent = '0원';
-// 제품 딕셔너리 초기화
         productDictionary = {};
-// 세션 스토리지 초기화
         sessionStorage.removeItem("productDictionary");
         sessionStorage.removeItem("totalQuantity");
         sessionStorage.removeItem("totalAmount");
     });
 
-// 테이블 업데이트 함수
+    // 테이블 업데이트 함수
     function updateOrderTable() {
         const orderTable = document.getElementById("order-table");
         const totalQuantityElement = document.getElementById("totalQuantity");
         const totalAmountElement = document.getElementById("totalAmount");
-        // 테이블 초기화
         orderTable.innerHTML = "";
         let totalQuantity = 0;
         let totalAmount = 0;
@@ -77,29 +71,34 @@ document.addEventListener('DOMContentLoaded', function() {
             totalQuantity += product.quantity;
             totalAmount += product.totalPrice;
             const row = `
-            <tr>
-                <td>${product.korName}</td>
-                <td>${product.price.toLocaleString()}원</td>
-                <td>${product.quantity}</td>
-                <td>${product.totalPrice.toLocaleString()}원</td>
-            </tr>
-        `;
+                <tr>
+                    <td>${product.korName}</td>
+                    <td>${product.price.toLocaleString()}원</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.totalPrice.toLocaleString()}원</td>
+                    <td><button class="del-btn" data-item="${itemName}">X</button></td>
+                </tr>
+            `;
             orderTable.innerHTML += row;
         });
-        // 디버깅
-        console.log("totalQuantity", totalQuantity);
-        // 총 수량과 금액 업데이트
+
         totalQuantityElement.innerHTML = `${totalQuantity}개`;
         totalAmountElement.innerHTML = `${totalAmount.toLocaleString()}원`;
-        console.log("SAdjhgjhgjha",productDictionary);
-        // 세션 스토리지에 데이터 저장
         sessionStorage.setItem("productDictionary", JSON.stringify(productDictionary));
         sessionStorage.setItem("totalQuantity", totalQuantity);
         sessionStorage.setItem("totalAmount", totalAmount.toString());
 
+        // 삭제 버튼 이벤트
+        document.querySelectorAll(".del-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const itemName = this.getAttribute("data-item");
+                delete productDictionary[itemName];
+                updateOrderTable();
+            });
+        });
     }
 
-// 촬영 버튼 이벤트
+    // 촬영 버튼 이벤트
     captureBtn.addEventListener("click", async () => {
         captureBtn.disabled = true;
         captureBtn.textContent = "🔄 추론 중...";
@@ -126,33 +125,30 @@ document.addEventListener('DOMContentLoaded', function() {
             const results = JSON.parse(responseText);
             console.log("📌 추론 결과:", results);
 
-// 상품 데이터를 테이블에 추가 (결과 처리 부분)
-results.forEach(result => {
-    if (result?.name && result?.confidence) {
-        const engName = result.name;
-        const korName = getKoreanName(engName);
-        const price = menu_data[engName]?.price || 0;
-        const item_id = menu_data[engName]?.item_id || null; // item_id 추가
+            results.forEach(result => {
+                if (result?.name && result?.confidence) {
+                    const engName = result.name;
+                    const korName = getKoreanName(engName);
+                    const price = menu_data[engName]?.price || 0;
+                    const item_id = menu_data[engName]?.item_id || null;
 
-        if (productDictionary[engName]) {
-            productDictionary[engName].quantity += 1;
-            productDictionary[engName].totalPrice =
-                productDictionary[engName].quantity * productDictionary[engName].price;
-        } else {
-            productDictionary[engName] = {
-                korName: korName,
-                price: price,
-                quantity: 1,
-                totalPrice: price,
-                item_id: item_id // item_id 저장
-            };
-        }
-    }
-});
+                    if (productDictionary[engName]) {
+                        productDictionary[engName].quantity += 1;
+                        productDictionary[engName].totalPrice =
+                            productDictionary[engName].quantity * productDictionary[engName].price;
+                    } else {
+                        productDictionary[engName] = {
+                            korName: korName,
+                            price: price,
+                            quantity: 1,
+                            totalPrice: price,
+                            item_id: item_id
+                        };
+                    }
+                }
+            });
 
-            // 테이블 업데이트
             updateOrderTable();
-
         } catch (error) {
             console.error("🚨 에러:", error);
         } finally {
@@ -160,6 +156,90 @@ results.forEach(result => {
             captureBtn.textContent = "📸 촬영";
         }
     });
+
+    // 모달 요소
+    const modal = document.getElementById("edit-modal");
+    const itemSelect = document.getElementById("item-select");
+    const quantityInput = document.getElementById("quantity-input");
+    const saveItemBtn = document.getElementById("save-item-btn");
+    const closeModalBtn = document.getElementById("close-modal-btn");
+    const searchInput = document.getElementById("search-input");
+
+    // 품목 목록 채우기
+    function populateItemSelect(filter = "") {
+        itemSelect.innerHTML = "";
+        Object.keys(menu_data).forEach(engName => {
+            const korName = getKoreanName(engName);
+            if (korName.includes(filter)) {
+                const option = document.createElement("option");
+                option.value = engName;
+                option.textContent = `${korName} - ${menu_data[engName].price}원`;
+                itemSelect.appendChild(option);
+            }
+        });
+    }
+
+    // 모달 열기 함수 (수정 모드)
+    function openModalForEdit(itemName) {
+        modal.style.display = "block";
+        populateItemSelect();
+        itemSelect.value = itemName;
+        quantityInput.value = productDictionary[itemName].quantity;
+        saveItemBtn.onclick = () => {
+            const newQuantity = parseInt(quantityInput.value);
+            productDictionary[itemName].quantity = newQuantity;
+            productDictionary[itemName].totalPrice = newQuantity * productDictionary[itemName].price;
+            updateOrderTable();
+            modal.style.display = "none";
+        };
+    }
+
+    // 모달 열기 함수 (추가 모드)
+    function openModalForAdd() {
+        modal.style.display = "block";
+        populateItemSelect();
+        quantityInput.value = 1;
+        saveItemBtn.onclick = () => {
+            const selectedItem = itemSelect.value;
+            const quantity = parseInt(quantityInput.value);
+            if (!productDictionary[selectedItem]) {
+                productDictionary[selectedItem] = {
+                    korName: getKoreanName(selectedItem),
+                    price: menu_data[selectedItem].price,
+                    quantity: quantity,
+                    totalPrice: menu_data[selectedItem].price * quantity,
+                    item_id: menu_data[selectedItem].item_id
+                };
+            } else {
+                productDictionary[selectedItem].quantity += quantity;
+                productDictionary[selectedItem].totalPrice = productDictionary[selectedItem].quantity * productDictionary[selectedItem].price;
+            }
+            updateOrderTable();
+            modal.style.display = "none";
+        };
+    }
+
+    // 검색 기능
+    searchInput.addEventListener("input", () => {
+        populateItemSelect(searchInput.value);
+    });
+
+    // 모달 닫기
+    closeModalBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // 테이블 행 클릭 시 수정 모달 열기
+    document.getElementById("order-table").addEventListener("click", (e) => {
+        const row = e.target.closest("tr");
+        if (row && e.target.tagName !== "BUTTON") { // 삭제 버튼 클릭 제외
+            const itemName = Object.keys(productDictionary).find(key => productDictionary[key].korName === row.cells[0].textContent);
+            openModalForEdit(itemName);
+        }
+    });
+
+    // 품목 추가 버튼 이벤트
+    document.getElementById("add-item-btn").addEventListener("click", openModalForAdd);
 
     startWebcam();
 });
