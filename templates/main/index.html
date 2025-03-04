@@ -5,6 +5,9 @@
 
 {% block header %}
     {% include 'layout/main/main_header.html' %}
+    <div class="design1">
+        <img src="{% static 'images/design1.png' %}" alt="메인홈지붕">
+    </div>
 {% endblock header %}
 
 {% block content %}
@@ -28,7 +31,6 @@
             }, 5000); // 5초 나타나고 사라지게 했음
         </script>
     {% endif %}
-    <br>
     <div class="brand-home-img">
         <img src="{% static 'images/home_text2.png' %}" class="rounded mx-auto d-block" alt="메인홈인사말1">
     </div>
@@ -63,9 +65,9 @@
     </div>
     <br>
     <!-- 메인 브랜드 인사말 -->
-    <div class="brand-home2-img">
-        <img src="{% static 'images/home_text.png' %}" class="rounded mx-auto d-block" alt="메인홈인사말2">
-    </div>
+{#    <div class="brand-home2-img">#}
+{#        <img src="{% static 'images/home_text.png' %}" class="rounded mx-auto d-block" alt="메인홈인사말2">#}
+{#    </div>#}
 {#    <p class="center-text" style="font-size: {{ font_size }};">언제나 신선한 재료와 정성으로 만든 감동의 빵을 맛 보세요. <br>#}
 {#    매일 아침, 갓 구운 빵의 향기로 여러분을 맞이하겠습니다 ( • ᴗ - ) ✧</p>#}
     <br>
@@ -115,10 +117,13 @@
 {#                {% endif %}#}
 {#            </div>#}
 {#        </div>#}
-<br><br>
-
+    <br><br>
 {% endblock content %}
+
 {% block footer %}
+    <div>
+        <img src="{% static 'images/design2.png' %}" alt="메인홈하단라인">
+    </div>
     {% include 'layout/main/main_footer.html' %}
 {% endblock footer %}
 
