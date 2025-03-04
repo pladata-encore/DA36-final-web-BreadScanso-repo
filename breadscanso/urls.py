@@ -3,6 +3,8 @@ from main import views
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
+from main.views import google_login, naver_login
+
 # namespace 지정
 app_name = 'main'
 
@@ -23,6 +25,9 @@ urlpatterns = [
     path('store_info/', include('store_info.urls')),  # store_info 앱의 urls.py를 포함
     path('admin/', admin.site.urls),  # 소셜로그인 추가
     path('accounts/', include('allauth.urls')),  # 소셜로그인 추가, allauth 관련 url 추가
+    path('google-login/', google_login, name='google_login'),
+    path('naver-login/', naver_login, name='naver_login'),
+
 ]
 
 
