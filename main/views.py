@@ -189,6 +189,7 @@ def google_login(request):
     return redirect('/accounts/google/login/')
 
 def naver_login(request):
+    # naver 로그인 URL로 직접 리다이렉트
     return redirect('/accounts/naver/login/')
 
 # 메인홈-product 신제품 가져오기 코드 - 안나옴/일단보류
