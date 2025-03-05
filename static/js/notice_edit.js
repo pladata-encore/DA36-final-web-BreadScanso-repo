@@ -27,6 +27,7 @@ $(document).ready(function() {
         const pinned = $('#id_pinned').is(':checked');
         const title = $('#id_title').val().trim();
         const content = $('#id_content').val().trim();
+        const notice_id = $('[name=notice_id]').val();
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(content, 'text/html');
@@ -34,6 +35,7 @@ $(document).ready(function() {
         uploadedImageUrl = img ? img.src : null;
 
         const noticeData = {
+            notice_id: notice_id,
             pinned: pinned,
             title: title,
             content: content,
@@ -53,7 +55,7 @@ $(document).ready(function() {
 
             const data = await response.json();
             if (data.success) {
-                alert('공지사항이 저장되었습니다.');
+                alert('공지사항이 수정되었습니다.');
                 window.location.href = `/notice/store/notice_info/${data.notice_id}/`;
             } else {
                 alert('저장 실패: ' + data.message);

@@ -1,10 +1,11 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
-{% block title %}시스템설정{% endblock title %}
+{% block title %}공지사항 수정{% endblock title %}
 
 {% block header %}
     {% include 'layout/store/header_store.html' %}
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 {% endblock header %}
 
 {% block sidebar %}
@@ -12,60 +13,87 @@
 {% endblock sidebar %}
 
 {% block content %}
-    <style>
-    /* 버튼 컨테이너 전체 */
-    .button-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 10px;
-        width: 100%;
-    }
-
-    /* 목록 버튼 위치 (왼쪽 정렬) */
-    .left-buttons {
-        align-self: flex-start;
-    }
-
-    /* 수정 & 삭제 버튼 위치 (오른쪽 정렬) */
-    .right-buttons {
-        display: flex;
+<style>
+    .notice-check { 
+        display: flex; 
+        justify-content: flex-start;
+        margin-bottom: 20px;
         gap: 10px;
     }
-    </style>
-    
-    <!-- 공지사항  -->
-    <h3 style="margin-bottom: 50px;" class="text-center">공지사항</h3>
-    
-    <!-- 목록, 수정, 삭제 버튼 -->
-    <div class="button-container">
-        <div class="left-buttons">
-            <button type="button" class="btn btn-success" id="list-btn" onclick="location.href='{% url 'store:community_notice' %}'">목록</button>
+    .content-container { 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+        width: 100%;
+    }
+    .form-group { 
+        width: 100%; 
+        text-align: left;
+        margin-bottom: 20px;
+    }
+    .button-container { 
+        display: flex; 
+        justify-content: space-between; 
+        width: 100%; 
+        margin-top: 20px; 
+    }
+    .form-control, .note-editor { 
+        width: 100% !important;
+    }
+    /* 제목 입력란 스타일 조정 */
+    .title-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+</style>
+
+<h3 style="margin-top: 20px; font-weight: bold" class="text-center">공지사항 수정</h3>
+
+<div class="content-container d-flex flex-column align-items-center w-100 p-3">
+    <form method="post" class="w-75" id="notice-form" enctype="multipart/form-data" data-store="{{ member.store }}">
+        {% csrf_token %}
+        <input type="hidden" name="notice_id" value="{{ notice_id }}">
+        <div class="notice-check">
+            {{ form.pinned }} <!-- id="id_pinned" -->
+            <label class="form-check-label" for="{{ form.pinned.id_for_label }}">[공지]</label>
         </div>
-        <div class="right-buttons">
-            <button type="button" class="btn btn-primary" id="edit-menu-btn" onclick="location.href='{% url 'store:community_notice_write' %}'">수정</button>
-            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">삭제</a>
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}" class="form-label"><strong>제목</strong></label>
+            <input type="text" class="title-input" id="{{ form.title.id_for_label }}" name="{{ form.title.name }}" placeholder="제목을 입력하세요" required value="{{ form.title.value|default:'' }}">
         </div>
-    </div>
-    
-        <!-- 게시글 삭제 팝업창 -->
-    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="confirmSuccessLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmSuccessLabel">게시글 삭제 안내</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    정말로 삭제하시겠습니까?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" id="finalConfirmButton" onclick="location.href='{% url 'store:community_notice' %}'">확인</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                </div>
+        <div class="form-group">
+            <label for="{{ form.content.id_for_label }}" class="form-label"><strong>내용</strong></label>
+            {{ form.content }} <!-- id="id_content" with Summernote -->
+        </div>
+        <div class="button-container">
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'notice_info' notice_id=notice_id %}'">취소</button>
+            <button type="button" class="btn btn-success" id="save-btn">저장</button>
+        </div>
+    </form>
+</div>
+
+<!-- 저장 확인 모달 -->
+<div class="modal fade" id="saveConfirmModal" tabindex="-1" aria-labelledby="saveConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="saveConfirmModalLabel">저장 확인</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">저장하시겠습니까?</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary" id="confirm-save-btn">확인</button>
             </div>
         </div>
     </div>
-    
+</div>
 {% endblock content %}
 
+{% block script %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/notice_edit.js' %}"></script>
+{% endblock script %}

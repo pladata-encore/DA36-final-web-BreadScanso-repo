@@ -27,7 +27,7 @@
     <!-- 검색 버튼 -->
     <div style="flex-grow: 1; display: flex; justify-content: flex-end;">
         <form method="get" class="d-flex mb-3" role="search" id="search-form">
-            <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="제목을 입력하세요" aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+            <input class="form-control me-2 search-input" type="search" id="search-input" name="search" placeholder="제목을 입력하세요" aria-label="Search" value="{{ search_query }}" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
             <button type="submit" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
         </form>
     </div>
@@ -86,7 +86,7 @@
                 <!-- 이전 버튼 -->
                 <li class="page-product {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
                     {% if page_obj.has_previous %}
-                        <a class="page-link rounded-start-2" href="?page={{ page_obj.previous_page_number }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" aria-label="Previous">
+                        <a class="page-link rounded-start-2" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}" aria-label="Previous">
                             <span aria-hidden="true">« 이전</span>
                         </a>
                     {% else %}
@@ -98,13 +98,13 @@
                 <!-- 페이지 번호들 -->
                 {% for num in page_range %}
                     <li class="page-product {% if page_obj.number == num %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}">{{ num }}</a>
+                        <a class="page-link" href="?page={{ num }}&search={{ search_query }}">{{ num }}</a>
                     </li>
                 {% endfor %}
                 <!-- 다음 버튼 -->
                 <li class="page-product {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
                     {% if page_obj.has_next %}
-                        <a class="page-link rounded-end-2" href="?page={{ page_obj.next_page_number }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}" aria-label="Next">
+                        <a class="page-link rounded-end-2" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}" aria-label="Next">
                             <span aria-hidden="true">다음 »</span>
                         </a>
                     {% else %}
