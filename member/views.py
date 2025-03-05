@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 import secrets
 from django.shortcuts import render, redirect
+from django.apps import apps
 
 
 
@@ -214,38 +215,79 @@ def member_delete(request):
     member = request.user.member
     return render(request, 'member/member_delete.html', {'member': member})
 
+# @login_required
+# def member_delete_detail(request):
+#     if request.method == 'POST':
+#         try:
+#             # 현재 로그인한 사용자의 Member 객체 가져오기
+#             member = request.user.member  # request.user가 Member 모델과 올바르게 연결되어 있어야 함.
+#             member_id = member.member_id  # Member 객체에서 member_id 가져오기
+#
+#             # SQL 쿼리를 사용하여 member_member와 auth_user 테이블에서 삭제
+#             with connection.cursor() as cursor:
+#                 # # 소셜 계정 먼저 삭제
+#                 # sql_social = "DELETE FROM socialaccount_socialaccount WHERE user_id = (SELECT id FROM auth_user WHERE username = %s)"
+#                 # cursor.execute(sql_social, [member_id])
+#                 # deleted_from_social = cursor.rowcount
+#
+#                 # member_member 테이블에서 회원 삭제
+#                 sql_member = "DELETE FROM member_member WHERE member_id = %s"
+#                 cursor.execute(sql_member, [member_id])
+#                 deleted_from_member = cursor.rowcount
+#
+#                 # auth_user 테이블에서 사용자 계정 삭제
+#                 sql_user = "DELETE FROM auth_user WHERE username = %s"
+#                 cursor.execute(sql_user, [member_id])
+#                 deleted_from_user = cursor.rowcount
+#
+#             # 로그아웃 처리
+#             logout(request)
+#
+#             # 탈퇴 완료 후 홈으로 이동
+#             return redirect('main:index')
+#
+#         except AttributeError:
+#             # 회원 정보를 찾을 수 없을 경우
+#             return render(request, 'member/member_delete_detail.html', {'error': '회원 정보를 찾을 수 없습니다.'})
+#         except Exception as e:
+#             # 예외 처리
+#             error_details = traceback.format_exc()
+#             return render(request, 'member/member_delete_detail.html', {'error': f'삭제 실패: {str(e)}', 'details': error_details})
+#
+#     return render(request, 'member/member_delete_detail.html')
+
 @login_required
 def member_delete_detail(request):
     if request.method == 'POST':
         try:
-            # 현재 로그인한 사용자의 Member 객체 가져오기
-            member = request.user.member  # request.user가 Member 모델과 올바르게 연결되어 있어야 함.
-            member_id = member.member_id  # Member 객체에서 member_id 가져오기
+            # 현재 로그인한 사용자 정보 가져오기
+            user = request.user
 
-            # SQL 쿼리를 사용하여 member_member와 auth_user 테이블에서 삭제
-            with connection.cursor() as cursor:
-                # member_member 테이블에서 회원 삭제
-                sql_member = "DELETE FROM member_member WHERE member_id = %s"
-                cursor.execute(sql_member, [member_id])
-                deleted_from_member = cursor.rowcount
+            try:
+                # 소셜 계정 삭제 (있는 경우에만)
+                SocialAccount = apps.get_model('socialaccount', 'SocialAccount')
+                SocialAccount.objects.filter(user=user).delete()
+            except ImportError:
+                # socialaccount 앱이 없는 경우 무시
+                pass
 
-                # auth_user 테이블에서 사용자 계정 삭제
-                sql_user = "DELETE FROM auth_user WHERE username = %s"
-                cursor.execute(sql_user, [member_id])
-                deleted_from_user = cursor.rowcount
+            # member_member 테이블에서 삭제
+            Member.objects.filter(user=user).delete()
+
+            # auth_user 테이블에서 사용자 삭제
+            user.delete()
 
             # 로그아웃 처리
             logout(request)
 
             # 탈퇴 완료 후 홈으로 이동
+            messages.success(request, '회원 탈퇴가 완료되었습니다.')
             return redirect('main:index')
 
-        except AttributeError:
-            # 회원 정보를 찾을 수 없을 경우
-            return render(request, 'member/member_delete_detail.html', {'error': '회원 정보를 찾을 수 없습니다.'})
         except Exception as e:
             # 예외 처리
-            error_details = traceback.format_exc()
-            return render(request, 'member/member_delete_detail.html', {'error': f'삭제 실패: {str(e)}', 'details': error_details})
+            messages.error(request, f'탈퇴 중 오류가 발생했습니다: {str(e)}')
+            return redirect('main:index')
 
+    # GET 요청의 경우
     return render(request, 'member/member_delete_detail.html')
