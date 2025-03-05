@@ -9,24 +9,52 @@ import json
 from .utils import upload_profile_image_to_s3
 import traceback
 from django.db import connection
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+import secrets
+from django.shortcuts import render, redirect
+
 
 
 # member 메인
 def member_main(request):
     return render(request, 'member/member_main.html')  # 템플릿 파일 경로 지정
 
+# # 회원 마이페이지
+# def member_page(request):
+#     if not request.user.is_authenticated:
+#         messages.error(request, "로그인이 필요합니다.")
+#         return redirect("main:login")
+#     try:
+#         member = Member.objects.get(user=request.user)
+#         return render(request, "member/member_page.html", {"member": member})
+#     except Member.DoesNotExist:
+#         messages.error(request, "회원 정보가 존재하지 않습니다.")
+#         return redirect("main:index")
 # 회원 마이페이지
 def member_page(request):
     if not request.user.is_authenticated:
         messages.error(request, "로그인이 필요합니다.")
         return redirect("main:login")
+
     try:
+        # 기존 코드 유지
         member = Member.objects.get(user=request.user)
         return render(request, "member/member_page.html", {"member": member})
-    except Member.DoesNotExist:
-        messages.error(request, "회원 정보가 존재하지 않습니다.")
-        return redirect("main:index")
 
+    except Member.DoesNotExist:
+        # 소셜 로그인된 사용자의 Member 자동 생성
+        member = Member.objects.create(
+            user=request.user,
+            member_id=request.user.username,
+            name=request.user.first_name or request.user.username,
+            email=request.user.email,
+            phone_num='',
+            member_type='normal'
+        )
+
+        messages.success(request, "회원 정보가 자동으로 생성되었습니다.")
+        return render(request, "member/member_page.html", {"member": member})
 
 @login_required
 @require_http_methods(["GET", "POST"])
