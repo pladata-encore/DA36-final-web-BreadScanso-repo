@@ -14,17 +14,24 @@
 {% block content %}
     <h3 style="margin-bottom: 50px;" class="text-center">구매/취소내역</h3>
 
-    <div style="display: flex; gap:20px; margin-bottom: 20px;">
-    <input type="datetime-local" name="startDate" id="startDate">
-        <p>-</p>
-    <input type="datetime-local" name="endDate" id="endDate">
-        <div style="margin-left: 10px;">
-            <button id="date_button" type="button" name="date_button" class="btn btn-success">검색</button>
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+        <div style="display: flex; gap: 20px;">
+            <input type="datetime-local" name="startDate" id="startDate">
+            <p>-</p>
+            <input type="datetime-local" name="endDate" id="endDate">
+            <div style="margin-left: 10px;">
+                <button id="date_button" type="button" name="date_button" class="btn btn-success">검색</button>
+            </div>
         </div>
-        <div>
-        <button id="cancel" class="btn btn-secondary" style="margin-left:200px;" >취소내역만 보러가기</button>
+    
+        <div style="display: flex; gap: 10px;">
+            <button id="cancel" class="btn btn-secondary">취소내역만 보러가기</button>
+            <a href="{% url 'pay:pay_main' %}" class="btn btn-secondary">목록</a>
         </div>
     </div>
+
+    
+
 
     <table class="table table-bordered text-center" style="width: 100%;">
         <thead class="table-light">
@@ -37,7 +44,7 @@
                 <th class="btn btn-secondary dropdown-toggle" id="payment_method_toggle"
                     data-bs-toggle="dropdown" role="button"
                     style="width:100%;">
-                    결제수단
+                    <strong>결제수단</strong>
                   <ul class="dropdown-menu dropdown-menu-dark">
                     <li>
                         <a class="dropdown-item" href="?payment_method=credit">카드</a>
