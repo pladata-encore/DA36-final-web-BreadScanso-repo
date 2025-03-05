@@ -14,6 +14,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import uuid
 
+
 # 소비자 화면 공지사항 페이지
 def notice_main(request):
     # pinned=1을 먼저, 그 다음 notice_id로 오름차순 정렬
@@ -69,11 +70,23 @@ def notice_detail(request, notice_id):
     return render(request, 'notice/notice_detail.html', {'notice': notice})
 
 # ---------------------------------------------------------------------------- #
-# 점주용 공지사항 페이지
+# 점주용 공지사항 페이지 (로그인 필요)
+@login_required
 def notice_store(request):
     member = request.user.member
-    # pinned=1을 먼저, 그 다음 notice_id로 오름차순 정렬
     notices = Notice.objects.all().order_by('-pinned', 'notice_id')
+
+    # member.store 값에 따라 해당 store의 공지사항만 필터링
+    if member.store:
+        notices = notices.filter(store=member.store)
+    else:
+        # member.store가 없는 경우 notice_store에서는 접근 불가, notice_main으로 리다이렉트
+        return redirect('notice_main')
+
+    # 검색 기능 추가
+    search_query = request.GET.get('search', '')
+    if search_query:
+        notices = notices.filter(title__icontains=search_query)
 
     # 페이지당 항목 수 (고정)
     notices_per_page = 10
@@ -113,8 +126,9 @@ def notice_store(request):
         'notices': notices,
         'page_obj': page_obj,
         'page_range': page_range,
-        'total_notices': notices.count(), # 총 공지사항 수
-        'member': member
+        'total_notices': notices.count(),  # 총 공지사항 수
+        'member': member,
+        'search_query': search_query,  # 검색어 템플릿에 전달
     }
     return render(request, 'notice/notice_store.html', context)
 
@@ -140,22 +154,11 @@ def notice_write(request):
         form = NoticeForm(request.POST)
         if form.is_valid():
             notice = form.save(commit=False)
-            member = request.user.member
             if not member:
                 return JsonResponse({"success": False, "message": "Member 객체가 존재하지 않습니다."})
 
-            # 이미지 URL 추출
             content_html = form.cleaned_data['content']
-            soup = BeautifulSoup(content_html, "html.parser")
-            img_tag = soup.find("img")
-            notice_image = img_tag['src'] if img_tag and 'src' in img_tag.attrs else None
-
-            # <p> 태그 제거 (필요 시)
-            for p_tag in soup.find_all("p"):
-                p_tag.unwrap()
-            notice.content = str(soup)
-            notice.notice_image = notice_image  # 이미지 URL 저장
-
+            notice.content = content_html
             notice.member = member
             notice.store = member.store
             notice.save()
@@ -209,11 +212,12 @@ def notice_save(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
+            notice_id = data.get("notice_id")
             pinned = data.get("pinned", False)
             title = data.get("title")
             content = data.get("content")
             store = data.get("store")
-            notice_image = data.get("notice_image")  # 클라이언트에서 전송된 이미지 URL
+            notice_image = data.get("notice_image")  # Base64 데이터
 
             if not title or not content:
                 return JsonResponse({"success": False, "message": "제목과 내용을 입력해주세요."})
@@ -223,17 +227,28 @@ def notice_save(request):
                 return JsonResponse({"success": False, "message": "Member 객체가 존재하지 않습니다."})
 
             now = timezone.now()
-            notice = Notice.objects.create(
-                pinned=pinned,
-                title=title,
-                content=content,
-                store=store if store in ["A", "B"] else member.store,
-                member=member,
-                created_at=now,
-                updated_at=now,
-                view_count=0,
-                notice_image=notice_image  # notice_image 필드에 저장
-            )
+            if notice_id:  # 수정
+                notice = get_object_or_404(Notice, notice_id=notice_id)
+                notice.pinned = pinned
+                notice.title = title
+                notice.content = content
+                notice.store = store if store in ["A", "B"] else member.store
+                notice.updated_at = now
+                if notice_image:
+                    notice.notice_image = base64.b64decode(notice_image.split(',')[1])
+                notice.save()
+            else:  # 신규 생성
+                notice = Notice.objects.create(
+                    pinned=pinned,
+                    title=title,
+                    content=content,
+                    store=store if store in ["A", "B"] else member.store,
+                    member=member,
+                    created_at=now,
+                    updated_at=now,
+                    view_count=0,
+                    notice_image=base64.b64decode(notice_image.split(',')[1]) if notice_image else None
+                )
 
             return JsonResponse({"success": True, "notice_id": notice.notice_id})
         except Exception as e:
@@ -241,33 +256,55 @@ def notice_save(request):
     return JsonResponse({"success": False, "message": "POST 요청만 허용됩니다."})
 
 # ---------------------------------------------------------------------------- #
-
+# 공지사항 내용 수정
+@login_required
 def notice_edit(request, notice_id):
     member = request.user.member
-    return render(request, 'notice/notice_edit.html', {'notice_id': notice_id, "member": member})  # 커뮤니티/공지사항 글쓰기
+    notice = get_object_or_404(Notice, notice_id=notice_id)
+
+    if request.method == "POST":
+        form = NoticeForm(request.POST, instance=notice)
+        if form.is_valid():
+            notice = form.save(commit=False)
+            content_html = form.cleaned_data['content']
+            notice.content = content_html
+            notice.member = member
+            notice.store = member.store
+            notice.updated_at = timezone.now()
+            notice.save()
+            return redirect('notice_info', notice_id=notice.notice_id)
+    else:
+        form = NoticeForm(instance=notice)
+
+    context = {
+        'form': form,
+        'notice_id': notice_id,
+        'member': member,
+    }
+    return render(request, 'notice/notice_edit.html', context)
 
 # ---------------------------------------------------------------------------- #
-# summernote 에서 s3 로 이미지 업로드 api
-@csrf_exempt
-def upload_image_to_s3(request):
-    if request.method == "POST" and request.FILES.get("file"):
-        file = request.FILES["file"]
-        file_name = f"images/{uuid.uuid4()}_{file.name}"
-
-        s3_client = boto3.client(
-            's3',
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name=settings.AWS_S3_REGION_NAME
-        )
-
-        s3_client.upload_fileobj(
-            file,
-            settings.AWS_STORAGE_BUCKET_NAME,
-            file_name,
-            ExtraArgs={'ACL': 'public-read'}
-        )
-
-        file_url = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/{file_name}"
-        return JsonResponse({"location": file_url})
-    return JsonResponse({"error": "Invalid request"}, status=400)
+# # summernote 에서 s3 로 이미지 업로드 api
+# @csrf_exempt
+# def upload_image_to_s3(request):
+#     if request.method == "POST" and request.FILES.get("file"):
+#         file = request.FILES["file"]
+#         file_name = f"images/{uuid.uuid4()}_{file.name}"
+#
+#         s3_client = boto3.client(
+#             's3',
+#             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+#             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+#             region_name=settings.AWS_S3_REGION_NAME
+#         )
+#
+#         s3_client.upload_fileobj(
+#             file,
+#             settings.AWS_STORAGE_BUCKET_NAME,
+#             file_name,
+#             ExtraArgs={'ACL': 'public-read'}
+#         )
+#
+#         file_url = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/{file_name}"
+#         return JsonResponse({"location": file_url})
+#     return JsonResponse({"error": "Invalid request"}, status=400)
