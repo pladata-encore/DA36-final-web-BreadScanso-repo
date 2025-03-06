@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from pathlib import Path
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,6 +33,7 @@ SECRET_KEY = 'django-insecure-&=9$0a5lsdo@uvu5qy%50!jbc6iqtx%f+862^2i#u^ec!!b362
 # Application definition
 
 INSTALLED_APPS = [
+    'django_summernote',  # 텍스트 에디터 summernote 추가
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,7 +62,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.naver',
     # 'corsheaders',  # ♦️지우지마세요♦️
-    'django_summernote',  # 텍스트 에디터 summernote 추가
 ]
 
 MIDDLEWARE = [
@@ -208,6 +209,9 @@ ACCOUNT_LOGOUT_ON_GET = True # 기본값 False
 
 #---------------------------------------#
 # Summernote 설정
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 SUMMERNOTE_CONFIG = {
     'summernote': {
         'width': '100%',
@@ -228,11 +232,12 @@ SUMMERNOTE_CONFIG = {
         'fontNames': ['Arial', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '돋음체', '바탕체'],
         'fontSizes': ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72', '96'],
     },
-    'attachment_upload_to': '',  # 기본 업로드 경로 비활성화 (S3로 처리할 것이므로)
-    'attachment_require_authentication': True,  # 인증된 사용자만 업로드 가능
+    'attachment_upload_to': None,  # 로컬 업로드 비활성화
+    'attachment_require_authentication': True,
+    # 'attachment_handler': 'notice.views.upload_image_to_s3',  # S3 업로드 핸들러
 }
 
-
+#---------------------------------------#
 
 
 
