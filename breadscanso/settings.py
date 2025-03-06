@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from pathlib import Path
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,6 +33,7 @@ SECRET_KEY = 'django-insecure-&=9$0a5lsdo@uvu5qy%50!jbc6iqtx%f+862^2i#u^ec!!b362
 # Application definition
 
 INSTALLED_APPS = [
+    'django_summernote',  # 텍스트 에디터 summernote 추가
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -173,6 +175,31 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL = '/main/login/'  # 실제 로그인 URL에 맞게 수정
 
 
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    },
+    'naver': {
+            'SCOPE': [
+                'profile',
+                'email',
+            ],
+            'AUTH_PARAMS': {
+                'response_type': 'code',
+            }
+        }
+    }
+
+
+SOCIALACCOUNT_LOGIN_ON_GET = True  # 이 설정이 핵심
+# SOCIALACCOUNT_AUTO_SIGNUP = True   # 추가 정보 입력 없이 자동 가입
+
 SITE_ID = 1 # django.contrib.sites 프레임워크 다중 사이트 지원 관련, SITE_ID값 1은 기본 사이트를 지정한다. (django_site 테이블의 첫 번째 레코드)
 ACCOUNT_EMAIL_REQUIRED = True # 회원가입시 email 필수입력
 ACCOUNT_EMAIL_VERIFICATION = 'none' # none | optional | mandatory
@@ -180,9 +207,37 @@ ACCOUNT_EMAIL_VERIFICATION = 'none' # none | optional | mandatory
 # LOGOUT_REDIRECT_URL = '/app/'  # 기본값 /
 ACCOUNT_LOGOUT_ON_GET = True # 기본값 False
 
+#---------------------------------------#
+# Summernote 설정
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+SUMMERNOTE_CONFIG = {
+    'summernote': {
+        'width': '100%',
+        'height': '400',
+        'lang': 'ko-KR',
+        'toolbar': [
+            ['style', ['style']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+            ['color', ['color']],
+            ['table', ['table']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['insert', ['picture', 'link', 'video']],
+            ['view', ['fullscreen', 'help']],
+        ],
+        'fontNames': ['Arial', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '돋음체', '바탕체'],
+        'fontSizes': ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72', '96'],
+    },
+    'attachment_upload_to': None,  # 로컬 업로드 비활성화
+    'attachment_require_authentication': True,
+    # 'attachment_handler': 'notice.views.upload_image_to_s3',  # S3 업로드 핸들러
+}
 
-
+#---------------------------------------#
 
 
 

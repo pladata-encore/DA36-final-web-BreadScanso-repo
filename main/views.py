@@ -10,6 +10,10 @@ import random
 import string
 from menu.models import Item
 
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from django.urls import reverse
+
 
 def index(request):
     return render(request, "main/index.html")
@@ -180,6 +184,13 @@ def store_signup(request):
 
     return render(request, "main/store_signup.html", {'member': member})
 
+def google_login(request):
+    # google 로그인 URL로 직접 리다이렉트
+    return redirect('/accounts/google/login/')
+
+def naver_login(request):
+    # naver 로그인 URL로 직접 리다이렉트
+    return redirect('/accounts/naver/login/')
 
 # 메인홈-product 신제품 가져오기 코드 - 안나옴/일단보류
 # def product(request):

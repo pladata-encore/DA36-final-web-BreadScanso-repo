@@ -15,9 +15,9 @@ urlpatterns = [
     path('store_map/edit', views.store_map_edit, name='store_map_edit'),  # 매장 안내 수정
     path('store_event', views.store_event, name='store_event'),  # 이벤트
     path('store_event/edit', views.store_event_edit, name='store_event_edit'),  # 이벤트 수정 페이지
-    path('community_notice', views.community_notice, name='community_notice'),  # 커뮤니티/공지사항
-    path('community_notice/write', views.community_notice_write, name='community_notice_write'),  # 커뮤니티/공지사항 글쓰기
-    path('community_notice/modify/<int:notice_id>', views.community_notice_modify, name='community_notice_modify'),  # 커뮤니티/공지사항 수정
+    # path('community_notice', views.community_notice, name='community_notice'),  # 커뮤니티/공지사항
+    # path('community_notice/write', views.community_notice_write, name='community_notice_write'),  # 커뮤니티/공지사항 글쓰기
+    # path('community_notice/modify/<int:notice_id>', views.community_notice_modify, name='community_notice_modify'),  # 커뮤니티/공지사항 수정
     # path('community_qna', views.community_qna, name='community_qna'),  # 커뮤니티/Q&A
 
     # # question관련 view

@@ -16,7 +16,7 @@ class Item(models.Model):
     stock = models.IntegerField(default=0)
     item_name_eng = models.CharField(max_length=50, null=True)
     item_image = models.ImageField(upload_to='', null=True, blank=True)  # 제품 사진
-
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f"Item {self.item_id}, {self.item_name}"

@@ -13,33 +13,21 @@
 
 {% block content %}
     <div style="display: flex; align-items: flex-start; gap: 40px; margin-bottom: 50px;">
-        <div style="flex: 6.5; display: flex; flex-direction: column;">
+        <!-- 그래프 영역 -->
+        <div style="flex: 2; display: flex; flex-direction: column;">
             <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 20px;">
-                <div>
-                    <label for="product-select">제품 선택:</label>
-                    <select id="product-select">
-                        <option value="all">전체</option>
-                        {% for item in items %}
-                            <option value="{{ item.item_id }}" {% if item.item_id == selected_item %}selected{% endif %}>{{ item.item_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div>
-                    <label for="start-date">기간 설정:</label>
-                    <input type="date" id="start-date" value="2025-02-23" /> ~
-                    <input type="date" id="end-date" value="2025-03-02" />
-                </div>
-
-                <div>
-                    <button id="update-button">확인</button>
-                </div>
+                <label>시작 날짜:</label>
+                <input type="date" id="start-date">
+                <label>종료 날짜:</label>
+                <input type="date" id="end-date">
+                <br>
+                <button id="update-chart">그래프 업데이트</button>
             </div>
-
-            <canvas id="salesChart" style="width: 100%; height: 400px; margin-top: 20px;"></canvas>
+            <canvas id="salesChart"></canvas>
         </div>
 
-        <div style="flex: 3.5; align-self: flex-end; margin-bottom: 50px;">
+        <!-- 표 영역 -->
+        <div style="flex: 1; align-self: flex-start;">
             <h4>판매량 TOP5 제품</h4>
             <table class="table table-bordered">
                 <thead>
@@ -66,75 +54,116 @@
 {% endblock content %}
 
 {% block script %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // 기본값: 어제부터 5일간의 매출 데이터
-    let salesData = {{ sales_data | safe }};
-    let ctx = document.getElementById('salesChart').getContext('2d');
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let salesData = {{ final_total_sales|safe }}; // 서버로부터 받은 데이터
+        let ctx = document.getElementById('salesChart').getContext('2d');
 
-    let salesChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: salesData.map(data => data.date),
-            datasets: [{
-                label: '매출 금액',
-                data: salesData.map(data => data.total_price),
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: { beginAtZero: true }
+        // 기존 차트 생성
+        let salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: salesData.map(final_total_sales => final_total_sales.order_date),
+                datasets: [{
+                    label: '매출 금액',
+                    data: salesData.map(final_total_sales => final_total_sales.total_sales), // total_sales가 숫자라면 그대로 사용
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
             }
-        }
-    });
-
-    // "확인" 버튼 클릭 시 그래프 업데이트
-    document.getElementById('update-button').addEventListener('click', function() {
-        updateChart();
-    });
-
-
-    const salesUrl = "/sales/";  // 템플릿 태그로 URL을 미리 렌더링하여 변수에 저장
-
-    function updateChart(type, value) {
-        const startDate = document.getElementById('start-date').value;
-        const endDate = document.getElementById('end-date').value;
-        const productId = document.getElementById('product-select').value;
-
-        let params = {
-            start_date: startDate,
-            end_date: endDate,
-            item_id: productId
-        };
-
-        const url = new URL(salesUrl);  // 미리 렌더링된 URL을 사용
-
-        url.searchParams.append('start_date', startDate);
-        url.searchParams.append('end_date', endDate);
-        url.searchParams.append('item_id', productId);
-
-        fetch(url, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-        })
-        .then(response => response.json())
-        .then(jsonData => {
-            let salesData = jsonData.salesData;
-
-            // 차트 데이터 업데이트
-            salesChart.data.labels = salesData.map(item => item.date);
-            salesChart.data.datasets[0].data = salesData.map(item => item.total_price);
-            salesChart.update();
-        })
-        .catch(error => {
-            console.error("Error fetching data:", error);
         });
-    }
+
+        // 페이지 로드 후 버튼 클릭 이벤트 추가
+        document.addEventListener("DOMContentLoaded", function () {
+            let updateButton = document.getElementById('update-chart');
+
+            if (updateButton) {
+                updateButton.addEventListener('click', function () {
+                    let startDate = document.getElementById('start-date').value;
+                    let endDate = document.getElementById('end-date').value;
+
+                    if (!startDate || !endDate) {
+                        alert('기간을 선택하세요!');
+                        return;
+                    }
+
+                    // 선택한 기간을 getDateRange 함수에 넘겨서 날짜 범위를 받아옴
+                    let dateRange = getDateRange(startDate, endDate);
+
+                    // 선택한 기간 리스트 콘솔에 출력
+                    console.log("선택한 기간 리스트 : ", dateRange);
+
+                    // getDateRange에서 받은 dateRange를 updateChart 함수에 전달하여 차트 업데이트
+                    updateChart(dateRange);
+                });
+            } else {
+                console.error("update-chart 버튼을 찾을 수 없음!");
+            }
+        });
+
+        // 날짜 범위 구하기
+        function getDateRange(startDate, endDate) {
+            let dates = [];
+            let currentDate = new Date(startDate);
+            let finalDate = new Date(endDate);
+            finalDate.setDate(finalDate.getDate() + 1); // endDate 포함
+
+            while (currentDate < finalDate) {
+                let year = currentDate.getFullYear();
+                let month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                let day = ('0' + currentDate.getDate()).slice(-2);
+                dates.push(`${year}-${month}-${day}`);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            return dates;
+        }
+
+        // 차트 업데이트
+        function updateChart(dateRange) {
+            // 날짜 범위에 맞는 매출 데이터 필터링
+            let salesDataFiltered = salesData.filter(final_total_sales => dateRange.includes(final_total_sales.order_date));
+
+            let salesAmounts = dateRange.map(date => {
+                let sale = salesDataFiltered.find(s => s.order_date.split(" ")[0] === date);
+                return sale ? sale.total_sales : 0;  // 매출이 없으면 0 반환
+            });
+
+            // 차트 유형 결정 (10개 이하일 경우 'bar', 그 이상이면 'line')
+            let chartType = dateRange.length > 10 ? 'line' : 'bar';
+
+            // 기존 차트 삭제 후 새로운 차트 생성
+            if (salesChart) {
+                salesChart.destroy();
+            }
+
+            // 새 차트 생성
+            salesChart = new Chart(ctx, {
+                type: chartType,
+                data: {
+                    labels: dateRange,  // 날짜는 그대로 유지
+                    datasets: [{
+                        label: '매출 금액',
+                        data: salesAmounts,
+                        borderWidth: 2,
+                        backgroundColor: chartType === 'bar' ? 'rgba(75, 192, 192, 0.2)' : 'transparent',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        tension: 0.3 // 꺾은선 그래프 부드럽게
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
 
 
-
-
-</script>
+    </script>
 {% endblock script %}

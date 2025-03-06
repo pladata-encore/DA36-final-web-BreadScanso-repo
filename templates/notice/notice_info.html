@@ -1,0 +1,80 @@
+{% extends 'layout/store/base_store.html' %}
+{% load static %}
+
+{% block title %}시스템설정{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
+
+{% block content %}
+    <h3 style="margin-top: 20px; font-weight: bold" class="text-center">공지사항</h3>
+    {% csrf_token %}
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="border">
+                    <table class="table">
+                        <tr style="background-color: #ffeb99">
+                            <th class="text-center" style="width: 50%;">제목</th>
+                            <th class="text-center" style="width: 20%;">작성자</th>
+                            <th class="text-end" style="width: 20%;">등록일</th>
+                        </tr>
+                        <tr>
+                            <td class="text-center">{{ notice.title }}</td>
+                            <td class="text-center">
+                                {% if notice.store == 'A' %}
+                                    서초점
+                                {% elif notice.store == 'B' %}
+                                    강남점
+                                {% else %}
+                                    {{ notice.store }}
+                                {% endif %}
+                            </td>
+                            <td class="text-end">{{ notice.created_at|date:"Y-m-d" }}</td>
+                        </tr>
+                    </table>
+
+                    <h2 class="text-center mb-3">{{ notice.title }}</h2>
+                    <div class="text-center">
+                        {{ notice.content|safe }}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'notice_store' %}" class="btn btn-secondary">목록</a>
+                    <div class="right-buttons">
+                        <button type="button" class="btn btn-primary" id="edit-btn" data-notice-id="{{ notice.notice_id }}">수정</button>
+                        <button type="button" class="btn btn-danger" id="delete-btn" data-notice-id="{{ notice.notice_id }}">삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 삭제 확인 모달 -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">삭제 확인</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">선택한 항목을 삭제하시겠습니까?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancel-btn" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete-btn" data-notice-id="{{ notice.notice_id }}">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    {{ block.super }}
+    <script src="{% static 'js/notice_info.js' %}"></script>
+{% endblock script %}
