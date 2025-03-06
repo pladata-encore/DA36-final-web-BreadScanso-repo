@@ -29,7 +29,7 @@
         <!-- 표 영역 -->
         <div style="flex: 1; align-self: flex-start;">
             <h4>판매량 TOP5 제품</h4>
-            <table class="table table-bordered">
+            <table id="salesTable" class="table table-bordered">
                 <thead>
                     <tr>
                         <th>상품 ID</th>
@@ -39,17 +39,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in top5 %}
+                    {% for sale in top_5_sales %}
                     <tr>
-                        <td>{{ item.item_id }}</td>
-                        <td>{{ item.item_name }}</td>
-                        <td>{{ item.total_quantity }}</td>
-                        <td>₩{{ item.total_price }}</td>
+                        <td>{{ sale.item_id }}</td>
+                        <td>{{ sale.item_name }}</td>
+                        <td>{{ sale.item_total_count }}</td>
+                        <td>₩{{ sale.item_total_amount }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+{#    {{ final_total_counts }}#}
     </div>
 {% endblock content %}
 
@@ -57,6 +58,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let salesData = {{ final_total_sales|safe }}; // 서버로부터 받은 데이터
+        let countsData = {{ top_5_filtered_sales|safe }};
         let ctx = document.getElementById('salesChart').getContext('2d');
 
         // 기존 차트 생성
@@ -100,11 +102,18 @@
 
                     // getDateRange에서 받은 dateRange를 updateChart 함수에 전달하여 차트 업데이트
                     updateChart(dateRange);
+                    updateTable(dateRange);
                 });
             } else {
                 console.error("update-chart 버튼을 찾을 수 없음!");
             }
         });
+
+        {#// 페이지 로드 시 전체 데이터 표시#}
+        {#document.addEventListener("DOMContentLoaded", function () {#}
+        {#    // 페이지 로드 후 표를 전체 데이터로 초기화#}
+        {#    updateTable([]);#}
+        {# });#}
 
         // 날짜 범위 구하기
         function getDateRange(startDate, endDate) {
@@ -163,6 +172,71 @@
                 }
             });
         }
+
+        // 표 업데이트 함수
+        function updateTable(dateRange) {
+            // 날짜 범위에 맞는 매출 데이터 필터링
+            let countsDataFiltered = countsData.filter(top_5_filtered_sales => dateRange.includes(top_5_filtered_sales.order_date));
+
+            // 제품 아이디별로 판매수량과 판매금액 합산
+            let productSales = countsDataFiltered.reduce((acc, sale) => {
+                let existingProduct = acc.find(item => item.item_id === sale.item_id);
+
+                if (existingProduct) {
+                    // 제품이 이미 존재하면 판매수량과 판매금액을 합산
+                    existingProduct.item_total_count += sale.item_total_count;
+                    existingProduct.item_total_amount += sale.item_total_amount;
+                } else {
+                    // 제품이 처음 등장하면 새로운 항목으로 추가
+                    acc.push({
+                        item_id: sale.item_id,
+                        item_name: sale.item_name,
+                        item_total_count: sale.item_total_count,
+                        item_total_amount: sale.item_total_amount
+                    });
+                }
+
+                return acc;
+            }, []);
+
+            // 판매수량 기준 내림차순 정렬 후 상위 5개 제품 추출
+            let top5Products = productSales
+                .sort((a, b) => b.item_total_count - a.item_total_count)  // 판매수량 내림차순 정렬
+                .slice(0, 5);  // 상위 5개 제품만 추출
+
+            // countsAmounts 배열에 상위 5개 제품 저장
+            let countsAmounts = top5Products.map(product => ({
+                item_id: product.item_id,
+                item_name: product.item_name,
+                item_total_count: product.item_total_count,
+                item_total_amount: product.item_total_amount
+            }));
+
+            console.log(countsAmounts);  // 최종 상위 5개 제품 확인
+
+            // 표의 tbody를 비우고 새로 갱신
+            let tableBody = document.getElementById('salesTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // 기존 표 내용 지우기
+
+            // console.log(sale);  // 각 제품 데이터 확인
+            // console.log(tableBody); // tableBody가 제대로 찾았는지 확인
+
+            // 필터링된 데이터로 표에 내용 추가
+            countsAmounts.forEach(sale => {
+                let row = tableBody.insertRow();
+
+                // 각 셀에 값 추가
+                let cellItemID = row.insertCell(0);
+                let cellItemName = row.insertCell(1);
+                let cellItemCount = row.insertCell(2);
+                let cellTotalAmount = row.insertCell(3);
+
+                cellItemID.textContent = sale.item_id;
+                cellItemName.textContent = sale.item_name;
+                cellItemCount.textContent = sale.item_total_count;
+                cellTotalAmount.textContent = sale.item_total_amount;
+            });
+         }
 
 
     </script>
