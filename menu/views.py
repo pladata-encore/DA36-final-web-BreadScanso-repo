@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods
 from .models import Item, NutritionInfo, Allergy
 import json
 from .utils import upload_product_image_to_s3
+from django.utils import timezone
 
 # 소비자 화면 메뉴 정보 페이지
 def menu_main(request):
@@ -48,12 +49,16 @@ def menu_main(request):
         new_items = new_items_query.order_by('item_name').distinct()
         best_items = items_query.filter(best=1).distinct()
 
+    # New 태그 지속 시간 (초 단위, 예: 3600초 = 1시간)
+    new_duration_seconds = 3600
+
     context = {
         'items': items,
         'new_items': new_items,
         'best_items': best_items,
         'selected_store': selected_store,
         'category_filter': category_filter,
+        'new_duration_seconds': new_duration_seconds,
     }
     return render(request, 'menu/menu_main.html', context)
 

@@ -226,4 +226,34 @@ document.addEventListener("DOMContentLoaded", function () {
         // URL은 유지하고 검색 결과만 초기화
         resetDisplay();
     });
+
+    // NEW 태그 타이머 설정
+    function setupNewTagTimers() {
+        const newTags = document.querySelectorAll('.new-tag-main');
+        const now = new Date(); // 현재 시간
+
+        newTags.forEach(tag => {
+            const createdAt = new Date(tag.getAttribute('data-created-at')); // 등록 시점
+            const durationSeconds = parseInt(tag.getAttribute('data-new-duration-seconds')) || 3600; // 지속 시간 (초)
+            const durationMs = durationSeconds * 1000; // 밀리초로 변환
+            const elapsedMs = now - createdAt; // 경과 시간
+            const remainingMs = durationMs - elapsedMs; // 남은 시간
+
+            if (remainingMs <= 0) {
+                // 이미 시간이 지난 경우 즉시 숨김
+                tag.style.display = 'none';
+            } else {
+                // 남은 시간 후 숨김
+                setTimeout(() => {
+                    tag.style.display = 'none';
+                }, remainingMs);
+            }
+        });
+    }
+
+    // 페이지 로드 시 타이머 설정
+    setupNewTagTimers();
+
+    // 실시간 업데이트 (1초마다 확인)
+    setInterval(setupNewTagTimers, 1000);
 });
