@@ -64,7 +64,7 @@ class QnA(models.Model):  # QnA 글 테이블
     content = models.TextField()  # 내용
     view_count = models.PositiveIntegerField(default=0)  # 조회수
     is_answered = models.BooleanField(default=False)  # 답변 완료 여부
-    store = models.CharField(max_length=50, null=True, choices=[("A", "Store A"), ("B", "Store B")])  # 매장
+    store = models.CharField(max_length=50, null=True, choices=[("A", "서초점"), ("B", "강남점")])  # 매장
 
     def __str__(self):
         return f"QnA {self.qna_id} - {self.title}"
