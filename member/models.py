@@ -47,8 +47,9 @@ class EventPost(models.Model):  # 이벤트 게시판 글 테이블
     updated_at = models.DateTimeField(auto_now=True)  # 수정일시
     content = models.ImageField(upload_to='', null=True, blank=True) # 이미지 내용
     view_count = models.PositiveIntegerField(default=0)  # 조회수
-    is_pinned = models.BooleanField(default=False)  # 상단 고정 여부
-    store = models.CharField(max_length=50, null=True, choices=[("A", "Store A"), ("B", "Store B")])  # 매장
+    show = models.BooleanField(default=True)  # 노출 여부
+    finish = models.BooleanField(default=False)  # 노출 여부
+    store = models.CharField(max_length=50, null=True, choices=[("A", "서초점"), ("B", "강남점")])  # 매장
 
     def __str__(self):
         return f"이벤트 {self.event_id} - {self.title}"
