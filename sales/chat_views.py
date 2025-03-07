@@ -10,7 +10,7 @@ import os
 load_dotenv()
 # FastAPI url 환경변수에서 로드
 # FASTAPI_URL = os.getenv("FASTAPI_URL")
-FASTAPI_URL = 'http://localhost:8003'
+FASTAPI_LOCAL_URL = 'http://127.0.0.1:8003/chatbot'
 
 # 로깅 설정
 logger = logging.getLogger(__name__)
@@ -41,7 +41,8 @@ def sales_chatbot(request):
             print('store:', store)
             # FastAPI 요청
             response = requests.post(
-                f"{FASTAPI_URL}/chatbot_endpoint",
+                # f"{FASTAPI_URL}/chatbot",
+                FASTAPI_LOCAL_URL,
                 headers={'Content-Type': 'application/json'},
                 json={"question": user_question},
                 timeout=60

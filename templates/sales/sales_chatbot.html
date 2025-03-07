@@ -37,12 +37,12 @@ document.getElementById("chat-form").addEventListener("submit", function(event) 
     if (userInput.trim() === "") return;
     
     // 사용자 질문 표시
-    chatBox.innerHTML += `<p><strong>🧑 사용자:</strong> ${userInput}</p>`;
+    chatBox.innerHTML += `<p><strong>🧑:</strong> ${userInput}</p>`;
     document.getElementById("user-input").value = "";
     
     // 로딩 메시지
     const loadingId = `loading-${Date.now()}`;
-    chatBox.innerHTML += `<p id="${loadingId}">응답 생성 중...</p>`;
+    chatBox.innerHTML += `<p id="${loadingId}">답변을 작성하고 있습니다...🐕</p>`;
     chatBox.scrollTop = chatBox.scrollHeight;
 
     fetch("{% url 'sales:sales_chatbot' %}", {
