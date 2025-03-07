@@ -47,9 +47,9 @@ document.getElementById("chat-form").addEventListener("submit", function(event) 
 
     fetch("{% url 'sales:sales_chatbot' %}", {
         method: "POST",
-        headers: { 
-            "Content-Type": "application/json", 
-            "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value 
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
         },
         body: JSON.stringify({ question: userInput })
     })
