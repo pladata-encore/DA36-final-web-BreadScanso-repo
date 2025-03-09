@@ -1154,6 +1154,51 @@ body.kiosk-payment-completed {
     text-align: center; /* 텍스트 중앙 정렬 */
 }
 
+/*---마이페이지-회원탈퇴 사유 페이지-----------------------------------------------------------------------------*/
+.pay-member_details .checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.pay-member_details .checkbox-container input[type="checkbox"] {
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.pay-member_details .checkbox-container label {
+    text-align: left;
+}
+
+.pay-member_details #otherReasonText {
+    width: 100%;
+    margin-top: 10px;
+    margin-left: 25px;
+    min-height: 80px;
+    resize: vertical;
+}
+
+.pay-member_details form {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.pay-member_details #confirmButton {
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pay-member_details form > div {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+
+
 
 /*--예진 end--*/
 
