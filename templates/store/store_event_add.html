@@ -72,36 +72,14 @@
     width: 100%;
 }
 
-.item-name-category {
-    display: flex;
-    gap: 15px;
-    width: 100%;
-}
-
-.item-name-category .mb-3 {
-    flex: 1;
-}
 
 .fieldset-container {
     width: 100%;
     max-width: 100%;
 }
 
-.nutrition-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    width: 100%;
-}
 
-.allergy-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    width: 100%;
-}
-
-/* Best, New, 노출중 체크박스 개별 스타일 */
+/* shoe, finish 체크박스 개별 스타일 */
 .form-check-group {
     display: flex;
     gap: 15px;
@@ -119,35 +97,8 @@
     background-color: #fff;
 }
 
-/* 알레르기 체크박스 개별 스타일 */
-.allergy-check {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 10px;
-    border: 1px solid #000;
-    border-radius: 5px;
-}
 
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 20px;
-}
-
-.btn {
-    padding: 8px 20px;
-}
-
-#cancel-btn {
-    background-color: #ffc107;
-}
-
-#save-btn {
-    background-color: #28a745;
-}
-
+{# 모바일 기기용 설정 적용 #}
 @media (max-width: 768px) {
     #event-form {
         margin-left: 0;
@@ -163,16 +114,13 @@
         width: 100%;
     }
 
-    .item-name-category {
-        flex-direction: column;
-    }
 }
 </style>
 
     <h3 style="margin-bottom: 50px;" class="text-center">이벤트 신규 등록</h3>
 
 
-<form action="{% url 'store:store_event_edit' %}" method="POST" enctype="multipart/form-data" id="event-form">
+<form action="{% url 'store:store_event_add' %}" method="POST" enctype="multipart/form-data" id="event-form">
     {% csrf_token %}
 
     {% if error %}
@@ -196,6 +144,21 @@
         <input type="hidden" name="store" value="{{ store }}">
     </div>
     <!-- -------------------------------------------------------------------- -->
+    <div class="form-area">
+        <div class="form-check-group full-width">
+            <div class="form-check-top">
+
+                <input class="form-check-input" type="checkbox" id="flexCheckShow" name="show" value="on"
+                    {% if request.GET.show == "on" %}checked{% endif %}>
+                <label class="form-check-label" for="flexCheckShow">진행중</label>
+            </div>
+            <div class="form-check-top">
+                <input class="form-check-input" type="checkbox" id="flexCheckFinish" name="finish" value="on"
+                    {% if request.GET.finish == "on" %}checked{% endif %}>
+                <label class="form-check-label" for="flexCheckFinish">종료</label>
+            </div>
+        </div>
+
 
     <div class="content-wrapper">
         <div class="image-area">
@@ -203,46 +166,34 @@
             <input type="file" id="file-input" name="content" accept="image/*">
             <img id="preview" src="" alt="Uploaded image preview">
         </div>
-
-{#        <div class="image-area">#}
-{#            <label for="file-input">이벤트 상세페이지용 사진</label>#}
-{#            <input type="file" id="file-input" name="content" accept="image/*">#}
-{#            <img id="preview" src="" alt="Uploaded image preview">#}
-{#        </div>#}
-{#    </div>#}
-            <div class="form-area">
-                <div class="form-check-group full-width">
-                    <div class="form-check-top">
-                        <input class="form-check-input" type="checkbox" id="flexCheckShow" name="show" value="on">
-                        <label class="form-check-label" for="flexCheckShow">진행중</label>
-                    </div>
-                    <div class="form-check-top">
-                        <input class="form-check-input" type="checkbox" id="flexCheckFinish" name="finish" value="on">
-                        <label class="form-check-label" for="flexCheckFinish">종료</label>
-                    </div>
-                </div>
-            <div class="fieldset-container full-width">
-                <fieldset>
-                    <div class="title-category">
-                        <div class="mb-3">
-                            <label for="Title" class="form-label"><strong>이벤트명</strong></label>
-                            <input type="text" class="form-control" id="Title" name="title" placeholder="이벤트명을 입력하세요" required>
-                        </div>
-                    </div>
-{#                    <div class="mb-3 full-width">#}
-{#                        <label for="ItemDescription" class="form-label"><strong>이벤트 설명</strong></label>#}
-{#                        <input type="text" class="form-control" id="ItemDescription" name="description" placeholder="이벤트 설명을 입력하세요" required>#}
-{#                    </div>#}
-                </fieldset>
-            </div>
-
-        <div class="button-container">
-            <button type="button" class="btn btn-warning" id="cancel-btn">취소</button>
-            <button type="button" class="btn btn-success" id="save-btn" data-bs-toggle="modal" data-bs-target="#saveConfirmModal">저장</button>
+        <div class="image-area">
+            <label for="file-input">이벤트 상세페이지용 사진</label>
+            <input type="file" id="file-input" name="event_detail" accept="image/*">
+            <img id="preview" src="" alt="Uploaded image preview">
         </div>
     </div>
+
+
+    <div class="fieldset-container full-width">
+        <fieldset>
+            <div class="title-category">
+                <div class="mb-3">
+                    <label for="Title" class="form-label"><strong>이벤트명</strong></label>
+                    <input type="text" class="form-control" id="Title" name="title" placeholder="이벤트명을 입력하세요" required>
+                </div>
+            </div>
+    {#                    <div class="mb-3 full-width">#}
+    {#                        <label for="ItemDescription" class="form-label"><strong>이벤트 설명</strong></label>#}
+    {#                        <input type="text" class="form-control" id="ItemDescription" name="description" placeholder="이벤트 설명을 입력하세요" required>#}
+    {#                    </div>#}
+        </fieldset>
     </div>
-    </form>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-warning" id="cancel-btn">취소</button>
+        <button type="button" class="btn btn-success" id="save-btn" data-bs-toggle="modal" data-bs-target="#saveConfirmModal">저장</button>
+    </div>
+    </div>
+</form>
 
 
     <!-- modal -->
@@ -390,11 +341,6 @@
 {#{% endblock content %}#}
 
 {% block script %}
-    <!-- jQuery 추가 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Summernote css/js 추가 -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script src="{% static 'js/store_event_add.js' %}"></script>
 {% endblock script %}
 

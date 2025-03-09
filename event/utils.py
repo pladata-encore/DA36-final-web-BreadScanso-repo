@@ -4,7 +4,7 @@ import os
 from uuid import uuid4
 from django.conf import settings
 
-def upload_content_to_s3(file, folder="content"):
+def upload_content_to_s3(file, folder="content, event_detail"):
     """S3에 파일을 업로드하고 URL을 반환하는 함수"""
     s3 = boto3.client(
         "s3",
