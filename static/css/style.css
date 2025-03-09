@@ -839,8 +839,9 @@ body.kiosk-member .store-name {
 body.kiosk-member .button-container {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin: 20px auto;
     gap: 15px;
+    align-items: center;
 }
 
 body.kiosk-member button {
@@ -995,46 +996,6 @@ body.kiosk-payment-method body {
     align-items: center;
     background-color: #f8f8f8;
 }
-
-/*!* 메인 컨테이너 (주문 목록) *!*/
-/*body.kiosk-payment-method .container {*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    width: 85%;*/
-/*    margin: 120px auto 0 auto; !* 위쪽 여백 120px, 좌우 자동 정렬 *!*/
-/*    align-items: center;*/
-/*}*/
-
-/*!* 결제 내역 *!*/
-/*body.kiosk-payment-method .payment-history {*/
-/*    width: 60%;*/
-/*    background-color: white;*/
-/*    padding: 15px;*/
-/*    border-radius: 10px;*/
-/*    border: 2px solid #ddd;*/
-/*    text-align: center;*/
-/*}*/
-
-/*body.kiosk-payment-method .payment-history table {*/
-/*    width: 100%;*/
-/*    border-collapse: collapse;*/
-/*    margin-top: 10px;*/
-/*}*/
-
-/*body.kiosk-payment-method .payment-history th, .payment-history td {*/
-/*    border: 1px solid #ddd;*/
-/*    padding: 10px;*/
-/*    text-align: center;*/
-/*}*/
-
-/*body.kiosk-payment-method .payment-history th {*/
-/*    background-color: #ffeb99;*/
-/*}*/
-
-/*body.kiosk-payment-method .total {*/
-/*    margin-top: 20px;*/
-/*    font-size: 18px;*/
-/*}*/
 
 /*!* 버튼 스타일 *!*/
 body.kiosk-payment-method .button-container {
