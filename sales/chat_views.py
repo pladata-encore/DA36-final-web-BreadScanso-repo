@@ -21,7 +21,8 @@ logger = logging.getLogger(__name__)
 def sales_chatbot(request):
     # sales_chatbot 요청을 받았을 때 사용자가 볼 첫 화면이 sales_chatbot.html
     if request.method == 'GET':
-        return render(request, 'sales/sales_chatbot.html')
+        member = request.user.member
+        return render(request, 'sales/sales_chatbot.html', {'member': member})
 
     # '보내기' 버튼 누르면 POST 요청. 사용자 질문을 json으로 FastAPI에 전달
     if request.method == 'POST':
