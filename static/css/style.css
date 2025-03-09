@@ -295,6 +295,63 @@ body.main-index .event-img, body.main-index .product-img {
 
 }
 /* ----------------------------------------------------------------------- */
+/* 시스템설정 - 이벤트 신규등록 설정 */
+.event-check {
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+.event-title input {
+    height: 40px;
+    margin-bottom: 15px;
+}
+
+/* 콘텐츠 왼쪽 정렬 */
+.content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-left: 15px;
+}
+
+.button-container {
+    display: flex;
+    align-self: flex-end;
+    margin-top: 20px;
+    margin-right: 175px;
+}
+
+/* 이미지 업로드 설정 */
+.filebox .upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    width: 78%;
+    color: #999999;
+}
+.filebox label {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #999999;
+    cursor: pointer;
+    height: 40px;
+    margin-left: 10px;
+}
+.filebox input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+}
+
+/* ----------------------------------------------------------------------- */
 /* 회원관리 내 삭제/신규등록 버튼 설정 */
 .member-container {
     display: flex;
@@ -370,6 +427,59 @@ body {
     cursor: pointer;
 }
 /* ----------------------------------------------------------------------- */
+/* 매장페이지 - 시스템설정 - 이벤트 */
+.event-store-table table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.event-store-table th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+.event-store-table thead {
+    border-bottom: 3px solid black;
+}
+.event-store-table .checkbox-column {
+    width: 50px;
+}
+
+.event-store-table tbody tr {
+    cursor: pointer;
+}
+
+/* 반응형 레이아웃 */
+@media (max-width: 768px) {
+    .d-flex {
+        flex-direction: column; /* 작은 화면에서 세로로 배치 */
+    }
+    .d-flex button {
+        margin: 10px 0; /* 버튼 간 간격 추가 */
+    }
+}
+
+/* 정렬 버튼 스타일 */
+.sort-container {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 5px;
+}
+.sort-btn {
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: none;
+    color: #000;
+    line-height: 1;
+}
+.sort-btn.active {
+    color: #007bff;
+    font-weight: bold;
+}
+
+
+/* ----------------------------------------------------------------------- */
+
 
 /*--정아 end--*/
 
@@ -1269,11 +1379,22 @@ body.kiosk-payment-completed {
     width: 100px;
 }
 
+/* ------------------------------------------------------------------------------ */
+/* 매장페이지 - 결제관리(전자영수증 설정) */
+.receipt-container-wrapper {
+        display: flex;         /* 부모 요소에 flex 사용 */
+        justify-content: center; /* 자식 요소를 중앙 정렬 */
+        align-items: center;     /* 세로 중앙 정렬 */
+        width: 100%;             /* 부모 요소의 너비를 100%로 설정 */
+    }
 
-
-
-
-
-
+.receipt-container {
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 79%; /* 너비 설정 */
+    }
 
 /*--은비 end--*/
