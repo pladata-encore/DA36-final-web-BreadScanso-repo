@@ -920,7 +920,7 @@ body.kiosk-point .phone-display {
 body.kiosk-point .button-container {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin: 20px auto;
     gap: 15px;
     align-items: center;
 }
@@ -1122,7 +1122,7 @@ body.kiosk-payment-completed body {
 body.kiosk-payment-completed .button-container {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin: 20px auto;
     gap: 15px;
 }
 
