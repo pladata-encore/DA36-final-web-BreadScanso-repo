@@ -2,14 +2,18 @@ from django.urls import path, include
 from main import views
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-
 from main.views import google_login, naver_login
+
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 # namespace 지정
 app_name = 'main'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('summernote/', include('django_summernote.urls')),  # summernote 텍스트 에디터 추가
     path('main/', include('main.urls')), # 회원 관련 URL
     path('kiosk/', include('kiosk.urls')),  # kiosk 앱의 urls.py를 포함
     path('brand/', include('brand.urls')),  # brand 앱의 urls.py를 포함
@@ -27,16 +31,11 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),  # 소셜로그인 추가, allauth 관련 url 추가
     path('google-login/', google_login, name='google_login'),
     path('naver-login/', naver_login, name='naver_login'),
-    path('summernote/', include('django_summernote.urls')),  # summernote 텍스트 에디터 추가
-
 ]
 
-
-
-
-
-
-
+# 개발 환경에서 미디어 파일 서빙
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 
