@@ -7,75 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiosk | Payment Method</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <style>
-        /* 테이블 스타일 개선 - 갈색 계열 */
-        .container {
-            width: 90%;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .order-list {
-            margin: 30px 0;
-        }
-
-        .order-list h3 {
-            color: #8B4513; /* 새들 브라운 색상 */
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .order-list table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px; /* 마진 줄임 */
-            box-shadow: 0 3px 8px rgba(139, 69, 19, 0.2);
-            font-size: 18px; /* 글자 크기 증가 */
-        }
-
-        .order-list th {
-            background-color: #8B4513; /* 새들 브라운 색상 */
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .order-list td {
-            padding: 15px; /* 셀 패딩 증가 */
-            text-align: center;
-            border-bottom: 1px solid #D2B48C; /* 탠 색상 */
-        }
-
-        .order-list tr:nth-child(even) {
-            background-color: #FFF8DC; /* 콘실크 색상 */
-        }
-
-        .order-list tr:nth-child(odd) {
-            background-color: #FAEBD7; /* 앤티크 화이트 색상 */
-        }
-
-        .order-list tr:hover {
-            background-color: #F5DEB3; /* 위트 색상 */
-        }
-
-        /* 총 수량과 금액 스타일 수정 */
-        .total-info {
-            text-align: right;
-            font-size: 18px; /* 글자 크기 줄임 */
-            margin-bottom: 20px;
-            color: #8B4513; /* 새들 브라운 색상 */
-        }
-
-        .total-info p {
-            margin: 5px 0; /* 각 문단 사이 여백 줄임 */
-        }
-
-        .total-info strong {
-            font-weight: bold;
-            color: #8B4513; /* 새들 브라운 색상 */
-        }
-    </style>
 </head>
 <body class="kiosk-payment-method">
     <!-- 헤더 추가 (로고 포함) -->
@@ -114,10 +45,10 @@
     <!-- 버튼 영역 -->
     <div class="button-container">
         <a href="{% url 'payment_completed' %}">
-            <button class="blue-button">카드 결제</button>
+            <button class="sandybrown-button">카드 결제</button>
         </a>
         <a href="{% url 'payment_completed' %}">
-            <button class="blue-button">간편 결제<br>(삼성페이, 애플페이 등)</button>
+            <button class="sandybrown-button">간편 결제<br>(삼성페이, 애플페이 등)</button>
         </a>
     </div>
     <script>
