@@ -485,11 +485,6 @@ body {
 
 /*--예진 start--*/
 
-
-
-
-
-
 /* kiosk-main.html에만 적용되는 헤더 스타일 ----------------------------------------------------------*/
 .kiosk-main {
     background: url('/static/images/kiosk_main.png') no-repeat center center/cover;
@@ -564,7 +559,7 @@ body.kiosk-products .store-name {
     top: 20px;
     right: 30px;
     font-size: 24px;
-    color: yellowgreen;
+    color: burlywood;
     font-weight: bold;
 }
 /* 전체 페이지 스타일 */
@@ -576,76 +571,6 @@ body.kiosk-products body {
     flex-direction: column;
     align-items: center;
     background-color: #f8f8f8;
-}
-
-/* 메인 컨테이너 (이미지 영역 + 주문 목록) */
-body.kiosk-products .container {
-    display: flex;
-    justify-content: space-between;
-    width: 85%;
-    margin: 120px auto 0 auto; /* 위쪽 여백 120px, 좌우 자동 정렬 */
-}
-
-/* 왼쪽: 이미지 영역 */
-body.kiosk-products .image-area {
-    width: 50%;
-    height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-/*.image-area img {*/
-/*    width: 90%;*/
-/*    height: auto;*/
-/*}*/
-body.kiosk-products #file-input {
-    display: block;
-    margin-bottom: 20px;
-}
-body.kiosk-products #preview {
-    max-width: 100%;
-    max-height: 300px;
-    display: none; /* 처음에는 숨겨두기 */
-}
-body.kiosk-products #reset-btn {
-    display: none; /* 처음에는 숨겨두기 */
-}
-
-
-/* 오른쪽: 주문 목록 */
-body.kiosk-products .order-list {
-    width: 40%;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    border: 2px solid #ddd;
-    text-align: center;
-}
-
-body.kiosk-products .order-list table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-body.kiosk-products .order-list th, .order-list td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-}
-
-body.kiosk-products .order-list th {
-    background-color: #ffeb99;
-}
-
-body.kiosk-products .total {
-    margin-top: 20px;
-    font-size: 18px;
 }
 
 /* 버튼 스타일 */
@@ -665,20 +590,217 @@ body.kiosk-products button {
     cursor: pointer;
 }
 
+body.kiosk-products .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1000px;
+    width: 85%;
+    margin: 120px auto 0 auto; /* 위쪽 여백 120px, 좌우 자동 정렬 */
+}
+
+body.kiosk-products .video-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+body.kiosk-products video {
+    width: 400px;
+    height: 300px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+body.kiosk-products #capture-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: sandybrown;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+body.kiosk-products h3 {
+    text-align: center;
+}
+
+body.kiosk-products table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+body.kiosk-products .order-list .del-btn {
+    background-color: red !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 2px !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    font-size: 14px !important;
+    width: 20px !important;
+    height: 20px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    line-height: 1 !important;
+    margin: 0 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+}
+
+body.kiosk-products #edit-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+body.kiosk-products #edit-modal > div {
+    background: white;
+    width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+body.kiosk-products #edit-modal h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+body.kiosk-products #search-input, #item-select, #quantity-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    -webkit-appearance: textfield; /* 기본 스핀 버튼 스타일 초기화 */
+}
+
+body.kiosk-products #quantity-input::-webkit-inner-spin-button,
+body.kiosk-products #quantity-input::-webkit-outer-spin-button {
+    -webkit-appearance: inner-spin-button; /* 스핀 버튼 유지 */
+    width: 30px; /* 스핀 버튼 너비 키움 */
+    height: 30px; /* 스핀 버튼 높이 키움 */
+    opacity: 1; /* 투명도 조정 */
+    background-color: #f0f0f0; /* 배경색 추가 */
+    border-radius: 3px; /* 둥글게 */
+}
+
+body.kiosk-products #save-item-btn, #close-modal-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+body.kiosk-products #save-item-btn {
+    background-color: burlywood;
+    color: white;
+    border: none;
+}
+
+body.kiosk-products #close-modal-btn {
+    background-color: gray;
+    color: white;
+    border: none;
+}
+
 /* 버튼 색상 */
-body.kiosk-products .yellow-button {
-    background-color: #ffcc00;
+body.kiosk-products .sandybrown-button {
+    background-color: sandybrown;
     color: black;
 }
 
-body.kiosk-products .blue-button {
-    background-color: #5c9aff;
+body.kiosk-products .burlywood-button {
+    background-color: burlywood;
     color: white;
 }
 
-body.kiosk-products .black-button {
-    background-color: black;
+body.kiosk-products .gray-button {
+    background-color: gray;
     color: white;
+}
+
+body.kiosk-products .total-container .btn-container {
+    margin-top:10px;
+    padding:5px 10px;
+    border:none;
+    border-radius:5px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+body.kiosk-products .order-list {
+    margin: 30px 0;
+}
+
+body.kiosk-products .order-list h3 {
+    color: #8B4513; /* 새들 브라운 색상 */
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+body.kiosk-products .order-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px; /* 마진 줄임 */
+    box-shadow: 0 3px 8px rgba(139, 69, 19, 0.2);
+    font-size: 18px; /* 글자 크기 증가 */
+}
+
+body.kiosk-products .order-list th {
+    background-color: #8B4513; /* 새들 브라운 색상 */
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+body.kiosk-products .order-list td {
+    padding: 15px; /* 셀 패딩 증가 */
+    text-align: center;
+    border-bottom: 1px solid #D2B48C; /* 탠 색상 */
+}
+
+body.kiosk-products .order-list tr:nth-child(even) {
+    background-color: #FFF8DC; /* 콘실크 색상 */
+}
+
+body.kiosk-products .order-list tr:nth-child(odd) {
+    background-color: #FAEBD7; /* 앤티크 화이트 색상 */
+}
+
+body.kiosk-products .order-list tr:hover {
+    background-color: #F5DEB3; /* 위트 색상 */
+}
+
+/* 총 수량과 금액 스타일 수정 */
+body.kiosk-products .total-info {
+    text-align: right;
+    font-size: 18px; /* 글자 크기 줄임 */
+    margin-bottom: 20px;
+    color: #8B4513; /* 새들 브라운 색상 */
+}
+
+body.kiosk-products .total-info p {
+    margin: 5px 0; /* 각 문단 사이 여백 줄임 */
+}
+
+body.kiosk-products .total-info strong {
+    font-weight: bold;
+    color: #8B4513; /* 새들 브라운 색상 */
 }
 
 /* 회원 확인 페이지 전체 화면 구성------------------------------------------------ */
@@ -708,7 +830,7 @@ body.kiosk-member .store-name {
     top: 20px;
     right: 30px;
     font-size: 24px;
-    color: yellowgreen;
+    color: burlywood;
     font-weight: bold;
 }
 
@@ -731,12 +853,12 @@ body.kiosk-member button {
 }
 
 /* 버튼 색상 */
-body.kiosk-member .black-button {
-    background-color: black;
+body.kiosk-member .gray-button {
+    background-color: gray;
     color: white;
 }
 
-/* 포인트 적립 페이지 구성 --------------------------------------*/
+/* 포인트 적립/사용 페이지 구성 --------------------------------------*/
 body.kiosk-point .keypad-container {
     display: flex;
     flex-direction: column;
@@ -763,7 +885,7 @@ body.kiosk-point .store-name {
     top: 20px;
     right: 30px;
     font-size: 24px;
-    color: yellowgreen;
+    color: burlywood;
     font-weight: bold;
 }
 
@@ -799,7 +921,6 @@ body.kiosk-point .button-container {
     justify-content: center;
     margin-top: 20px;
     gap: 15px;
-    /*flex-direction: column; !* 버튼을 세로 정렬 *!*/
     align-items: center;
 }
 
@@ -812,105 +933,34 @@ body.kiosk-point button {
     cursor: pointer;
 }
 
-body.kiosk-point .blue-button {
-    background-color: #5c9aff;
+body.kiosk-point .burlywood-button {
+    background-color: burlywood;
     color: white;
 }
 
-body.kiosk-point .black-button {
-    background-color: black;
+body.kiosk-point .sandybrown-button {
+    background-color: sandybrown;
     color: white;
 }
 
-/* 포인트 사용 페이지 구성--------------------------------------------------*/
-body.kiosk-usepoint .keypad-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100vw;
+body.kiosk-point .gray-button {
+    background-color: gray;
+    color: white;
 }
 
-body.kiosk-usepoint header {
-    position: fixed; /* 화면에 고정 */
-    top: 20px;
-    left: 20px;
-    height: 60px;
-}
-/* 브랜드 로고 이미지 스타일 */
-body.kiosk-usepoint .brand-logo {
-    width: 150px; /* 로고 크기 조정 */
-    height: auto; /* 비율 유지 */
-}
-/* 지점명 (오른쪽 상단) */
-body.kiosk-usepoint .store-name {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    font-size: 24px;
-    color: yellowgreen;
+body.kiosk-point .input-box {
+    height: 50px; /* 높이 증가 */
+    font-size: 2rem; /* 텍스트 크기 증가 */
     font-weight: bold;
-}
-
-
-body.kiosk-usepoint .keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    border: 3px solid #ddd; /* 윤곽선 두께 증가 */
+    padding: 10px;
+    border-radius: 8px; /* 윤각선 처리 */
     width: 100%;
     max-width: 250px;
-    margin: 20px auto;
-}
-body.kiosk-usepoint .keypad button {
-    height: 60px;
-    font-size: 1.5rem;
-}
-body.kiosk-usepoint .input-box {
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    border: 2px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 200px;
     margin: 0 auto;
+    text-align: right;
 }
 
-body.kiosk-usepoint .btn-lg {
-  width: 80px;
-  height: 80px;
-  font-size: 24px;
-}
-
-
-/* 버튼 스타일 */
-body.kiosk-usepoint .button-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    gap: 15px;
-}
-
-body.kiosk-usepoint button {
-    width: 120px;
-    height: 50px;
-    font-size: 18px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-body.kiosk-usepoint .blue-button {
-    background-color: #5c9aff;
-    color: white;
-}
-
-body.kiosk-usepoint .black-button {
-    background-color: black;
-    color: white;
-}
 
 /* 결제 수단 선정------------------------------------------------------------ */
 body.kiosk-payment-method header {
@@ -932,7 +982,7 @@ body.kiosk-payment-method .store-name {
     top: 20px;
     right: 30px;
     font-size: 24px;
-    color: yellowgreen;
+    color: burlywood;
     font-weight: bold;
 }
 /* 전체 페이지 스타일 */
@@ -946,47 +996,47 @@ body.kiosk-payment-method body {
     background-color: #f8f8f8;
 }
 
-/* 메인 컨테이너 (주문 목록) */
-body.kiosk-payment-method .container {
-    display: flex;
-    justify-content: center;
-    width: 85%;
-    margin: 120px auto 0 auto; /* 위쪽 여백 120px, 좌우 자동 정렬 */
-    align-items: center;
-}
+/*!* 메인 컨테이너 (주문 목록) *!*/
+/*body.kiosk-payment-method .container {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    width: 85%;*/
+/*    margin: 120px auto 0 auto; !* 위쪽 여백 120px, 좌우 자동 정렬 *!*/
+/*    align-items: center;*/
+/*}*/
 
-/* 결제 내역 */
-body.kiosk-payment-method .payment-history {
-    width: 60%;
-    background-color: white;
-    padding: 15px;
-    border-radius: 10px;
-    border: 2px solid #ddd;
-    text-align: center;
-}
+/*!* 결제 내역 *!*/
+/*body.kiosk-payment-method .payment-history {*/
+/*    width: 60%;*/
+/*    background-color: white;*/
+/*    padding: 15px;*/
+/*    border-radius: 10px;*/
+/*    border: 2px solid #ddd;*/
+/*    text-align: center;*/
+/*}*/
 
-body.kiosk-payment-method .payment-history table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
+/*body.kiosk-payment-method .payment-history table {*/
+/*    width: 100%;*/
+/*    border-collapse: collapse;*/
+/*    margin-top: 10px;*/
+/*}*/
 
-body.kiosk-payment-method .payment-history th, .payment-history td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-}
+/*body.kiosk-payment-method .payment-history th, .payment-history td {*/
+/*    border: 1px solid #ddd;*/
+/*    padding: 10px;*/
+/*    text-align: center;*/
+/*}*/
 
-body.kiosk-payment-method .payment-history th {
-    background-color: #ffeb99;
-}
+/*body.kiosk-payment-method .payment-history th {*/
+/*    background-color: #ffeb99;*/
+/*}*/
 
-body.kiosk-payment-method .total {
-    margin-top: 20px;
-    font-size: 18px;
-}
+/*body.kiosk-payment-method .total {*/
+/*    margin-top: 20px;*/
+/*    font-size: 18px;*/
+/*}*/
 
-/* 버튼 스타일 */
+/*!* 버튼 스타일 *!*/
 body.kiosk-payment-method .button-container {
     display: flex;
     justify-content: center;
@@ -1004,15 +1054,97 @@ body.kiosk-payment-method button {
     cursor: pointer;
 }
 
-body.kiosk-payment-method .blue-button {
-    background-color: #5c9aff;
+body.kiosk-payment-method .sandybrown-button {
+    background-color: sandybrown;
     color: white;
 }
 
-body.kiosk-payment-method .black-button {
-    background-color: black;
+body.kiosk-payment-method .burlywood-button {
+    background-color: burlywood;
     color: white;
 }
+
+
+/* 테이블 스타일 개선 - 갈색 계열 */
+body.kiosk-payment-method .container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 120px auto 0 auto; /* 위쪽 여백 120px, 좌우 자동 정렬 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.kiosk-payment-method .order-list {
+    margin: 30px 0;
+}
+
+body.kiosk-payment-method .order-list h3 {
+    color: #8B4513; /* 새들 브라운 색상 */
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+body.kiosk-payment-method .order-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px; /* 마진 줄임 */
+    box-shadow: 0 3px 8px rgba(139, 69, 19, 0.2);
+    font-size: 18px; /* 글자 크기 증가 */
+}
+
+body.kiosk-payment-method .order-list th {
+    background-color: #8B4513; /* 새들 브라운 색상 */
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+body.kiosk-payment-method .order-list td {
+    padding: 15px; /* 셀 패딩 증가 */
+    text-align: center;
+    border-bottom: 1px solid #D2B48C; /* 탠 색상 */
+}
+
+body.kiosk-payment-method .order-list tr:nth-child(even) {
+    background-color: #FFF8DC; /* 콘실크 색상 */
+}
+
+body.kiosk-payment-method .order-list tr:nth-child(odd) {
+    background-color: #FAEBD7; /* 앤티크 화이트 색상 */
+}
+
+body.kiosk-payment-method .order-list tr:hover {
+    background-color: #F5DEB3; /* 위트 색상 */
+}
+
+/* 총 수량과 금액 스타일 수정 */
+body.kiosk-payment-method .total-info {
+    text-align: right;
+    font-size: 18px; /* 글자 크기 줄임 */
+    margin-bottom: 20px;
+    color: #8B4513; /* 새들 브라운 색상 */
+}
+
+body.kiosk-payment-method .total-info p {
+    margin: 5px 0; /* 각 문단 사이 여백 줄임 */
+}
+
+body.kiosk-payment-method .total-info strong {
+    font-weight: bold;
+    color: #8B4513; /* 새들 브라운 색상 */
+}
+
+
+
+
+
+
+
+
+
+
 
 /* 결제 완료 / 영수증 페이지--------------------------------------------------- */
 body.kiosk-payment-completed body {
@@ -1042,8 +1174,13 @@ body.kiosk-payment-completed button {
     cursor: pointer;
 }
 
-body.kiosk-payment-completed .blue-button {
-    background-color: #5c9aff;
+body.kiosk-payment-completed .sandybrown-button {
+    background-color: sandybrown;
+    color: white;
+}
+
+body.kiosk-payment-completed .gray-button {
+    background-color: gray;
     color: white;
 }
 
@@ -1055,21 +1192,6 @@ body.kiosk-payment-completed {
     height: 100vh; /* 전체 화면 높이 */
     text-align: center; /* 텍스트 중앙 정렬 */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*--예진 end--*/
