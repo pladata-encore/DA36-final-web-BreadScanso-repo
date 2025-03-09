@@ -1,5 +1,6 @@
 $(document).ready(function() {
-    var uploadedImageUrl = null;
+    console.log("notice_edit.js 로드 완료");
+
     var store = $('#notice-form').data('store') || 'A';
 
     $('#save-btn').on('click', function(event) {
@@ -7,7 +8,9 @@ $(document).ready(function() {
         console.log("저장 버튼 클릭됨");
 
         const title = $('#id_title').val().trim();
-        const content = $('#id_content').val().trim();
+        // iframe 내의 Summernote 에디터에서 콘텐츠 가져오기
+        const contentIframe = $('#id_content_iframe')[0];
+        const content = $(contentIframe.contentWindow.document).find('.note-editable').html().trim();
 
         if (!title) {
             alert("제목을 입력해주세요.");
@@ -19,6 +22,7 @@ $(document).ready(function() {
         }
 
         $('#saveConfirmModal').modal('show');
+        console.log("모달 표시 요청");
     });
 
     $('#confirm-save-btn').on('click', async function() {
@@ -26,21 +30,16 @@ $(document).ready(function() {
 
         const pinned = $('#id_pinned').is(':checked');
         const title = $('#id_title').val().trim();
-        const content = $('#id_content').val().trim();
+        const contentIframe = $('#id_content_iframe')[0];
+        const content = $(contentIframe.contentWindow.document).find('.note-editable').html().trim();
         const notice_id = $('[name=notice_id]').val();
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(content, 'text/html');
-        const img = doc.querySelector('img');
-        uploadedImageUrl = img ? img.src : null;
 
         const noticeData = {
             notice_id: notice_id,
             pinned: pinned,
             title: title,
             content: content,
-            store: store,
-            notice_image: uploadedImageUrl
+            store: store
         };
 
         try {

@@ -1,5 +1,8 @@
 from django.db import models
+from member.models import Member
+from django.contrib.auth.models import User
 
+# Create your models here.
 class Notice(models.Model):
     notice_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=30)
@@ -10,7 +13,7 @@ class Notice(models.Model):
     view_count = models.IntegerField(default=0)
     pinned = models.BooleanField(default=False)
     store = models.CharField(max_length=50, null=True, choices=[("A", "서초점"), ("B", "강남점")])
-    notice_image = models.BinaryField(null=True, blank=True)  # 이미지 바이너리 저장
+    notice_image = models.ImageField(upload_to='', null=True, blank=True)  # 제품 사진
 
     def __str__(self):
         return f"공지사항 {self.notice_id} - {self.title}"

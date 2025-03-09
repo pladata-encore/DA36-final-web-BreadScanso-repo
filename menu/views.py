@@ -50,7 +50,7 @@ def menu_main(request):
         best_items = items_query.filter(best=1).distinct()
 
     # New 태그 지속 시간 (초 단위, 예: 3600초 = 1시간)
-    new_duration_seconds = 3600
+    new_duration_seconds = 3600 * 24
 
     context = {
         'items': items,

@@ -208,10 +208,11 @@ ACCOUNT_EMAIL_VERIFICATION = 'none' # none | optional | mandatory
 ACCOUNT_LOGOUT_ON_GET = True # 기본값 False
 
 #---------------------------------------#
-# Summernote 설정
+# summernote 로컬 저장소 지정
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
+# Summernote 설정
 SUMMERNOTE_CONFIG = {
     'summernote': {
         'width': '100%',
@@ -232,9 +233,13 @@ SUMMERNOTE_CONFIG = {
         'fontNames': ['Arial', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '돋음체', '바탕체'],
         'fontSizes': ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72', '96'],
     },
-    'attachment_upload_to': None,  # 로컬 업로드 비활성화
-    'attachment_require_authentication': True,
-    # 'attachment_handler': 'notice.views.upload_image_to_s3',  # S3 업로드 핸들러
+    'attachment_upload_to': 'summernote/',  # 미디어 폴더 내 하위 경로
+    # 'attachment_upload_to': '',  # 로컬 업로드 비활성화
+    # 'attachment_require_authentication': True,
+    # 'attachment_handler': 'notice.utils.upload_notice_image_to_s3',  # S3 업로드 핸들러
+    'disable_attachment': False,  # 첨부 파일 기능 활성화
+    'jquery': 'window.jQuery',
+    'iframe': True,
 }
 
 #---------------------------------------#
