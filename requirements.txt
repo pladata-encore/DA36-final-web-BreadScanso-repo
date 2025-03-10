@@ -11,3 +11,4 @@ openai
 pydantic
 requests
 python-dotenv
+django_summernote
