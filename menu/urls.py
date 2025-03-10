@@ -10,4 +10,7 @@ urlpatterns = [
     path('store/menu_delete/', views.menu_delete, name="menu_delete"), # 점주 메뉴 삭제 api
     path('store/menu_info/<int:item_id>/', views.menu_store_menu_info, name='menu_store_menu_info'),  # 제품별 관리 상세 페이지
     path('store/menu_edit/<int:item_id>/', views.menu_store_menu_edit, name='menu_store_menu_edit'),  # 제품별 수정 페이지
+    path('store/new_menu_guide/<int:item_id>/', views.menu_store_new_menu_guide, name='menu_store_new_menu_guide'),  # 신규 메뉴 학습 가이드 페이지
+    path('store/new_menu_learn/<int:item_id>/', views.menu_store_new_menu_learn, name='menu_store_new_menu_learn'),  # 신규 메뉴 학습 페이지
+
 ]
