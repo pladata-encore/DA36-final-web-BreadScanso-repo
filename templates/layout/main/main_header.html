@@ -1,12 +1,12 @@
 {% load static %}
 <header>
-    <div class="logo-container" style="background-color: #ECC58D;">
-        <a href="/">
-            <img src="{% static 'images/bread_im_text.png' %}" alt="text" class="logo-img">
-        </a>
+    <div class="logo-container">
         <a href="/brand" class="btn">브랜드소개</a>
         <a href="{% url 'store:store_main' %}" class="btn">매장위치</a>
         <a href="/menu" class="btn">메뉴정보</a>
+        <a href="/">
+            <img src="{% static 'images/bread_im_text.png' %}" alt="text" class="logo-img">
+        </a>
         <a href="/event" class="btn">이벤트</a>
         <div class="btn-group">
             <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -18,6 +18,7 @@
             </ul>
         </div>
         <div>
+        <div class="main-login-container">
             {% if user.is_authenticated %}
                 <span style="padding: 8px; font-weight: 600; color: brown; text-decoration: underline; font-size: 1.2rem;">{{ member.name }} 님</span>
 
@@ -36,5 +37,6 @@
                 <a href="{% url 'main:signup' %}" class="btn btn-light">회원가입</a>
             {% endif %}
         </div>
+    </div>
     </div>
 </header>
