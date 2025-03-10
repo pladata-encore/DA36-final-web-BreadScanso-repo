@@ -155,7 +155,7 @@
             <div class="form-check-top">
                 <input class="form-check-input" type="checkbox" id="flexCheckFinish" name="finish" value="on"
                     {% if request.GET.finish == "on" %}checked{% endif %}>
-                <label class="form-check-label" for="flexCheckFinish">종료</label>
+                <label class="form-check-label" for="flexCheckFinish">노출여부</label>
             </div>
         </div>
 
@@ -216,6 +216,12 @@
     </div>
 
 {% endblock content%}
+
+{% block script %}
+    <script src="{% static 'js/store_event_add.js' %}"></script>
+{% endblock script %}
+
+
 {#{% block content %}#}
 {#  아래 스타일은 우선 css 파일로 복붙  #}
 {#    <style>#}
@@ -340,9 +346,9 @@
 {##}
 {#{% endblock content %}#}
 
-{% block script %}
-    <script src="{% static 'js/store_event_add.js' %}"></script>
-{% endblock script %}
+{#{% block script %}#}
+{#    <script src="{% static 'js/store_event_add.js' %}"></script>#}
+{#{% endblock script %}#}
 
 {# store_event_edit.js로 복붙   #}
 {#    <script>#}

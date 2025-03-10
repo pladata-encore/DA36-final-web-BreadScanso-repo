@@ -204,54 +204,61 @@
         </div>
     </div>
     </div>
-
-    <!-- 테이블 -->
-    <table class="table event-store-table table-hover">
-        <thead>
-            <tr>
-            <th class="checkbox-column"><input type="checkbox" id="select-all"></th>
-            <th scope="col">이벤트 아이디</th>
-            <th scope="col">이벤트명</th>
-                <th scope="col">
-                    <select class="form-select form-select-sm" name="store" id="store-filter">
-                        <option value="" style="text-align: center;">매장</option>
-                        <option value="A" style="text-align: center;" {% if request.GET.store == "A" %}selected{% endif %}>서초점</option>
-                        <option value="B" style="text-align: center;" {% if request.GET.store == "B" %}selected{% endif %}>강남점</option>
-                    </select>
-                </th>
-                <th scope="col">
-                    <select class="form-select form-select-sm" name="show" id="show-filter">
-                        <option value="" style="text-align: center;">진행중</option>
-                        <option value="1" style="text-align: center;" {% if request.GET.show == "1" %}selected{% endif %}>✅</option>
-                        <option value="0" style="text-align: center;" {% if request.GET.show == "0" %}selected{% endif %}>❌</option>
-                    </select>
-                </th>
-                <th scope="col">
-                    <select class="form-select form-select-sm" name="finish" id="finish-filter">
-                        <option value="" style="text-align: center;">종료</option>
-                        <option value="1" style="text-align: center;" {% if request.GET.finish == "1" %}selected{% endif %}>✅</option>
-                        <option value="0" style="text-align: center;" {% if request.GET.finish == "0" %}selected{% endif %}>❌</option>
-                    </select>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for event in events %}
+    <form id="search-form" method="GET" action="">
+        <!-- 기존 필터 상태를 유지하기 위한 hidden 필드 추가 -->
+        <input type="hidden" name="page" value="{{ page_obj.number }}">
+        <input type="hidden" name="sort_by" value="{{ sort_by }}">
+        <input type="hidden" name="sort_order" value="{{ sort_order }}">
+        <!-- 테이블 -->
+        <table class="table event-store-table table-hover">
+            <thead>
                 <tr>
-                    <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
-                    <td>{{ event.event_id }}</td>
-                    <td>{{ event.title }}</td>
-                    <td>{{ event.store }}</td>
-                    <td>{% if event.show %}✅{% else %}❌{% endif %}</td>
-                    <td>{% if event.finish %}✅{% else %}❌{% endif %}</td>
+                <th class="checkbox-column"><input type="checkbox" id="select-all"></th>
+                <th scope="col">이벤트 아이디</th>
+                <th scope="col">이벤트명</th>
+                <th scope="col">작성자</th>
+                    <th scope="col">
+                        <select class="form-select form-select-sm" name="store" id="store-filter">
+                            <option value="" style="text-align: center;">매장</option>
+                            <option value="A" style="text-align: center;" {% if request.GET.store == "A" %}selected{% endif %}>서초점</option>
+                            <option value="B" style="text-align: center;" {% if request.GET.store == "B" %}selected{% endif %}>강남점</option>
+                        </select>
+                    </th>
+                    <th scope="col">
+                        <select class="form-select form-select-sm" name="show" id="show-filter">
+                            <option value="" style="text-align: center;">진행중</option>
+                            <option value="1" style="text-align: center;" {% if request.GET.show == "1" %}selected{% endif %}>✅</option>
+                            <option value="0" style="text-align: center;" {% if request.GET.show == "0" %}selected{% endif %}>❌</option>
+                        </select>
+                    </th>
+                    <th scope="col">
+                        <select class="form-select form-select-sm" name="finish" id="finish-filter">
+                            <option value="" style="text-align: center;">노출여부</option>
+                            <option value="1" style="text-align: center;" {% if request.GET.finish == "1" %}selected{% endif %}>✅</option>
+                            <option value="0" style="text-align: center;" {% if request.GET.finish == "0" %}selected{% endif %}>❌</option>
+                        </select>
+                    </th>
                 </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="6">등록된 이벤트가 없습니다.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+                        <td>{{ event.event_id }}</td>
+                        <td>{{ event.title }}</td>
+                        <td>{{ event.member_id }}</td>
+                        <td>{{ event.store }}</td>
+                        <td>{% if event.show %}✅{% else %}❌{% endif %}</td>
+                        <td>{% if event.finish %}✅{% else %}❌{% endif %}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6">등록된 이벤트가 없습니다.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
 
     <!-- 삭제와 신규등록을 한 줄에 배치 -->
     <div class="d-flex justify-content-between align-items-center mt-3" style="width: 100%;">
@@ -266,6 +273,7 @@
             <button class="btn btn-primary" type="button" id="new-register-btn" onclick="location.href='{% url 'store:store_event_add' %}'">신규등록</button>
         </div>
     </div>
+
 
     <!-- 페이지 네비게이션 (중앙) -->
     <div class="d-flex justify-content-center mt-2 mb-4">

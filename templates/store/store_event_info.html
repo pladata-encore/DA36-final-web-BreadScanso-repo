@@ -2,7 +2,7 @@
 {% load event_tags %} {# menu_tags.py 파일의 custom template tag를 사용하기 위한 코드 #}
 {% load static %}
 
-{% block title %}메뉴관리{% endblock title %}
+{% block title %}이벤트 관리{% endblock title %}
 
 {% block header %}
     {% include 'layout/store/header_store.html' %}
@@ -121,34 +121,35 @@
     <!-- 메인 컨테이너 -->
     <div class="event-detail-container">
         <!-- 이미지 영역 -->
-        <div class="event-image">
-            {% if event.event_image %}
-                <img src="{{ event.event_image }}" alt="{{ event.event_name }}">
+        <div class="content">
+            {% if event.content %}
+                <img src="{{ event.content }}" alt="{{ event.title}}">
             {% else %}
                 <img src="{% static 'images/default.jpg' %}" alt="기본 이미지">
             {% endif %}
             <!-- 목록 버튼을 이미지 아래 왼쪽에 배치 -->
             <div class="left-buttons">
-                <button type="button" class="btn btn-success" id="list-btn">목록</button>
+                <button type="button" class="btn btn-success" id="list-btn" onclick="location.href='{% url 'store:store_event' %}'">목록</button>
+{#                <button type="button" class="btn btn-success" id="list-btn">목록</button>#}
             </div>
         </div>
 
         <!-- 제품 콘텐츠 -->
         <div class="event-content">
             {% csrf_token %}
-            <!-- 상태 표시 (Best, New, 노출중) -->
+            <!-- 상태 표시 (Show, Finish) -->
             <div class="status-container">
                 <div class="status-left">
                     {% if event.show %}
-                        <span class="tag show-tag">노출중</span>
+                        <span class="tag show-tag">진행중</span>
                     {% endif %}
                     {% if event.finish %}
-                        <span class="tag show-tag">종료</span>
+                        <span class="tag finish-tag">노출여부</span>
                     {% endif %}
                 </div>
             </div>
         
-            <!-- 제품명 및 기본 정보 -->
+            <!-- 이벤트명 -->
             <h1>{{ event.title }}</h1>
 
             <!-- 수정, 삭제 버튼 -->
@@ -169,10 +170,11 @@
                     <h5 class="modal-title" id="deleteConfirmModalLabel">삭제 확인</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">선택한 항목을 삭제하시겠습니까?</div>
+                <div class="modal-body">선택한 이벤트을 삭제하시겠습니까?</div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <button type="button" class="btn btn-danger" id="confirm-delete-btn" data-event-id="{{ event.event_id }}">삭제</button>
+{#                    <button type="button" class="btn btn-danger" id="confirm-delete-btn" data-event-id="{{ event.event_id }}">삭제</button>#}
+                    <button type="button" class="btn btn-danger" id="delete-btn" data-event-id="{{ event.event_id }}">삭제</button>
                 </div>
             </div>
         </div>
@@ -181,6 +183,5 @@
 {% endblock content %}
 
 {% block script %}
-    {{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
     <script src="{% static 'js/sotre_event_info.js' %}"></script>
 {% endblock script %}

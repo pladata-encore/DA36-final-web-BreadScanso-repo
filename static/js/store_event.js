@@ -88,3 +88,50 @@ document.getElementById("delete-selected").addEventListener("click", async funct
         return document.getElementsByName("csrfmiddlewaretoken")[0].value;
     }
 
+// 행 클릭 시 페이지 이동 (체크박스 열 제외)
+    rows.forEach(row => {
+        row.addEventListener("click", function (event) {
+            const target = event.target;
+
+            // 체크박스 자체를 클릭한 경우
+            if (target.classList.contains("row-checkbox")) {
+                // 체크박스 클릭 시 기본 동작 유지 (자동으로 체크 상태 변경됨)
+                event.stopPropagation(); // tr 클릭 이벤트 방지
+                return;
+            }
+
+            // 체크박스 열(컬럼)을 클릭한 경우
+            if (target.closest(".checkbox-column")) {
+                const checkbox = target.closest(".checkbox-column").querySelector(".row-checkbox");
+                if (checkbox) {
+                    checkbox.checked = !checkbox.checked;
+                }
+                event.stopPropagation(); // tr 클릭 이벤트 방지
+                return;
+            }
+
+            // 체크박스 열이 아닌 경우에만 페이지 이동
+            const event_id = row.querySelector("td:nth-child(2)").textContent.trim();
+            // 해당 제품 정보로 이동
+            window.location.href = `/store/store_event_info/${event_id}/`;
+        });
+    });
+
+// 필터링
+document.addEventListener('DOMContentLoaded', function() {
+    // 필터 변경 시 폼 제출
+    document.getElementById('store-filter').addEventListener('change', function() {
+        console.log('Store filter changed:', this.value); // 디버깅용
+        document.getElementById('search-form').submit();
+    });
+
+    document.getElementById('show-filter').addEventListener('change', function() {
+        console.log('Show filter changed:', this.value); // 디버깅용
+        document.getElementById('search-form').submit();
+    });
+
+    document.getElementById('finish-filter').addEventListener('change', function() {
+        console.log('Finish filter changed:', this.value); // 디버깅용
+        document.getElementById('search-form').submit();
+    });
+});

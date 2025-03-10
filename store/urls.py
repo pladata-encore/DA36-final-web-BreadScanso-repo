@@ -18,6 +18,7 @@ urlpatterns = [
     path('store_map/edit', views.store_map_edit, name='store_map_edit'),  # 매장 안내 수정
     path('store_event', views.store_event, name='store_event'),  # 이벤트 목록
     path('store_event/add', views.store_event_add, name='store_event_add'),  # 이벤트 신규등록 페이지
+    path('event/<int:event_id>/edit/', views.event_edit, name='store_event_edit'),  # 수정 페이지 URL
     path('delete_store_event/', views.delete_store_event, name='delete_store_event'),  # 이벤트 삭제
 
     # path('community_notice', views.community_notice, name='community_notice'),  # 커뮤니티/공지사항
