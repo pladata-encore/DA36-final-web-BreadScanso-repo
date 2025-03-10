@@ -25,6 +25,7 @@
                 {% else %}
                     <a href="{% url 'member:member_page' %}" class="btn btn-light">마이페이지</a>
                 {% endif %}
+                    <span class="p-2">{% if member %}{{ member.member_id }}{% endif %} 님</span>
                     <form action="{% url 'main:logout' %}" method="post" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-light">로그아웃</button>

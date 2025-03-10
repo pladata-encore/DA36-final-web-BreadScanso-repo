@@ -51,14 +51,17 @@ def qna_main(request):
 
     page_range = range(start_page, end_page + 1)
 
-    # member = request.user.member
+    member = None  # 기본값을 None으로 설정
+
+    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
+        member = request.user.member
 
     context = {
         'qnas': qnas,
         'page_obj': page_obj,
         'page_range': page_range,
         'total_qnas': qnas.count(),  # 총 공지사항 수
-        # 'member': member,
+        'member': member,
     }
     return render(request, 'qna/qna_main.html', context)  # qna/qna_main
 
@@ -84,10 +87,6 @@ class QuestionRepository(ABC):
     @abstractmethod
     def find_by_title(self, query):
         pass
-
-    # @abstractmethod
-    # def add_remove_voter(self, question, voter):
-    #     pass
 
 
 class QuestionRepositoryImpl(QuestionRepository):
@@ -120,12 +119,6 @@ class QuestionRepositoryImpl(QuestionRepository):
     def find_by_title(self, query):
         return QnA.objects.filter(Q(title__icontains=query) | Q(content__icontains=query)).order_by('-created_at')
 
-    # def add_remove_voter(self, question, voter):
-    #     if question.voter.filter(id=voter.id).exists():
-    #         question.voter.remove(voter)
-    #     else:
-    #         question.voter.add(voter)
-
 
 # Service
 class QuestionService(ABC):
@@ -152,10 +145,6 @@ class QuestionService(ABC):
     @abstractmethod
     def find_by_title(self, query):
         pass
-
-    # @abstractmethod
-    # def add_remove_voter(self, qna_id, voter):
-    #     pass
 
 
 class QuestionServiceImpl(QuestionService):
@@ -193,14 +182,6 @@ class QuestionServiceImpl(QuestionService):
     def find_by_title(self, query):
         return self.__question_repository.find_by_title(query)
 
-    # def add_remove_voter(self, qna_id, voter):
-    #     question = self.__question_repository.find_by_id(qna_id)
-    #     if voter == question.author:
-    #         raise RuntimeError('본인이 작성한 글은 추천할 수 없습니다.')
-    #     else:
-    #         self.__question_repository.add_remove_voter(question, voter)
-    #     return question
-
 
 # Views
 question_service = QuestionServiceImpl.get_instance()
@@ -211,46 +192,19 @@ def qna_detail(request, qna_id):
     # 질문에 달린 답변들을 가져옴
     answers = QnAReply.objects.filter(qna_id=qna_id)
 
-    # member = request.user.member
+    member = None  # 기본값을 None으로 설정
+
+    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
+        member = request.user.member
 
     context = {
         'qna': qna,
         'answers': answers,
-        # 'member': member,
+        'member': member,
     }
     return render(request, 'qna/qna_detail.html', context)
 
 
-
-# @login_required(login_url='login')
-# def qna_create(request):
-#     # stores = [
-#     #     {"id": "A", "name": "Store A"},
-#     #     {"id": "B", "name": "Store B"}
-#     # ]  # 매장 목록을 리스트 형태로 제공
-#
-#     if request.method == 'POST':
-#         form = QuestionForm(request.POST)
-#         if form.is_valid():
-#             # store = request.POST.get('store', '전체')  # 선택된 매장
-#             qna = form.save(commit=False)
-#             qna.member_id = request.user
-#             # qna.store = store
-#             qna = question_service.create(qna)
-#             return redirect('qna:qna_detail', qna_id=qna.qna_id)
-#         else:
-#             print('form.errors =', form.errors)
-#     else:
-#         form = QuestionForm()
-#
-#     member = request.user.member
-#     context = {
-#         'form': form,
-#         'member': member,
-#         # 'stores': stores,  # 🔥 stores 추가
-#     }
-#
-#     return render(request, 'qna/qna_form.html', context)
 # views.py에서 stores 매핑
 def qna_create(request):
     stores = [
@@ -270,7 +224,11 @@ def qna_create(request):
     else:
         form = QuestionForm()
 
-    member = request.user.member
+    member = None  # 기본값을 None으로 설정
+
+    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
+        member = request.user.member
+
     context = {
         'form': form,
         'member': member,
@@ -284,12 +242,6 @@ def qna_create(request):
 def qna_modify(request, qna_id):
     qna = question_service.find_by_id(qna_id)
 
-    # 인가 확인(작성자 본인 여부)
-    # if request.user != qna.member_id:
-    #     from django.contrib import messages
-    #     messages.error(request, '수정 권한이 없습니다.') # 논필드오류
-    #     return redirect('qna:qna_detail', qna_id=qna_id)
-
     # GET/POST 요청 분기
     if request.method == 'POST':
         form = QuestionForm(request.POST, instance=qna)  # 기존 qna에 사용자입력값 덮어쓰기
@@ -301,7 +253,18 @@ def qna_modify(request, qna_id):
         form = QuestionForm(instance=qna)
 
     form = QuestionForm(instance=qna)
-    return render(request, 'qna/qna_form.html', {'form': form})
+
+    member = None  # 기본값을 None으로 설정
+
+    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
+        member = request.user.member
+
+    context = {
+        'form': form,
+        'member': member,
+    }
+
+    return render(request, 'qna/qna_form.html', context)
 
 # @login_required(login_url='login')
 def qna_delete(request, qna_id):
@@ -320,21 +283,6 @@ def qna_search(request):
     results = [{'qna_id': qna.qna_id, 'text': qna.title} for qna in qna]
     return JsonResponse({"results": results})
 
-# @login_required(login_url='login')
-# def question_vote(request, qna_id):
-#     try:
-#         qna = question_service.add_remove_voter(qna_id, request.user)
-#         votes_count = qna.voter.count() if hasattr(qna, 'voter') else 0
-#         return JsonResponse({
-#             'result': 'success',
-#             'votes_count': votes_count
-#         })
-#     except Exception as e:
-#         return JsonResponse({
-#             'result': 'error',
-#             'message': str(e)
-#         }, status=400)
-
 # Repository Layer
 class AnswerRepository(ABC):
     @abstractmethod
@@ -348,10 +296,6 @@ class AnswerRepository(ABC):
     @abstractmethod
     def delete(self, answer):
         pass
-
-    # @abstractmethod
-    # def add_remove_voter(self, answer, voter):
-    #     pass
 
 
 class AnswerRepositoryImpl(AnswerRepository):
@@ -378,12 +322,6 @@ class AnswerRepositoryImpl(AnswerRepository):
     def delete(self, answer):
         return answer.delete()
 
-    # def add_remove_voter(self, answer, voter):
-    #     if answer.voter.filter(id=voter.id).exists():
-    #         answer.voter.remove(voter)
-    #     else:
-    #         answer.voter.add(voter)
-
 
 # Service Layer
 class AnswerService(ABC):
@@ -402,10 +340,6 @@ class AnswerService(ABC):
     @abstractmethod
     def modify(self, answer):
         pass
-
-    # @abstractmethod
-    # def add_remove_voter(self, answer_id, voter):
-    #     pass
 
 
 class AnswerServiceImpl(AnswerService):
@@ -439,13 +373,6 @@ class AnswerServiceImpl(AnswerService):
     def modify(self, answer):
         return self.__answer_repository.save(answer)
 
-    # def add_remove_voter(self, answer_id, voter):
-    #     answer = self.__answer_repository.find_by_id(answer_id)
-    #     if voter == answer.author:
-    #         raise RuntimeError('본인이 작성한 글은 추천할수 없습니다')
-    #     self.__answer_repository.add_remove_voter(answer, voter)
-    #     return answer
-
 
 # View Layer
 answer_service = AnswerServiceImpl.get_instance()
@@ -477,24 +404,9 @@ def answer_modify(request, answer_id):
     qna_id = request.GET['qna_id']
     answer = answer_service.find_by_id(answer_id)
 
-    # if request.user != answer.author_id:
-    #     messages.error(request, '수정 권한이 없습니다.')
-    #     return redirect('qna:qna_detail', qna_id=qna_id)
-
     if request.method == 'POST':
         new_content = request.POST['content']
         answer.content = new_content
         answer_service.modify(answer)
 
     return redirect('qna:qna_detail', qna_id=qna_id)
-
-
-# @login_required(login_url='login')
-# def answer_vote(request, answer_id):
-#     try:
-#         answer = answer_service.add_remove_voter(answer_id, request.user)
-#         votes_count = answer.voter.count() if hasattr(answer, 'voter') else 0
-#         return JsonResponse({'result': 'success', 'votes_count': votes_count})
-#     except Exception as e:
-#         return JsonResponse({'result': 'error', 'message': str(e)}, status=400)
-
