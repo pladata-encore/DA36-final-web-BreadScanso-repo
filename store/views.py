@@ -202,6 +202,11 @@ def store_home_edit(request):
     member = request.user.member
     return render(request, 'store/store_home_edit.html', {"member": member})  # 홈 화면 수정
 
+def store_home_edit_details(request):
+    member = request.user.member
+    return render(request, 'store/store_home_edit_details.html', {"member": member})
+
+
 def about_breadscanso_edit(request):
     # GET 요청 처리 (member 데이터 가져오기)
     member = request.user.member
