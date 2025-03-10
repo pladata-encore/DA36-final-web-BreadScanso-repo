@@ -47,9 +47,7 @@
                         <span class="text-success">+{{ payment.order.earned_points }} Point</span>
                     {% endif %}
                     {% if payment.order.earned_points and payment.order.used_points %}
-{#                        <span class="text-success">+{{ payment.order.earned_points }} Point</span>#}
                         <br>
-{#                        <span class="text-danger">-{{ payment.order.used_points }} Point</span>#}
                     {% endif %}
                     {% if payment.order.used_points %}
                         <span class="text-danger">-{{ payment.order.used_points }} Point</span>
