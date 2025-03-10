@@ -19,7 +19,8 @@
         </div>
         <div>
             {% if user.is_authenticated %}
-                <span class="p-2">{{ member.name }} 님</span>
+                <span style="padding: 8px; font-weight: 600; color: brown; text-decoration: underline; font-size: 1.2rem;">{{ member.name }} 님</span>
+
                 {% if request.session.member_type == "manager" %}
                     <a href="{% url 'kiosk_main' %}" class="btn btn-light">KIOSK</a>
                     <a href="{% url 'sales:sales_main' %}" class="btn btn-light">매장페이지</a>
