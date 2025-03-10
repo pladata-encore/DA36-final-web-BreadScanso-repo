@@ -4,7 +4,7 @@ from enum import member
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render, redirect, resolve_url
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from member.models import QnA, QnAReply, QuestionForm
 from member.models import Member, EventPost
@@ -415,7 +415,6 @@ def store_event_add(request):
             return redirect('store:store_event_add')
 
     return render(request, 'store/store_event_add.html')
-
 # # 시스템설정 - 이벤트 신규등록
 # def store_event_add(request):
 #     if request.method == 'POST':
@@ -535,7 +534,62 @@ def store_event_add(request):
 #             "success": False,
 #             "message": "서버 오류가 발생했습니다."
 #         })
+@require_POST
+def delete_store_event(request):
+    try:
+        data = json.loads(request.body)
+        event_ids = data.get("event_ids", [])
 
+        if not event_ids:
+            return JsonResponse({"success": False, "message": "삭제할 이벤트를 선택해주세요."})
+
+        with connection.cursor() as cursor:
+            placeholders = ','.join(['%s'] * len(event_ids))
+            sql = f"DELETE FROM member_eventpost WHERE event_id IN ({placeholders})"
+            cursor.execute(sql, event_ids)
+            connection.commit()
+
+        return JsonResponse({"success": True, "message": f"{cursor.rowcount}개의 이벤트가 삭제되었습니다."})
+
+    except Exception as e:
+        return JsonResponse({"success": False, "message": f"삭제 실패: {str(e)}"})
+
+def event_edit(request, event_id):
+    event = get_object_or_404(EventPost, id=event_id)  # 수정할 이벤트를 ID로 조회
+
+    if request.method == 'POST':
+        # POST 데이터를 기반으로 이벤트 수정
+        event.title = request.POST.get('title', event.title)
+        event.store = request.POST.get('store', event.store)
+        event.content = request.POST.get('content', event.content)
+        event.event_detail = request.POST.get('event_detail', event.event_detail)
+
+        # 체크박스 처리
+        event.show = request.POST.get("show") == "on"
+        event.finish = request.POST.get("finish") == "on"
+
+        # 이미지 업로드 처리
+        if 'content' in request.FILES:
+            try:
+                new_content_url = upload_content_to_s3(request.FILES['content'])
+                event.content = new_content_url
+            except Exception as e:
+                return render(request, 'store/store_event_edit.html', {
+                    "event": event,
+                    "member": member,
+                    "error": f"이미지 업로드 중 오류 발생: {str(e)}"
+                })
+
+        event.save()  # 이벤트 저장
+        return redirect('store_event', event_id=event.event_id)  # 여기서 함수 종료됨!
+
+    # GET 요청 시 기존 데이터 로드 (None 반환 방지)
+    context = {
+        'event': event,
+        'member': member,
+    }
+
+    return render(request, 'store_event_edit.html', context)  # GET 요청 시 렌더링
 
 def store_account(request):
     member = request.user.member
