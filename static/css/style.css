@@ -1,5 +1,4 @@
-/*--정아 start--*/
-/* 전체 배경색 설정 */
+/* ------------------------------------------메인페이지----------------------------------------------- */
 body.main-index {
     background-color: #FFFFFF;  /* 원하는 배경색 */
 }
@@ -23,7 +22,7 @@ body.main-index {
     width: 100%;  /* 이미지 크기 조정 */
     height: auto;  /* 원본 비율 유지 */
 }
-/* ----------------------------------------------------------------------- */
+
 /* 브랜드소개 로고 */
 .brand-logo {
     display: flex; /* flexbox를 사용하여 중앙 정렬 */
@@ -46,7 +45,7 @@ body.main-index {
     width: 1000px;  /* 이미지 크기 조정 */
     height: 350px;  /* 원본 비율 유지 */
 }
-/* ----------------------------------------------------------------------- */
+
 /* 브랜드소개 하단 4개의 네모박스(카드) */
 .card-container {
     display: flex;
@@ -95,7 +94,6 @@ body.main-index {
     /*box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); !* 카드 그림자 *!*/
 }
 
-
 .card-body {
     display: flex;
     flex-direction: column;
@@ -119,7 +117,7 @@ body.main-index {
     color: #6c757d;
     text-align: center;
 }
-/* ----------------------------------------------------------------------- */
+
 /* 이벤트 카드 타이틀 색상 설정 */
 .event-card.text-decoration-none {
   color: black; /* 링크 색상을 검정색으로 설정 */
@@ -190,8 +188,6 @@ body.main-index {
     height: auto;  /* 원본 비율 유지 */
 }
 
-
-/* ----------------------------------------------------------------------- */
 /* 최상단 텍스트 로고 이미지 설정 */
 header .logo-container {
     display: flex;         /* 플렉스박스로 정렬 */
@@ -210,12 +206,11 @@ footer .logo-img {
     height: auto;  /* 원본 비율 유지 */
 }
 
-/* ----------------------------------------------------------------------- */
 /* 상단 텍스트 정렬 */
 body.main-index .center-text {
     text-align: center;  /* 텍스트 가운데 정렬 */
 }
-/* ----------------------------------------------------------------------- */
+
 /* 메인홈 케러셀 설정 */
 .carousel-item {
     /*position: relative; !* 기본값 유지 *!*/
@@ -237,7 +232,7 @@ body.main-index .center-text {
 .carousel-inner {
     overflow: hidden;
 }
-/* ----------------------------------------------------------------------- */
+
 /* event & product 텍스트 정렬 */
 body.main-index .main-header {
     display: flex;  /* 가로 정렬 */
@@ -254,7 +249,7 @@ body.main-index .main_image-header {
     align-items: center;  /* 세로 중앙 정렬 */
     width: 100%;  /* 부모 요소 너비 전체 사용 */
 }
-/* ----------------------------------------------------------------------- */
+
 /* main-container */
 body.main-index .main-container {
     display: flex;  /* 내부 요소를 가로로 배치 */
@@ -262,7 +257,7 @@ body.main-index .main-container {
     gap: 20px; /* 요소 사이 간격 */
     flex-wrap: wrap; /* 화면이 작아지면 다음 줄로 넘어감 */
 }
-/* ----------------------------------------------------------------------- */
+
 /* 이벤트 컨테이너 설정 */
 body.main-index .event-container {
     display: flex; /* 내부 요소를 가로로 배치 */
@@ -305,8 +300,254 @@ body.main-index .event-img, body.main-index .product-img {
     border-radius: 20px; /* 이미지 모서리 둥글게 */
 }
 
+/* 메뉴 메인 전체 제품 grid styling */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
 
-/* ----------------------------------------------------------------------- */
+/* 제품 그리드 스타일 */
+.product-grid .card {
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.product-grid .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.product-grid .card-img-top {
+    height: 100%;
+    object-fit: cover;
+}
+
+#load-more-btn {
+    padding: 8px 20px;
+    background-color: #007bff;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+#load-more-btn:hover {
+    background-color: #0056b3;
+}
+
+.new-tag-main {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #FFEE8C;
+    color: black;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+/* 제품 상세 페이지 */
+/* 전체 컨테이너 중앙 정렬 */
+.product-detail-container {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* 이미지와 정보 나란히 정렬 */
+.product-content {
+    display: flex;
+    gap: 50px;  /* 사진과 정보 사이 간격 넓히기 */
+    align-items: flex-start;
+}
+
+/* 이미지 스타일 */
+.product-image {
+    position: relative;  /* 버튼을 이미지 안에서 절대 위치로 설정하기 위해 필요 */
+}
+
+.product-image img {
+    width: 400px;
+    border-radius: 10px;
+}
+
+/* 목록으로 돌아가는 버튼을 product-content 바깥에서 왼쪽 정렬 */
+.back-button {
+    display: block;
+    margin-top: 20px;  /* product-content와의 간격 */
+    background-color: rgba(0, 0, 0, 0.6);  /* 반투명 배경 */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* 제품 정보 스타일 */
+.product-info {
+    max-width: 1000px;
+}
+
+.nutrition-row {
+    display: flex;
+    flex-wrap: wrap;  /* 화면 크기에 따라 줄바꿈 */
+    gap: 10px;  /* 요소 간 간격 */
+    align-items: center;  /* 항목들을 중앙 정렬 */
+}
+
+.nutrition-row p {
+    margin: 0;
+    white-space: nowrap; /* 너무 좁을 때만 줄바꿈 */
+    flex-shrink: 0; /* 화면 줄어들어도 글자 크기 유지 */
+}
+
+/* best, new tag 스타일 */
+.tag-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tag {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    border-radius: 10px;
+}
+
+.best-tag {
+    background-color: #00FFFF; /* 밝은 하늘색 */
+}
+
+.new-tag {
+    background-color: #FFEE8C; /* 연한 노란색 */
+}
+
+.product-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #e63946;
+}
+
+/*-- 메인 메뉴 carousel 설정 --*/
+/* 공통 캐러셀 스타일 */
+.new-carousel-container,
+.product-carousel-container,
+.best-carousel-container {
+    position: relative;
+    justify-content: center;
+    margin: auto;
+    overflow: visible;
+}
+
+.carousel-wrapper {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-track,
+.new-carousel-track,
+.product-carousel-track,
+.best-carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.product-name {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* new & 제품 캐러셀 */
+.new-carousel-item,
+.product-carousel-item {
+    flex: 0 0 20%; /* 5개씩 보이도록 설정 */
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease, z-index 0.3s;
+    cursor: pointer;
+}
+
+.new-carousel-item img,
+.product-carousel-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* best 캐러셀 (초기화 때문에 따로 설정) */
+.best-carousel-item {
+    flex: 0 0 20%; /* 5개씩 보이도록 설정 */
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease, z-index 0.3s;
+    cursor: pointer;
+}
+
+.best-carousel-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* 버튼 스타일 (각 캐러셀별 구분) */
+.new-carousel-btn,
+.product-carousel-btn,
+.best-carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-80%);
+    color: black;
+    border: none;
+    padding: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    background-color: unset;
+}
+
+.new-carousel-btn.left,
+.product-carousel-btn.left,
+.best-carousel-btn.left {
+    left: -50px;
+}
+
+.new-carousel-btn.right,
+.product-carousel-btn.right,
+.best-carousel-btn.right {
+    right: -50px;
+}
+
+.new-carousel-btn:hover,
+.product-carousel-btn:hover,
+.best-carousel-btn:hover {
+    background: lightgray;
+}
+
+/* ------------------------------------------매장페이지----------------------------------------------- */
 /* 시스템설정 - 이벤트 신규등록 설정 */
 .event-check {
     justify-content: flex-start;
@@ -344,6 +585,7 @@ body.main-index .event-img, body.main-index .product-img {
     width: 78%;
     color: #999999;
 }
+
 .filebox label {
     display: inline-block;
     padding: 10px 20px;
@@ -354,6 +596,7 @@ body.main-index .event-img, body.main-index .product-img {
     height: 40px;
     margin-left: 10px;
 }
+
 .filebox input[type="file"] {
     position: absolute;
     width: 0;
@@ -363,7 +606,6 @@ body.main-index .event-img, body.main-index .product-img {
     border: 0;
 }
 
-/* ----------------------------------------------------------------------- */
 /* 회원관리 내 삭제/신규등록 버튼 설정 */
 .member-container {
     display: flex;
@@ -387,42 +629,110 @@ body.main-index .event-img, body.main-index .product-img {
 .signup-btn {
     margin-right: 10px; /* 오른쪽 여백 추가 */
 }
-/* ----------------------------------------------------------------------- */
-/* 마이페이지 - 회원정보 */
 
-body {
-    font-family: Arial, sans-serif;
+/*pay - 상세 페이지 */
+.receipt-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
 }
+
+.left-section {
+    text-align: left;
+}
+
+.left-section, .right-section {
+    width: 48%;
+}
+
+.receipt-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.receipt-table th, .receipt-table td {
+    text-align: right;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.btn-success {
+    width: 100px;
+}
+
+/* 매장페이지 - 결제관리(전자영수증 설정) */
+.receipt-container-wrapper {
+        display: flex;         /* 부모 요소에 flex 사용 */
+        justify-content: center; /* 자식 요소를 중앙 정렬 */
+        align-items: center;     /* 세로 중앙 정렬 */
+        width: 100%;             /* 부모 요소의 너비를 100%로 설정 */
+    }
+
+.receipt-container {
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 79%; /* 너비 설정 */
+    }
+
+/* ------------------------------------------마이페이지----------------------------------------------- */
+/*------------마이페이지 - 회원정보------------*/
+
+/*body {*/
+/*    font-family: Arial, sans-serif;*/
+/*}*/
+
 .member-page-container {
     display: flex;
     justify-content: space-between;
     padding: 50px;
 }
-.member-page-profile {
+
+.member-page-container .member-page-profile {
     text-align: center;
 }
-.member-page-profile img {
+
+.member-page-container .member-page-profile img {
     width: 80px;
     height: 80px;
     border-radius: 50%;
 }
-.member-page-buttons {
+
+.member-page-container .member-page-buttons {
     margin-top: 10px;
 }
-.member-page-buttons button {
+
+.member-page-container .member-page-buttons button {
     margin: 5px;
     padding: 5px 10px;
     border: 1px solid #ccc;
     background: white;
     cursor: pointer;
 }
-.member-page-info-boxes {
+
+.member-page-container .member-page-info-boxes {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3개씩 배치 */
     gap: 10px; /* 박스 간격 */
     text-align: center;
 }
-.member-page-box {
+
+.member-page-container .member-page-box {
     width: 120px;
     height: 80px;
     border: 1px solid #ccc;
@@ -431,14 +741,58 @@ body {
     justify-content: center;
     flex-direction: column;
 }
-.member-page-withdraw-btn {
+
+.member-page-container .member-page-withdraw-btn {
     margin-top: 20px;
     padding: 5px 15px;
     border: 1px solid #ccc;
     background: white;
     cursor: pointer;
 }
-/* ----------------------------------------------------------------------- */
+
+/*------------마이페이지 - 회원탈퇴 사유------------*/
+.member-page-delete-detail .checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.member-page-delete-detail .checkbox-container input[type="checkbox"] {
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.member-page-delete-detail .checkbox-container label {
+    text-align: left;
+}
+
+.member-page-delete-detail #otherReasonText {
+    width: 100%;
+    margin-top: 10px;
+    margin-left: 25px;
+    min-height: 80px;
+    resize: vertical;
+}
+
+.member-page-delete-detail form {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.member-page-delete-detail #confirmButton {
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.member-page-delete-detail form > div {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
 /* 시스템설정 - 이벤트 */
 .event-store-table table {
     border-collapse: collapse;
@@ -488,7 +842,7 @@ body {
     color: #007bff;
     font-weight: bold;
 }
-/* ----------------------------------------------------------------------- */
+
 /* 시스템설정 - 이벤트신규등록 */
 #event-form {
     width: 100%;
@@ -549,12 +903,10 @@ body {
     width: 100%;
 }
 
-
 .fieldset-container {
     width: 100%;
     max-width: 100%;
 }
-
 
 /* shoe, finish 체크박스 개별 스타일 */
 .form-check-group {
@@ -602,15 +954,8 @@ body {
     }
 }
 
-
-/* ----------------------------------------------------------------------- */
-
-
-/*--정아 end--*/
-
-/*--예진 start--*/
-
-/* kiosk-main.html에만 적용되는 헤더 스타일 ----------------------------------------------------------*/
+/* ------------------------------------------KIOSK----------------------------------------------- */
+/*------------kiosk-main------------*/
 .kiosk-main {
     background: url('/static/images/kiosk_main.png') no-repeat center center/cover;
     height: 100vh;
@@ -664,7 +1009,7 @@ body.kiosk-main .start-button:hover {
     background-color: rgba(0, 0, 0, 0.9);
 }
 
-/* kiosk-products.html에만 적용되는 헤더 스타일 --------------------------------------------------------*/
+/*------------kiosk-products------------*/
 body.kiosk-products header {
     position: fixed; /* 화면에 고정 */
     top: 20px;
@@ -928,7 +1273,7 @@ body.kiosk-products .total-info strong {
     color: #8B4513; /* 새들 브라운 색상 */
 }
 
-/* 회원 확인 페이지 전체 화면 구성------------------------------------------------ */
+/*------------kiosk-member------------*/
 body.kiosk-member {
     display: flex;
     flex-direction: column; /* 세로 방향 정렬 */
@@ -984,7 +1329,7 @@ body.kiosk-member .gray-button {
     color: white;
 }
 
-/* 포인트 적립/사용 페이지 구성 --------------------------------------*/
+/*------------kiosk-point(phonenumber, usepoint)------------*/
 body.kiosk-point .keypad-container {
     display: flex;
     flex-direction: column;
@@ -1088,7 +1433,7 @@ body.kiosk-point .input-box {
 }
 
 
-/* 결제 수단 선정------------------------------------------------------------ */
+/*------------kiosk-payment-method------------*/
 body.kiosk-payment-method header {
     position: fixed; /* 화면에 고정 */
     top: 20px;
@@ -1149,7 +1494,6 @@ body.kiosk-payment-method .burlywood-button {
     background-color: burlywood;
     color: white;
 }
-
 
 /* 테이블 스타일 개선 - 갈색 계열 */
 body.kiosk-payment-method .container {
@@ -1222,17 +1566,7 @@ body.kiosk-payment-method .total-info strong {
     color: #8B4513; /* 새들 브라운 색상 */
 }
 
-
-
-
-
-
-
-
-
-
-
-/* 결제 완료 / 영수증 페이지--------------------------------------------------- */
+/*------------kiosk-payment-completed------------*/
 body.kiosk-payment-completed body {
     font-family: 'Arial', sans-serif;
     margin: 0;
@@ -1278,376 +1612,3 @@ body.kiosk-payment-completed {
     height: 100vh; /* 전체 화면 높이 */
     text-align: center; /* 텍스트 중앙 정렬 */
 }
-
-/*---마이페이지-회원탈퇴 사유 페이지-----------------------------------------------------------------------------*/
-.pay-member_details .checkbox-container {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
-.pay-member_details .checkbox-container input[type="checkbox"] {
-    margin-right: 10px;
-    margin-top: 5px;
-}
-
-.pay-member_details .checkbox-container label {
-    text-align: left;
-}
-
-.pay-member_details #otherReasonText {
-    width: 100%;
-    margin-top: 10px;
-    margin-left: 25px;
-    min-height: 80px;
-    resize: vertical;
-}
-
-.pay-member_details form {
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: left;
-}
-
-.pay-member_details #confirmButton {
-    margin-top: 20px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.pay-member_details form > div {
-    text-align: left;
-    margin-bottom: 10px;
-}
-
-
-
-
-/*--예진 end--*/
-
-/*--정석 start--*/
-/* ----------------------------------------------------------------------- */
-/*-- 메인 메뉴 carousel 설정 --*/
-/* 공통 캐러셀 스타일 */
-.new-carousel-container,
-.product-carousel-container,
-.best-carousel-container {
-    position: relative;
-    justify-content: center;
-    margin: auto;
-    overflow: visible;
-}
-
-.carousel-wrapper {
-    display: flex;
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-}
-
-.carousel-track,
-.new-carousel-track,
-.product-carousel-track,
-.best-carousel-track {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-}
-
-.product-name {
-    margin-top: 15px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* new & 제품 캐러셀 */
-.new-carousel-item,
-.product-carousel-item {
-    flex: 0 0 20%; /* 5개씩 보이도록 설정 */
-    padding: 10px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.3s ease, z-index 0.3s;
-    cursor: pointer;
-}
-
-.new-carousel-item img,
-.product-carousel-item img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-}
-
-/* best 캐러셀 (초기화 때문에 따로 설정) */
-.best-carousel-item {
-    flex: 0 0 20%; /* 5개씩 보이도록 설정 */
-    padding: 10px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.3s ease, z-index 0.3s;
-    cursor: pointer;
-}
-
-.best-carousel-item img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-}
-
-/* 버튼 스타일 (각 캐러셀별 구분) */
-.new-carousel-btn,
-.product-carousel-btn,
-.best-carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-80%);
-    color: black;
-    border: none;
-    padding: 10px;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    background-color: unset;
-}
-
-.new-carousel-btn.left,
-.product-carousel-btn.left,
-.best-carousel-btn.left {
-    left: -50px;
-}
-
-.new-carousel-btn.right,
-.product-carousel-btn.right,
-.best-carousel-btn.right {
-    right: -50px;
-}
-
-.new-carousel-btn:hover,
-.product-carousel-btn:hover,
-.best-carousel-btn:hover {
-    background: lightgray;
-}
-
-/* ----------------------------------------------------------------------- */
-/* 메뉴 메인 전체 제품 grid styling */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
-}
-
-/* 제품 그리드 스타일 */
-.product-grid .card {
-    margin-bottom: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-}
-
-.product-grid .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.product-grid .card-img-top {
-    height: 100%;
-    object-fit: cover;
-}
-
-#load-more-btn {
-    padding: 8px 20px;
-    background-color: #007bff;
-    border: none;
-    transition: background-color 0.3s;
-}
-
-#load-more-btn:hover {
-    background-color: #0056b3;
-}
-
-.new-tag-main {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: #FFEE8C;
-    color: black;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
-    text-transform: uppercase;
-}
-
-/* ----------------------------------------------------------------------- */
-/* 제품 상세 페이지 */
-/* 전체 컨테이너 중앙 정렬 */
-.product-detail-container {
-    max-width: 100%;
-    margin: 20px auto;
-    padding: 20px;
-}
-
-/* 이미지와 정보 나란히 정렬 */
-.product-content {
-    display: flex;
-    gap: 50px;  /* 사진과 정보 사이 간격 넓히기 */
-    align-items: flex-start;
-}
-
-/* 이미지 스타일 */
-.product-image {
-    position: relative;  /* 버튼을 이미지 안에서 절대 위치로 설정하기 위해 필요 */
-}
-
-.product-image img {
-    width: 400px;
-    border-radius: 10px;
-}
-
-/* 목록으로 돌아가는 버튼을 product-content 바깥에서 왼쪽 정렬 */
-.back-button {
-    display: block;
-    margin-top: 20px;  /* product-content와의 간격 */
-    background-color: rgba(0, 0, 0, 0.6);  /* 반투명 배경 */
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-.back-button:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-/* 제품 정보 스타일 */
-.product-info {
-    max-width: 1000px;
-}
-
-.nutrition-row {
-    display: flex;
-    flex-wrap: wrap;  /* 화면 크기에 따라 줄바꿈 */
-    gap: 10px;  /* 요소 간 간격 */
-    align-items: center;  /* 항목들을 중앙 정렬 */
-}
-
-.nutrition-row p {
-    margin: 0;
-    white-space: nowrap; /* 너무 좁을 때만 줄바꿈 */
-    flex-shrink: 0; /* 화면 줄어들어도 글자 크기 유지 */
-}
-
-/* best, new tag 스타일 */
-.tag-container {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.tag {
-    display: inline-block;
-    padding: 5px 10px;
-    font-size: 20px;
-    font-weight: bold;
-    color: black;
-    border-radius: 10px;
-}
-
-.best-tag {
-    background-color: #00FFFF; /* 밝은 하늘색 */
-}
-
-.new-tag {
-    background-color: #FFEE8C; /* 연한 노란색 */
-}
-
-.product-price {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #e63946;
-}
-/* ----------------------------------------------------------------------- */
-/* 메뉴 등록 페이지 */
-
-
-
-
-
-/* ----------------------------------------------------------------------- */
-
-
-
-
-
-/*--정석 end--*/
-
-/*--은비 start--*/
-
-/*pay - 상세 페이지 */
-.receipt-container {
-    width: 100%;
-    max-width: 800px;
-    margin: 30px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-}
-.left-section {
-    text-align: left;
-}
-
-.left-section, .right-section {
-    width: 48%;
-}
-.receipt-header {
-    text-align: center;
-    font-weight: bold;
-    font-size: 20px;
-}
-.receipt-table th, .receipt-table td {
-    text-align: right;
-}
-.button-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-    width: 100%;
-}
-.btn-success {
-    width: 100px;
-}
-
-/* ------------------------------------------------------------------------------ */
-/* 매장페이지 - 결제관리(전자영수증 설정) */
-.receipt-container-wrapper {
-        display: flex;         /* 부모 요소에 flex 사용 */
-        justify-content: center; /* 자식 요소를 중앙 정렬 */
-        align-items: center;     /* 세로 중앙 정렬 */
-        width: 100%;             /* 부모 요소의 너비를 100%로 설정 */
-    }
-
-.receipt-container {
-    margin-bottom: 30px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 79%; /* 너비 설정 */
-    }
-
-/*--은비 end--*/

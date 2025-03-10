@@ -2,76 +2,66 @@
 {% load static %}
 
 {% block title %}브랜드{% endblock title %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-
 
 {% block header %}
     {% include 'layout/main/main_header.html' %}
 {% endblock header %}
 {% block content %}
-<body class="text-dark py-3" style="background-color: #ffffff;">
-    <br><br><br>
-    <div class="brand-logo">
-        <img src="{% static 'images/brand_info.png' %}" class="rounded mx-auto d-block" alt="브랜드소개">
-    </div>
-    <br><br><br>
-    <div class="brand-logo-img">
-        <img src="{% static 'images/brand_img3.jpg' %}" class="rounded mx-auto d-block" alt="브랜드소개이미지">
-    </div>
-    <br><br>
-    <div class="brand-text">
-        <img src="{% static 'images/brand_text.jpg' %}" class="rounded mx-auto d-block" alt="브랜드소개글">
-    </div>
-{#    <p class="text-center">오븐에서 방금 꺼낸 빵이 가장 맛있다는 것을 알기에,<br>#}
-{#        브랜드스캔소는 지금도 더욱 따뜻하고 촉촉한 갓 구운 빵을 제공하기 위해 끊임없이 노력합니다.<br>#}
-{#        매장에서 직접 굽는 것에 그치지 않고, 언제라도 따끈한 빵을 만날 수 있게 더욱 자주 굽고,<br>#}
-{#        고객들이 필요한 시간에 맞춰 굽는 등<br>#}
-{#        세심하고 배려가 담긴 서비스도 준비하고 있습니다.<br>#}
-{#        갓 구워낸 빵은 고소한 향기와 따스한 온기로 매장을 가득 채우고,<br>#}
-{#        고객들에게는 가장 맛있는 빵을 맛보는 행복을 선물합니다.</p>#}
-    <br><br><br><br>
-    <div class="card-container">
-      <div class="card">
-        <div class="card-body">
-          <img src="{% static 'images/brand_ceo.jpg' %}" class="card-img" alt="점주명이미지">
-            <br>
-          <h5 class="card-title text-center fs-6 fw-bold">점주명</h5>
-            <br>
-          <h6 class="card-subtitle mb-2 text-body-secondary text-center">브레드</h6>
+    <body class="text-dark py-3" style="background-color: #ffffff;">
+        <br><br><br>
+        <div class="brand-logo">
+            <img src="{% static 'images/brand_info.png' %}" class="rounded mx-auto d-block" alt="브랜드소개">
         </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <img src="{% static 'images/brand_call.jpg' %}" class="card-img" alt="연락처이미지">
-            <br>
-          <h5 class="card-title text-center fs-6 fw-bold">지점 연락처</h5>
-            <br>
-          <h6 class="card-subtitle mb-2 text-body-secondary text-center">02)123-4567</h6>
+        <br><br><br>
+        <div class="brand-logo-img">
+            <img src="{% static 'images/brand_img3.jpg' %}" class="rounded mx-auto d-block" alt="브랜드소개이미지">
         </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <img src="{% static 'images/brand_store.jpg' %}" class="card-img" alt="주소이미지">
-            <br>
-          <h5 class="card-title text-center fs-6 fw-bold">지점 주소</h5>
-            <br>
-            <a class="card-subtitle mb-2 text-body-secondary text-center" href="{% url 'store:store_main' %}">서울특별시 서초구<br> 효령로 335</a>
+        <br><br>
+        <div class="brand-text">
+            <img src="{% static 'images/brand_text.jpg' %}" class="rounded mx-auto d-block" alt="브랜드소개글">
         </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <img src="{% static 'images/brand_history.jpg' %}" class="card-img" alt="히스토리이미지">
-            <br>
-            <h5 class="card-title text-center fs-6 fw-bold">브레드스캔소<br>히스토리</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary text-center" style="font-size: 10px;">2010브랜드 아이덴티티 리뉴얼<br>'맛있고 건강한 홈메이드 베이커리'<br>한국 서비스 품질지수 (KS-SQI) 4년 연속 1위 수상</h6>
+        <br><br><br><br>
+        <div class="card-container">
+          <div class="card">
+            <div class="card-body">
+              <img src="{% static 'images/brand_ceo.jpg' %}" class="card-img" alt="점주명이미지">
+                <br>
+              <h5 class="card-title text-center fs-6 fw-bold">점주명</h5>
+                <br>
+              <h6 class="card-subtitle mb-2 text-body-secondary text-center">브레드</h6>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <img src="{% static 'images/brand_call.jpg' %}" class="card-img" alt="연락처이미지">
+                <br>
+              <h5 class="card-title text-center fs-6 fw-bold">지점 연락처</h5>
+                <br>
+              <h6 class="card-subtitle mb-2 text-body-secondary text-center">02)123-4567</h6>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <img src="{% static 'images/brand_store.jpg' %}" class="card-img" alt="주소이미지">
+                <br>
+              <h5 class="card-title text-center fs-6 fw-bold">지점 주소</h5>
+                <br>
+                <a class="card-subtitle mb-2 text-body-secondary text-center" href="{% url 'store:store_main' %}">서울특별시 서초구<br> 효령로 335</a>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <img src="{% static 'images/brand_history.jpg' %}" class="card-img" alt="히스토리이미지">
+                <br>
+                <h5 class="card-title text-center fs-6 fw-bold">브레드스캔소<br>히스토리</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary text-center" style="font-size: 10px;">2010브랜드 아이덴티티 리뉴얼<br>'맛있고 건강한 홈메이드 베이커리'<br>한국 서비스 품질지수 (KS-SQI) 4년 연속 1위 수상</h6>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <br><br><br><br><br><br><br><br>
-</body>
+        <br><br><br><br><br><br><br><br>
+    </body>
 {% endblock content %}
-
 
 {% block footer %}
     {% include 'layout/main/main_footer.html' %}
