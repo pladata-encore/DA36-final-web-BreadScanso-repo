@@ -23,6 +23,25 @@ body.main-index {
     height: auto;  /* 원본 비율 유지 */
 }
 
+/* header 로그인/회원가입 위치 설정 */
+.main-login-container {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 버튼 사이 여백 */
+}
+
+/* header 로그인/회원가입 위치 설정 */
+.member-name {
+    font-weight: 600;
+    color: brown;
+    text-decoration: underline;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
 /*----------------------메인 - 브랜드소개----------------------*/
 /* 로고 이미지 */
 .main-brand .brand-logo {
@@ -281,6 +300,7 @@ header .logo-container {
     justify-content: center; /* 가로 중앙 정렬 */
     align-items: center;     /* 세로 중앙 정렬 */
     height: 200px;          /* 컨테이너 높이 (필요시 조정) */
+    background: #ECC58D;
 }
 
 header .logo-img {
