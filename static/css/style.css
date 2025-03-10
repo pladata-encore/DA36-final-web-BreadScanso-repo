@@ -55,36 +55,120 @@ body.main-index {
     flex-wrap: wrap; /* 여러 줄 정렬 */
 }
 
-/*----------------------메인 - 커뮤니티 - Q&A----------------------*/
-.qna-detail-card {
-    width: 100%; /* 카드 너비 조절 */
-    height: auto; /* 높이 자동 조절 */
-    text-align: center; /* 내부 텍스트 중앙 정렬 */
-    padding: 10px; /* 카드 내부 여백 */
-    border-radius: 10px; /* 둥근 테두리 */
-    background-color: #ffffff; /* 카드 배경 색상 */
-    /*box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); !* 카드 그림자 *!*/
-}
-
-/*.qna-detail-card.card {*/
-/*    width: 100% !important; !* 카드 너비 강제 적용 *!*/
-/*    max-width: 800px !important;*/
-/*    height: auto !important; !* 필요하면 높이 자동 조절 *!*/
-/*}*/
-
-.qna-detail-card-text {
-    white-space: pre-line;
-    word-wrap: break-word;
-    width: 100%;
-}
-
-.qna-detail-card-body {
+/*----------------------메인 - 매장위치----------------------*/
+.store-main-map-container {
+    margin: 30px auto;
+    max-width: 1200px;
     display: flex;
     flex-direction: column;
-    align-items: stretch; /* 내부 요소를 가득 차게 */
-    /*border: 2px solid black; !* 검정색 윤곽선 *!*/
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* 검정색 그림자 */
+    position: relative;
+    padding: 0 50px;
 }
+
+.store-main-map-container .store-title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.store-main-map-container .store-map-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.store-main-map-container .map-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.store-main-map-container .store-info-section {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.store-main-map-container .store-info-section h3 {
+    font-size: 20px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.store-main-map-container .store-info-section p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.store-main-map-container .button-container {
+    margin-top: 20px;
+    align-self: flex-end;
+}
+
+.store-main-map-container .carousel-item {
+    padding: 20px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    will-change: transform, opacity;
+}
+
+.store-main-map-container .carousel-control-prev-icon,
+.store-main-map-container .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+}
+
+.store-main-map-container .map-container {
+    width: 450px;
+    height: 450px;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    position: relative;
+}
+
+.store-main-map-container .map-container.loading::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(248, 249, 250, 0.7);
+    z-index: 1;
+}
+
+.store-main-map-container .carousel-control-prev,
+.store-main-map-container .carousel-control-next {
+    width: 40px;
+}
+
+.store-main-map-container #storeCarousel {
+    position: relative;
+    overflow: visible;
+}
+
+.store-main-map-container .naver-info-window {
+    padding: 7px;
+    min-width: 150px;
+    max-width: 200px;
+    word-break: keep-all;
+    line-height: 1.4;
+}
+
+.store-main-map-container .naver-info-window h5 {
+    margin: 3px 0;
+    font-size: 14px;
+    white-space: normal;
+}
+
+
+
+
+
+
+
+
+
 
 /*----------------------메인 - 이벤트----------------------*/
 .card {
@@ -549,6 +633,48 @@ body.main-index .event-img, body.main-index .product-img {
 .best-carousel-btn:hover {
     background: lightgray;
 }
+
+
+/*----------------------메인 - 커뮤니티 - Q&A----------------------*/
+.qna-detail-card {
+    width: 100%; /* 카드 너비 조절 */
+    height: auto; /* 높이 자동 조절 */
+    text-align: center; /* 내부 텍스트 중앙 정렬 */
+    padding: 10px; /* 카드 내부 여백 */
+    border-radius: 10px; /* 둥근 테두리 */
+    background-color: #ffffff; /* 카드 배경 색상 */
+    /*box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); !* 카드 그림자 *!*/
+}
+
+/*.qna-detail-card.card {*/
+/*    width: 100% !important; !* 카드 너비 강제 적용 *!*/
+/*    max-width: 800px !important;*/
+/*    height: auto !important; !* 필요하면 높이 자동 조절 *!*/
+/*}*/
+
+.qna-detail-card-text {
+    white-space: pre-line;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.qna-detail-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* 내부 요소를 가득 차게 */
+    /*border: 2px solid black; !* 검정색 윤곽선 *!*/
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* 검정색 그림자 */
+}
+
+
+
+
+
+
+
+
+
+
 
 /* ------------------------------------------매장페이지----------------------------------------------- */
 /*----------------------매장페이지 - 시스템설정 - 이벤트----------------------*/
