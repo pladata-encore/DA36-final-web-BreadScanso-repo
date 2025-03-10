@@ -1,30 +1,36 @@
-from django.shortcuts import render
-from django.contrib import messages
-from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 from member.models import EventPost
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
+from .utils import upload_content_to_s3
+from django.core.checks import messages
+
 
 def event_main(request):
-#     search_keyword = self.request.GET.get('q', '')  # 검색어 가져오기
-#     event_list = EventPost.objects.order_by('-id')  # 최신순 정렬
-#
-#     if search_keyword:
-#         if len(search_keyword) > 1:
-#             search_event_list = event_list.filter(title__icontains=search_keyword)
-#             return search_event_list  # 검색 결과 반환
-#         else:
-#             messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
-#
-#     return event_list  # 검색어가 없을 경우 전체 목록 반환
-    return render(request, '../templates/event/event_main.html')  # 템플릿 파일 경로 지정
-#
-# def get_context_data(self, **kwargs):
-#     search_keyword = self.request.GET.get('q', '')
-#
-#     if len(search_keyword) > 1 :
-#         context['q'] = search_keyword
-#
-#     return context
+    member = None  # 기본값을 None으로 설정
 
-def event_detail(request):
-    return render(request, 'event/event_detail.html')
+    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
+        member = request.user.member
+
+    events = EventPost.objects.all()
+
+    context = {
+        'member': member,
+        'events': events,
+    }
+
+    return render(request, 'event/event_main.html', context)
+
+# 메인홈 - 이벤트상세페이지
+def event_detail(request, event_id):
+    event = get_object_or_404(EventPost, pk=event_id)  # 해당 event_id의 제품을 가져옴
+    member = None  # 기본값을 None으로 설정
+
+    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
+        member = request.user.member
+    context = {
+        'member': member,
+        'event': event,
+    }
+    return render(request, 'event/event_detail.html', context)
+
+

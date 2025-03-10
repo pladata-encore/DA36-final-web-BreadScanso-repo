@@ -9,126 +9,45 @@
 
 {% block content %}
     <body class="text-dark py-3" style="background-color: #ffffff;">
-    <form method="POST" action="{% url 'main:signup' %}" enctype="multipart/form-data">
-    <br><br>
-    <div class="brand-logo">
-        <img src="{% static 'images/event_text.png' %}" class="rounded mx-auto d-block" alt="이벤트">
-    </div>
-    <br><br>
-    <!-- 검색창 (오른쪽 정렬) -->
-    <div style="flex-grow: 1; display: flex; justify-content: flex-end;">
-    <form method="post" class="d-flex" role="search" id="search-form">
-      {% csrf_token %}
-      <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="검색어를 입력하세요" aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
-      <button id="search_button" type="submit" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
-    </form>
+        <br><br>
+        <div class="brand-logo">
+            <img src="{% static 'images/event_text.png' %}" class="rounded mx-auto d-block" alt="이벤트">
+        </div>
+        <br>
+        <!-- 검색창 (오른쪽 정렬) -->
+        <div class="d-flex justify-content-between align-items-center mt-3 mb-4" style="width: 100%;">
+            <div style="flex-grow: 1; display: flex; justify-content: flex-end;">
+                <form method="post" class="d-flex" role="search" id="search-form">
+                    {% csrf_token %}
+                    <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="이벤트명을 입력하세요" aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+                    <button id="search_button" type="submit" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
+                </form>
+            </div>
+        </div>
+        <br><br><br>
+
+    <div class="event-card-container">
+        {% for event in events %}
+            <div class="col">
+                <div class="card h-100 event-card" data-id="1">
+                    <img src="{{ event.content }}" class="card-img-top">
+                    <div class="card-body">
+                        <h6 class="event-card-title">{{ event.title }}</h6>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 
-    <br><br><br><br><br>
-    <div class="event-card-container">
-        <a href="{% url 'event_detail'%}" class="card event-card text-decoration-none">
-            <img src="{% static 'images/event1.jpg' %}" class="card-img-top" alt="이벤트1">
-            <div class="card-body">
-                <h6 class="event-card-title">🍓 베리스페셜 🍰 상큼달콤한 딸기 케이크 ❤️</h6>
-            </div>
-        </a>
-          <div class="col">
-            <div class="card h-100 event-card">
-              <img src="{% static 'images/event2.jpg' %}" class="card-img-top" alt="이벤트2">
-              <div class="card-body">
-                <h6 class="event-card-title">🍞 부드럽고 촉촉한 식빵 🧡</h6>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card h-100 event-card">
-              <img src="{% static 'images/event3.jpg' %}" class="card-img-top" alt="이벤트3">
-              <div class="card-body">
-                <h6 class="event-card-title">🥖 겉바속촉 라라나 바게트 🥖</h6>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card h-100 event-card">
-              <img src="{% static 'images/event4.jpg' %}" class="card-img-top" alt="이벤트4">
-              <div class="card-body">
-                <h6 class="event-card-title">🍫 달콤 촉촉한 초코 컵케이크 🤎</h6>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card h-100 event-card">
-              <img src="{% static 'images/event5.jpg' %}" class="card-img-top" alt="이벤트5">
-              <div class="card-body">
-                <h6 class="event-card-title">🤎 이것이 까눌레 🤎</h6>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card h-100 event-card">
-              <img src="{% static 'images/event6.jpg' %}" class="card-img-top" alt="이벤트6">
-              <div class="card-body">
-                <h5 class="event-card-title">🫓 건강한 비건 효모빵 🌾️</h5>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card h-100 event-card">
-              <img src="{% static 'images/event7.jpg' %}" class="card-img-top" alt="이벤트7">
-              <div class="card-body">
-                <h5 class="event-card-title">🍓 새콤달콤 딸기 케이크 🍰</h5>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card h-100 event-card">
-              <img src="{% static 'images/event8.jpg' %}" class="card-img-top" alt="이벤트8">
-              <div class="card-body">
-                <h5 class="event-card-title">🥯 앙버터 베이글 🧈</h5>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card h-100 event-card">
-              <img src="{% static 'images/event9.jpg' %}" class="card-img-top" alt="이벤트8">
-              <div class="card-body">
-                <h5 class="event-card-title">🥐 크루아상 & 크림 크루아상 ☁️</h5>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card h-100 event-card">
-              <img src="{% static 'images/event10.jpg' %}" class="card-img-top" alt="이벤트8">
-              <div class="card-body">
-                <h5 class="event-card-title">🍡 쫀득한 마카롱 🌈</h5>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card h-100 event-card">
-              <img src="{% static 'images/event11.jpg' %}" class="card-img-top" alt="이벤트8">
-              <div class="card-body">
-                <h5 class="event-card-title">🤎 꾸덕 달콤 초코케이크 🍫</h5>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card h-100 event-card">
-              <img src="{% static 'images/event12.jpg' %}" class="card-img-top" alt="이벤트8">
-              <div class="card-body">
-                <h5 class="event-card-title">🥨 크림치즈 가득 프레첼 🧀</h5>
-              </div>
-            </div>
-          </div>
-    </div>
-    <br><br>
-    </div>
-</form>
+        <br><br>
+    </body>
 {% endblock content %}
 
 {% block footer %}
     {% include 'layout/main/main_footer.html' %}
 {% endblock footer %}
+
 {% block script %}
-    <script src="{% static 'js/member_store.js' %}"></script>
+    <script src="{% static 'js/event_main.js' %}"></script>
 {% endblock %}
+

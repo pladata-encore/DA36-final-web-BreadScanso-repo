@@ -1,0 +1,187 @@
+{% extends 'layout/store/base_store.html' %}
+{% load event_tags %} {# menu_tags.py 파일의 custom template tag를 사용하기 위한 코드 #}
+{% load static %}
+
+{% block title %}이벤트 관리{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
+
+{% block content %}
+<style>
+/* 상태 표시 컨테이너 */
+.status-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* 상태 태그들 (Best, New, 노출중) */
+.status-left {
+    display: flex;
+    gap: 5px;
+}
+
+.tag {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    border-radius: 10px;
+}
+
+.show-tag {
+    padding: 5px 10px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 1px solid steelblue;
+    background-color: transparent;
+}
+
+.finish-tag {
+    padding: 5px 10px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 1px solid gray;
+    background-color: transparent;
+}
+
+
+/* 메인 컨테이너 스타일 */
+.event-detail-container {
+    display: flex;
+    gap: 20px; /* 이미지와 제품 정보 사이 간격 */
+    padding: 20px;
+}
+
+/* 이미지 영역 */
+.event-image {
+    flex: 0 0 40%; /* 이미지 영역 비율 조정 */
+    max-width: 400px; /* 최대 너비 설정 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 이미지와 버튼을上下로 분리 */
+}
+
+.event-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.left-buttons {
+    align-self: flex-start; /* 버튼을 왼쪽으로 정렬 */
+    margin-top: 10px; /* 이미지와 버튼 사이 간격 */
+}
+
+/* 제품 정보 영역 */
+.event-content {
+    flex: 1; /* 나머지 공간 채우기 */
+    display: flex;
+    flex-direction: column;
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+}
+
+.nutrition-row {
+    display: flex;
+    flex-wrap: wrap;  /* 화면 크기에 따라 줄바꿈 */
+    gap: 10px;  
+    align-items: flex-start;  
+}
+
+.nutrition-row p {
+    margin: 0;
+    white-space: nowrap; /* 너무 좁을 때만 줄바꿈 */
+    flex-shrink: 0; /* 화면 줄어들어도 글자 크기 유지 */
+}
+
+/* 버튼 컨테이너 전체 */
+.button-container {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* 수정 & 삭제 버튼 위치 (오른쪽 정렬) */
+.right-buttons {
+    display: flex;
+    gap: 10px;
+}
+</style>
+
+    <!-- 메인 컨테이너 -->
+    <div class="event-detail-container">
+        <!-- 이미지 영역 -->
+        <div class="content">
+            {% if event.content %}
+                <img src="{{ event.content }}" alt="{{ event.title}}">
+            {% else %}
+                <img src="{% static 'images/default.jpg' %}" alt="기본 이미지">
+            {% endif %}
+            <!-- 목록 버튼을 이미지 아래 왼쪽에 배치 -->
+            <div class="left-buttons">
+                <button type="button" class="btn btn-success" id="list-btn" onclick="location.href='{% url 'store:store_event' %}'">목록</button>
+{#                <button type="button" class="btn btn-success" id="list-btn">목록</button>#}
+            </div>
+        </div>
+
+        <!-- 제품 콘텐츠 -->
+        <div class="event-content">
+            {% csrf_token %}
+            <!-- 상태 표시 (Show, Finish) -->
+            <div class="status-container">
+                <div class="status-left">
+                    {% if event.show %}
+                        <span class="tag show-tag">진행중</span>
+                    {% endif %}
+                    {% if event.finish %}
+                        <span class="tag finish-tag">노출여부</span>
+                    {% endif %}
+                </div>
+            </div>
+        
+            <!-- 이벤트명 -->
+            <h1>{{ event.title }}</h1>
+
+            <!-- 수정, 삭제 버튼 -->
+            <div class="button-container">
+                <div class="right-buttons">
+                    <button type="button" class="btn btn-primary" id="edit-event-btn" data-event-id="{{ event.event_id }}">수정</button>
+                    <button type="button" class="btn btn-danger" id="delete-btn">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 삭제 확인 모달 -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">삭제 확인</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">선택한 이벤트을 삭제하시겠습니까?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+{#                    <button type="button" class="btn btn-danger" id="confirm-delete-btn" data-event-id="{{ event.event_id }}">삭제</button>#}
+                    <button type="button" class="btn btn-danger" id="delete-btn" data-event-id="{{ event.event_id }}">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'js/sotre_event_info.js' %}"></script>
+{% endblock script %}

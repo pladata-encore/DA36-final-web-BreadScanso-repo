@@ -50,7 +50,12 @@ def menu_main(request):
         best_items = items_query.filter(best=1).distinct()
 
     # New 태그 지속 시간 (초 단위, 예: 3600초 = 1시간)
-    new_duration_seconds = 3600
+    new_duration_seconds = 3600 * 24
+
+    member = None  # 기본값을 None으로 설정
+
+    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
+        member = request.user.member
 
     context = {
         'items': items,
@@ -59,6 +64,7 @@ def menu_main(request):
         'selected_store': selected_store,
         'category_filter': category_filter,
         'new_duration_seconds': new_duration_seconds,
+        'member': member,
     }
     return render(request, 'menu/menu_main.html', context)
 
@@ -68,7 +74,18 @@ def product_detail(request, item_id):
     item = get_object_or_404(Item, pk=item_id)  # 해당 item_id의 제품을 가져옴
     nutrition_info = NutritionInfo.objects.filter(item_id=item_id).first() # NutritionInfo에서 해당 item_id의 영양 정보 가져오기
     allergy_info = Allergy.objects.filter(item_id=item_id).first() # AllergyInfo에서 해당 item_id의 영양 정보 가져오기
-    return render(request, 'menu/product_detail.html', {'item': item, 'nutrition': nutrition_info, 'allergy': allergy_info})
+    member = None  # 기본값을 None으로 설정
+
+    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
+        member = request.user.member
+
+    context = {
+        'member': member,
+        'item': item,
+        'nutrition': nutrition_info,
+        'allergy': allergy_info
+    }
+    return render(request, 'menu/product_detail.html', context)
 
 # ---------------------------------------------------------------------------- #
 # 점주의 메뉴관리 메인 페이지

@@ -14,6 +14,8 @@ from django.contrib.auth.hashers import make_password
 import secrets
 from django.shortcuts import render, redirect
 from django.apps import apps
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from kiosk.models import PaymentInfo
 
 
 
@@ -291,3 +293,21 @@ def member_delete_detail(request):
 
     # GET 요청의 경우
     return render(request, 'member/member_delete_detail.html')
+
+@login_required
+def mypoint(request):
+    member = request.user.member # 로그인한 회원 정보 가져오기
+
+    # 현재 로그인한 회원(member_id) 기준으로 결제 내역 조회
+    member_payments = PaymentInfo.objects.filter(member=member).order_by("-pay_at")
+
+    # 페이지네이션 (10개씩 표시)
+    paginator = Paginator(member_payments, 10)  # 한 페이지당 10개씩
+    page_number = request.GET.get("page")  # 현재 페이지 번호 가져오기
+
+    try:
+        page_obj = paginator.get_page(page_number)
+    except (PageNotAnInteger, EmptyPage):
+        page_obj = paginator.get_page(1)  # 유효하지 않은 페이지 번호라면 첫 페이지로 이동
+
+    return render(request, "member/member_mypoint.html", {"member": member, "page_obj": page_obj})

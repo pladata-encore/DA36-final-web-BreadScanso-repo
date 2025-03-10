@@ -1,7 +1,40 @@
+{#{% extends 'layout/main/main_base.html' %}#}
+{#{% load static %}#}
+{##}
+{#{% block title %}이벤트{% endblock title %}#}
+{##}
+{#{% block header %}#}
+{#    {% include 'layout/main/main_header.html' %}#}
+{#{% endblock header %}#}
+{##}
+{#{% block content %}#}
+{#    <body class="text-dark py-3" style="background-color: #ffffff;">#}
+{#    <form method="POST" action="{% url 'main:signup' %}" enctype="multipart/form-data">#}
+{#    <br><br>#}
+{#    <div class="brand-logo">#}
+{#        <img src="{% static 'images/event_text.png' %}" class="rounded mx-auto d-block" alt="이벤트">#}
+{#    </div>#}
+{#    <br><br>#}
+{#    <div>#}
+{#      <img src="{% static 'images/event_detail.png' %}" class="card-detail-img" alt="이벤트상세이미지">#}
+{#    </div>#}
+{#    <br><br>#}
+    {# 목록 왼쪽 버튼 정렬 #}
+{#    <div style="flex-shrink: 0;">#}
+{#        <button class="btn btn-warning" type="button" onclick="location.href='{% url 'event_main' %}'">목록</button>#}
+{#    </div>#}
+{#    <br><br>#}
+{#    </form>#}
+{#{% endblock content %}#}
+{##}
+{#{% block footer %}#}
+{#    {% include 'layout/main/main_footer.html' %}#}
+{#{% endblock footer %}#}
+
 {% extends 'layout/main/main_base.html' %}
 {% load static %}
 
-{% block title %}이벤트{% endblock title %}
+{% block title %}이벤트상세정보{% endblock title %}
 
 {% block header %}
     {% include 'layout/main/main_header.html' %}
@@ -9,24 +42,41 @@
 
 {% block content %}
     <body class="text-dark py-3" style="background-color: #ffffff;">
-    <form method="POST" action="{% url 'main:signup' %}" enctype="multipart/form-data">
-    <br><br>
-    <div class="brand-logo">
-        <img src="{% static 'images/event_text.png' %}" class="rounded mx-auto d-block" alt="이벤트">
+
+    <!-- 제품 상세 정보 -->
+    <div class="event-detail-container">
+            <div class="event-detail">
+                <!-- S3 이미지 사용 -->
+                {% if event.event_detail %}
+                    <img src="{{ event.event_detail }}" alt="{{ event.title }}">
+                {% else %}
+                    <img src="{% static 'images/default.png' %}">
+                {% endif %}
+            </div>
+
+{#            <div class="product-info">#}
+{#                <!-- show & finish 태그 추가 -->#}
+{#                <div class="tag-container">#}
+{#                    {% if event.shoe %}#}
+{#                        <span class="tag show-tag">Show</span>#}
+{#                    {% endif %}#}
+{#                    {% if event.finish %}#}
+{#                        <span class="tag finish-tag">Finish</span>#}
+{#                    {% endif %}#}
+{#                </div>#}
+{#                <h1>{{ event.title }}</h1>#}
+{#            </div>#}
+        </div>
     </div>
-    <br><br>
-    <div>
-      <img src="{% static 'images/event_detail.png' %}" class="card-detail-img" alt="이벤트상세이미지">
-    </div>
-    <br><br>
+    </body>
     {# 목록 왼쪽 버튼 정렬 #}
     <div style="flex-shrink: 0;">
         <button class="btn btn-warning" type="button" onclick="location.href='{% url 'event_main' %}'">목록</button>
     </div>
-    <br><br>
-    </form>
+    <br>
 {% endblock content %}
 
 {% block footer %}
     {% include 'layout/main/main_footer.html' %}
 {% endblock footer %}
+
