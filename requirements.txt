@@ -15,3 +15,4 @@ django_summernote
 django-allauth
 PyJWT
 cryptography
+beautifulsoup4
