@@ -223,10 +223,16 @@ def store_main(request):
         for member in members
     ]
     first_store_name = stores[0]['store_name'] if stores else ''
+    member = None  # 기본값을 None으로 설정
+
+    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
+        member = request.user.member
+
     context = {
         'stores': json.dumps(stores, ensure_ascii=False),  # JSON 변환 후 전달
         # 'store_name': [store['store_name'] for store in stores],
         'store_name': first_store_name,
+        'member': member
     }
     return render(request, 'store/store_main_map.html', context)
 

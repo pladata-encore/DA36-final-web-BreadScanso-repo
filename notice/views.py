@@ -17,60 +17,6 @@ import uuid
 from django_summernote.models import Attachment
 from .utils import upload_notice_image_to_s3
 
-# @csrf_exempt
-# def summernote_upload(request):
-#     if request.method == "POST":
-#         print("summernote_upload 호출됨")
-#         file = request.FILES.get("files")
-#         if not file:
-#             print("파일이 요청에 포함되지 않음")
-#             return JsonResponse({"error": {"message": "No file uploaded"}}, status=400)
-#         try:
-#             file_extension = file.name.split(".")[-1].lower()
-#             # 허용된 이미지 확장자 검증
-#             allowed_extensions = ['jpg', 'jpeg', 'png', 'gif']
-#             if file_extension not in allowed_extensions:
-#                 print(f"허용되지 않는 파일 확장자: {file_extension}")
-#                 return JsonResponse({"error": {"message": "Invalid file type. Only JPG, JPEG, PNG, GIF are allowed."}},
-#                                     status=400)
-#
-#             unique_filename = f"summernote/{uuid.uuid4().hex}.{file_extension}"
-#             file_path = os.path.join(settings.MEDIA_ROOT, unique_filename)
-#             os.makedirs(os.path.dirname(file_path), exist_ok=True)
-#             with open(file_path, 'wb+') as destination:
-#                 for chunk in file.chunks():
-#                     destination.write(chunk)
-#
-#             # 절대 URL로 변환
-#             file_url = request.build_absolute_uri(settings.MEDIA_URL + unique_filename)
-#             print(f"로컬 업로드 성공, URL: {file_url}")
-#             return JsonResponse({"url": file_url, "success": True})
-#         except Exception as e:
-#             print(f"업로드 실패: {str(e)}")
-#             return JsonResponse({"error": {"message": str(e)}}, status=400)
-#     print("잘못된 요청 메서드:", request.method)
-#     return JsonResponse({"error": {"message": "Invalid request method"}}, status=400)
-
-# # s3에 이미지 업로드
-# @csrf_exempt
-# def summernote_upload(request):
-#     if request.method == "POST":
-#         print("summernote_upload 호출됨")
-#         file = request.FILES.get("files")
-#         if not file:
-#             print("파일이 요청에 포함되지 않음")
-#             return JsonResponse({"error": {"message": "No file uploaded"}}, status=400)
-#         try:
-#             s3_url = upload_notice_image_to_s3(file, folder="notice_images")
-#             print(f"S3 업로드 성공, URL: {s3_url}")
-#             return JsonResponse({"url": s3_url, "success": True})
-#         except Exception as e:
-#             print(f"업로드 실패: {str(e)}")
-#             return JsonResponse({"error": {"message": str(e)}}, status=400)
-#     print("잘못된 요청 메서드:", request.method)
-#     return JsonResponse({"error": {"message": "Invalid request method"}}, status=400)
-
-# ---------------------------------------------------------------------------- #
 # 소비자 화면 공지사항 페이지
 def notice_main(request):
     # pinned=1을 먼저, 그 다음 notice_id로 오름차순 정렬
@@ -110,11 +56,17 @@ def notice_main(request):
 
     page_range = range(start_page, end_page + 1)
 
+    member = None  # 기본값을 None으로 설정
+
+    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
+        member = request.user.member
+
     context = {
         'notices': notices,
         'page_obj': page_obj,
         'page_range': page_range,
         'total_notices': notices.count(),  # 총 공지사항 수
+        'member': member,
     }
 
     return render(request, 'notice/notice_main.html', context)
@@ -123,7 +75,15 @@ def notice_main(request):
 # 소비자 화면 공지사항 상세 페이지
 def notice_detail(request, notice_id):
     notice = get_object_or_404(Notice, notice_id=notice_id)
-    return render(request, 'notice/notice_detail.html', {'notice': notice})
+    member = None  # 기본값을 None으로 설정
+
+    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
+        member = request.user.member
+    context = {
+        'notice': notice,
+        'member': member,
+    }
+    return render(request, 'notice/notice_detail.html', context)
 
 # ---------------------------------------------------------------------------- #
 # 점주용 공지사항 페이지 (로그인 필요)
