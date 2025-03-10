@@ -178,22 +178,6 @@
         {{ error }}
     </div>
     {% endif %}
-    <!-- -------------------------------------------------------------------- -->
-    <!-- ♦️♦️♦️ 이후 오른쪽 상단에 점장명과 매장이 같이 나오면 삭제  ♦️♦️♦️ -->
-    <!-- 매장 (고정값으로 표시) -->
-    <div class="store-fixed mb-3" style="position: absolute; top: 120px; right: 50px" >
-        <label class="form-label"><strong>매장</strong></label>
-        <div class="store-fixed">
-            {% if member.store == 'A' %}
-                서초점
-            {% elif member.store == 'B' %}
-                강남점
-            {% endif %}
-        </div>
-        <!-- 숨겨진 input으로 store 값 전송 -->
-        <input type="hidden" name="store" value="{{ store }}">
-    </div>    
-    <!-- -------------------------------------------------------------------- -->
 
     <div class="content-wrapper">
         <div class="image-area">
@@ -216,17 +200,30 @@
                     <input class="form-check-input" type="checkbox" id="show" name="show" {% if item.show %}checked{% endif %}>
                     <label class="form-check-label" for="show">노출중</label>
                 </div>
+                <!-- 매장 정보를 오른쪽 끝으로 배치 -->
+                <div class="form-check-top" style="border: none; padding: 5px 0; margin-left: auto;">
+                    <label class="form-label" style="margin: 0;"><strong>매장:</strong></label>
+                    <div>
+                        {% if member.store == 'A' %}
+                            서초점
+                        {% elif member.store == 'B' %}
+                            강남점
+                        {% endif %}
+                    </div>
+                    <!-- 숨겨진 input으로 store 값 전송 -->
+                    <input type="hidden" name="store" value="{{ store }}">
+                </div>
             </div>
     
             <div class="fieldset-container full-width">
                 <fieldset>
                     <div class="item-name-category">
                         <div class="mb-3">
-                            <label for="item_name">제품명:</label>
-                            <input type="text" id="item_name" name="item_name" value="{{ item.item_name }}" required>
+                            <label for="item_name" class="form-label">제품명</label>
+                            <input type="text" id="item_name" name="item_name" class="form-control" value="{{ item.item_name }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="category">카테고리</label>
+                            <label for="category" class="form-label">카테고리</label>
                             <select id="category" name="category" class="form-control">
                                 <option value="bread" {% if item.category == "bread" %}selected{% endif %}>빵</option>
                                 <option value="dessert" {% if item.category == "dessert" %}selected{% endif %}>디저트</option>
@@ -234,7 +231,7 @@
                         </div>
                     </div>
                         <div class="mb-3 full-width">
-                            <label for="item_info">제품설명</label>
+                            <label for="item_info" class="form-label">제품설명</label>
                             <input type="text" name="item_info" id="item_info" class="form-control" value="{{ item.description }}" required>
                         </div>
                 </fieldset>
@@ -246,35 +243,35 @@
                     <hr>
                     <div class="nutrition-grid">
                         <div class="mb-3">
-                            <label for="nutrition_weight">총 내용량 (g):</label>
+                            <label for="nutrition_weight" class="form-label">총 내용량 (g)</label>
                             <input type="number" name="nutrition_weight" id="nutrition_weight" class="form-control" value="{{ nutrition.nutrition_weight }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="nutrition_calories">총 칼로리 (kcal):</label>
+                            <label for="nutrition_calories" class="form-label">총 칼로리 (kcal)</label>
                             <input type="number" name="nutrition_calories" id="nutrition_calories" class="form-control" value="{{ nutrition.nutrition_calories }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="nutrition_sodium">나트륨 (mg):</label>
+                            <label for="nutrition_sodium" class="form-label">나트륨 (mg)</label>
                             <input type="number" name="nutrition_sodium" id="nutrition_sodium" class="form-control" value="{{ nutrition.nutrition_sodium }}">
                         </div>
                         <div class="mb-3">
-                            <label for="nutrition_sugar">당류 (g):</label>
+                            <label for="nutrition_sugar" class="form-label">당류 (g)</label>
                             <input type="number" name="nutrition_sugar" id="nutrition_sugar" class="form-control" value="{{ nutrition.nutrition_sugar }}">
                         </div>
                         <div class="mb-3">
-                            <label for="nutrition_carbohydrates">탄수화물 (g):</label>
+                            <label for="nutrition_carbohydrates" class="form-label">탄수화물 (g)</label>
                             <input type="number" name="nutrition_carbohydrates" id="nutrition_carbohydrates" class="form-control" value="{{ nutrition.nutrition_carbohydrates }}">
                         </div>
                         <div class="mb-3">
-                            <label for="nutrition_saturated_fat">포화지방 (g):</label>
+                            <label for="nutrition_saturated_fat" class="form-label">포화지방 (g)</label>
                             <input type="number" name="nutrition_saturated_fat" id="nutrition_saturated_fat" class="form-control" value="{{ nutrition.nutrition_saturated_fat }}">
                         </div>
                         <div class="mb-3">
-                            <label for="nutrition_trans_fat">트랜스지방 (g):</label>
+                            <label for="nutrition_trans_fat" class="form-label">트랜스지방 (g)</label>
                             <input type="number" name="nutrition_trans_fat" id="nutrition_trans_fat" class="form-control" value="{{ nutrition.nutrition_trans_fat }}">
                         </div>
                         <div class="mb-3">
-                            <label for="nutrition_protein">단백질 (g):</label>
+                            <label for="nutrition_protein" class="form-label">단백질 (g)</label>
                             <input type="number" name="nutrition_protein" id="nutrition_protein" class="form-control" value="{{ nutrition.nutrition_protein }}">
                         </div>
                     </div>

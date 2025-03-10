@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
     const editMenuBtn = document.getElementById("edit-menu-btn");
     const listBtn = document.getElementById("list-btn");
+    const menuLearnBtn = document.getElementById("menu-learn-btn");
 
     // 삭제 버튼 클릭 시 모달 표시
     deleteBtn.addEventListener("click", function () {
@@ -57,6 +58,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (listBtn) {
         listBtn.addEventListener("click", function () {
             window.location.href = "/menu/store/";
+        });
+    }
+
+    // 메뉴 학습 버튼
+    if (menuLearnBtn) {
+        menuLearnBtn.addEventListener("click", function () {
+            const itemId = menuLearnBtn.getAttribute("data-item-id");  // 버튼의 data-item-id 값 가져오기
+            if (itemId) {
+                window.location.href = `/menu/store/new_menu_guide/${itemId}`;
+            }
         });
     }
 });

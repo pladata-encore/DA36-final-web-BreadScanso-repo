@@ -1,0 +1,131 @@
+{% extends 'layout/store/base_store.html' %}
+{% load static %}
+
+{% block title %}메뉴관리 | 신규 제품 등록{% endblock title %}
+
+{% block header %}
+    {% include 'layout/store/header_store.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/store/sidebar_store.html' %}
+{% endblock sidebar %}
+
+{% block content %}
+<style>
+/* 메인 컨테이너 스타일 */
+.new-menu-guide-container {
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+}
+
+/* 이미지 영역 */
+.new-menu-guide-image {
+    flex: 0 0 40%; /* 이미지 영역 비율 조정 */
+    max-width: 400px; /* 최대 너비 설정 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+}
+
+.new-menu-guide-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.left-button {
+    align-self: flex-start; 
+    margin-top: 10px; 
+}
+
+/* 제품 정보 영역 */
+.new-menu-guide-content {
+    flex: 1; /* 나머지 공간 채우기 */
+    display: flex;
+    flex-direction: column;
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+}
+
+.guide-meta {
+    white-space: nowrap; /* 너무 좁을 때만 줄바꿈 */
+    flex-shrink: 0; /* 화면 줄어들어도 글자 크기 유지 */
+}
+
+.confirm-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    width: 100%;
+}
+</style>
+
+     <h3 style="margin-bottom: 50px;" class="text-center">신규 메뉴 학습 등록 가이드</h3>
+    
+    
+    <div class="new-menu-guide-container">
+        <!-- 이미지 영역 -->
+        <div class="new-menu-guide-image">
+            <h5><strong>신규 메뉴 학습용 예시 이미지</strong></h5>
+            <img src="{% static 'images/example.jpg' %}" alt="예시 이미지">
+            <div class="left-button">
+                <button type="button" class="btn btn-success" id="cancel-btn">취소</button>
+            </div>
+        </div>
+        
+        <!-- 가이드 안내 영역 -->
+        <div class="new-menu-guide-content">
+            <!-- 제품 메타 정보 -->
+            <div class="guide-meta">
+                <h4 class="mb-4"><strong>사진 촬영 가이드</strong></h4>
+                    <p>1. 왼쪽 예시 이미지와 같은 구도로 촬영해 주세요.</p>
+                    <p>2. 사진 크기는 640×640 규격에 맞춰 촬영해 주세요.</p>
+                    <p>3. 반드시 브랜드스캔소의 스캐너를 이용해 촬영해 주세요.</p>
+                    <p>4. 사진은 최소 50장 이상 촬영해 주세요.</p>
+                    <p>5. 제품을 다양한 구도로 촬영해 주세요.</p>
+                    <p>6. 동영상 촬영도 가능합니다.</p>
+                    <p>7. 제품 영문명을 입력해주세요.</p>
+            
+                <hr>
+            
+                <h4 class="mb-4"><strong>주의 사항</strong></h4>
+                    <p>1. 제품 외에 다른 물체가 포함되거나 빛 반사, 그림자가 생기지 않도록 촬영해 주세요.</p>
+                    <p>2. 동영상 촬영 시에도 동일하게 다른 물체가 포함되거나 빛 반사, 그림자가 생기지 않도록 촬영해 주세요.</p>
+                    <p>3. 파일 용량이 너무 큰 경우 압축하여 업로드해 주세요.</p>
+                    <p>4. 휴대폰으로 촬영할 경우 크기 및 화질이 달라져 학습이 원활하지 않을 수 있습니다.</p>
+                    <p>5. 학습해야 할 제품이 여러 개여도 단일 제품을 개별적으로 촬영하여 업로드해 주세요.</p>
+                    <p>6. 학습된 제품의 정확도가 너무 낮을 경우 사진 등록을 다시 요청할 수 있습니다.</p>
+            </div>
+
+
+            <!-- 확인 버튼 -->
+            <div class="confirm-button">
+                <button type="button" class="btn btn-primary" id="confirm-guide-btn">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 안내 가이드 확인 모달 -->
+    <div class="modal fade" id="guideConfirmModal" tabindex="-1" aria-labelledby="guideConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ConfirmGuideModalLabel">안내 확인</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">"안내 가이드를 모두 읽으셨나요?"</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니오</button>
+                    <button type="button" class="btn btn-primary" id="confirm-btn" data-item-id="{{ item.item_id }}">예</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block script %}
+    {{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
+    <script src="{% static 'js/menu_new_menu_guide.js' %}"></script>
+{% endblock script %}
