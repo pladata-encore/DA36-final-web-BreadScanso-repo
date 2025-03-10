@@ -11,10 +11,66 @@ from .forms import NoticeForm
 from bs4 import BeautifulSoup
 import boto3
 from django.conf import settings
+import os
 from django.views.decorators.csrf import csrf_exempt
 import uuid
+from django_summernote.models import Attachment
+from .utils import upload_notice_image_to_s3
 
+# @csrf_exempt
+# def summernote_upload(request):
+#     if request.method == "POST":
+#         print("summernote_upload 호출됨")
+#         file = request.FILES.get("files")
+#         if not file:
+#             print("파일이 요청에 포함되지 않음")
+#             return JsonResponse({"error": {"message": "No file uploaded"}}, status=400)
+#         try:
+#             file_extension = file.name.split(".")[-1].lower()
+#             # 허용된 이미지 확장자 검증
+#             allowed_extensions = ['jpg', 'jpeg', 'png', 'gif']
+#             if file_extension not in allowed_extensions:
+#                 print(f"허용되지 않는 파일 확장자: {file_extension}")
+#                 return JsonResponse({"error": {"message": "Invalid file type. Only JPG, JPEG, PNG, GIF are allowed."}},
+#                                     status=400)
+#
+#             unique_filename = f"summernote/{uuid.uuid4().hex}.{file_extension}"
+#             file_path = os.path.join(settings.MEDIA_ROOT, unique_filename)
+#             os.makedirs(os.path.dirname(file_path), exist_ok=True)
+#             with open(file_path, 'wb+') as destination:
+#                 for chunk in file.chunks():
+#                     destination.write(chunk)
+#
+#             # 절대 URL로 변환
+#             file_url = request.build_absolute_uri(settings.MEDIA_URL + unique_filename)
+#             print(f"로컬 업로드 성공, URL: {file_url}")
+#             return JsonResponse({"url": file_url, "success": True})
+#         except Exception as e:
+#             print(f"업로드 실패: {str(e)}")
+#             return JsonResponse({"error": {"message": str(e)}}, status=400)
+#     print("잘못된 요청 메서드:", request.method)
+#     return JsonResponse({"error": {"message": "Invalid request method"}}, status=400)
 
+# # s3에 이미지 업로드
+# @csrf_exempt
+# def summernote_upload(request):
+#     if request.method == "POST":
+#         print("summernote_upload 호출됨")
+#         file = request.FILES.get("files")
+#         if not file:
+#             print("파일이 요청에 포함되지 않음")
+#             return JsonResponse({"error": {"message": "No file uploaded"}}, status=400)
+#         try:
+#             s3_url = upload_notice_image_to_s3(file, folder="notice_images")
+#             print(f"S3 업로드 성공, URL: {s3_url}")
+#             return JsonResponse({"url": s3_url, "success": True})
+#         except Exception as e:
+#             print(f"업로드 실패: {str(e)}")
+#             return JsonResponse({"error": {"message": str(e)}}, status=400)
+#     print("잘못된 요청 메서드:", request.method)
+#     return JsonResponse({"error": {"message": "Invalid request method"}}, status=400)
+
+# ---------------------------------------------------------------------------- #
 # 소비자 화면 공지사항 페이지
 def notice_main(request):
     # pinned=1을 먼저, 그 다음 notice_id로 오름차순 정렬
@@ -151,26 +207,16 @@ def notice_info(request, notice_id):
 def notice_write(request):
     member = request.user.member
     if request.method == "POST":
-        form = NoticeForm(request.POST)
+        form = NoticeForm(request.POST, request.FILES)
         if form.is_valid():
             notice = form.save(commit=False)
-            if not member:
-                return JsonResponse({"success": False, "message": "Member 객체가 존재하지 않습니다."})
-
-            content_html = form.cleaned_data['content']
-            notice.content = content_html
             notice.member = member
             notice.store = member.store
             notice.save()
             return redirect('notice_info', notice_id=notice.notice_id)
     else:
         form = NoticeForm()
-
-    context = {
-        'form': form,
-        'member': member
-    }
-    return render(request, 'notice/notice_write.html', context)
+    return render(request, 'notice/notice_write.html', {'form': form, 'member': member})
 
 # ---------------------------------------------------------------------------- #
 # 점주용 공지사항 글쓰기 삭제 api
@@ -207,6 +253,43 @@ def notice_delete(request):
 
 # ---------------------------------------------------------------------------- #
 # 점주용 공지사항 글쓰기 저장 api
+# @login_required
+# def notice_save(request):
+#     if request.method == "POST":
+#         try:
+#             data = json.loads(request.body)
+#             pinned = data.get("pinned", False)
+#             title = data.get("title")
+#             content = data.get("content")
+#             store = data.get("store")
+#
+#             if not title or not content:
+#                 return JsonResponse({"success": False, "message": "제목과 내용을 입력해주세요."})
+#
+#             member = request.user.member
+#
+#             # Summernote UI 태그 제거
+#             soup = BeautifulSoup(content, 'html.parser')
+#             for tag in soup.select('.note-editor, .note-frame, .panel, .panel-default'):
+#                 tag.decompose()  # Summernote 관련 태그 제거
+#             clean_content = str(soup)
+#
+#             now = timezone.now()
+#             notice = Notice.objects.create(
+#                 pinned=pinned,
+#                 title=title,
+#                 content=clean_content,
+#                 store=store if store in ["A", "B"] else member.store,
+#                 member=member,
+#                 created_at=now,
+#                 updated_at=now,
+#                 view_count=0
+#             )
+#             return JsonResponse({"success": True, "notice_id": notice.notice_id})
+#         except Exception as e:
+#             return JsonResponse({"success": False, "message": str(e)})
+#     return JsonResponse({"success": False, "message": "POST 요청만 허용됩니다."})
+
 @login_required
 def notice_save(request):
     if request.method == "POST":
@@ -217,7 +300,6 @@ def notice_save(request):
             title = data.get("title")
             content = data.get("content")
             store = data.get("store")
-            notice_image = data.get("notice_image")  # Base64 데이터
 
             if not title or not content:
                 return JsonResponse({"success": False, "message": "제목과 내용을 입력해주세요."})
@@ -234,8 +316,6 @@ def notice_save(request):
                 notice.content = content
                 notice.store = store if store in ["A", "B"] else member.store
                 notice.updated_at = now
-                if notice_image:
-                    notice.notice_image = base64.b64decode(notice_image.split(',')[1])
                 notice.save()
             else:  # 신규 생성
                 notice = Notice.objects.create(
@@ -246,8 +326,7 @@ def notice_save(request):
                     member=member,
                     created_at=now,
                     updated_at=now,
-                    view_count=0,
-                    notice_image=base64.b64decode(notice_image.split(',')[1]) if notice_image else None
+                    view_count=0
                 )
 
             return JsonResponse({"success": True, "notice_id": notice.notice_id})
@@ -283,28 +362,4 @@ def notice_edit(request, notice_id):
     }
     return render(request, 'notice/notice_edit.html', context)
 
-# ---------------------------------------------------------------------------- #
-# # summernote 에서 s3 로 이미지 업로드 api
-# @csrf_exempt
-# def upload_image_to_s3(request):
-#     if request.method == "POST" and request.FILES.get("file"):
-#         file = request.FILES["file"]
-#         file_name = f"images/{uuid.uuid4()}_{file.name}"
-#
-#         s3_client = boto3.client(
-#             's3',
-#             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-#             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-#             region_name=settings.AWS_S3_REGION_NAME
-#         )
-#
-#         s3_client.upload_fileobj(
-#             file,
-#             settings.AWS_STORAGE_BUCKET_NAME,
-#             file_name,
-#             ExtraArgs={'ACL': 'public-read'}
-#         )
-#
-#         file_url = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/{file_name}"
-#         return JsonResponse({"location": file_url})
-#     return JsonResponse({"error": "Invalid request"}, status=400)
+

@@ -46,6 +46,7 @@ class EventPost(models.Model):  # 이벤트 게시판 글 테이블
     created_at = models.DateTimeField(auto_now_add=True)  # 등록일시
     updated_at = models.DateTimeField(auto_now=True)  # 수정일시
     content = models.ImageField(upload_to='', null=True, blank=True) # 이미지 내용
+    event_detail = models.ImageField(upload_to='', null=True, blank=True) # 이미지 내용(이벤트 상세페이지용)
     view_count = models.PositiveIntegerField(default=0)  # 조회수
     show = models.BooleanField(default=True)  # 노출 여부
     finish = models.BooleanField(default=False)  # 노출 여부

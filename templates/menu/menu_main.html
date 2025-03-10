@@ -163,8 +163,10 @@
                 <div class="col">
                     <div class="card shadow-sm h-100 product-card" data-id="{{ item.item_id }}">
                         <!-- New 태그 -->
-                        {% if item.new == 1 %}
-                            <div class="new-tag-main">NEW</div>
+                        {% if item.new %}
+                            <div class="new-tag-main" 
+                                 data-created-at="{{ item.created_at|date:'c' }}"
+                                 data-new-duration-seconds="{{ new_duration_seconds }}">NEW</div>
                         {% endif %}
                         <!-- S3 이미지 사용 -->
                         {% if item.item_image %}

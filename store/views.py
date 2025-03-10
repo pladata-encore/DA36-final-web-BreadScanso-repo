@@ -3,17 +3,21 @@ from enum import member
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-# from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, resolve_url
 from django.db.models import Q
 from member.models import QnA, QnAReply, QuestionForm
-from member.models import Member
-import json
+from member.models import Member, EventPost
 from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator, EmptyPage
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
+from django.db import connection
+import json
+import traceback
+from django.views.decorators.http import require_POST
+from event.utils import upload_content_to_s3
+
+
 
 
 # def store_main(request):    // 밑으로 옮길게요 ~~
@@ -96,11 +100,6 @@ def update_member_store(request):
 def member_store_edit(request):
     return render(request, 'store/member_store_edit.html')  # 회원 정보 수정
 
-from django.views.decorators.http import require_http_methods
-from django.http import JsonResponse
-from django.db import connection
-import json
-import traceback
 
 @require_http_methods(["POST"])
 def delete_member_store(request):
@@ -291,15 +290,249 @@ def store_map_edit(request):
     }
     return render(request, 'store/store_map_edit.html', context)
 
+
+
+# 시스템설정 - 이벤트
 def store_event(request):
     member = request.user.member
-    return render(request, 'store/store_event.html', {"member": member})  # 이벤트
 
-def store_event_edit(request):
-    member = request.user.member
-    return render(request, 'store/store_event_edit.html', {"member": member})  # 이벤트 수정
+    # 정렬 조건
+    sort_by = request.GET.get("sort_by", "event_id")
+    sort_order = request.GET.get("sort_order", "asc")
+
+    # 정렬 방식 지정
+    if sort_order == "desc":
+        sort_by = f"-{sort_by}"
+
+    # 필터링 (진행중 / 종료)
+    show_filter = request.GET.get("show", '')
+    finish_filter = request.GET.get("finish", '')
+
+    events = EventPost.objects.all()
+
+    if show_filter:
+        events = events.filter(show=show_filter == "1")
+    if finish_filter:
+        events = events.filter(finish=finish_filter == "1")
+
+    # 페이지네이션 처리 (10개씩)
+    paginator = Paginator(events, 10)
+    page_number = request.GET.get('page', 1)
+
+    try:
+        page_number = int(page_number)
+        if page_number < 1:
+            page_number = 1
+    except ValueError:
+        page_number = 1
+
+    try:
+        page_obj = paginator.get_page(page_number)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
+
+    # 정렬 적용
+    events = events.order_by(sort_by)
+
+    # GET 요청 처리 (member 데이터 가져오기)
+    context = {
+        'member': member,
+        'events': page_obj,
+        'page_obj': page_obj,  # 페이지네이션된 events 객체를 전달
+        'show_filter': show_filter,
+        'finish_filter': finish_filter,
+        'sort_by': sort_by,
+        'sort_order': sort_order,
+    }
+
+    return render(request, 'store/store_event.html', context)
+
+@require_POST
+def delete_store_event(request):
+    try:
+        data = json.loads(request.body)
+        event_ids = data.get("event_ids", [])
+
+        if not event_ids:
+            return JsonResponse({"success": False, "message": "삭제할 이벤트를 선택해주세요."})
+
+        with connection.cursor() as cursor:
+            placeholders = ','.join(['%s'] * len(event_ids))
+            sql = f"DELETE FROM member_eventpost WHERE event_id IN ({placeholders})"
+            cursor.execute(sql, event_ids)
+            connection.commit()
+
+        return JsonResponse({"success": True, "message": f"{cursor.rowcount}개의 이벤트가 삭제되었습니다."})
+
+    except Exception as e:
+        return JsonResponse({"success": False, "message": f"삭제 실패: {str(e)}"})
+
+
+def store_event_add(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')  # 폼 데이터에서 이벤트명
+        show = 'show' in request.POST  # 체크박스 값
+        finish = 'finish' in request.POST  # 체크박스 값
+        store = request.POST.get('store')  # 숨겨진 store 값
+        content = request.FILES.get('content')  # 파일 업로드(기본형)
+        event_detail = request.FILES.get('event_detail')  # 파일 업로드(상세페이지용)
+
+        # S3에 프로필 이미지 업로드 후 URL 저장
+        if content:
+            content_url = upload_content_to_s3(content)  # 파일을 S3에 업로드하고 URL 반환
+        if event_detail:
+            event_detail_url = upload_content_to_s3(event_detail)
+        else:
+            content_url = None
+            event_detail_url = None
+
+        # 데이터 검증 (기본적으로 제목만 필수로 받음)
+        if not title:
+            messages.error(request, "이벤트명은 필수입니다.")
+            return redirect('store:store_event_add')
+
+        # 모델 객체 생성 후 저장
+        try:
+            event = EventPost.objects.create(
+                title=title,
+                store=store,
+                content=content_url,  # S3 URL 저장
+                event_detail=event_detail_url,  # S3 URL 저장
+                show=show,
+                finish=finish
+            )
+            event.save()
+            messages.success(request, "이벤트가 성공적으로 저장되었습니다.")
+            return redirect('store:store_event')  # 이벤트 목록 페이지로 리다이렉트
+        except Exception as e:
+            messages.error(request, f"이벤트 저장 중 오류 발생: {e}")
+            return redirect('store:store_event_add')
+
+    return render(request, 'store/store_event_add.html')
+
+# # 시스템설정 - 이벤트 신규등록
+# def store_event_add(request):
+#     if request.method == 'POST':
+#         title = request.POST.get('title')  # 폼 데이터에서 이벤트명
+#         show = 'show' in request.POST  # 체크박스 값
+#         finish = 'finish' in request.POST  # 체크박스 값
+#         store = request.POST.get('store')  # 숨겨진 store 값
+#         content = request.FILES.get('content')  # 파일 업로드
+#
+#         # S3에 프로필 이미지 업로드 후 URL 저장
+#         content = upload_content_to_s3(content) if content else None
+#
+#         # 데이터 검증 (기본적으로 제목만 필수로 받음)
+#         if not title:
+#             messages.error(request, "이벤트명은 필수입니다.")
+#             return redirect('store:store_event_add')
+#
+#         # 모델 객체 생성 후 저장
+#         try:
+#             events = EventPost.objects.create(
+#                 title=title,
+#                 store=store,
+#                 content=content,
+#                 show=show,
+#                 finish=finish
+#             )
+#             events.save()
+#             messages.success(request, "이벤트가 성공적으로 저장되었습니다.")
+#             return redirect('store:store_event')  # 이벤트 목록 페이지로 리다이렉트
+#         except Exception as e:
+#             messages.error(request, f"이벤트 저장 중 오류 발생: {e}")
+#             return redirect('store:store_event_add')
+#     return render(request, 'store/store_event_add.html')
+
+# # 시스템설정 - 이벤트 신규등록 저장
+# @require_http_methods(["POST"])
+# def evnet_save(request):
+#     if request.method == "POST":
+#         # show, finish 체크박스 여부
+#         show = request.POST.get("show") == "on"
+#         finish = request.POST.get("finish") == "on"
+#
+#         # 기본 제품 정보
+#         title = request.POST.get("title")
+#         store = request.user.member.store # 로그인한 사용자의 member.store 정보 가져옴
+#
+#
+#         # S3
+#         event_image_url = None
+#         if 'event_image' in request.FILES:
+#             try:
+#                 event_image_url = upload_event_image_to_s3(request.FILES['event_image'])
+#             except Exception as e:
+#                 return render(request, 'menu/menu_add.html', {
+#                     'error': f'이미지 업로드 중 오류가 발생했습니다: {str(e)}'
+#                 })
+#
+#         # 제품 정보 입력 검수
+#         if not all([title, store]):
+#             return render(request, 'menu/menu_add.html', {
+#                 'error': '기본 정보의 모든 필드를 입력해주세요.'
+#             })
+#
+#         try:
+#             event = EventPost(
+#                 event_id=member.event_id,
+#                 show=show,
+#                 finish=finish,
+#                 title=title,
+#                 content=content_url
+#             )
+#             event.save()
+#
+#
+#             return redirect('menu_store_menu_info', event_id=member.event_id)
+#
+#         except Exception as e:
+#             return render(request, 'menu/menu_add.html', {
+#                 'error': f'저장 중 오류가 발생했습니다: {str(e)}'
+#             })
+#     else:
+#         return render(request, 'store/store_event_add.html')
+#
+# # 이벤트 삭제
+# @require_http_methods(["POST"])
+# def event_delete(request):
+#     try:
+#         # 요청 데이터 파싱
+#         data = json.loads(request.body)
+#         event_ids = data.get("event_ids", [])
+#
+#         if not event_ids:
+#             return JsonResponse({
+#                 "success": False,
+#                 "message": "삭제할 항목이 없습니다."
+#             })
+#
+#         deleted_count, _ = Event.objects.filter(event_id__in=event_id).delete()
+#
+#         # 삭제 결과 반환
+#         if deleted_count > 0:
+#             return JsonResponse({
+#                 "success": True,
+#             })
+#         else:
+#             return JsonResponse({
+#                 "success": False,
+#             })
+#
+#     except json.JSONDecodeError:
+#         return JsonResponse({
+#             "success": False,
+#             "message": "잘못된 요청 데이터입니다."
+#         })
+#     except Exception as e:
+#         return JsonResponse({
+#             "success": False,
+#             "message": "서버 오류가 발생했습니다."
+#         })
+
 
 def store_account(request):
     member = request.user.member
     return render(request, 'store/store_account.html', {"member": member})  # 매장정보
+
 

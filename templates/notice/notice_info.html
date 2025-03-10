@@ -41,6 +41,9 @@
 
                     <h2 class="text-center mb-3">{{ notice.title }}</h2>
                     <div class="text-center">
+                        {% if notice.notice_image %}
+                            <img src="{{ notice.notice_image }}" alt="공지사항 이미지" style="max-width: 100%;">
+                        {% endif %}
                         {{ notice.content|safe }}
                     </div>
                 </div>

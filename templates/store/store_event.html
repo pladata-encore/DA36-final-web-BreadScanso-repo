@@ -1,3 +1,174 @@
+{#{% extends 'layout/store/base_store.html' %}#}
+{#{% load static %}#}
+{##}
+{#{% block title %}시스템설정{% endblock title %}#}
+{##}
+{#{% block header %}#}
+{#    {% include 'layout/store/header_store.html' %}#}
+{#{% endblock header %}#}
+{##}
+{#{% block sidebar %}#}
+{#    {% include 'layout/store/sidebar_store.html' %}#}
+{#{% endblock sidebar %}#}
+{##}
+{#{% block content %}#}
+{#    <style>#}
+    {#.event-store-table table {#}
+    {#    border-collapse: collapse;#}
+    {#    width: 100%;#}
+    {#.event-store-table th, td {#}
+    {#    border: 1px solid black;#}
+    {#    padding: 8px;#}
+    {#    text-align: center;#}
+    {#.event-store-table thead {#}
+    {#    border-bottom: 3px solid black;#}
+    {#.event-store-table .checkbox-column {#}
+    {#    width: 50px;#}
+    {##}
+    {#.event-store-table tbody tr {#}
+    {#    cursor: pointer;#}
+    {##}
+    {#/* 반응형 레이아웃 */#}
+    {#@media (max-width: 768px) {#}
+    {#    .d-flex {#}
+    {#        flex-direction: column; /* 작은 화면에서 세로로 배치 */#}
+    {#    }#}
+    {#    .d-flex button {#}
+    {#        margin: 10px 0; /* 버튼 간 간격 추가 */#}
+    {#    }#}
+    {##}
+    {#/* 정렬 버튼 스타일 */#}
+    {#.sort-container {#}
+    {#    display: inline-flex;#}
+    {#    flex-direction: column;#}
+    {#    align-items: center;#}
+    {#    margin-left: 5px;#}
+    {#.sort-btn {#}
+    {#    cursor: pointer;#}
+    {#    font-size: 12px;#}
+    {#    text-decoration: none;#}
+    {#    color: #000;#}
+    {#    line-height: 1;#}
+    {#.sort-btn.active {#}
+    {#    color: #007bff;#}
+    {#    font-weight: bold;#}
+{#</style>#}
+{#    <h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">이벤트</h3>#}
+{##}
+{#        <!-- 검색창 및 버튼 컨테이너 -->#}
+{#    <div class="d-flex justify-content-between align-items-center mt-3 mb-4" style="width: 100%;">#}
+{#      <div style="flex-grow: 1; display: flex; justify-content: flex-end;">#}
+{#        <form method="post" class="d-flex" role="search" id="search-form">#}
+{#          {% csrf_token %}#}
+{#          <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="이벤트명을 입력하세요" aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">#}
+{#          <button type="submit" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>#}
+{#        </form>#}
+{#      </div>#}
+{#    </div>#}
+{##}
+{##}
+{#    <!-- 테이블 -->#}
+{#    <table class="table event-store-table table-hover">#}
+{#        <thead>#}
+{#            <tr>#}
+{#                <th class="checkbox-column"><label for="select-all"></label><input type="checkbox" id="select-all"></th>#}
+{#                <th scope="col">이벤트 아이디</th>#}
+{#                <th scope="col">이벤트명</th>#}
+{#                <th scope="col">#}
+{#                    매장#}
+{#                    <span class="sort-container">#}
+{#                        <a href="{% if sort_by == 'title' and sort_order == 'asc' %}?sort_by=none{% else %}?sort_by=title&sort_order=asc{% endif %}{% if store_filter %}&store={{ store_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if finish_filter %}&finish={{ finish_filter }}{% endif %}{% if sort_by == 'title' and sort_order == 'asc' %}active{% endif %}">▲</a>#}
+{#                        <a href="{% if sort_by == 'title' and sort_order == 'desc' %}?sort_by=none{% else %}?sort_by=title&sort_order=desc{% endif %}{% if store_filter %}&store={{ store_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if finish_filter %}&finish={{ finish_filter }}{% endif %}{% if sort_by == 'title' and sort_order == 'desc' %}active{% endif %}">▼</a>#}
+{#                    </span>#}
+{#                </th>#}
+{#                <th scope="col">이벤트 설명</th>#}
+{#                <th scope="col">#}
+{#                    <select class="form-select form-select-sm" name="show" id="show-filter">#}
+{#                        <option value="" style="text-align: center;">진행중</option>#}
+{#                        <option value="1" style="text-align: center;" {% if request.GET.show == "1" %}selected{% endif %}>✅</option>#}
+{#                        <option value="0" style="text-align: center;" {% if request.GET.show == "0" %}selected{% endif %}>❌</option>#}
+{#                    </select>#}
+{#                </th>#}
+{#                <th scope="col">#}
+{#                    <select class="form-select form-select-sm" name="finish" id="finish-filter">#}
+{#                        <option value="" style="text-align: center;">종료</option>#}
+{#                        <option value="1" style="text-align: center;" {% if request.GET.finish == "1" %}selected{% endif %}>✅</option>#}
+{#                        <option value="0" style="text-align: center;" {% if request.GET.finish == "0" %}selected{% endif %}>❌</option>#}
+{#                    </select>#}
+{#                </th>#}
+{#            </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#            {% for event in events %}#}
+{#                <tr>#}
+{#                    <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>#}
+{#                    <td>{{ event.event_id }}</td>#}
+{#                    <td>{{ event.title }}</td>#}
+{#                    <td>{{ event.store }}</td>#}
+{#                    <td>{% if event.show %}✅{% else %}❌{% endif %}</td>#}
+{#                    <td>{% if event.finish %}✅{% else %}❌{% endif %}</td>#}
+{#                </tr>#}
+{#            {% empty %}#}
+{#                <tr>#}
+{#                    <td colspan="6">등록된 이벤트가 없습니다.</td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
+{#            </tbody>#}
+{#        </table>#}
+{##}
+{#    {% for event in events %}#}
+{#    <div class="col">#}
+{#        <div class="card" style="width: auto; border: none">#}
+{#            <input type="checkbox" id="event_{{ event.id }}" class="form-check-input">#}
+{#            <a href="{% url 'store:store_event_edit' %}">#}
+{#                <img src="{{ event.image }}" class="card-img-top" alt="{{ event.title }}">#}
+{#            </a>#}
+{#            <div class="card-body">#}
+{#                <h5 class="card-title">#}
+{#                    <a href="{% url 'store:store_event_edit' %}" class="text-decoration-none text-dark">{{ event.title }}</a>#}
+{#                </h5>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    {% endfor %}#}
+{##}
+{##}
+{##}
+{#    <!-- 삭제와 신규등록을 한 줄에 배치 -->#}
+{#    <div class="d-flex justify-content-between align-items-center mt-3" style="width: 100%; margin-bottom: 50px;">#}
+{#        <!-- 하단 페이지 넘김 버튼 (가운데 정렬) -->#}
+{#        <nav aria-label="..." style="flex-grow: 1; display: flex; justify-content: center;">#}
+{#            <ul class="pagination mb-0">#}
+{#                <li class="page-item disabled">#}
+{#                    <a class="page-link">Previous</a>#}
+{#                </li>#}
+{#                <li class="page-item active" aria-current="page">#}
+{#                    <a class="page-link" href="#">1</a>#}
+{#                </li>#}
+{#                <li class="page-item"><a class="page-link" href="#">2</a></li>#}
+{#                <li class="page-item"><a class="page-link" href="#">3</a></li>#}
+{#                <li class="page-next">#}
+{#                    <a class="page-link" href="#">Next</a>#}
+{#                </li>#}
+{#            </ul>#}
+{#        </nav>#}
+{##}
+{#        <!-- 삭제 버튼 (오른쪽 정렬) -->#}
+{#        <div class="me-2">#}
+{#            <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">삭제</button>#}
+{#        </div>#}
+{##}
+{#        <!-- 신규등록 버튼 (오른쪽 정렬) -->#}
+{#        <div>#}
+{#            <form method="post" class="d-flex">#}
+{#                <a type="button" class="btn btn-primary signup-btn" onclick="location.href='{% url 'store:store_event_edit' %}'">신규등록</a>#}
+{#            </form>#}
+{#        </div>#}
+{#    </div>#}
+{#    #}
+{#{% endblock content %}#}
+{##}
+
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
 
@@ -14,55 +185,129 @@
 {% block content %}
     <h3 style="margin-bottom: 50px; font-weight: bold" class="text-center">이벤트</h3>
 
-    {% for event in events %}
-    <div class="col">
-        <div class="card" style="width: auto; border: none">
-            <input type="checkbox" id="event_{{ event.id }}" class="form-check-input">
-            <a href="{% url 'store:store_event_edit' %}">
-                <img src="{{ event.image }}" class="card-img-top" alt="{{ event.title }}">
-            </a>
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a href="{% url 'store:store_event_edit' %}" class="text-decoration-none text-dark">{{ event.title }}</a>
-                </h5>
-            </div>
-        </div>
+    <!-- 버튼과 검색창을 한 줄에 배치 -->
+    <div class="d-flex justify-content-between align-items-center mt-3" style="width: 100%;">
+
+    <!-- 목록 버튼 (왼쪽 정렬) -->
+    <div style="flex-shrink: 0;">
+        <button class="btn btn-success justify-content-md-end" type="button" onclick="location.href='{% url 'store:store_event' %}'">목록</button>
     </div>
-    {% endfor %}
 
-
-
-    <!-- 삭제와 신규등록을 한 줄에 배치 -->
-    <div class="d-flex justify-content-between align-items-center mt-3" style="width: 100%; margin-bottom: 50px;">
-        <!-- 하단 페이지 넘김 버튼 (가운데 정렬) -->
-        <nav aria-label="..." style="flex-grow: 1; display: flex; justify-content: center;">
-            <ul class="pagination mb-0">
-                <li class="page-item disabled">
-                    <a class="page-link">Previous</a>
-                </li>
-                <li class="page-item active" aria-current="page">
-                    <a class="page-link" href="#">1</a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-next">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- 삭제 버튼 (오른쪽 정렬) -->
-        <div class="me-2">
-            <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">삭제</button>
-        </div>
-
-        <!-- 신규등록 버튼 (오른쪽 정렬) -->
-        <div>
-            <form method="post" class="d-flex">
-                <a type="button" class="btn btn-primary signup-btn" onclick="location.href='{% url 'store:store_event_edit' %}'">신규등록</a>
+    <!-- 검색창 (오른쪽 정렬) -->
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-4" style="width: 100%;">
+        <div style="flex-grow: 1; display: flex; justify-content: flex-end;">
+            <form method="post" class="d-flex" role="search" id="search-form">
+                {% csrf_token %}
+                <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="이벤트명을 입력하세요" aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+                <button id="search_button" type="submit" name="search_button" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
             </form>
         </div>
     </div>
-    
-{% endblock content %}
+    </div>
 
+    <!-- 테이블 -->
+    <table class="table event-store-table table-hover">
+        <thead>
+            <tr>
+            <th class="checkbox-column"><input type="checkbox" id="select-all"></th>
+            <th scope="col">이벤트 아이디</th>
+            <th scope="col">이벤트명</th>
+                <th scope="col">
+                    <select class="form-select form-select-sm" name="store" id="store-filter">
+                        <option value="" style="text-align: center;">매장</option>
+                        <option value="A" style="text-align: center;" {% if request.GET.store == "A" %}selected{% endif %}>서초점</option>
+                        <option value="B" style="text-align: center;" {% if request.GET.store == "B" %}selected{% endif %}>강남점</option>
+                    </select>
+                </th>
+                <th scope="col">
+                    <select class="form-select form-select-sm" name="show" id="show-filter">
+                        <option value="" style="text-align: center;">진행중</option>
+                        <option value="1" style="text-align: center;" {% if request.GET.show == "1" %}selected{% endif %}>✅</option>
+                        <option value="0" style="text-align: center;" {% if request.GET.show == "0" %}selected{% endif %}>❌</option>
+                    </select>
+                </th>
+                <th scope="col">
+                    <select class="form-select form-select-sm" name="finish" id="finish-filter">
+                        <option value="" style="text-align: center;">종료</option>
+                        <option value="1" style="text-align: center;" {% if request.GET.finish == "1" %}selected{% endif %}>✅</option>
+                        <option value="0" style="text-align: center;" {% if request.GET.finish == "0" %}selected{% endif %}>❌</option>
+                    </select>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+                <tr>
+                    <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+                    <td>{{ event.event_id }}</td>
+                    <td>{{ event.title }}</td>
+                    <td>{{ event.store }}</td>
+                    <td>{% if event.show %}✅{% else %}❌{% endif %}</td>
+                    <td>{% if event.finish %}✅{% else %}❌{% endif %}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">등록된 이벤트가 없습니다.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- 삭제와 신규등록을 한 줄에 배치 -->
+    <div class="d-flex justify-content-between align-items-center mt-3" style="width: 100%;">
+
+    <!-- 삭제 버튼 -->
+    <div class="member-container" style="flex-shrink: 0;">
+        <button class="btn btn-danger" type="button" id="delete-selected">삭제</button>
+    </div>
+
+    <!-- 신규등록 버튼 (오른쪽 정렬) -->
+        <div style="flex-shrink: 0;">
+            <button class="btn btn-primary" type="button" id="new-register-btn" onclick="location.href='{% url 'store:store_event_add' %}'">신규등록</button>
+        </div>
+    </div>
+
+    <!-- 페이지 네비게이션 (중앙) -->
+    <div class="d-flex justify-content-center mt-2 mb-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination mb-0">
+                <!-- 이전 버튼 -->
+                <li class="page-item {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
+                    {% if page_obj.has_previous %}
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; 이전</span>
+                        </a>
+                    {% else %}
+                        <span class="page-link" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; 이전</span>
+                        </span>
+                    {% endif %}
+                </li>
+
+                <!-- 페이지 번호들 -->
+                {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endfor %}
+
+                <!-- 다음 버튼 -->
+                <li class="page-item {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
+                    {% if page_obj.has_next %}
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">다음 &raquo;</span>
+                        </a>
+                    {% else %}
+                        <span class="page-link" aria-label="Next">
+                            <span aria-hidden="true">다음 &raquo;</span>
+                        </span>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/store_event.js' %}"></script>
+{% endblock %}
