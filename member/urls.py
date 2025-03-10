@@ -12,6 +12,7 @@ urlpatterns = [
     path("check_password/", views.check_password, name="check_password"),  # 비밀번호 확인
     path('member_delete/', views.member_delete, name='member_delete'), # 회원탈퇴 페이지
     path('member_delete_detail/', views.member_delete_detail, name='member_delete_detail'), # 회원탈퇴 detail 페이지
+    path('mypoint/', views.mypoint, name='mypoint'), # 포인트 적립 페이지
 ]
 
 
