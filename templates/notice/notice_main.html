@@ -41,7 +41,6 @@
         </thead>
         <tbody class="table-group-divider">
             {% for notice in page_obj %}
-                {% if forloop.counter <= 10 %}
                     <tr>
                         <td class="text-center">
                             {% if notice.pinned == 1 %}
@@ -62,7 +61,6 @@
                         </td>
                         <td class="text-center">{{ notice.created_at|date:"Y-m-d" }}</td>
                     </tr>
-                {% endif %}
             {% empty %}
                 <tr>
                     <td colspan="4">등록된 공지가 없습니다.</td> <!-- colspan 수정: 5 -> 4 -->

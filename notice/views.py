@@ -74,10 +74,10 @@ from .utils import upload_notice_image_to_s3
 # 소비자 화면 공지사항 페이지
 def notice_main(request):
     # pinned=1을 먼저, 그 다음 notice_id로 오름차순 정렬
-    notices = Notice.objects.all().order_by('-pinned', 'notice_id')
+    notices = Notice.objects.all().order_by('-pinned', '-notice_id')
 
     # 페이지당 항목 수 (고정)
-    notices_per_page = 10
+    notices_per_page = 20
 
     # 페이지네이션 처리
     paginator = Paginator(notices, notices_per_page)
