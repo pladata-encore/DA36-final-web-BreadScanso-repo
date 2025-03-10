@@ -23,8 +23,9 @@ body.main-index {
     height: auto;  /* 원본 비율 유지 */
 }
 
-/* 브랜드소개 로고 */
-.brand-logo {
+/*----------------------메인 - 브랜드소개----------------------*/
+/* 로고 이미지 */
+.main-brand .brand-logo {
     display: flex; /* flexbox를 사용하여 중앙 정렬 */
     justify-content: center; /* 가로 중앙 정렬 */
     align-items: center; /* 세로 중앙 정렬 */
@@ -32,28 +33,29 @@ body.main-index {
     height: 100px; /* 원하는 높이로 설정 */
 }
 
-.brand-logo img {
+.main-brand .brand-logo img {
     width: 400px;  /* 이미지 크기 조정 */
     height: auto;  /* 원본 비율 유지 */
 }
-.brand-logo-img img{
+.main-brand .brand-logo-img img{
     width: 1000px;  /* 이미지 크기 조정 */
     height: 500px;  /* 원본 비율 유지 */
 }
 
-.brand-text img {
+.main-brand .brand-text img {
     width: 1000px;  /* 이미지 크기 조정 */
     height: 350px;  /* 원본 비율 유지 */
 }
 
 /* 브랜드소개 하단 4개의 네모박스(카드) */
-.card-container {
+.main-brand .card-container {
     display: flex;
     justify-content: center; /* 가운데 정렬 */
     gap: 40px; /* 카드 간격 */
     flex-wrap: wrap; /* 여러 줄 정렬 */
 }
 
+/*----------------------메인 - 커뮤니티 - Q&A----------------------*/
 .qna-detail-card {
     width: 100%; /* 카드 너비 조절 */
     height: auto; /* 높이 자동 조절 */
@@ -84,6 +86,7 @@ body.main-index {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* 검정색 그림자 */
 }
 
+/*----------------------메인 - 이벤트----------------------*/
 .card {
     width: 13rem; /* 카드 너비 조절 */
     height: auto; /* 높이 자동 조절 */
@@ -548,7 +551,8 @@ body.main-index .event-img, body.main-index .product-img {
 }
 
 /* ------------------------------------------매장페이지----------------------------------------------- */
-/* 시스템설정 - 이벤트 신규등록 설정 */
+/*----------------------매장페이지 - 시스템설정 - 이벤트----------------------*/
+/* 신규 등록 설정 */
 .event-check {
     justify-content: flex-start;
     margin-bottom: 15px;
@@ -604,193 +608,6 @@ body.main-index .event-img, body.main-index .product-img {
     padding: 0;
     overflow: hidden;
     border: 0;
-}
-
-/* 회원관리 내 삭제/신규등록 버튼 설정 */
-.member-container {
-    display: flex;
-    justify-content: space-between; /* 양쪽 정렬 */
-    align-items: center; /* 세로 정렬 */
-    width: 100%; /* 부모 요소 너비 지정 */
-    padding: 10px 0; /* 위아래 여백 */
-}
-
-/* 매장페이지 - 회원관리 테이블 설정 */
-.member-edit-table {
-    width: 100%; /* 테이블 너비 설정 */
-    min-width: 800px; /* 최소 너비 설정 */
-    /*border-collapse: collapse;*/
-}
-
-.delete-btn {
-    margin-left: 10px; /* 왼쪽 여백 추가 */
-}
-
-.signup-btn {
-    margin-right: 10px; /* 오른쪽 여백 추가 */
-}
-
-/*pay - 상세 페이지 */
-.receipt-container {
-    width: 100%;
-    max-width: 800px;
-    margin: 30px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-}
-
-.left-section {
-    text-align: left;
-}
-
-.left-section, .right-section {
-    width: 48%;
-}
-
-.receipt-header {
-    text-align: center;
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.receipt-table th, .receipt-table td {
-    text-align: right;
-}
-
-.button-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-.btn-success {
-    width: 100px;
-}
-
-/* 매장페이지 - 결제관리(전자영수증 설정) */
-.receipt-container-wrapper {
-        display: flex;         /* 부모 요소에 flex 사용 */
-        justify-content: center; /* 자식 요소를 중앙 정렬 */
-        align-items: center;     /* 세로 중앙 정렬 */
-        width: 100%;             /* 부모 요소의 너비를 100%로 설정 */
-    }
-
-.receipt-container {
-    margin-bottom: 30px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 79%; /* 너비 설정 */
-    }
-
-/* ------------------------------------------마이페이지----------------------------------------------- */
-/*------------마이페이지 - 회원정보------------*/
-
-/*body {*/
-/*    font-family: Arial, sans-serif;*/
-/*}*/
-
-.member-page-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 50px;
-}
-
-.member-page-container .member-page-profile {
-    text-align: center;
-}
-
-.member-page-container .member-page-profile img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-}
-
-.member-page-container .member-page-buttons {
-    margin-top: 10px;
-}
-
-.member-page-container .member-page-buttons button {
-    margin: 5px;
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    background: white;
-    cursor: pointer;
-}
-
-.member-page-container .member-page-info-boxes {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3개씩 배치 */
-    gap: 10px; /* 박스 간격 */
-    text-align: center;
-}
-
-.member-page-container .member-page-box {
-    width: 120px;
-    height: 80px;
-    border: 1px solid #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.member-page-container .member-page-withdraw-btn {
-    margin-top: 20px;
-    padding: 5px 15px;
-    border: 1px solid #ccc;
-    background: white;
-    cursor: pointer;
-}
-
-/*------------마이페이지 - 회원탈퇴 사유------------*/
-.member-page-delete-detail .checkbox-container {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
-.member-page-delete-detail .checkbox-container input[type="checkbox"] {
-    margin-right: 10px;
-    margin-top: 5px;
-}
-
-.member-page-delete-detail .checkbox-container label {
-    text-align: left;
-}
-
-.member-page-delete-detail #otherReasonText {
-    width: 100%;
-    margin-top: 10px;
-    margin-left: 25px;
-    min-height: 80px;
-    resize: vertical;
-}
-
-.member-page-delete-detail form {
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: left;
-}
-
-.member-page-delete-detail #confirmButton {
-    margin-top: 20px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.member-page-delete-detail form > div {
-    text-align: left;
-    margin-bottom: 10px;
 }
 
 /* 시스템설정 - 이벤트 */
@@ -954,8 +771,201 @@ body.main-index .event-img, body.main-index .product-img {
     }
 }
 
+
+
+/*----------------------매장페이지 - 회원관리----------------------*/
+/*-----테이블-----*/
+.member-edit-table {
+    width: 100%; /* 테이블 너비 설정 */
+    min-width: 800px; /* 최소 너비 설정 */
+    /*border-collapse: collapse;*/
+}
+
+.delete-btn {
+    margin-left: 10px; /* 왼쪽 여백 추가 */
+}
+
+.signup-btn {
+    margin-right: 10px; /* 오른쪽 여백 추가 */
+}
+
+/*-----삭제/신규등록 버튼 설정-----*/
+.member-container {
+    display: flex;
+    justify-content: space-between; /* 양쪽 정렬 */
+    align-items: center; /* 세로 정렬 */
+    width: 100%; /* 부모 요소 너비 지정 */
+    padding: 10px 0; /* 위아래 여백 */
+}
+
+
+
+
+/*----------------------매장페이지 - 결제관리----------------------*/
+/*-----상세 페이지-----*/
+.receipt-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-section {
+    text-align: left;
+}
+
+.left-section, .right-section {
+    width: 48%;
+}
+
+.receipt-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.receipt-table th, .receipt-table td {
+    text-align: right;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.btn-success {
+    width: 100px;
+}
+
+/*-----전자영수증-----*/
+.receipt-container-wrapper {
+        display: flex;         /* 부모 요소에 flex 사용 */
+        justify-content: center; /* 자식 요소를 중앙 정렬 */
+        align-items: center;     /* 세로 중앙 정렬 */
+        width: 100%;             /* 부모 요소의 너비를 100%로 설정 */
+    }
+
+.receipt-container {
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 79%; /* 너비 설정 */
+    }
+
+/* ------------------------------------------마이페이지----------------------------------------------- */
+/*----------------------마이페이지 - 회원정보----------------------*/
+/*body {*/
+/*    font-family: Arial, sans-serif;*/
+/*}*/
+
+.member-page-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 50px;
+}
+
+.member-page-container .member-page-profile {
+    text-align: center;
+}
+
+.member-page-container .member-page-profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.member-page-container .member-page-buttons {
+    margin-top: 10px;
+}
+
+.member-page-container .member-page-buttons button {
+    margin: 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+.member-page-container .member-page-info-boxes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3개씩 배치 */
+    gap: 10px; /* 박스 간격 */
+    text-align: center;
+}
+
+.member-page-container .member-page-box {
+    width: 120px;
+    height: 80px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.member-page-container .member-page-withdraw-btn {
+    margin-top: 20px;
+    padding: 5px 15px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+/*----------------------마이페이지 - 회원탈퇴 사유----------------------*/
+.member-page-delete-detail .checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.member-page-delete-detail .checkbox-container input[type="checkbox"] {
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.member-page-delete-detail .checkbox-container label {
+    text-align: left;
+}
+
+.member-page-delete-detail #otherReasonText {
+    width: 100%;
+    margin-top: 10px;
+    margin-left: 25px;
+    min-height: 80px;
+    resize: vertical;
+}
+
+.member-page-delete-detail form {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.member-page-delete-detail #confirmButton {
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.member-page-delete-detail form > div {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
 /* ------------------------------------------KIOSK----------------------------------------------- */
-/*------------kiosk-main------------*/
+/*----------------------kiosk-main----------------------*/
 .kiosk-main {
     background: url('/static/images/kiosk_main.png') no-repeat center center/cover;
     height: 100vh;
@@ -1009,7 +1019,7 @@ body.kiosk-main .start-button:hover {
     background-color: rgba(0, 0, 0, 0.9);
 }
 
-/*------------kiosk-products------------*/
+/*----------------------kiosk-products----------------------*/
 body.kiosk-products header {
     position: fixed; /* 화면에 고정 */
     top: 20px;
@@ -1273,7 +1283,7 @@ body.kiosk-products .total-info strong {
     color: #8B4513; /* 새들 브라운 색상 */
 }
 
-/*------------kiosk-member------------*/
+/*----------------------kiosk-member----------------------*/
 body.kiosk-member {
     display: flex;
     flex-direction: column; /* 세로 방향 정렬 */
@@ -1329,7 +1339,7 @@ body.kiosk-member .gray-button {
     color: white;
 }
 
-/*------------kiosk-point(phonenumber, usepoint)------------*/
+/*----------------------kiosk-point(phonenumber, usepoint)----------------------*/
 body.kiosk-point .keypad-container {
     display: flex;
     flex-direction: column;
@@ -1432,8 +1442,7 @@ body.kiosk-point .input-box {
     text-align: right;
 }
 
-
-/*------------kiosk-payment-method------------*/
+/*----------------------kiosk-payment-method----------------------*/
 body.kiosk-payment-method header {
     position: fixed; /* 화면에 고정 */
     top: 20px;
@@ -1566,7 +1575,7 @@ body.kiosk-payment-method .total-info strong {
     color: #8B4513; /* 새들 브라운 색상 */
 }
 
-/*------------kiosk-payment-completed------------*/
+/*----------------------kiosk-payment-completed----------------------*/
 body.kiosk-payment-completed body {
     font-family: 'Arial', sans-serif;
     margin: 0;
