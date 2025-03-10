@@ -1,0 +1,114 @@
+{% extends 'layout/member/member_base.html' %}
+{% load static %}
+
+{% block title %}MYPAGE{% endblock title %}
+
+{% block header %}
+    {% include 'layout/member/member_header.html' %}
+{% endblock header %}
+
+{% block sidebar %}
+    {% include 'layout/member/member_sidebar.html' %}
+{% endblock sidebar %}
+
+
+{% block content %}
+    <h3 style="margin-bottom: 50px;" class="text-center mb-4">포인트적립</h3>
+{#    <div>#}
+{##}
+{#    </div>#}
+    <table class="table table-bordered text-center">
+        <thead class="table-light">
+            <tr>
+                <th>날짜</th>
+                <th>매장명</th>
+                <th>내용</th>
+                <th>point 내역</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in page_obj %}
+            <tr>
+                <td>
+                    {{ payment.pay_at|date:"Y-m-d H:i" }}
+                </td>
+                <td>{{ payment.order.store }}</td>
+                <td>
+                    {% if payment.order.earned_points and payment.order.used_points %}
+                        포인트 사용 + 포인트 적립
+                    {% elif payment.order.earned_points %}
+                        포인트 적립
+                    {% elif payment.order.used_points %}
+                        포인트 사용
+                    {% endif %}
+                </td>
+                <td>
+                    {% if payment.order.earned_points %}
+                        <span class="text-success">+{{ payment.order.earned_points }} Point</span>
+                    {% endif %}
+                    {% if payment.order.earned_points and payment.order.used_points %}
+{#                        <span class="text-success">+{{ payment.order.earned_points }} Point</span>#}
+                        <br>
+{#                        <span class="text-danger">-{{ payment.order.used_points }} Point</span>#}
+                    {% endif %}
+                    {% if payment.order.used_points %}
+                        <span class="text-danger">-{{ payment.order.used_points }} Point</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">포인트 적립/사용 내역이 없습니다.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+        <!-- 페이지네이션 -->
+    <nav aria-label="Page navigation" style="margin-top:2%;">
+        <ul class="pagination justify-content-center">
+            <!-- 이전 버튼 -->
+            <li class="page-pay {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
+                {% if page_obj.has_previous %}
+                    <a class="page-link rounded-start-2" href="?page={{ page_obj.previous_page_number }}{% if payment_method %}&payment_method={{ payment_method }}{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo; 이전</span>
+                    </a>
+                {% else %}
+                    <span class="page-link rounded-start-2" aria-label="Previous">
+                        <span aria-hidden="true">&laquo; 이전</span>
+                    </span>
+                {% endif %}
+            </li>
+
+            <!-- 페이지 번호 5개씩 표시 -->
+            {% with start_page=page_obj.number|add:"-2" end_page=page_obj.number|add:"2" %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num >= start_page and num <= end_page %}
+                        <li class="page-product {% if page_obj.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}{% if payment_method %}&payment_method={{ payment_method }}{% endif %}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}
+
+            <!-- 다음 버튼 -->
+            <li class="page-pay {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
+                {% if page_obj.has_next %}
+                    <a class="page-link rounded-end-2" href="?page={{ page_obj.next_page_number }}{% if payment_method %}&payment_method={{ payment_method }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">다음 &raquo;</span>
+                    </a>
+                {% else %}
+                    <span class="page-link rounded-end-2" aria-label="Next">
+                        <span aria-hidden="true">다음 &raquo;</span>
+                    </span>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+
+{% endblock content %}
+
+{% block script %}
+    <script></script>
+{% endblock script %}
