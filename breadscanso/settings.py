@@ -28,6 +28,7 @@ SECRET_KEY = 'django-insecure-&=9$0a5lsdo@uvu5qy%50!jbc6iqtx%f+862^2i#u^ec!!b362
 # DEBUG = True
 #
 # ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["www.breadscanso.shop", "breadscanso.shop"]
 
 
 # Application definition
