@@ -104,24 +104,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // 캐러셀 설정 함수 (무한 스크롤 적용)
     function setupCarousel(carouselTrackSelector, btnLeftSelector, btnRightSelector, itemClass) {
         const track = document.querySelector(carouselTrackSelector);
-        if (!track) return;
-
+        if (!track) {
+            console.error("Track not found:", carouselTrackSelector);
+            return;
+        }
         let index = 0;
         const items = track.querySelectorAll(itemClass);
         const totalItems = items.length;
-        const visibleItems = Math.min(5, totalItems); // 한 번에 보이는 아이템 수
+        const visibleItems = Math.min(5, totalItems);
         const itemWidth = 100 / visibleItems;
         const btnLeft = document.querySelectorAll(btnLeftSelector);
         const btnRight = document.querySelectorAll(btnRightSelector);
-
-        // 버튼이 존재하는지 확인 후 이벤트 리스너 추가
-        if (btnLeft.length > 0) {
-            btnLeft.forEach(btn => btn.addEventListener("click", () => moveCarousel(-1)));
-        }
-
-        if (btnRight.length > 0) {
-            btnRight.forEach(btn => btn.addEventListener("click", () => moveCarousel(1)));
-        }
 
         if (totalItems <= visibleItems) {
             btnLeft.forEach(btn => btn.style.display = "none");
@@ -129,10 +122,21 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        btnLeft.forEach(btn => {
+            btn.addEventListener("click", () => {
+                moveCarousel(-1);
+            });
+        });
+
+        btnRight.forEach(btn => {
+            btn.addEventListener("click", () => {
+                moveCarousel(1);
+            });
+        });
+
         function moveCarousel(direction) {
             index += direction;
             const moveX = -(index * itemWidth);
-            // 트랜지션 적용
             track.style.transition = "transform 0.5s ease-in-out";
             track.style.transform = `translateX(${moveX}%)`;
 
@@ -153,10 +157,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 500);
         }
 
-        // 자동 슬라이드 (5초 간격, 오른쪽으로 계속 이동)
-        if (!window.carouselInitialized) {
+        if (!track.dataset.carouselInitialized) {
             setInterval(() => moveCarousel(1), 5000);
-            window.carouselInitialized = true;
+            track.dataset.carouselInitialized = true;
         }
     }
 
