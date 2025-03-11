@@ -4,11 +4,8 @@
         const totalQuantity = parseNumber(sessionStorage.getItem("totalQuantity") || "0");
         const usedPoints = parseNumber(sessionStorage.getItem("usedPoints") || "0");
         const totalAmount = parseNumber(sessionStorage.getItem("totalAmount") || "0");
-        // 비회원주문시 finalAmount를 totalAmount로 설정
         let finalAmount = parseNumber(sessionStorage.getItem("finalAmount") || "0");
-        if (finalAmount === 0 && totalAmount > 0) {
-            finalAmount = totalAmount;
-    }
+
 
     console.log("제품 딕셔너리 전체 내용:", productDictionary);
     Object.keys(productDictionary).forEach(key => {

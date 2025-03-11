@@ -174,9 +174,6 @@ def complete_payment(request):
             print(f"상품 데이터: {products}")
 
 
-            if not final_amount or final_amount < 0:
-                return JsonResponse({"success": False, "message": "결제 금액이 필요합니다."}, status=400)
-
             # 회원 정보 조회 및 업데이트 (update_points 기능)
             member = Member.objects.filter(phone_num=phone_num).first() if phone_num else None
 
