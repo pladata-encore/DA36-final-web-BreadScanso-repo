@@ -181,15 +181,25 @@ body.main-index {
 }
 
 
-
-
-
-
-
-
-
-
 /*----------------------메인 - 이벤트----------------------*/
+/* 이벥트 title 설정 */
+.main-event-container {
+    margin: 30px auto;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0 50px;
+}
+
+.main-event-container .event-title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+
 .card {
     width: 13rem; /* 카드 너비 조절 */
     height: auto; /* 높이 자동 조절 */
