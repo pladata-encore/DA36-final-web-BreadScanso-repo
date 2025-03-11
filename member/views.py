@@ -18,6 +18,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from kiosk.models import PaymentInfo
 
 
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from member.models import Member
+import re
+
+
 
 # member 메인
 def member_main(request):
@@ -59,25 +65,93 @@ def member_page(request):
         messages.success(request, "회원 정보가 자동으로 생성되었습니다.")
         return render(request, "member/member_page.html", {"member": member})
 
+
 @login_required
 @require_http_methods(["GET", "POST"])
 def member_edit(request):
     if request.method == "POST":
         try:
-            member = request.user.member  # 현재 로그인한 회원 정보 가져오기
+            member = request.user.member
+            user = request.user  # auth_user 테이블의 user 객체
 
-            # 회원 정보 업데이트
-            member.name = request.POST.get('name')
-            member.phone_num = request.POST.get('phone_num')
-            member.email = request.POST.get('email')
-            member.age_group = request.POST.get('age_group')
-            member.sex = request.POST.get('sex')
+            current_member_id = member.member_id  # 기존 아이디
+            new_user_id = request.POST.get('user_id')  # 새로 입력한 아이디
 
-            # 프로필 이미지 처리
-            if 'profile_image' in request.FILES:
-                member.profile_image = request.FILES['profile_image']
+            # 다른 필드 데이터 먼저 저장
+            name = request.POST.get('name')
+            phone_num = request.POST.get('phone_num')
+            email = request.POST.get('email')
+            age_group = request.POST.get('age_group')
+            sex = request.POST.get('sex')
 
-            member.save()  # 변경 사항 저장
+            # ID 변경이 있는 경우
+            if current_member_id != new_user_id:
+                # 중복 체크
+                if Member.objects.filter(member_id=new_user_id).exclude(member_id=current_member_id).exists():
+                    return JsonResponse({'success': False, 'error': '이미 사용 중인 아이디입니다.'}, status=400)
+
+                # 기존 Member 객체를 백업
+                member_data = {
+                    'name': name,
+                    'phone_num': phone_num,
+                    'email': email,
+                    'age_group': age_group,
+                    'sex': sex,
+                    'total_spent': member.total_spent,
+                    'points': member.points,
+                    'visit_count': member.visit_count,
+                    'last_visited': member.last_visited,
+                    'profile_image': member.profile_image,
+                    'store': member.store,
+                    'store_num': member.store_num,
+                    'earning_rate': member.earning_rate,
+                    'store_address': member.store_address,
+                    'store_time': member.store_time,
+                    'store_notes': member.store_notes,
+                    'member_type': member.member_type,
+                    'member_password': member.member_password
+                }
+
+                # 기존 Member 삭제
+                member.delete()
+
+                # User 모델 업데이트
+                user.username = new_user_id
+                user.save()
+
+                # 새 Member 생성
+                new_member = Member.objects.create(
+                    user=user,
+                    member_id=new_user_id,
+                    **member_data
+                )
+
+                # 프로필 이미지 업데이트
+                if 'profile_image' in request.FILES and request.FILES['profile_image']:
+                    try:
+                        profile_url = upload_profile_image_to_s3(request.FILES['profile_image'])
+                        new_member.profile_image = profile_url
+                        new_member.save()
+                    except Exception as e:
+                        return JsonResponse({'success': False, 'error': f"프로필 이미지 업로드 중 오류: {str(e)}"}, status=400)
+
+            else:
+                # ID 변경이 없는 경우는 일반 업데이트
+                member.name = name
+                member.phone_num = phone_num
+                member.email = email
+                member.age_group = age_group
+                member.sex = sex
+
+                # 프로필 이미지 업데이트
+                if 'profile_image' in request.FILES and request.FILES['profile_image']:
+                    try:
+                        profile_url = upload_profile_image_to_s3(request.FILES['profile_image'])
+                        member.profile_image = profile_url
+                    except Exception as e:
+                        return JsonResponse({'success': False, 'error': f"프로필 이미지 업로드 중 오류: {str(e)}"}, status=400)
+
+                member.save()
 
             return JsonResponse({
                 'success': True,
@@ -85,15 +159,15 @@ def member_edit(request):
             })
 
         except Exception as e:
+            print(f"Error in member_edit: {str(e)}")
             return JsonResponse({
                 'success': False,
                 'error': str(e)
-            })
+            }, status=400)
 
-    # GET 요청 처리 (회원 정보 페이지 렌더링)
+    # GET 요청 처리
     member = request.user.member
 
-    # 이메일 주소 분리하기
     email_parts = {'id': '', 'domain': ''}
     if member.email and '@' in member.email:
         email_id, email_domain = member.email.split('@', 1)
@@ -107,21 +181,24 @@ def member_edit(request):
 
 # 아이디 중복확인
 def check_user_id(request):
-    user_id = request.GET.get('user_id', '')
-    if not user_id:
-        return JsonResponse({'available': False, 'message': '아이디를 입력해주세요.'})
+    user_id = request.GET.get('user_id', '').strip()
 
-    # 최소 길이 체크
-    if len(user_id) < 4:
-        return JsonResponse({'available': False, 'message': '아이디는 최소 4자 이상이어야 합니다.'})
+    # 아이디 유효성 검사 (영문 소문자 + 숫자, 4~12자리)
+    if not re.match(r'^[a-z0-9]{4,12}$', user_id):
+        return JsonResponse({"valid": False, "message": "아이디는 영문 소문자와 숫자로 4~12자리여야 합니다."})
+
+    # 현재 로그인한 사용자의 아이디인 경우
+    if request.user.is_authenticated:
+        if request.user.username == user_id or request.user.member.member_id == user_id:
+            return JsonResponse({"valid": True, "message": "현재 사용 중인 아이디입니다."})
 
     # 기존 회원 아이디와 비교
-    exists = Member.objects.filter(member_id=user_id).exists()  # Member는 실제 모델명으로 변경해야 함
+    exists = User.objects.filter(username=user_id).exists() or Member.objects.filter(member_id=user_id).exists()
 
     if exists:
-        return JsonResponse({'available': False, 'message': '이미 사용 중인 아이디입니다.'})
-    else:
-        return JsonResponse({'available': True, 'message': '사용 가능한 아이디입니다.'})
+        return JsonResponse({"valid": False, "message": "이미 사용 중인 아이디입니다."})
+
+    return JsonResponse({"valid": True, "message": "사용 가능한 아이디입니다."})
 
 @login_required
 def member_pw(request):
