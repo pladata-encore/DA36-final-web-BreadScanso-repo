@@ -14,89 +14,106 @@
 {% block content %}
     <h3 style="margin-bottom: 50px;" class="text-center">회원정보수정</h3>
     <div class="container">
-        <form id="memberEditForm" method="POST" enctype="multipart/form-data">
+        <form id="memberEditForm" method="POST" action="{% url 'member:member_edit' %}" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="mb-3">
-                <label for="user_id" class="form-label w-100 text-start">* 아이디</label>
-                <div class="input-group">
-                    <input type="text" name="user_id" class="form-control" value="{% if member %}{{ member.member_id }}{% endif %}">
-                    <button type="button" class="btn btn-secondary" onclick="checkUser_id()">중복 확인</button>
-                    <p id="user_id-result"></p>
-                </div>
-            </div>
-    <div class="mb-3">
-        <label for="name" class="w-100 text-start">* 이름</label>
-        <input type="text" id="name" name="name" class="form-control" value="{% if member %}{{ member.name }}{% endif %}">
-    </div>
-    <div class="mb-3">
-        <label for="phone_num" class="w-100 text-start">* 휴대폰 번호</label>
-        <input type="number" id="phone_num" name="phone_num" class="form-control" value="{% if member %}{{ member.phone_num }}{% endif %}">
-    </div>
-    <div class="mb-3">
-        <label for="profile_image" class="form-label w-100 text-start">프로필</label>
-        {% if member.profile_image %}
-            <img src="{{ member.profile_image.url }}" alt="Current Profile" class="mb-2" style="max-width: 200px;">
-        {% endif %}
-        <input class="form-control" type="file" id="profile_image" name="profile_image">
-    </div>
-    <div class="mb-3">
-        <label for="email_id" class="w-100 text-start">* 이메일</label>
-        <div class="d-flex">
-            <input type="text" id="email_id" class="form-control" value="{{ email_parts.id }}">
-            <span class="mx-2">@</span>
-             <select id="email_domain" class="form-control">
-            <option value="" disabled selected>도메인 선택</option>
-            <option value="naver.com" {% if email_parts.domain == 'naver.com' %}selected{% endif %}>naver.com</option>
-            <option value="gmail.com" {% if email_parts.domain == 'gmail.com' %}selected{% endif %}>gmail.com</option>
-            <option value="daum.net" {% if email_parts.domain == 'daum.net' %}selected{% endif %}>daum.net</option>
-            <option value="직접입력" {% if email_parts.domain and email_parts.domain not in 'naver.com,gmail.com,daum.net' %}selected{% endif %}>직접입력</option>
-        </select>
-        <input type="text" id="email_custom" class="form-control {% if not email_parts.domain or email_parts.domain in 'naver.com,gmail.com,daum.net' %}d-none{% endif %}"
-               placeholder="직접입력" value="{% if email_parts.domain and email_parts.domain not in 'naver.com,gmail.com,daum.net' %}{{ email_parts.domain }}{% endif %}">
-    </div>
-    <input type="hidden" name="email" id="email_full" value="{{ member.email }}">
-</div>
-    <br>
-        <div class="mb-3 text-start">
-            <label class="w-100 text-start">연령대</label><br>
-            <input type="radio" name="age_group" value="10" {% if member.age_group == '10' or member.age_group == 10 or member.age_group == '10대' %}checked{% endif %}> 10대 &nbsp;
-            <input type="radio" name="age_group" value="10" {% if member.age_group == '20' or member.age_group == 20 or member.age_group == '20대' %}checked{% endif %}> 20대 &nbsp;
-            <input type="radio" name="age_group" value="10" {% if member.age_group == '30' or member.age_group == 30 or member.age_group == '30대' %}checked{% endif %}> 30대 &nbsp;
-            <input type="radio" name="age_group" value="10" {% if member.age_group == '40' or member.age_group == 40 or member.age_group == '40대' %}checked{% endif %}> 40대 &nbsp;
-            <input type="radio" name="age_group" value="10" {% if member.age_group == '50' or member.age_group == 50 or member.age_group == '50대' %}checked{% endif %}> 50대 &nbsp;
-            <input type="radio" name="age_group" value="10" {% if member.age_group == '60' or member.age_group == 60 or member.age_group == '60대' %}checked{% endif %}> 60대 이상 &nbsp;
-        </div>
 
-        <div class="mb-3 text-start">
-            <label class="w-100 text-start">성별</label><br>
+            <!-- 아이디 -->
+            <div class="mb-3">
+                <label for="user_id">* 아이디</label>
+                <div class="input-group">
+                    <input type="text" name="user_id" id="user_id" class="form-control" value="{{ member.member_id }}" required>
+                    <button type="button" id="check-username-btn" class="btn btn-secondary" onclick="checkUsername()">중복 확인</button>
+                </div>
+                <small id="username-check-result" class="form-text"></small>
+            </div>
+
+
+            <!-- 이름 -->
+            <div class="mb-3">
+                <label for="name" class="w-100 text-start">* 이름</label>
+                <input type="text" id="name" name="name" class="form-control"
+                       value="{% if member %}{{ member.name }}{% endif %}">
+            </div>
+
+            <!-- 휴대폰 번호 -->
+            <div class="mb-3">
+                <label for="phone_num" class="w-100 text-start">* 휴대폰 번호</label>
+                <input type="number" id="phone_num" name="phone_num" class="form-control"
+                       value="{% if member %}{{ member.phone_num }}{% endif %}">
+            </div>
+
+            <!-- 프로필 이미지 -->
+            <div class="mb-3">
+                <label for="profile_image" class="form-label w-100 text-start">프로필</label>
+                {% if member.profile_image %}
+                    <img src="{{ member.profile_image.url }}" alt="Current Profile" class="mb-2" style="max-width: 200px;">
+                {% endif %}
+                <input class="form-control" type="file" id="profile_image" name="profile_image">
+            </div>
+
+            <!-- 이메일 입력 폼 수정 -->
+            <div class="mb-3">
+                <label for="email_id">* 이메일</label>
+                <div class="d-flex">
+                    <input type="text" id="email_id" class="form-control" value="{{ email_parts.id }}">
+                    <span class="mx-2">@</span>
+                    <select id="email_domain" class="form-control">
+                        <option value="naver.com" {% if email_parts.domain == 'naver.com' %}selected{% endif %}>naver.com</option>
+                        <option value="gmail.com" {% if email_parts.domain == 'gmail.com' %}selected{% endif %}>gmail.com</option>
+                        <option value="daum.net" {% if email_parts.domain == 'daum.net' %}selected{% endif %}>daum.net</option>
+                        <option value="직접입력" {% if email_parts.domain and email_parts.domain not in 'naver.com,gmail.com,daum.net' %}selected{% endif %}>직접입력</option>
+                    </select>
+                    <input type="text" id="email_custom" class="form-control {% if not email_parts.domain or email_parts.domain in 'naver.com,gmail.com,daum.net' %}d-none{% endif %}"
+                        placeholder="직접입력" value="{% if email_parts.domain and email_parts.domain not in 'naver.com,gmail.com,daum.net' %}{{ email_parts.domain }}{% endif %}">
+                </div>
+                <input type="hidden" name="email" id="email_full" value="{{ member.email }}">
+            </div>
+
+
+            <!-- 연령대 -->
+            <div class="mb-3 text-start">
+                <label class="w-100 text-start">연령대</label><br>
+                <input type="radio" name="age_group" value="10" {% if member.age_group == '10' or member.age_group == 10 %}checked{% endif %}> 10대 &nbsp;
+                <input type="radio" name="age_group" value="20" {% if member.age_group == '20' or member.age_group == 20 %}checked{% endif %}> 20대 &nbsp;
+                <input type="radio" name="age_group" value="30" {% if member.age_group == '30' or member.age_group == 30 %}checked{% endif %}> 30대 &nbsp;
+                <input type="radio" name="age_group" value="40" {% if member.age_group == '40' or member.age_group == 40 %}checked{% endif %}> 40대 &nbsp;
+                <input type="radio" name="age_group" value="50" {% if member.age_group == '50' or member.age_group == 50 %}checked{% endif %}> 50대 &nbsp;
+                <input type="radio" name="age_group" value="60" {% if member.age_group == '60' or member.age_group == 60 %}checked{% endif %}> 60대 이상 &nbsp;
+            </div>
+
+            <!-- 성별 -->
+            <div class="mb-3 text-start">
+                <label class="w-100 text-start">성별</label><br>
                 <input type="radio" name="sex" value="M" {% if member.sex == 'M' %}checked{% endif %}> 남성
                 <input type="radio" name="sex" value="F" {% if member.sex == 'F' %}checked{% endif %}> 여성
-        </div>
+            </div>
 
-        {% if error %}
-            <div class="alert alert-danger">{{ error }}</div>
-        {% endif %}
+            <!-- 오류 메시지 -->
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
 
-        <br>
-        <button type="submit" id="signupButton" class="btn btn-primary">수정하기</button>
-        <br><br>
+            <br>
+            <button type="submit" id="signupButton" class="btn btn-primary">수정하기</button>
+            <br><br>
 
-        <div class="modal fade" id="signupSuccessModal" tabindex="-1" aria-labelledby="signupSuccessLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="signupSuccessLabel">회원정보수정 완료</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        수정이 완료되었습니다.
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" id="confirmButton" onclick="location.href='{% url 'member:member_page' %}'">확인</button>
+            <!-- 회원정보 수정 성공 모달 -->
+            <div class="modal fade" id="signupSuccessModal" tabindex="-1" aria-labelledby="signupSuccessLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="signupSuccessLabel">회원정보수정 완료</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            수정이 완료되었습니다.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="confirmButton" onclick="location.href='{% url 'member:member_page' %}'">확인</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </form>
     </div>
 {% endblock content %}
@@ -104,5 +121,3 @@
 {% block script %}
     <script src="{% static 'js/member-edit.js' %}"></script>
 {% endblock script %}
-
-
