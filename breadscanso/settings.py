@@ -200,11 +200,6 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SOCIALACCOUNT_LOGIN_ON_GET = True  # 이 설정이 핵심
 # SOCIALACCOUNT_AUTO_SIGNUP = True   # 추가 정보 입력 없이 자동 가입
-SECURE_SSL_REDIRECT = True
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = "https://www.breadscanso.shop/accounts/google/login/callback/"
-
 
 SITE_ID = 1 # django.contrib.sites 프레임워크 다중 사이트 지원 관련, SITE_ID값 1은 기본 사이트를 지정한다. (django_site 테이블의 첫 번째 레코드)
 ACCOUNT_EMAIL_REQUIRED = True # 회원가입시 email 필수입력
