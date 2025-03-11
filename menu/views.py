@@ -1,4 +1,6 @@
 import os
+from lib2to3.fixes.fix_input import context
+
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -425,3 +427,89 @@ def menu_save(request):
             })
     else:
         return render(request, 'menu/menu_add.html')
+
+# ---------------------------------------------------------------------------- #
+# 신규 제품 학습 가이드 페이지
+def menu_store_new_menu_guide(request, item_id):
+    member = request.user.member
+    item = get_object_or_404(Item, pk=item_id)
+    context = {
+        'item': item,
+        'member': member
+    }
+    return render(request, 'menu/new_menu_guide.html', context)
+
+# ---------------------------------------------------------------------------- #
+# 신규 제품 학습 등록 페이지
+@require_http_methods(["GET", "POST"])
+def menu_store_new_menu_learn(request, item_id):
+    item = get_object_or_404(Item, pk=item_id)
+
+    if request.method == "POST":
+        # 제품 정보 업데이트
+        item.item_name = request.POST.get("item_name", item.item_name)
+        item.description = request.POST.get("item_info", item.description)
+        item.cost_price = request.POST.get("cost", item.cost_price)
+        item.sale_price = request.POST.get("price", item.sale_price)
+        item.category = request.POST.get("category", item.category)
+        item.store = request.user.member.store # 로그인한 사용자의 member.store 정보 가져옴
+
+        # Best, New, 노출 여부 업데이트
+        item.best = request.POST.get("best") == "on"
+        item.new = request.POST.get("new") == "on"
+        item.show = request.POST.get("show") == "on"
+
+        # **이미지 업로드 로직 추가**
+        if 'item_image' in request.FILES:  # 새 이미지 업로드 확인
+            try:
+                new_image_url = upload_product_image_to_s3(request.FILES['item_image'])
+                item.item_image = new_image_url  # S3 URL로 업데이트
+            except Exception as e:
+                return render(request, "menu/menu_edit.html", {
+                    "item": item,
+                    "nutrition": NutritionInfo.objects.filter(item=item).first(),
+                    "allergy": Allergy.objects.filter(item=item).first(),
+                    "error": f"이미지 업로드 중 오류 발생: {str(e)}"
+                })
+
+        item.save()  # 제품 정보 저장
+
+        # **영양 정보 업데이트 (있으면 수정, 없으면 추가하지 않음)**
+        nutrition_info = NutritionInfo.objects.filter(item=item).first()
+        if nutrition_info:
+            nutrition_info.nutrition_weight = request.POST.get("nutrition_weight", nutrition_info.nutrition_weight)
+            nutrition_info.nutrition_calories = request.POST.get("nutrition_calories", nutrition_info.nutrition_calories)
+            nutrition_info.nutrition_sodium = request.POST.get("nutrition_sodium", nutrition_info.nutrition_sodium)
+            nutrition_info.nutrition_sugar = request.POST.get("nutrition_sugar", nutrition_info.nutrition_sugar)
+            nutrition_info.nutrition_carbohydrates = request.POST.get("nutrition_carbohydrates", nutrition_info.nutrition_carbohydrates)
+            nutrition_info.nutrition_saturated_fat = request.POST.get("nutrition_saturated_fat", nutrition_info.nutrition_saturated_fat)
+            nutrition_info.nutrition_trans_fat = request.POST.get("nutrition_trans_fat", nutrition_info.nutrition_trans_fat)
+            nutrition_info.nutrition_protein = request.POST.get("nutrition_protein", nutrition_info.nutrition_protein)
+            nutrition_info.save()
+
+        # **알레르기 정보 업데이트 (있으면 수정, 없으면 추가하지 않음)**
+        allergy_info = Allergy.objects.filter(item=item).first()
+        if allergy_info:
+            allergy_info.allergy_wheat = request.POST.get("allergy_wheat") == "on"
+            allergy_info.allergy_milk = request.POST.get("allergy_milk") == "on"
+            allergy_info.allergy_egg = request.POST.get("allergy_egg") == "on"
+            allergy_info.allergy_soybean = request.POST.get("allergy_soybean") == "on"
+            allergy_info.allergy_nuts = request.POST.get("allergy_nuts") == "on"
+            allergy_info.allergy_etc = request.POST.get("allergy_etc", allergy_info.allergy_etc)
+            allergy_info.save()
+
+        return redirect("menu_store_menu_info", item_id=item.item_id)
+
+    # **기존 데이터 불러오기**
+    nutrition_info = NutritionInfo.objects.filter(item=item).first()
+    allergy_info = Allergy.objects.filter(item=item).first()
+    member = request.user.member
+
+    context = {
+        'item': item,
+        'nutrition': nutrition_info,
+        'allergy': allergy_info,
+        'member': member
+    }
+
+    return render(request, "menu/new_menu_learn.html", context)
