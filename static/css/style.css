@@ -919,6 +919,89 @@ body.main-index .event-img, body.main-index .product-img {
 
 
 
+/*----------------------매장페이지 - 시스템설정 - 매장안내----------------------*/
+/*.store-map-container {*/
+/*    text-align: center;*/
+/*    margin: 30px auto;*/
+/*    max-width: 90%; !* 기존 1200px이 너무 작다면 조정 *!*/
+/*    width: 100%;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: space-between;*/
+/*    position: relative;*/
+/*}*/
+
+/*.store-map-container .store-map-content {*/
+/*    display: flex; !* grid 대신 flex 사용 *!*/
+/*    flex-direction: row; !* 가로 정렬 *!*/
+/*    justify-content: space-between; !* 양쪽 정렬 *!*/
+/*    align-items: center; !* 높이 맞추기 *!*/
+/*    gap: 20px;*/
+/*    width: 50%;*/
+/*}*/
+
+/*.store-map-container .map-section {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    flex: 1; !* 두 개의 섹션을 균등하게 배분 *!*/
+/*}*/
+
+/*.store-map-container .store-info-section {*/
+/*    text-align: left;*/
+/*    display: flex;*/
+/*    flex-direction: column; !* 내부 요소는 세로 정렬 *!*/
+/*    justify-content: center; !* 내용 중앙 정렬 *!*/
+/*    flex: 1; !* 동일한 크기로 배치 *!*/
+/*}*/
+
+/*.store-map-container .store-title {*/
+/*    font-size: 30px;*/
+/*    font-weight: bold;*/
+/*    margin-bottom: 30px;*/
+/*}*/
+/*!*.store-map-container .store-map-content {*!*/
+/*!*    display: grid;*!*/
+/*!*    grid-template-columns: 1fr 1fr;*!*/
+/*!*    gap: 20px;*!*/
+/*!*    width: 100%; !* 컨테이너가 꽉 차도록 설정 *!*!*/
+/*!*}*!*/
+/*!*.store-map-container .map-section {*!*/
+/*!*    display: flex;*!*/
+/*!*    justify-content: center;*!*/
+/*!*    align-items: center;*!*/
+/*!*}*!*/
+/*.store-map-container .map-section img {*/
+/*    width: 100%;*/
+/*    max-width: 600px;*/
+/*    height: auto;*/
+/*    object-fit: cover;*/
+/*    object-position: center;*/
+/*}*/
+/*!*.store-map-container .store-info-section {*!*/
+/*!*    text-align: left;*!*/
+/*!*    display: flex;*!*/
+/*!*    flex-direction: column; !* 내부 요소들은 세로 정렬 *!*!*/
+/*!*    justify-content: center; !* 가운데 정렬 *!*!*/
+/*!*}*!*/
+/*.store-map-container .store-info-section h3 {*/
+/*    font-size: 20px;*/
+/*    margin-top: 15px;*/
+/*    font-weight: bold;*/
+/*}*/
+/*.store-map-container .store-info-section p {*/
+/*    font-size: 16px;*/
+/*    margin: 5px 0;*/
+/*}*/
+/*.store-map-container .button-container {*/
+/*    margin-top: 20px;*/
+/*    align-self: flex-end;*/
+/*}*/
+
+
+
+
+
 /*----------------------매장페이지 - 회원관리----------------------*/
 /*-----테이블-----*/
 .member-edit-table {

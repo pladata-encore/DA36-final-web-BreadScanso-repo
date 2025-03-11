@@ -14,56 +14,56 @@
 {% block content %}
 
 {#  css에는 옮겨놓음, 테스트 더 해보고 삭제하기  #}
-{#    <style>#}
-{#        .store-map-container {#}
-{#            text-align: center;#}
-{#            margin: 30px auto;#}
-{#            max-width: 1200px;#}
-{#            display: flex;#}
-{#            flex-direction: column;#}
-{#            justify-content: space-between;#}
-{#            position: relative;#}
-{#        }#}
-{#        .store-title {#}
-{#            font-size: 30px;#}
-{#            font-weight: bold;#}
-{#            margin-bottom: 30px;#}
-{#        }#}
-{#        .store-map-content {#}
-{#            display: grid;#}
-{#            grid-template-columns: 1fr 1fr;#}
-{#            gap: 20px;#}
-{#        }#}
-{#        .map-section {#}
-{#            display: flex;#}
-{#            justify-content: center;#}
-{#            align-items: center;#}
-{#        }#}
-{#        .map-section img {#}
-{#            width: 100%;#}
-{#            max-width: 600px;#}
-{#            height: auto;#}
-{#            object-fit: cover;#}
-{#            object-position: center;#}
-{#        }#}
-{#        .store-info-section {#}
-{#            text-align: left;#}
-{#        }#}
-{#        .store-info-section h3 {#}
-{#            font-size: 20px;#}
-{#            margin-top: 15px;#}
-{#            font-weight: bold;#}
-{#        }#}
-{#        .store-info-section p {#}
-{#            font-size: 16px;#}
-{#            margin: 5px 0;#}
-{#        }#}
-{#        .button-container {#}
-{#            margin-top: 20px;#}
-{#            align-self: flex-end;#}
-{#        }#}
-{##}
-{#    </style>#}
+    <style>
+        .store-map-container {
+            text-align: center;
+            margin: 30px auto;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        .store-title {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .store-map-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .map-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .map-section img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            object-fit: cover;
+            object-position: center;
+        }
+        .store-info-section {
+            text-align: left;
+        }
+        .store-info-section h3 {
+            font-size: 20px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .store-info-section p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        .button-container {
+            margin-top: 20px;
+            align-self: flex-end;
+        }
+
+    </style>
 
     <!-- 매장 안내 정보 -->
     <div class="store-map-container">
@@ -72,74 +72,70 @@
             <div class="map-section">
                 <div id="map" style="width: 450px; height: 450px;"></div>
             </div>
-
             <div class="store-info-section">
                 <h3>| 주소</h3>
                 <p id="address-display" data-address="{{ store_address }}">{{ store_address }}</p>
                 <h3>| 운영 시간</h3>
                 <p id="store_time-display">{{ store_time }}</p>
                 <h3>| 매장 전화번호</h3>
-                <p id="store_num-display">{{ store_num }}</p><br>                
+                <p id="store_num-display">{{ store_num }}</p><br>
                 <p id="transportation-display">{{ store_notes|safe }}</p>
             </div>
         </div>
-
         <!-- 버튼 섹션 -->
         <div class="button-container">
             <a href="{% url 'store:store_map_edit' %}" class="btn btn-primary">수정</a>
         </div>
     </div>
-
 {% endblock content %}
 
-{# store_map.js로 옮겨놓음. 테스트 더 해보고 삭제하기 #}
-{#{% block script %}#}
-{#    {{ block.super }}#}
-{#    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=zsn0ti7kcl&submodules=geocoder"></script>#}
-{#    <script>#}
-{#        document.addEventListener('DOMContentLoaded', function() {#}
-{#        var storeName = "{{ store_name }}";#}
-{#        var storeAddress = "{{ store_address|escapejs }}";#}
-{#        #}
-{#        // 매장에 따라 아이콘 변경#}
-{#        var iconUrl = "{% static 'images/pink.png' %}";  // 기본 아이콘#}
-{#        if (storeName === "강남점") {#}
-{#            iconUrl = "{% static 'images/milk.png' %}";#}
-{#        }#}
-{#        #}
-{#        // 주소를 좌표로 변환하는 함수#}
-{#        naver.maps.Service.geocode({query: storeAddress}, #}
-{#            function(status, response) {#}
-{#            if (status !== naver.maps.Service.Status.OK) {#}
-{#                return alert('Something went wrong!');#}
-{#            }#}
-{#            var result = response.v2; // 검색 결과의 컨테이너#}
-{#            var items = result.addresses; // 검색 결과의 배열#}
-{##}
-{#            var location = new naver.maps.LatLng(items[0].y, items[0].x);#}
-{#            var map = new naver.maps.Map('map', {#}
-{#                center: location,#}
-{#                zoom: 17,#}
-{#            });#}
-{#            var marker = new naver.maps.Marker({#}
-{#                position: location,#}
-{#                map: map,#}
-{#                icon:{#}
-{#                    url: iconUrl,#}
-{#                    scaledSize: new naver.maps.Size(60, 60),#}
-{#                    origin: new naver.maps.Point(0, 0),#}
-{#                    anchor: new naver.maps.Point(25, 26)#}
-{#                }#}
-{#            });#}
-{#            var infowindow = new naver.maps.InfoWindow({#}
-{#                content: '<div style="padding:7px;min-width:150px;line-height:100%;"><h5 style="margin-top:3px;">브레드스캔소 ' + storeName + '</h5></div>'#}
-{#            });#}
-{#            infowindow.open(map, marker);#}
-{#        });#}
-{#    });#}
-{#    </script>#}
-{#{% endblock script %}#}
-
 {% block script %}
-    <script src="{% static 'js/store_map.js' %}"></script>
+    {{ block.super }}
+    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=zsn0ti7kcl&submodules=geocoder"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        var storeName = "{{ store_name }}";
+        var storeAddress = "{{ store_address|escapejs }}";
+
+        // 매장에 따라 아이콘 변경
+        var iconUrl = "{% static 'images/pink.png' %}";  // 기본 아이콘
+        if (storeName === "강남점") {
+            iconUrl = "{% static 'images/milk.png' %}";
+        }
+
+        // 주소를 좌표로 변환하는 함수
+        naver.maps.Service.geocode({query: storeAddress},
+            function(status, response) {
+            if (status !== naver.maps.Service.Status.OK) {
+                return alert('Something went wrong!');
+            }
+            var result = response.v2; // 검색 결과의 컨테이너
+            var items = result.addresses; // 검색 결과의 배열
+
+            var location = new naver.maps.LatLng(items[0].y, items[0].x);
+            var map = new naver.maps.Map('map', {
+                center: location,
+                zoom: 17,
+            });
+            var marker = new naver.maps.Marker({
+                position: location,
+                map: map,
+                icon:{
+                    url: iconUrl,
+                    scaledSize: new naver.maps.Size(60, 60),
+                    origin: new naver.maps.Point(0, 0),
+                    anchor: new naver.maps.Point(25, 26)
+                }
+            });
+            var infowindow = new naver.maps.InfoWindow({
+                content: '<div style="padding:7px;min-width:150px;line-height:100%;"><h5 style="margin-top:3px;">브레드스캔소 ' + storeName + '</h5></div>'
+            });
+            infowindow.open(map, marker);
+        });
+    });
+    </script>
 {% endblock script %}
+
+{#{% block script %}#}
+{#    <script src="{% static 'js/store_map.js' %}"></script>#}
+{#{% endblock script %}#}
