@@ -16,12 +16,8 @@ from django.urls import reverse
 
 
 def index(request):
-    member = None  # 기본값을 None으로 설정
+    member = getattr(request.user, 'member', None)  # member 속성이 없으면 None 반환
 
-    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
-        member = request.user.member
-
-    # 하나의 딕셔너리로 합쳐서 전달
     context = {
         'member': member
     }
