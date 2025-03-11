@@ -17,7 +17,8 @@
     </header>
 
     <!-- 지점명 -->
-    <div class="store-name">서초동점</div>
+    <span class="store-name">{% if member %}{{ store_name }}{% endif %}점</span>
+
 
     <div class="keypad-container">
         <h5 class="mb-3">포인트를 사용하시겠습니까?</h5>

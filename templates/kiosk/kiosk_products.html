@@ -16,7 +16,8 @@
     </header>
 
     <!-- 지점명 -->
-    <div class="store-name">서초동점</div>
+    <span class="store-name">{% if member %}{{ store_name }}{% endif %}점</span>
+
 
     <div class="container">
         <!-- 웹캠 -->

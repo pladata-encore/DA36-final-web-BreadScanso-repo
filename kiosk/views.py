@@ -1,3 +1,5 @@
+from lib2to3.fixes.fix_input import context
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from member.models import Member
@@ -10,7 +12,19 @@ from django.db import transaction
 
 
 def kiosk_main(request):
-    return render(request, 'kiosk/kiosk_main.html')
+    member = request.user.member
+    # store 값 변환
+    store_mapping = {
+        'A': '서초동',
+        'B': '강남'
+    }
+    store_name = store_mapping.get(member.store, '알 수 없음')  # 기본값 설정
+    context = {
+        'member': member,
+        'store_name': store_name,
+    }
+
+    return render(request, 'kiosk/kiosk_main.html', context)
 
 def products(request):
     store = request.session.get('store')
@@ -28,25 +42,91 @@ def products(request):
             'item_id': item['item_id']
         } for item in items}
 
-    return render(request, 'kiosk/kiosk_products.html', {
+    member = request.user.member
+    # store 값 변환
+    store_mapping = {
+        'A': '서초동',
+        'B': '강남'
+    }
+    store_name = store_mapping.get(member.store, '알 수 없음')  # 기본값 설정
+    context = {
+        'member': member,
+        'store_name': store_name,
         'menu_data': menu_dict
-    })
+    }
+
+    return render(request, 'kiosk/kiosk_products.html', context)
 
 
 def member(request):
-    return render(request, 'kiosk/kiosk_member.html')
+    member = request.user.member
+    # store 값 변환
+    store_mapping = {
+        'A': '서초동',
+        'B': '강남'
+    }
+    store_name = store_mapping.get(member.store, '알 수 없음')  # 기본값 설정
+    context = {
+        'member': member,
+        'store_name': store_name,
+    }
+    return render(request, 'kiosk/kiosk_member.html', context)
 
 def phonenumber(request):
-    return render(request, 'kiosk/kiosk_phonenumber.html')
+    member = request.user.member
+    # store 값 변환
+    store_mapping = {
+        'A': '서초동',
+        'B': '강남'
+    }
+    store_name = store_mapping.get(member.store, '알 수 없음')  # 기본값 설정
+    context = {
+        'member': member,
+        'store_name': store_name,
+    }
+    return render(request, 'kiosk/kiosk_phonenumber.html', context)
 
 def usepoint(request):
-    return render(request, 'kiosk/kiosk_usepoint.html')
+    member = request.user.member
+    # store 값 변환
+    store_mapping = {
+        'A': '서초동',
+        'B': '강남'
+    }
+    store_name = store_mapping.get(member.store, '알 수 없음')  # 기본값 설정
+    context = {
+        'member': member,
+        'store_name': store_name,
+    }
+    return render(request, 'kiosk/kiosk_usepoint.html', context)
 
 def payment_method(request):
-    return render(request, 'kiosk/kiosk_payment_method.html')
+    member = request.user.member
+    # store 값 변환
+    store_mapping = {
+        'A': '서초동',
+        'B': '강남'
+    }
+    store_name = store_mapping.get(member.store, '알 수 없음')  # 기본값 설정
+    context = {
+        'member': member,
+        'store_name': store_name,
+    }
+    return render(request, 'kiosk/kiosk_payment_method.html', context)
 
 def payment_completed(request):
-    return render(request, 'kiosk/kiosk_payment_completed.html')
+    member = request.user.member
+    # store 값 변환
+    store_mapping = {
+        'A': '서초동',
+        'B': '강남'
+    }
+    store_name = store_mapping.get(member.store, '알 수 없음')  # 기본값 설정
+    context = {
+        'member': member,
+        'store_name': store_name,
+    }
+    return render(request, 'kiosk/kiosk_payment_completed.html', context)
 
 
 def check_phone_number(request):
