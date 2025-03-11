@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             totalAmount += product.totalPrice;
 
             // confidence 값이 70% 미만이면 붉은 글씨로 표시
-            const textColor = (product.confidence < 0.7) ? 'style="color: red;"' : '';
+            const textColor = (product.confidence < 0.6) ? 'style="color: red;"' : '';
             const row = `
                 <tr>
                     <td ${textColor}>${product.korName}</td>
