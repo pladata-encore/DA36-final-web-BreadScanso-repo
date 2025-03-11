@@ -14,7 +14,8 @@
         <a href="/">
             <img src="{% static 'images/bread_im_text.png' %}" alt="text" class="logo-img" width="200">
         </a>
-        <div class="store-name">서초동점</div>
+        <span class="store-name">{% if member %}{{ store_name }}{% endif %}점</span>
+{#        <div class="store-name">서초동점</div>#}
     </div>
 
     <!-- 시작하기 버튼 -->

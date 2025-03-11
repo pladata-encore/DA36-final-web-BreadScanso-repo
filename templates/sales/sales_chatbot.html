@@ -13,18 +13,74 @@
 
 {% block content %}
 <div class="container">
-    <p><strong>🍞브레드스캔소🍞</strong> 매출&판매 관련 질문을 해주세요.</p>
+    <p class="text-center" style="font-size: 17px;"><strong>🍞브레드스캔소</strong>의 매출&판매 관련 질문을 해주세요.🍞</p>
 
     <form id="chat-form">
         {% csrf_token %}
-        <div id="chat-box" class="border p-3 mb-3" style="height: 350px; overflow-y: auto; background-color: whitesmoke;"></div>
+        <div id="chat-box" class="border p-3 mb-3" style="height: 300px; overflow-y: auto; background-color: whitesmoke;"></div>
 
         <div class="input-group mb-3">
-            <input type="text" id="user-input" class="form-control" placeholder="질문을 입력해 주세요.">
-            <button class="btn btn-primary" id="send-btn">▶️</button>
+            <input type="text" id="user-input" class="form-control" style="height: 40px" placeholder="질문을 입력해 주세요.">
+            <button class="btn btn-info" id="send-btn">▶</button>
         </div>
     </form>
 </div>
+
+<style>
+    .user-message {
+        text-align: right;
+        margin-left: 20%;
+        background-color: #dcf8c6;
+        padding: 6px 10px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        display: inline-block;
+        max-width: 80%;
+        float: right;
+        clear: both;
+        font-size: 13.5px;
+    }
+
+    .bot-message {
+        text-align: left;
+        margin-right: 20%;
+        background-color: white;
+        padding: 6px 10px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        display: inline-block;
+        max-width: 80%;
+        float: left;
+        clear: both;
+        font-size: 12px;
+    }
+
+    .system-message {
+        text-align: center;
+        font-style: italic;
+        color: #777;
+        margin: 8px 0;
+        clear: both;
+        {#font-size: 0.9em;#}
+        font-size: 13.5px;
+    }
+
+    #chat-box {
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #chat-box::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    .container {
+        max-width: 800px;
+    }
+</style>
 {% endblock content %}
 
 {% block script %}
@@ -33,16 +89,16 @@ document.getElementById("chat-form").addEventListener("submit", function(event) 
     event.preventDefault();
     const userInput = document.getElementById("user-input").value;
     const chatBox = document.getElementById("chat-box");
-    
+
     if (userInput.trim() === "") return;
-    
-    // 사용자 질문 표시
-    chatBox.innerHTML += `<p><strong>🕺🏻:</strong> ${userInput}</p>`;
+
+    // 사용자 질문 표시 (오른쪽 정렬)
+    chatBox.innerHTML += `<div class="user-message"><strong>🤷🏻‍♂️️:</strong> ${userInput}</div>`;
     document.getElementById("user-input").value = "";
-    
+
     // 로딩 메시지
     const loadingId = `loading-${Date.now()}`;
-    chatBox.innerHTML += `<p id="${loadingId}">답변을 작성하고 있습니다...🐕</p>`;
+    chatBox.innerHTML += `<div id="${loadingId}" class="system-message">답변을 작성하고 있습니다..🐕..🫧</div>`;
     chatBox.scrollTop = chatBox.scrollHeight;
 
     fetch("{% url 'sales:sales_chatbot' %}", {
@@ -57,29 +113,29 @@ document.getElementById("chat-form").addEventListener("submit", function(event) 
     .then(data => {
         // 로딩 메시지 제거
         document.getElementById(loadingId).remove();
-        
+
         console.log("API 응답:", data);
-        
+
         if (data && data.answer) {
-            // 비즈니스 어드바이저 응답 표시
-            chatBox.innerHTML += `<p><strong>🤖:</strong> ${data.answer}</p>`;
+            // 비즈니스 어드바이저 응답 표시 (왼쪽 정렬)
+            chatBox.innerHTML += `<div class="bot-message"><strong>🤖:</strong> ${data.answer}</div>`;
         } else if (data && data.error) {
             // 오류 메시지
-            chatBox.innerHTML += `<p><strong>⚠️ 오류:</strong> ${data.error}</p>`;
+            chatBox.innerHTML += `<div class="system-message"><strong>⚠️ 오류:</strong> ${data.error}</div>`;
         } else {
             // 예상치 못한 응답
-            chatBox.innerHTML += `<p><strong>⚠️ 시스템:</strong> 예상치 못한 응답 형식이 수신되었습니다.</p>`;
+            chatBox.innerHTML += `<div class="system-message"><strong>⚠️ 시스템:</strong> 예상치 못한 응답 형식이 수신되었습니다.</div>`;
             console.error("예상치 못한 응답:", data);
         }
-        
+
         chatBox.scrollTop = chatBox.scrollHeight;
     })
     .catch(error => {
         // 로딩 메시지 제거
         document.getElementById(loadingId).remove();
-        
+
         console.error("API 요청 오류:", error);
-        chatBox.innerHTML += `<p><strong>⚠️ 오류:</strong> 요청 처리 중 문제가 발생했습니다.</p>`;
+        chatBox.innerHTML += `<div class="system-message"><strong>⚠️ 오류:</strong> 요청 처리 중 문제가 발생했습니다.</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
     });
 });
