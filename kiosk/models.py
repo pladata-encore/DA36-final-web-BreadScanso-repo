@@ -11,7 +11,7 @@ class OrderInfo(models.Model):
     order_id = models.AutoField(primary_key=True)
     order_at = models.DateTimeField(auto_now_add=True)  # 주문 일시
     total_amount = models.IntegerField(default=0)  # 주문 총액
-    store = models.CharField(max_length=50, choices=[("A", "Store A"), ("B", "Store B")])  # 매장
+    store = models.CharField(max_length=50, choices=[("A", "서초점"), ("B", "강남점")])  # 매장
     earned_points = models.IntegerField(default=0)  # 적립 포인트
     used_points = models.IntegerField(default=0)  # 사용 포인트
     final_amount = models.IntegerField(default=0)  # 최종 결제 금액
