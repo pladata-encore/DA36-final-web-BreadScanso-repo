@@ -43,8 +43,8 @@ def sales_chatbot(request):
             print('store:', store)
             # FastAPI 요청
             response = requests.post(
-                # FASTAPI_EC2_URL,
-                FASTAPI_LOCAL_URL,
+                FASTAPI_EC2_URL,
+                # FASTAPI_LOCAL_URL,
                 headers={'Content-Type': 'application/json'},
                 json={"question": user_question},
                 timeout=60
