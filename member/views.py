@@ -76,6 +76,7 @@ def member_edit(request):
 
             current_member_id = member.member_id  # 기존 아이디
             new_user_id = request.POST.get('user_id')  # 새로 입력한 아이디
+            new_user_email = request.POST.get('email')
 
             # 다른 필드 데이터 먼저 저장
             name = request.POST.get('name')
@@ -117,6 +118,7 @@ def member_edit(request):
 
                 # User 모델 업데이트
                 user.username = new_user_id
+                user.email = new_user_email
                 user.save()
 
                 # 새 Member 생성
@@ -142,6 +144,10 @@ def member_edit(request):
                 member.email = email
                 member.age_group = age_group
                 member.sex = sex
+
+                # User 모델의 이메일도 업데이트 (추가된 부분)
+                user.email = email
+                user.save()
 
                 # 프로필 이미지 업데이트
                 if 'profile_image' in request.FILES and request.FILES['profile_image']:
@@ -177,7 +183,6 @@ def member_edit(request):
         'member': member,
         'email_parts': email_parts
     })
-
 
 # 아이디 중복확인
 def check_user_id(request):
