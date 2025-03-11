@@ -1207,7 +1207,7 @@ body.main-index .event-img, body.main-index .product-img {
 /*----------------------kiosk-main----------------------*/
 .kiosk-main {
     background: url('/static/images/kiosk_main.png') no-repeat center center/cover;
-    height: 100vh;
+    height: 97vh;
 }
 
 /* 전체 화면을 채우는 스타일 */
@@ -1296,7 +1296,7 @@ body.kiosk-products body {
 body.kiosk-products .button-container {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 15px;
     gap: 15px;
 }
 
@@ -1314,8 +1314,8 @@ body.kiosk-products .container {
     justify-content: space-around;
     align-items: center;
     max-width: 100%;
-    width: 100%;
-    margin: 100px 0 0 100px;
+    width: 90%;
+    margin: 100px 0 0 9%;
 }
 
 body.kiosk-products .video-container {
@@ -1325,8 +1325,8 @@ body.kiosk-products .video-container {
 }
 
 body.kiosk-products video {
-    width: 720px;
-    height: 540px;
+    width: 620px;
+    height: 465px;
     border: 2px solid black;
     border-radius: 10px;
 }
