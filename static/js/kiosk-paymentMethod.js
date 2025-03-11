@@ -22,7 +22,6 @@
 
         // 주문 테이블 업데이트
         const orderTable = document.getElementById("order-table");
-
         if (orderTable && Object.keys(productDictionary).length > 0) {
             orderTable.innerHTML = ''; // 기존 내용 초기화
             Object.keys(productDictionary).forEach(itemName => {
@@ -73,7 +72,7 @@
         }
 
         // 결제 버튼 클릭 이벤트
-        document.querySelectorAll('.blue-button').forEach(button => {
+        document.querySelectorAll('.sandybrown-button').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
                 // db 업데이트 후 다음 페이지로 넘어가도록 수정
@@ -84,11 +83,11 @@
                     };
                 }
 
-                // 🟢 1. 세션 스토리지에서 데이터 가져오기
+                // 1. 세션 스토리지에서 데이터 가져오기
                 const phoneNum = sessionStorage.getItem("phone_num") || "";
                 const points = parseNumber(sessionStorage.getItem("points") || "0");
                 const usedPoints = parseNumber(sessionStorage.getItem("usedPoints") || "0");
-                // 🟢 2. earnedPoints와 finalPoints 미리 계산
+                // 2. earnedPoints와 finalPoints 미리 계산
                 const earnedPoints = Math.floor(finalAmount * parseFloat(earningRate));
                 const finalPoints = points + earnedPoints - usedPoints;
                 console.log(points, earnedPoints, usedPoints, finalPoints);
@@ -97,7 +96,7 @@
                 // finalPoints 세션에 저장
                 sessionStorage.setItem("finalPoints", finalPoints);
 
-                // 🟢 3. 서버로 보낼 데이터 구성 (fetch 요청 전에 미리 만듦)
+                // 3. 서버로 보낼 데이터 구성 (fetch 요청 전에 미리 만듦)
                 const paymentData = {
                     phone_num: phoneNum,
                     final_amount: finalAmount,
@@ -112,7 +111,7 @@
                 console.log("결제 요청 데이터:", paymentData);
 
 
-                // 🟢 4. 서버에 결제 완료 요청
+                // 4. 서버에 결제 완료 요청
                 fetch("/kiosk/complete_payment/", {
                     method: "POST",
                     headers: {
