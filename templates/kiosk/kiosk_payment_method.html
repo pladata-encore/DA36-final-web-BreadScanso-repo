@@ -14,7 +14,8 @@
         <img src="{% static '/images/brand_logo.png' %}" alt="브랜드 로고" class="brand-logo">
     </header>
     <!-- 지점명 -->
-    <div class="store-name">서초동점</div>
+    <span class="store-name">{% if member %}{{ store_name }}{% endif %}점</span>
+
 
     <!-- 주문 목록 -->
     <div class="container">

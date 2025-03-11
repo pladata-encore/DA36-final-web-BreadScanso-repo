@@ -16,7 +16,8 @@
     </header>
 
     <!-- 지점명 -->
-    <div class="store-name">서초동점</div>
+    <span class="store-name">{% if member %}{{ store_name }}{% endif %}점</span>
+
 
     <div class="keypad-container">
         <h3 class="mb-3">전화번호를 입력해 주세요.</h3>

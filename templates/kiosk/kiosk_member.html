@@ -15,7 +15,8 @@
     </header>
 
     <!-- 지점명 -->
-    <div class="store-name">서초동점</div>
+    <span class="store-name">{% if member %}{{ store_name }}{% endif %}점</span>
+
 
     <h2>회원이신가요?</h2>
 
