@@ -208,6 +208,10 @@ ACCOUNT_EMAIL_VERIFICATION = 'none' # none | optional | mandatory
 # LOGOUT_REDIRECT_URL = '/app/'  # 기본값 /
 ACCOUNT_LOGOUT_ON_GET = True # 기본값 False
 
+# 운영 환경을 위한 HTTPS 설정
+SECURE_SSL_REDIRECT = True  # HTTP 요청을 HTTPS로 리디렉션
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # 프록시 뒤에서 HTTPS 인식
+
 #---------------------------------------#
 # summernote 로컬 저장소 지정
 MEDIA_URL = '/media/'
