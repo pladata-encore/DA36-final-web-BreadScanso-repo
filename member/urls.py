@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views  # views.py에서 함수 가져오기
+from .views import check_user_id
 
 app_name = 'member'
 

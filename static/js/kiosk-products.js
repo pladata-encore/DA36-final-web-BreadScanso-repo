@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // 페이지 로드시 세션 스토리지 초기화
     sessionStorage.removeItem("productDictionary");
     sessionStorage.removeItem("totalQuantity");
@@ -122,19 +122,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 mode: "cors"
             });
 
-            const responseText = await response.text();
-            if (!responseText) throw new Error("빈 응답이 왔습니다");
+            const results = await response.json();
+            if (!results) throw new Error("빈 응답이 왔습니다");
 
-            const results = JSON.parse(responseText);
-            console.log("📌 추론 결과:", results);
+            // Base64 인코딩된 이미지 받아오기
+            const detectedImage = results.image;
+            const detectionData = results.data;
 
-            results.forEach(result => {
+            // base64 이미지
+            document.getElementById("result-image").src = `data:image/jpeg;base64,${detectedImage}`;
+            document.getElementById("result-modal").style.display = "block";
+
+
+            // 모달 외부 클릭 시 닫기 (선택 사항)
+            window.addEventListener("click", function (event) {
+                const modal = document.getElementById("result-modal");
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+
+            // 라벨, confidence data
+            detectionData.forEach(result => {
                 if (result?.name && result?.confidence) {
                     const engName = result.name;
                     const korName = getKoreanName(engName);
                     const price = menu_data[engName]?.price || 0;
                     const item_id = menu_data[engName]?.item_id || null;
-                    const confidence = result.confidence; // confidence 값 저장
+                    const confidence = parseFloat(result.confidence); // 문자열에서 숫자로 변환
 
                     if (productDictionary[engName]) {
                         productDictionary[engName].quantity += 1;
