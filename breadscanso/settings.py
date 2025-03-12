@@ -25,7 +25,7 @@ print("BASE_DIR = ", BASE_DIR)
 SECRET_KEY = 'django-insecure-&=9$0a5lsdo@uvu5qy%50!jbc6iqtx%f+862^2i#u^ec!!b362'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = True
 #
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ["www.breadscanso.shop", "breadscanso.shop"]
@@ -208,9 +208,14 @@ ACCOUNT_EMAIL_VERIFICATION = 'none' # none | optional | mandatory
 # LOGOUT_REDIRECT_URL = '/app/'  # 기본값 /
 ACCOUNT_LOGOUT_ON_GET = True # 기본값 False
 
-# 운영 환경을 위한 HTTPS 설정
-SECURE_SSL_REDIRECT = True  # HTTP 요청을 HTTPS로 리디렉션
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # 프록시 뒤에서 HTTPS 인식
+# 환경 구분을 위한 설정 (조건문 사용)
+if DEBUG:
+    print("개발 환경 설정 적용")
+    SECURE_SSL_REDIRECT = False
+else:
+    print("운영 환경 설정 적용")
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 #---------------------------------------#
 # summernote 로컬 저장소 지정
