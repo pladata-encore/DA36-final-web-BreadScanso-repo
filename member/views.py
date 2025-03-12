@@ -76,7 +76,6 @@ def member_edit(request):
 
             current_member_id = member.member_id  # 기존 아이디
             new_user_id = request.POST.get('user_id')  # 새로 입력한 아이디
-            new_user_email = request.POST.get('email')
 
             # 다른 필드 데이터 먼저 저장
             name = request.POST.get('name')
@@ -91,52 +90,25 @@ def member_edit(request):
                 if Member.objects.filter(member_id=new_user_id).exclude(member_id=current_member_id).exists():
                     return JsonResponse({'success': False, 'error': '이미 사용 중인 아이디입니다.'}, status=400)
 
-                # 기존 Member 객체를 백업
-                member_data = {
-                    'name': name,
-                    'phone_num': phone_num,
-                    'email': email,
-                    'age_group': age_group,
-                    'sex': sex,
-                    'total_spent': member.total_spent,
-                    'points': member.points,
-                    'visit_count': member.visit_count,
-                    'last_visited': member.last_visited,
-                    'profile_image': member.profile_image,
-                    'store': member.store,
-                    'store_num': member.store_num,
-                    'earning_rate': member.earning_rate,
-                    'store_address': member.store_address,
-                    'store_time': member.store_time,
-                    'store_notes': member.store_notes,
-                    'member_type': member.member_type,
-                    'member_password': member.member_password
-                }
-
-                # 기존 Member 삭제
-                member.delete()
+                # Member 테이블의 ID 변경
+                Member.objects.filter(member_id=current_member_id).update(member_id=new_user_id)
 
                 # User 모델 업데이트
                 user.username = new_user_id
-                user.email = new_user_email
+                user.email = email
                 user.save()
 
-                # 새 Member 생성
-                new_member = Member.objects.create(
-                    user=user,
-                    member_id=new_user_id,
-                    **member_data
-                )
+                # 객체 다시 가져오기
+                member = Member.objects.get(member_id=new_user_id)
 
                 # 프로필 이미지 업데이트
                 if 'profile_image' in request.FILES and request.FILES['profile_image']:
                     try:
                         profile_url = upload_profile_image_to_s3(request.FILES['profile_image'])
-                        new_member.profile_image = profile_url
-                        new_member.save()
+                        member.profile_image = profile_url
+                        member.save()
                     except Exception as e:
                         return JsonResponse({'success': False, 'error': f"프로필 이미지 업로드 중 오류: {str(e)}"}, status=400)
-
             else:
                 # ID 변경이 없는 경우는 일반 업데이트
                 member.name = name
@@ -145,7 +117,7 @@ def member_edit(request):
                 member.age_group = age_group
                 member.sex = sex
 
-                # User 모델의 이메일도 업데이트 (추가된 부분)
+                # User 모델의 이메일도 업데이트
                 user.email = email
                 user.save()
 
@@ -183,6 +155,28 @@ def member_edit(request):
         'member': member,
         'email_parts': email_parts
     })
+
+
+# 아이디 중복확인
+def check_user_id(request):
+    user_id = request.GET.get('user_id', '').strip()
+
+    # 아이디 유효성 검사 (영문 소문자 + 숫자, 4~12자리)
+    if not re.match(r'^[a-z0-9]{4,12}$', user_id):
+        return JsonResponse({"valid": False, "message": "아이디는 영문 소문자와 숫자로 4~12자리여야 합니다."})
+
+    # 현재 로그인한 사용자의 아이디인 경우
+    if request.user.is_authenticated:
+        if request.user.username == user_id or request.user.member.member_id == user_id:
+            return JsonResponse({"valid": True, "message": "현재 사용 중인 아이디입니다."})
+
+    # 기존 회원 아이디와 비교
+    exists = User.objects.filter(username=user_id).exists() or Member.objects.filter(member_id=user_id).exists()
+
+    if exists:
+        return JsonResponse({"valid": False, "message": "이미 사용 중인 아이디입니다."})
+
+    return JsonResponse({"valid": True, "message": "사용 가능한 아이디입니다."})
 
 # 아이디 중복확인
 def check_user_id(request):
