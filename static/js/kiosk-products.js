@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const captureBtn = document.getElementById("capture-btn");
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    const NGROK_URL = "https://dace-175-121-129-72.ngrok-free.app/predict/";
+    const NGROK_URL = "https://6a2e-175-121-129-72.ngrok-free.app/predict/";
 
     let productDictionary = {};
 
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // 모달 열기 함수 (수정 모드)
+    // 수정시 모달 열기 함수
     function openModalForEdit(itemName) {
         modal.style.display = "block";
         populateItemSelect();
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
-    // 모달 열기 함수 (추가 모드)
+    // 수동추가 모달 열기 함수
     function openModalForAdd() {
         modal.style.display = "block";
         populateItemSelect();
