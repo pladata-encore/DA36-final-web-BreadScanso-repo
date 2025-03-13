@@ -84,11 +84,17 @@
         let countsData = {{ top_5_filtered_sales|safe }};
         let ctx = document.getElementById('salesChart').getContext('2d');
 
+        // 날짜 범위에 맞는 매출 데이터 필터링
+        let salesDataFiltered = salesData.map(date_total_sales => date_total_sales.order_date);
+        
+        // 차트 유형 결정 (10개 이하일 경우 'bar', 그 이상이면 'line')
+        let chartType = salesDataFiltered.length > 10 ? 'line' : 'bar';
+
         // 기존 차트 생성
         let salesChart = new Chart(ctx, {
-            type: 'bar',
+            type: chartType,
             data: {
-                labels: salesData.map(date_total_sales => date_total_sales.order_date),
+                labels: salesDataFiltered,
                 datasets: [{
                     label: '매출 금액',
                     data: salesData.map(date_total_sales => date_total_sales.total_sales), // total_sales가 숫자라면 그대로 사용
