@@ -6,7 +6,7 @@
 ### • 프로젝트 기간 | 2025.01.16 ~ 03.14
 ### • 프로젝트 주제 | 이미지 인식 기반 베이커리 무인결제 및 매장 관리 시스템
 <br>
-
+![프로젝트개요 이미지](readme_images/brandscanso_ppt.jpg)
 <img src="{% static 'readme_images/brandscanso_ppt.jpg' %}">
 <br>
 <img src="{% static 'readme_images/brandscanso_ppt(1).jpg' %}">
@@ -88,7 +88,6 @@
 <img src="{% static 'readme_images/brandscanso_ppt(39).jpg' %}">
 <br>
 <img src="{% static 'readme_images/brandscanso_ppt(40).jpg' %}">
-
 
 
 ## 프로젝트 개요 - NABC
