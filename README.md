@@ -1,7 +1,7 @@
 ## DA36 FINAL-PROJECT
 ![](static/images/bread_im_text.png)
 
-### • 과정 | PLATDATA DA-36
+### • 과정 | PLAYDATA DA-36
 ### • 팀원 | 이예진(팀장), 강한결, 김정아, 조은비, 전민하, 심정석 
 ![](static/readme_images/member_img.jpg)
 ### • 프로젝트 기간 | 2025.01.16 ~ 03.14
@@ -19,9 +19,12 @@
   - 매니저(관리자)만 이용할 수 있으며, '매출정보', '재고관리', '메뉴관리', '회원관리', '시스템설정'을 할 수 있음
   
 <br>
+<<<<<<< HEAD
+=======
 
  ## 프로젝트 소개
 
+>>>>>>> f1e6f404ee3f1b998b7907f970754a464821cb66
 ![](static/readme_images/Breadscanso_ppt.jpg)
 <br>
 ![](static/readme_images/Breadscanso_ppt_1.jpg)
