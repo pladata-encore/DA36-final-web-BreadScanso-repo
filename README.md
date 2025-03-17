@@ -1,7 +1,7 @@
 ## DA36 FINAL-PROJECT
 ![](https://github.com/jjungah/DA36-final-web-BreadScanso-repo/blob/633cea36ffd4af806e60b79795221be5f3314f9b/static/images/bread_im_text.png)
 
-### • 과정 | PLATDATE DA-36
+### • 과정 | PLATDATA DA-36
 ### • 팀원 | 이예진(팀장), 강한결, 김정아, 조은비, 전민하, 심정석 
 ![](static/readme_images/member_img.jpg)
 ### • 프로젝트 기간 | 2025.01.16 ~ 03.14
