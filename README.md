@@ -6,88 +6,88 @@
 ### • 프로젝트 기간 | 2025.01.16 ~ 03.14
 ### • 프로젝트 주제 | 이미지 인식 기반 베이커리 무인결제 및 매장 관리 시스템
 <br>
-![brandscanso_ppt](static/readme_images/brandscanso_ppt(40).jpg)
-<img src="{% static 'readme_images/brandscanso_ppt.jpg' %}">
+
+![brandscanso_ppt](static/readme_images/brandscanso_ppt.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(1).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_1.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(2).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_2.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(3).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_3.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(4).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_4.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(5).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_5.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(6).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_6.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(7).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_7.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(8).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_8.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(9).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_9.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(10).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_10.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(11).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_11.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(12).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_12.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(13).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_13.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(14).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_14.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(15).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_15.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(16).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_16.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(17).jpg' %}">
+<![brandscanso_ppt](static/readme_images/brandscanso_ppt_17.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(18).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_18.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(19).jpg' %}">
+<![brandscanso_ppt](static/readme_images/brandscanso_ppt_19.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(20).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_20.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(21).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_21.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(22).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_22.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(23).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_23.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(24).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_24.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(25).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_25.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(26).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_26.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(27).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_27.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(28).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_28.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(29).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_29.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(30).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_30.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(31).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_31.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(32).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_32.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(33).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_33.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(34).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_34.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(35).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_35.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(36).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_36.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(37).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_37.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(38).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_38.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(39).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_39.jpg)
 <br>
-<img src="{% static 'readme_images/brandscanso_ppt(40).jpg' %}">
+![brandscanso_ppt](static/readme_images/brandscanso_ppt_40.jpg)
 
 
 ## 프로젝트 개요 - NABC
