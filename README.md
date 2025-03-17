@@ -19,12 +19,8 @@
   - 매니저(관리자)만 이용할 수 있으며, '매출정보', '재고관리', '메뉴관리', '회원관리', '시스템설정'을 할 수 있음
   
 <br>
-<<<<<<< HEAD
-=======
 
  ## 프로젝트 소개
-
->>>>>>> f1e6f404ee3f1b998b7907f970754a464821cb66
 ![](static/readme_images/Breadscanso_ppt.jpg)
 <br>
 ![](static/readme_images/Breadscanso_ppt_1.jpg)
@@ -122,7 +118,6 @@
 - 클라우드: AWS (EC2, EB, S3)
 - AI 모델 및 도구: OpenCV, TensorFlow, Pytorch, YOLOv8s, Faster R-CNN, Mask R-CNN, Detectron2, Roboflow
 - 배포 도구 : Docker, Docker Hub, GitHub Action
-<br>
 
 
 
