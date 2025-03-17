@@ -18,49 +18,6 @@
 - 매장페이지 
   - 매니저(관리자)만 이용할 수 있으며, '매출정보', '재고관리', '메뉴관리', '회원관리', '시스템설정'을 할 수 있음
 <br>
-![](static/readme_images/Breadscanso_ppt.jpg)
-![](static/readme_images/Breadscanso_ppt_1.jpg)
-![](static/readme_images/Breadscanso_ppt_2.jpg)
-![](static/readme_images/Breadscanso_ppt_3.jpg)
-![](static/readme_images/Breadscanso_ppt_4.jpg)
-![](static/readme_images/Breadscanso_ppt_5.jpg)
-![](static/readme_images/Breadscanso_ppt_6.jpg)
-![](static/readme_images/Breadscanso_ppt_7.jpg)
-![](static/readme_images/Breadscanso_ppt_8.jpg)
-![](static/readme_images/Breadscanso_ppt_9.jpg)
-![](static/readme_images/Breadscanso_ppt_10.jpg)
-![](static/readme_images/Breadscanso_ppt_11.jpg)
-![](static/readme_images/Breadscanso_ppt_12.jpg)
-![](static/readme_images/Breadscanso_ppt_13.jpg)
-![](static/readme_images/Breadscanso_ppt_14.jpg)
-![](static/readme_images/Breadscanso_ppt_15.jpg)
-![](static/readme_images/Breadscanso_ppt_16.jpg)
-![](static/readme_images/Breadscanso_ppt_17.jpg)
-![](static/readme_images/Breadscanso_ppt_18.jpg)
-![](static/readme_images/Breadscanso_ppt_19.jpg)
-![](static/readme_images/Breadscanso_ppt_20.jpg)
-![](static/readme_images/Breadscanso_ppt_21.jpg)
-![](static/readme_images/Breadscanso_ppt_22.jpg)
-![](static/readme_images/Breadscanso_ppt_23.jpg)
-![](static/readme_images/Breadscanso_ppt_24.jpg)
-![](static/readme_images/Breadscanso_ppt_25.jpg)
-![](static/readme_images/Breadscanso_ppt_26.jpg)
-![](static/readme_images/Breadscanso_ppt_27.jpg)
-![](static/readme_images/Breadscanso_ppt_28.jpg)
-![](static/readme_images/Breadscanso_ppt_29.jpg)
-![](static/readme_images/Breadscanso_ppt_30.jpg)
-![](static/readme_images/Breadscanso_ppt_31.jpg)
-![](static/readme_images/Breadscanso_ppt_32.jpg)
-![](static/readme_images/Breadscanso_ppt_33.jpg)
-![](static/readme_images/Breadscanso_ppt_34.jpg)
-![](static/readme_images/Breadscanso_ppt_35.jpg)
-![](static/readme_images/Breadscanso_ppt_36.jpg)
-![](static/readme_images/Breadscanso_ppt_37.jpg)
-![](static/readme_images/Breadscanso_ppt_38.jpg)
-![](static/readme_images/Breadscanso_ppt_39.jpg)
-![](static/readme_images/Breadscanso_ppt_40.jpg)
-
-
 ![](static/readme_images/Breadscanso_ppt.jpg) 
 <br>
 ![](static/readme_images/Breadscanso_ppt_1.jpg)
@@ -143,6 +100,13 @@
 <br>
 ![](static/readme_images/Breadscanso_ppt_40.jpg)
 <br>
+![](static/readme_images/Breadscanso_ppt_41.jpg)
+<br>
+![](static/readme_images/Breadscanso_ppt_42.jpg)
+<br>
+![](static/readme_images/Breadscanso_ppt_43.jpg)
+<br>
+
 
 [//]: # (![]&#40;https://github.com/jjungah/DA36-final-web-BreadScanso-repo/blob/81f1b538a13712f532a1b7ec50eeaf00bd13345a/static/readme_images/Breadscanso_ppt.jpg&#41;)
 
