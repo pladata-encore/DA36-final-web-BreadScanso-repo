@@ -16,8 +16,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const captureBtn = document.getElementById("capture-btn");
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    const NGROK_URL = "https://6a2e-175-121-129-72.ngrok-free.app/predict/";
 
+    const NGROK_URL = "https://6a2e-175-121-129-72.ngrok-free.app/predict/";
+    const EC2_URL = "http://3.38.150.51:8001/predict/"
     let productDictionary = {};
 
     // 한글명 매핑 함수
@@ -110,161 +111,180 @@ document.addEventListener('DOMContentLoaded', function () {
         canvas.height = video.videoHeight;
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = canvas.toDataURL("image/jpeg");
-
         try {
-            const response = await fetch(NGROK_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({image: imageData}),
-                mode: "cors"
-            });
-
-            const results = await response.json();
-            if (!results) throw new Error("빈 응답이 왔습니다");
-
-            // Base64 인코딩된 이미지 받아오기
-            const detectedImage = results.image;
-            const detectionData = results.data;
-
-            // base64 이미지
-            document.getElementById("result-image").src = `data:image/jpeg;base64,${detectedImage}`;
-            document.getElementById("result-modal").style.display = "block";
+        // local gpu서버용 요청 코드
+        //     const response = await fetch(NGROK_URL, {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             "Accept": "application/json"
+        //         },
+        //         body: JSON.stringify({image: imageData}),
+        //         mode: "cors"
+        //     });
 
 
-            // 모달 외부 클릭 시 닫기 (선택 사항)
-            window.addEventListener("click", function (event) {
-                const modal = document.getElementById("result-modal");
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                }
-            });
+        // EC2 cpu서버용 요청 코드
+        const response = await fetch(EC2_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({image: imageData}),
+            mode: "cors"
+        });
 
-            // 라벨, confidence data
-            detectionData.forEach(result => {
-                if (result?.name && result?.confidence) {
-                    const engName = result.name;
-                    const korName = getKoreanName(engName);
-                    const price = menu_data[engName]?.price || 0;
-                    const item_id = menu_data[engName]?.item_id || null;
-                    const confidence = parseFloat(result.confidence); // 문자열에서 숫자로 변환
+        const results = await response.json();
+        if (!results) throw new Error("빈 응답이 왔습니다");
 
-                    if (productDictionary[engName]) {
-                        productDictionary[engName].quantity += 1;
-                        productDictionary[engName].totalPrice =
-                            productDictionary[engName].quantity * productDictionary[engName].price;
-                        // confidence 값이 더 낮은 경우 갱신
-                        if (confidence < productDictionary[engName].confidence) {
-                            productDictionary[engName].confidence = confidence;
-                        }
-                    } else {
-                        productDictionary[engName] = {
-                            korName: korName,
-                            price: price,
-                            quantity: 1,
-                            totalPrice: price,
-                            item_id: item_id,
-                            confidence: confidence // confidence 값 추가
-                        };
-                    }
-                }
-            });
 
-            updateOrderTable();
-        } catch (error) {
-            console.error("🚨 에러:", error);
-        } finally {
-            captureBtn.disabled = false;
-            captureBtn.textContent = "📸 촬영";
-        }
-    });
+        // Base64 인코딩된 이미지 받아오기
+        const detectedImage = results.image;
+        const detectionData = results.data;
 
-    // 모달 요소
-    const modal = document.getElementById("edit-modal");
-    const itemSelect = document.getElementById("item-select");
-    const quantityInput = document.getElementById("quantity-input");
-    const saveItemBtn = document.getElementById("save-item-btn");
-    const closeModalBtn = document.getElementById("close-modal-btn");
-    const searchInput = document.getElementById("search-input");
+        // base64 이미지
+        document.getElementById("result-image").src = `data:image/jpeg;base64,${detectedImage}`;
+        document.getElementById("result-modal").style.display = "block";
 
-    // 품목 목록 채우기
-    function populateItemSelect(filter = "") {
-        itemSelect.innerHTML = "";
-        Object.keys(menu_data).forEach(engName => {
-            const korName = getKoreanName(engName);
-            if (korName.includes(filter)) {
-                const option = document.createElement("option");
-                option.value = engName;
-                option.textContent = `${korName} - ${menu_data[engName].price}원`;
-                itemSelect.appendChild(option);
+
+        // 모달 외부 클릭 시 닫기 (선택 사항)
+        window.addEventListener("click", function (event) {
+            const modal = document.getElementById("result-modal");
+            if (event.target === modal) {
+                modal.style.display = "none";
             }
         });
-    }
 
-    // 수정시 모달 열기 함수
-    function openModalForEdit(itemName) {
-        modal.style.display = "block";
-        populateItemSelect();
-        itemSelect.value = itemName;
-        quantityInput.value = productDictionary[itemName].quantity;
-        saveItemBtn.onclick = () => {
-            const newQuantity = parseInt(quantityInput.value);
-            productDictionary[itemName].quantity = newQuantity;
-            productDictionary[itemName].totalPrice = newQuantity * productDictionary[itemName].price;
-            updateOrderTable();
-            modal.style.display = "none";
-        };
-    }
+        // 라벨, confidence data
+        detectionData.forEach(result => {
+            if (result?.name && result?.confidence) {
+                const engName = result.name;
+                const korName = getKoreanName(engName);
+                const price = menu_data[engName]?.price || 0;
+                const item_id = menu_data[engName]?.item_id || null;
+                const confidence = parseFloat(result.confidence); // 문자열에서 숫자로 변환
 
-    // 수동추가 모달 열기 함수
-    function openModalForAdd() {
-        modal.style.display = "block";
-        populateItemSelect();
-        quantityInput.value = 1;
-        saveItemBtn.onclick = () => {
-            const selectedItem = itemSelect.value;
-            const quantity = parseInt(quantityInput.value);
-            if (!productDictionary[selectedItem]) {
-                productDictionary[selectedItem] = {
-                    korName: getKoreanName(selectedItem),
-                    price: menu_data[selectedItem].price,
-                    quantity: quantity,
-                    totalPrice: menu_data[selectedItem].price * quantity,
-                    item_id: menu_data[selectedItem].item_id,
-                    confidence: 1.0 // 수동 추가 시 confidence 값 기본 100%
-                };
-            } else {
-                productDictionary[selectedItem].quantity += quantity;
-                productDictionary[selectedItem].totalPrice = productDictionary[selectedItem].quantity * productDictionary[selectedItem].price;
+                if (productDictionary[engName]) {
+                    productDictionary[engName].quantity += 1;
+                    productDictionary[engName].totalPrice =
+                        productDictionary[engName].quantity * productDictionary[engName].price;
+                    // confidence 값이 더 낮은 경우 갱신
+                    if (confidence < productDictionary[engName].confidence) {
+                        productDictionary[engName].confidence = confidence;
+                    }
+                } else {
+                    productDictionary[engName] = {
+                        korName: korName,
+                        price: price,
+                        quantity: 1,
+                        totalPrice: price,
+                        item_id: item_id,
+                        confidence: confidence // confidence 값 추가
+                    };
+                }
             }
-            updateOrderTable();
-            modal.style.display = "none";
-        };
+        });
+
+        updateOrderTable();
     }
+catch
+    (error)
+    {
+        console.error("🚨 에러:", error);
+    }
+finally
+    {
+        captureBtn.disabled = false;
+        captureBtn.textContent = "📸 촬영";
+    }
+});
 
-    // 검색 기능
-    searchInput.addEventListener("input", () => {
-        populateItemSelect(searchInput.value);
-    });
+// 모달 요소
+const modal = document.getElementById("edit-modal");
+const itemSelect = document.getElementById("item-select");
+const quantityInput = document.getElementById("quantity-input");
+const saveItemBtn = document.getElementById("save-item-btn");
+const closeModalBtn = document.getElementById("close-modal-btn");
+const searchInput = document.getElementById("search-input");
 
-    // 모달 닫기
-    closeModalBtn.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
-
-    // 테이블 행 클릭 시 수정 모달 열기
-    document.getElementById("order-table").addEventListener("click", (e) => {
-        const row = e.target.closest("tr");
-        if (row && e.target.tagName !== "BUTTON") { // 삭제 버튼 클릭 제외
-            const itemName = Object.keys(productDictionary).find(key => productDictionary[key].korName === row.cells[0].textContent);
-            openModalForEdit(itemName);
+// 품목 목록 채우기
+function populateItemSelect(filter = "") {
+    itemSelect.innerHTML = "";
+    Object.keys(menu_data).forEach(engName => {
+        const korName = getKoreanName(engName);
+        if (korName.includes(filter)) {
+            const option = document.createElement("option");
+            option.value = engName;
+            option.textContent = `${korName} - ${menu_data[engName].price}원`;
+            itemSelect.appendChild(option);
         }
     });
+}
 
-    // 품목 추가 버튼 이벤트
-    document.getElementById("add-item-btn").addEventListener("click", openModalForAdd);
+// 수정시 모달 열기 함수
+function openModalForEdit(itemName) {
+    modal.style.display = "block";
+    populateItemSelect();
+    itemSelect.value = itemName;
+    quantityInput.value = productDictionary[itemName].quantity;
+    saveItemBtn.onclick = () => {
+        const newQuantity = parseInt(quantityInput.value);
+        productDictionary[itemName].quantity = newQuantity;
+        productDictionary[itemName].totalPrice = newQuantity * productDictionary[itemName].price;
+        updateOrderTable();
+        modal.style.display = "none";
+    };
+}
 
-    startWebcam();
+// 수동추가 모달 열기 함수
+function openModalForAdd() {
+    modal.style.display = "block";
+    populateItemSelect();
+    quantityInput.value = 1;
+    saveItemBtn.onclick = () => {
+        const selectedItem = itemSelect.value;
+        const quantity = parseInt(quantityInput.value);
+        if (!productDictionary[selectedItem]) {
+            productDictionary[selectedItem] = {
+                korName: getKoreanName(selectedItem),
+                price: menu_data[selectedItem].price,
+                quantity: quantity,
+                totalPrice: menu_data[selectedItem].price * quantity,
+                item_id: menu_data[selectedItem].item_id,
+                confidence: 1.0 // 수동 추가 시 confidence 값 기본 100%
+            };
+        } else {
+            productDictionary[selectedItem].quantity += quantity;
+            productDictionary[selectedItem].totalPrice = productDictionary[selectedItem].quantity * productDictionary[selectedItem].price;
+        }
+        updateOrderTable();
+        modal.style.display = "none";
+    };
+}
+
+// 검색 기능
+searchInput.addEventListener("input", () => {
+    populateItemSelect(searchInput.value);
 });
+
+// 모달 닫기
+closeModalBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+});
+
+// 테이블 행 클릭 시 수정 모달 열기
+document.getElementById("order-table").addEventListener("click", (e) => {
+    const row = e.target.closest("tr");
+    if (row && e.target.tagName !== "BUTTON") { // 삭제 버튼 클릭 제외
+        const itemName = Object.keys(productDictionary).find(key => productDictionary[key].korName === row.cells[0].textContent);
+        openModalForEdit(itemName);
+    }
+});
+
+// 품목 추가 버튼 이벤트
+document.getElementById("add-item-btn").addEventListener("click", openModalForAdd);
+
+startWebcam();
+})
+;
