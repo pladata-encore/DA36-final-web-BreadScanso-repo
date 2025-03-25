@@ -4,8 +4,9 @@
 {% block title %}Main{% endblock title %}
 
 {% block header %}
+
     {% include 'layout/main/main_header.html' %}
-    <div class="design1">
+    <div class="main-design1">
         <img src="{% static 'images/design1.png' %}" alt="메인홈지붕">
     </div>
 {% endblock header %}
@@ -20,23 +21,12 @@
                 {{ message }}
             {% endfor %}
         </div>
-{#        <script>#}
-{#            setTimeout(function() {#}
-{#                let messageBox = document.getElementById("signup-message");#}
-{#                if (messageBox) {#}
-{#                    messageBox.style.transition = "opacity 0.5s";#}
-{#                    messageBox.style.opacity = "0";#}
-{#                    setTimeout(() => messageBox.remove(), 500);#}
-{#                }#}
-{#            }, 5000); // 5초 나타나고 사라지게 했음#}
-{#        </script>#}
     {% endif %}
-    <div class="brand-home-img">
+    <div class="main-home-img">
         <img src="{% static 'images/home_text2.png' %}" class="rounded mx-auto d-block" alt="메인홈인사말1">
     </div>
     <br>
-{#    <p class="center-text" style="font-size: {{ font_size }};">따뜻한 빵의 향기로 가득한 브레드 스캔소에 오신 것을 환영합니다!</p>#}
-    <!-- 슬라이드 -->
+    <!-- 슬라이드 캐러셀-->
     <div id="carouselExampleIndicators" class="carousel slide">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -64,12 +54,6 @@
         </button>
     </div>
     <br>
-    <!-- 메인 브랜드 인사말 -->
-{#    <div class="brand-home2-img">#}
-{#        <img src="{% static 'images/home_text.png' %}" class="rounded mx-auto d-block" alt="메인홈인사말2">#}
-{#    </div>#}
-{#    <p class="center-text" style="font-size: {{ font_size }};">언제나 신선한 재료와 정성으로 만든 감동의 빵을 맛 보세요. <br>#}
-{#    매일 아침, 갓 구운 빵의 향기로 여러분을 맞이하겠습니다 ( • ᴗ - ) ✧</p>#}
     <br>
     <!-- event & product 텍스트 정렬(홈(본문)) -->
     <div class="main-header">
@@ -81,9 +65,7 @@
         <!-- evnet 이미지 왼쪽 정렬 -->
         <div class="event-container">
             <div class="event-item">
-{#                <a href="{% url 'event_detail'%}" class="card event-card text-decoration-none">#}
                 <img src="{% static 'images/event1.jpg' %}" class="event-img" alt="이벤트1">
-{#                </a>#}
             </div>
             <div class="event-item">
                 <img src="{% static 'images/event2.jpg' %}" class="event-img" alt="이벤트2">
@@ -121,7 +103,7 @@
 {% endblock content %}
 
 {% block footer %}
-    <div class="design2">
+    <div class="main-design2">
         <img src="{% static 'images/design2.png' %}" alt="메인홈하단라인">
     </div>
     {% include 'layout/main/main_footer.html' %}
