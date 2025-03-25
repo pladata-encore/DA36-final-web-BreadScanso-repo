@@ -1,23 +1,32 @@
 {% load static %}
 <header>
-    <div class="logo-container">
-        <a href="/brand" class="btn">브랜드소개</a>
-        <a href="{% url 'store:store_main' %}" class="btn">매장위치</a>
-        <a href="/menu" class="btn">메뉴정보</a>
+    <div class="category-container">
         <a href="/">
-            <img src="{% static 'images/bread_im_text.png' %}" alt="text" class="logo-img">
+            <img src="{% static 'images/bread_im_text.png' %}" alt="text" class="header-img">
         </a>
-        <a href="/event" class="btn">이벤트</a>
+    </div>
+    <div class="category-container">
+        <a href="/brand">
+            <img src="{%  static 'images/name_brand.png' %}" alt="브랜드소개" class="category-img">
+        </a>
+        <a href="{% url 'store:store_main' %}">
+            <img src="{%  static 'images/name_map.png' %}" alt="매장안내" class="category-img">
+        </a>
+        <a href="/menu">
+            <img src="{%  static 'images/name_menu.png' %}" alt="메뉴정보" class="category-img">
+        </a>
+        <a href="/event">
+            <img src="{%  static 'images/name_event.png' %}" alt="이벤트" class="category-img">
+        </a>
         <div class="btn-group">
-            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                커뮤니티
-            </button>
+            <img src="{%  static 'images/name_commu.png' %}" alt="커뮤니티" class="btn dropdown-toggl" data-bs-toggle="dropdown" aria-expanded="false" style="width: 125px; margin: 0 20px;">
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="/notice">공지사항</a></li>
                 <li><a class="dropdown-item" href="/qna">Q&A</a></li>
             </ul>
         </div>
-        <div>
+    </div>
+
         <div class="main-login-container">
             {% if user.is_authenticated %}
                 <span style="padding: 8px; font-weight: 600; color: brown; text-decoration: underline; font-size: 1.2rem;">{{ member.name }} 님</span>
@@ -37,6 +46,5 @@
                 <a href="{% url 'main:signup' %}" class="btn btn-light">회원가입</a>
             {% endif %}
         </div>
-    </div>
     </div>
 </header>
