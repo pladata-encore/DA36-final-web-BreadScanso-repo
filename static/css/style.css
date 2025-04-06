@@ -513,13 +513,6 @@ body.main-index .event-img, body.main-index .product-img {
     cursor: pointer;
 }
 
-.new-carousel-item img,
-.product-carousel-item img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-}
-
 /* best 캐러셀 (초기화 때문에 따로 설정) */
 .best-carousel-item {
     flex: 0 0 20%; /* 5개씩 보이도록 설정 */
@@ -533,10 +526,11 @@ body.main-index .event-img, body.main-index .product-img {
     cursor: pointer;
 }
 
-.best-carousel-item img {
+.carousel-img {
     width: 100%;
-    height: auto;
-    border-radius: 10px;
+    height: 100%;
+    object-fit: cover; /* 이미지 비율 유지 + 꽉 채우기 (잘릴 수도 있음) */
+    border-radius: 20px; /* 이미지 모서리 둥글게 */
 }
 
 /* 버튼 스타일 (각 캐러셀별 구분) */
