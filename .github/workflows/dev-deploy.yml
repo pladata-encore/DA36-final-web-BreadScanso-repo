@@ -41,7 +41,7 @@ jobs:
             mkdir -p ~/breadscanso-dev
             cd ~/breadscanso-dev
 
-            cat > docker-compose.yml << 'EOF'
+            cat > docker-compose.yml << EOF
 version: '3'
 services:
   web:
