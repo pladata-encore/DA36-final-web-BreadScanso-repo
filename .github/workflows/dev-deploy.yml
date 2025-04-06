@@ -1,0 +1,63 @@
+name: Dev-Deploy
+
+on:
+  pull_request:
+    branches:
+      - dev
+    types:
+      - closed
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DEV_DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DEV_DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile.dev
+          push: true
+          tags: ${{ secrets.DEV_DOCKERHUB_USERNAME }}/breadscanso-dev:latest
+          build-args: |
+            DJANGO_SETTINGS_MODULE=breadscanso.settings_dev
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: 3.34.46.30
+          username: ubuntu
+          key: ${{ secrets.DEV_SSH_KEY }}
+          script: |
+            mkdir -p ~/breadscanso-dev
+            cd ~/breadscanso-dev
+            
+            cat > docker-compose.yml << 'EOF'
+version: '3'
+services:
+  web:
+    image: ${{ secrets.DEV_DOCKERHUB_USERNAME }}/breadscanso-dev:latest
+    restart: always
+    environment:
+      - DJANGO_SETTINGS_MODULE=breadscanso.settings_dev
+    ports:
+      - '80:8000'
+    volumes:
+      - ./static:/app/static
+      - ./media:/app/media
+    env_file:
+      - .env
+EOF
+            
+            docker pull ${{ secrets.DEV_DOCKERHUB_USERNAME }}/breadscanso-dev:latest
+            docker-compose down
+            docker-compose up -d
