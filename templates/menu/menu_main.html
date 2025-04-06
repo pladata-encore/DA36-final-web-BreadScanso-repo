@@ -1,5 +1,6 @@
 {% extends 'layout/main/main_base.html' %}
 {% load static %}
+{% load menu_tags %} <!-- menu_tags.py 로드 -->
 
 {% block title %}메뉴정보{% endblock title %}
 
@@ -8,27 +9,31 @@
 {% endblock header %}
 
 {% block content %}
-    <body class="text-dark py-3" style="background-color: #ffffff;">
-    <h2 style="font-weight: bold" class="text-center mt-5">메뉴 정보</h2>
-    
-    <!-- 매장 선택 (가운데, 매장 미선택 시에만 표시) -->
+<body class="text-dark py-3" style="background-color: #ffffff;">
+    <!-- 페이지 제목 -->
+    <h1 style="font-weight: bold" class="text-center mt-5">메뉴 정보</h1>
+
+    <!-- 매장 선택 드롭다운 (매장 미선택 시 표시) -->
     {% if not selected_store %}
     <div class="container my-5">
         <div class="d-flex justify-content-center align-items-center">
-            <div class="d-flex">
-                <form id="storeForm" method="get" action="{% url 'menu_main' %}">
-                    <select class="form-select" aria-label="select store" name="store" id="selectStore" onchange="this.form.submit()">
-                        <option value="" {% if not selected_store %}selected{% endif %}>매장을 선택해주세요</option>
-                        <option value="A" {% if selected_store == 'A' %}selected{% endif %}>서초점</option>
-                        <option value="B" {% if selected_store == 'B' %}selected{% endif %}>강남점</option>
-                    </select>
-                </form>
-            </div>
+            <form id="storeForm" method="get" action="{% url 'menu_main' %}">
+                <select class="form-select" aria-label="매장 선택" name="store" id="selectStore" onchange="this.form.submit()">
+                    <option value="" {% if not selected_store %}selected{% endif %}>매장을 선택해주세요</option>
+                    <!-- menu_tags.py에서 매장 목록 동적 로드 -->
+                    {% get_store_map as store_map %}
+                    {% for store_code, store_name in store_map.items %}
+                    <option value="{{ store_code }}" {% if selected_store == store_code %}selected{% endif %}>
+                        {{ store_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
         </div>
     </div>
     {% endif %}
 
-    <!-- New 캐러셀 (매장 미선택 시 표시) -->
+    <!-- New 캐러셀 -->
     {% if not selected_store %}
     <div class="menu-section">
         <div class="container">
@@ -36,16 +41,13 @@
                 <h2 class="category-title"><strong>New</strong></h2>
             </div>
             <div class="new-carousel-container">
-                <button class="new-carousel-btn left">❮</button>  
+                <button class="new-carousel-btn left" aria-label="New 캐러셀 이전">❮</button>
                 <div class="carousel-wrapper">
                     <div class="new-carousel-track">
                         {% for item in new_items %}
                         <div class="new-carousel-item" data-id="{{ item.item_id }}">
-                            {% if item.item_image %}
-                                <img src="{{ item.item_image }}" class="product-img" alt="{{ item.item_name }}">
-                            {% else %}
-                                <img src="{% static 'images/default.jpg' %}" class="product-img" alt="{{ item.item_name }}">
-                            {% endif %}
+                            <img src="{{ item.item_image|default:'/static/images/default.jpg' }}"
+                                 class="carousel-img" alt="{{ item.item_name }}">
                             <div class="product-name">{{ item.item_name }}</div>
                         </div>
                         {% empty %}
@@ -53,28 +55,25 @@
                         {% endfor %}
                     </div>
                 </div>
-                <button class="new-carousel-btn right">❯</button> 
+                <button class="new-carousel-btn right" aria-label="New 캐러셀 다음">❯</button>
             </div>
         </div>
     </div>
-    
-    <!-- 전체 제품 캐러셀 (매장 미선택 시 표시) -->
+
+    <!-- 전체 제품 캐러셀 -->
     <div class="menu-section">
         <div class="container mt-5 mb-5">
             <div class="category-block">
                 <h2 class="category-title"><strong>전체 제품</strong></h2>
             </div>
             <div class="product-carousel-container">
-                <button class="product-carousel-btn left">❮</button>  
+                <button class="product-carousel-btn left" aria-label="제품 캐러셀 이전">❮</button>
                 <div class="carousel-wrapper">
                     <div class="product-carousel-track">
                         {% for item in items %}
                         <div class="product-carousel-item" data-id="{{ item.item_id }}">
-                            {% if item.item_image %}
-                                <img src="{{ item.item_image }}" class="product-img" alt="{{ item.item_name }}">
-                            {% else %}
-                                <img src="{% static 'images/default.jpg' %}" class="product-img" alt="{{ item.item_name }}">
-                            {% endif %}
+                            <img src="{{ item.item_image|default:'/static/images/default.jpg' }}"
+                                 class="carousel-img" alt="{{ item.item_name }}">
                             <div class="product-name">{{ item.item_name }}</div>
                         </div>
                         {% empty %}
@@ -82,41 +81,55 @@
                         {% endfor %}
                     </div>
                 </div>
-                <button class="product-carousel-btn right">❯</button> 
+                <button class="product-carousel-btn right" aria-label="제품 캐러셀 다음">❯</button>
             </div>
         </div>
     </div>
     {% endif %}
 
-    <!-- 매장 선택 후 버튼 및 검색창 -->
+    <!-- 매장 선택 후 필터 및 검색 UI -->
     {% if selected_store %}
     <div class="container my-3">
         <div class="d-flex justify-content-between align-items-center">
-            <!-- 왼쪽: 카테고리 버튼 -->
+            <!-- 매장 선택 및 카테고리 필터 버튼 -->
             <div class="d-flex gap-3">
                 <form id="storeForm" method="get" action="{% url 'menu_main' %}">
-                    <select class="form-select" aria-label="select store" name="store" id="storeSelect" onchange="this.form.submit()">
+                    <select class="form-select" aria-label="매장 선택" name="store" id="storeSelect" onchange="this.form.submit()">
                         <option value="" {% if not selected_store %}selected{% endif %}>매장을 선택해주세요</option>
-                        <option value="A" {% if selected_store == 'A' %}selected{% endif %}>서초점</option>
-                        <option value="B" {% if selected_store == 'B' %}selected{% endif %}>강남점</option>
+                        <!-- menu_tags.py에서 매장 목록 동적 로드 -->
+                        {% get_store_map as store_map %}
+                        {% for store_code, store_name in store_map.items %}
+                        <option value="{{ store_code }}" {% if selected_store == store_code %}selected{% endif %}>
+                            {{ store_name }}
+                        </option>
+                        {% endfor %}
                     </select>
                 </form>
-                <button type="button" class="btn btn-info" onclick="location.href='{% url 'menu_main' %}?store={{ selected_store }}'">All</button>
-                <button type="button" class="btn btn-info" onclick="location.href='{% url 'menu_main' %}?store={{ selected_store }}&category=bread'">Bread</button>
-                <button type="button" class="btn btn-info" onclick="location.href='{% url 'menu_main' %}?store={{ selected_store }}&category=dessert'">Dessert</button>
+                <!-- 전체 보기 버튼 -->
+                <button type="button" class="btn btn-info"
+                        onclick="location.href='{% url 'menu_main' %}?store={{ selected_store }}'">All</button>
+                <!-- menu_tags.py에서 카테고리 목록 동적 로드 -->
+                {% get_category_map as category_map %}
+                {% for category_code, category_name in category_map.items %}
+                <button type="button" class="btn btn-info"
+                        onclick="location.href='{% url 'menu_main' %}?store={{ selected_store }}&category={{ category_code }}'">
+                    {{ category_name }}
+                </button>
+                {% endfor %}
             </div>
 
-            <!-- 오른쪽: 검색창 -->
+            <!-- 검색 폼 -->
             <nav class="navbar">
                 <div class="container-fluid">
                     <form id="search-form" class="d-flex" method="get" action="{% url 'menu_main' %}">
+                        {% csrf_token %}
                         <input type="hidden" name="store" value="{{ selected_store }}">
                         <input class="form-control me-2 search-input" type="search" id="search-input" name="search"
-                            placeholder="제품명을 입력하세요" aria-label="Search"
-                            style="width: 200px; border-radius: 5px;">
+                               placeholder="제품명을 입력하세요" aria-label="제품 검색"
+                               style="width: 200px; border-radius: 5px;">
                         <button id="search-button" type="submit" name="search_button"
-                            style="background-color: lightgoldenrodyellow; padding: 10px 15px;
-                            border: none; border-radius: 5px; cursor: pointer;">
+                                style="background-color: lightgoldenrodyellow; padding: 10px 15px;
+                                border: none; border-radius: 5px; cursor: pointer;">
                             검색
                         </button>
                     </form>
@@ -125,23 +138,20 @@
         </div>
     </div>
 
-    <!-- Best 캐러셀 (매장 선택 시 표시) -->
+    <!-- Best 캐러셀 -->
     <div class="menu-section best-section">
         <div class="container">
             <div class="category-block">
                 <h2 class="category-title">Best</h2>
             </div>
             <div class="best-carousel-container">
-                <button class="best-carousel-btn left">❮</button>  
+                <button class="best-carousel-btn left" aria-label="Best 캐러셀 이전">❮</button>
                 <div class="carousel-wrapper">
                     <div class="best-carousel-track">
                         {% for item in best_items %}
                         <div class="best-carousel-item" data-id="{{ item.item_id }}">
-                            {% if item.item_image %}
-                                <img src="{{ item.item_image }}" class="product-img" alt="{{ item.item_name }}">
-                            {% else %}
-                                <img src="{% static 'images/default.jpg' %}" class="product-img" alt="{{ item.item_name }}">
-                            {% endif %}
+                            <img src="{{ item.item_image|default:'/static/images/default.jpg' }}"
+                                    class="carousel-img" alt="{{ item.item_name }}">
                             <div class="product-name">{{ item.item_name }}</div>
                         </div>
                         {% empty %}
@@ -149,12 +159,12 @@
                         {% endfor %}
                     </div>
                 </div>
-                <button class="best-carousel-btn right">❯</button> 
+                <button class="best-carousel-btn right" aria-label="Best 캐러셀 다음">❯</button>
             </div>
         </div>
     </div>
-    
-    <!-- 전체 제품 표시 (매장 선택시) -->
+
+    <!-- 전체 메뉴 그리드 -->
     <div class="container mt-5">
         <div class="category-block">
             <h2 class="category-title">전체 메뉴</h2>
@@ -162,20 +172,17 @@
                 {% for item in items %}
                 <div class="col">
                     <div class="card shadow-sm h-100 product-card" data-id="{{ item.item_id }}">
-                        <!-- New 태그 -->
                         {% if item.new %}
-                            <div class="new-tag-main" 
+                            <div class="new-tag-main"
                                  data-created-at="{{ item.created_at|date:'c' }}"
                                  data-new-duration-seconds="{{ new_duration_seconds }}">NEW</div>
                         {% endif %}
-                        <!-- S3 이미지 사용 -->
-                        {% if item.item_image %}
-                            <img src="{{ item.item_image }}" class="card-img-top" alt="{{ item.item_name }}">
-                        {% else %}
-                            <img src="{% static 'images/default.jpg' %}{{ item.image_filename }}" class="card-img-top">
-                        {% endif %}
+                        <img src="{{ item.item_image|default:'/static/images/default.jpg' }}"
+                             class="card-img-top" alt="{{ item.item_name }}">
                         <div class="card-body text-center" style="align-content: center">
-                            <h5 class="menu-card-title" style="margin: 0 0 0 0; font-weight: bold; font-size: 18px">{{ item.item_name }}</h5>
+                            <h5 class="menu-card-title" style="margin: 0; font-weight: bold; font-size: 18px">
+                                {{ item.item_name }}
+                            </h5>
                         </div>
                     </div>
                 </div>
@@ -189,7 +196,7 @@
         </div>
     </div>
     {% endif %}
-    
+</body>
 {% endblock content %}
 
 {% block footer %}

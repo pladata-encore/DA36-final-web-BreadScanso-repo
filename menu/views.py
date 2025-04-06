@@ -1,6 +1,5 @@
 import os
 from lib2to3.fixes.fix_input import context
-
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -11,13 +10,16 @@ from .models import Item, NutritionInfo, Allergy
 import json
 from .utils import upload_product_image_to_s3
 from django.utils import timezone
+from django.core.serializers import serialize
+from json import dumps
+from .templatetags.menu_tags import get_category_map # 카테고리 매핑 가져오기
 
 # 소비자 화면 메뉴 정보 페이지
 def menu_main(request):
-    selected_store = request.GET.get('store', '')
-    category_filter = request.GET.get('category', '')
+    selected_store = request.GET.get('store', '')  # URL에서 매장 코드 가져오기
+    category_filter = request.GET.get('category', '')  # URL에서 카테고리 필터 가져오기
 
-    # 기본 쿼리: show=1인 아이템
+    # 기본 쿼리: show=1인 아이템만 조회
     items_query = Item.objects.filter(show=1)
     new_items_query = Item.objects.filter(show=1, new=1)
 
@@ -26,11 +28,11 @@ def menu_main(request):
         items_query = items_query.filter(store=selected_store)
         new_items_query = new_items_query.filter(store=selected_store)
 
-    # 카테고리 필터링 추가
+    # 카테고리 필터링 (URL 기반 초기 렌더링용)
     if category_filter:
         items_query = items_query.filter(category=category_filter)
 
-    # 중복된 item_name 제거 로직 (매장 선택 전용)
+    # 중복된 item_name 제거 로직 (매장 미선택 시)
     def get_unique_items(query):
         seen_names = set()
         unique_items = []
@@ -40,25 +42,27 @@ def menu_main(request):
                 unique_items.append(item)
         return unique_items
 
-    # 매장 선택 여부에 따라 처리
+    # 매장 선택 여부에 따라 데이터 준비
     if not selected_store:
-        items = get_unique_items(items_query.order_by('item_name'))
+        items = get_unique_items(items_query.order_by('item_name'))  # 중복 제거 후 이름순
         new_items = get_unique_items(new_items_query.order_by('item_name'))
-        best_items = []  # 매장 미선택 시 Best는 표시 안 함
+        best_items = []  # 매장 미선택 시 Best 빈 리스트
     else:
-        # new 태그가 있는 제품을 먼저 정렬하고, 나머지는 가나다 순 정렬
-        items = items_query.order_by('-new', 'item_name').distinct()
+        items = items_query.order_by('-new', 'item_name').distinct()  # New 우선, 이름순
         new_items = new_items_query.order_by('item_name').distinct()
-        best_items = items_query.filter(best=1).distinct()
+        best_items = items_query.filter(best=1).distinct()  # Best 항목
 
-    # New 태그 지속 시간 (초 단위, 예: 3600초 = 1시간)
-    new_duration_seconds = 3600 * 24
+    # New 태그 지속 시간 (3600초 = 1시간, 24시간)
+    new_duration_seconds = 3600 * 24 
 
-    member = None  # 기본값을 None으로 설정
+    # 로그인 여부에 따라 member 설정
+    member = None if not request.user.is_authenticated else request.user.member
 
-    if request.user.is_authenticated:  # 로그인한 경우에만 가져오기
-        member = request.user.member
+    # JSON 데이터 준비
+    items_json = serialize('json', Item.objects.filter(show=1), fields=('item_id', 'item_name', 'category', 'item_image', 'new', 'best', 'store'))
+    category_map = get_category_map()  # tag.py에서 카테고리 매핑 가져오기
 
+    # 컨텍스트 설정
     context = {
         'items': items,
         'new_items': new_items,
@@ -67,6 +71,8 @@ def menu_main(request):
         'category_filter': category_filter,
         'new_duration_seconds': new_duration_seconds,
         'member': member,
+        'items_json': items_json,  # 전체 아이템 JSON
+        'category_map_json': dumps(category_map),  # tag.py에서 가져온 카테고리 JSON
     }
     return render(request, 'menu/menu_main.html', context)
 
