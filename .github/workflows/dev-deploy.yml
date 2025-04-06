@@ -9,8 +9,8 @@ on:
 
 jobs:
   build-deploy:
-    runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -40,7 +40,7 @@ jobs:
           script: |
             mkdir -p ~/breadscanso-dev
             cd ~/breadscanso-dev
-            
+
             cat > docker-compose.yml << 'EOF'
 version: '3'
 services:
@@ -57,7 +57,7 @@ services:
     env_file:
       - .env
 EOF
-            
+
             docker pull ${{ secrets.DEV_DOCKERHUB_USERNAME }}/breadscanso-dev:latest
             docker-compose down
             docker-compose up -d
