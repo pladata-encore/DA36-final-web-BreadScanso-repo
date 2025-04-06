@@ -6,7 +6,7 @@ cat > docker-compose.yml << EOF
 version: '3'
 services:
   web:
-    image: ${DOCKER_IMAGE}
+    image: ${DOCKER_DEV_IMAGE}
     restart: always
     environment:
       - DJANGO_SETTINGS_MODULE=breadscanso.settings_dev
