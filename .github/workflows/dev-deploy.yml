@@ -9,8 +9,8 @@ on:
 
 jobs:
   build-deploy:
-    runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -31,33 +31,23 @@ jobs:
           build-args: |
             DJANGO_SETTINGS_MODULE=breadscanso.settings_dev
 
-      - name: Deploy to EC2
+      - name: Copy deploy.sh to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: 3.34.46.30
+          username: ubuntu
+          key: ${{ secrets.DEV_SSH_KEY }}
+          source: "deploy.sh"
+          target: "~/breadscanso-dev"
+
+      - name: Run deploy.sh on EC2
         uses: appleboy/ssh-action@master
         with:
           host: 3.34.46.30
           username: ubuntu
           key: ${{ secrets.DEV_SSH_KEY }}
+          envs: DOCKER_DEV_IMAGE
           script: |
-            mkdir -p ~/breadscanso-dev
-            cd ~/breadscanso-dev
-            
-            cat > docker-compose.yml << 'EOF'
-version: '3'
-services:
-  web:
-    image: ${{ secrets.DEV_DOCKERHUB_USERNAME }}/breadscanso-dev:latest
-    restart: always
-    environment:
-      - DJANGO_SETTINGS_MODULE=breadscanso.settings_dev
-    ports:
-      - '80:8000'
-    volumes:
-      - ./static:/app/static
-      - ./media:/app/media
-    env_file:
-      - .env
-EOF
-            
-            docker pull ${{ secrets.DEV_DOCKERHUB_USERNAME }}/breadscanso-dev:latest
-            docker-compose down
-            docker-compose up -d
+            export DOCKER_DEV_IMAGE=${{ secrets.DEV_DOCKERHUB_USERNAME }}/breadscanso-dev:latest
+            chmod +x ~/breadscanso-dev/deploy.sh
+            ~/breadscanso-dev/deploy.sh

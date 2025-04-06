@@ -6,7 +6,7 @@ load_dotenv()
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '3.34.46.30', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '3.34.46.30', '127.0.0.1', 'www.dev.devbreadscanso.shop', 'dev.devbreadscanso.shop']
 
 # 개발 db
 DATABASES = {
@@ -56,30 +56,10 @@ LOGGING = {
     },
 }
 
-
-
-
-# import os
-# from .settings import *
-# from dotenv import load_dotenv
-# load_dotenv()
-#
-#
-# DEBUG = True
-#
-# ALLOWED_HOSTS = ['localhost', '3.34.46.30']
-#
-# # 개발 db
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.getenv('DATABASE_DEV_NAME'),
-#         'USER': os.getenv('DATABASE_DEV_USER'),
-#         'PASSWORD': os.getenv('DATABASE_DEV_PASSWORD'),
-#         'HOST': os.getenv('DATABASE_DEV_HOST'),
-#         'PORT': os.getenv('DATABASE_DEV_PORT'),
-#         'OPTIONS': {
-#             'charset': 'utf8mb4',
-#         }
-#     }
-# }
+# CSRF 설정
+CSRF_TRUSTED_ORIGINS = [
+    "https://dev.devbreadscanso.shop",
+    "https://www.dev.devbreadscanso.shop",
+    "http://dev.devbreadscanso.shop",
+    "http://www.dev.devbreadscanso.shop"
+]
