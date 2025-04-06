@@ -1,3 +1,4 @@
+// 메인홈 캐러셀
 setTimeout(function() {
     let messageBox = document.getElementById("signup-message");
     if (messageBox) {
