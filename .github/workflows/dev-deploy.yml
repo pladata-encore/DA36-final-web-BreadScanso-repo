@@ -15,8 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name:
-          DEBUG: Check if secrets are loaded
+      - name: DEBUG - Check if secrets are loaded
         run: |
           if [ -z "${{ secrets.DEV_DOCKERHUB_USERNAME }}" ]; then
             echo "❌ USERNAME is missing"
