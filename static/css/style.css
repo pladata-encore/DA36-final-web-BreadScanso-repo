@@ -78,7 +78,7 @@ body.main-index {
 }
 
 .main-home-img img {
-    width: 50%; /* 이미지 크기 조정 */
+    width: 80%; /* 이미지 크기 조정 */
     height: 80px; /* 원본 비율 유지 */
 }
 
@@ -214,7 +214,7 @@ body.main-index .event-img, body.main-index .product-img {
 }
 
 /* 브랜드소개 하단 4개의 네모박스(카드) */
-.main-brand .card-container {
+.brand-card-container {
     display: flex;
     justify-content: center; /* 가운데 정렬 */
     gap: 40px; /* 카드 간격 */
