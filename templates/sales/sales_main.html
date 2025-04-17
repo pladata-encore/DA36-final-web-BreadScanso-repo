@@ -207,14 +207,6 @@
         // 차트 업데이트 (선택된 제품)
         function updateChartForSelectedProduct(dateRange, selectedProduct) {
 
-
-            // 예시로 선택한 날짜 범위와 제품 아이디
-            {#let dateRange1 = ['2025-02-25', '2025-02-26']; // 선택한 날짜 범위#}
-            {#let selectedProduct1 = 3; // 선택한 제품 ID (예: '식빵'의 item_id는 3)#}
-
-            {#let filteredData = itemsalesData.filter(sale =>#}
-            {#    dateRange.includes(sale.order_date) && sale.item_id === Number(selectedProduct)#}
-            {#);#}
             let filteredData = itemsalesData.filter(sale =>
                 sale.item_id === Number(selectedProduct)
             );
@@ -224,62 +216,10 @@
                 return sale ? sale.item_total_amount : 0;  // 데이터가 없으면 0 반환
             });
 
-            {#console.log(filteredData);#}
-
-
-
-
             // 필터링된 데이터를 확인
-            {#console.log(filteredData);#}
-            {#console.log(itemsalesData);  // 이 데이터를 제대로 받았는지 확인#}
-
-            {#console.log("dateRange :", dateRange);#}
-            {#console.log("selectedProduct :", selectedProduct);#}
             console.log("itemsalesData :", itemsalesData);
             console.log("filteredData :", filteredData);
             console.log("resultData :", resultData);
-
-
-            {#// 날짜 범위에 맞는 매출 데이터 필터링#}
-            {#let itemSalesDataFiltered = itemsalesData.filter(final_sales =>#}
-            {#    dateRange.includes(final_sales.order_date) && final_sales.item_id === selectedProduct#}
-            {#);#}
-            {##}
-            {#// 날짜별 매출 데이터 계산#}
-            {#let itemSalesAmounts = dateRange.map(date => {#}
-            {#    let sale = itemSalesDataFiltered.find(s => s.order_date.split(" ")[0] === date);#}
-            {#    return sale ? sale.total_sales : 0;  // 매출이 없으면 0 반환#}
-            {# });#}
-
-            {#// 날짜 범위와 제품 아이디에 맞는 매출 데이터 필터링#}
-            {#let itemSalesDataFiltered = itemsalesData.filter(final_sales =>#}
-            {#    dateRange.includes(final_sales.order_date) && final_sales.item_id === selectedProduct#}
-            {#);#}
-            {##}
-            {#let productSales = itemSalesDataFiltered.reduce((acc, sale) => {#}
-            {#    // 이미 `item_id`가 acc 배열에 있으면 추가하지 않음#}
-            {#    if (!acc.some(item => item.item_id === sale.item_id)) {#}
-            {#        acc.push({#}
-            {#            order_date: sale.order_date,#}
-            {#            item_id: sale.item_id,#}
-            {#            item_name: sale.item_name,#}
-            {#            item_total_count: sale.item_total_count,#}
-            {#            item_total_amount: sale.item_total_amount#}
-            {#        });#}
-            {#    }#}
-            {#    return acc;#}
-            {# }, []);#}
-
-
-            {#let itemSalesAmounts = productSales.map(product => ({#}
-            {#    order_date: product.order_date,#}
-            {#    item_id: product.item_id,#}
-            {#    item_name: product.item_name,#}
-            {#    item_total_count: product.item_total_count,#}
-            {#    item_total_amount: product.item_total_amount#}
-            {# }));#}
-
-            {#console.log("productSales :", productSales);#}
             console.log("선택된 제품에 대한 매출 업데이트");
 
             // 차트 유형 결정 (10개 이하일 경우 'bar', 그 이상이면 'line')
@@ -316,20 +256,16 @@
                                 label: function(tooltipItem) {
                                     let date = tooltipItem.label;  // 날짜
                                     let salesAmount = tooltipItem.raw;  // 매출 금액
-
                                     // 제품 수량을 찾아야 합니다. (여기서는 `quantityData`를 예로 들었습니다)
                                     let productCount = 0;
-
                                     // 날짜에 해당하는 제품 수량을 가져오는 로직 (예시)
                                     const selectedDate = date; // 툴팁에서 나온 날짜
-
                                     // `itemsalesData`에서 해당 날짜와 제품의 수량을 찾음
                                     itemsalesData.forEach(sale => {
                                         if (sale.order_date === selectedDate && sale.item_id === Number(selectedProduct)) {
                                             productCount = sale.item_total_count; // 수량
                                         }
                                     });
-
                                     // 날짜, 매출 금액, 제품 수량을 반환
                                     return `매출 금액: ${salesAmount} 원, 수량: ${productCount} 개`;
                                 }
@@ -402,7 +338,5 @@
                 cellTotalAmount.textContent = sale.item_total_amount;
             });
          }
-
-
     </script>
 {% endblock script %}
