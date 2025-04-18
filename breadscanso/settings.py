@@ -185,6 +185,7 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
+            'prompt': 'select_account' # 로그아웃 이후 계정 선택할 수 있게 하는!
         }
     },
     'naver': {
