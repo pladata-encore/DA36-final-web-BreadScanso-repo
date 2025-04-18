@@ -208,10 +208,11 @@ ACCOUNT_EMAIL_VERIFICATION = 'none' # none | optional | mandatory
 # LOGIN_REDIRECT_URL = '/app/' # 기본값 /accounts/profile/
 # LOGOUT_REDIRECT_URL = '/app/'  # 기본값 /
 ACCOUNT_LOGOUT_ON_GET = True # 기본값 False
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # allauth가 리디렉션 URL을 https로 생성
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # HTTPS 프록시 신뢰
-SECURE_SSL_REDIRECT = True  # 모든 HTTP 요청을 HTTPS로 자동 리디렉션
+# ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # allauth가 리디렉션 URL을 https로 생성
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # HTTPS 프록시 신뢰
+# SECURE_SSL_REDIRECT = True  # 모든 HTTP 요청을 HTTPS로 자동 리디렉션
 
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
 
 # 환경 구분을 위한 설정 (조건문 사용)
 if DEBUG:

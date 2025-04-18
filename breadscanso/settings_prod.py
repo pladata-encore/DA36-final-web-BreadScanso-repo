@@ -54,7 +54,9 @@ DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 
-
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # allauth가 리디렉션 URL을 https로 생성
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # HTTPS 프록시 신뢰
+SECURE_SSL_REDIRECT = True  # 모든 HTTP 요청을 HTTPS로 자동 리디렉션
 
 
 
