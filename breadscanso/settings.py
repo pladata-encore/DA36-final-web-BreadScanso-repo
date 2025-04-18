@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-&=9$0a5lsdo@uvu5qy%50!jbc6iqtx%f+862^2i#u^ec!!b362
 DEBUG = True
 #
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ["www.breadscanso.shop", "breadscanso.shop"]
+ALLOWED_HOSTS = ["www.breadscanso.shop", "breadscanso.shop", "127.0.0.1"]
 
 
 # Application definition
@@ -159,6 +159,7 @@ STATICFILES_DIRS = [
 # 로그인 후 이동할 기본 페이지 설정
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/' # 구글로그인 연동 추가
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -207,6 +208,10 @@ ACCOUNT_EMAIL_VERIFICATION = 'none' # none | optional | mandatory
 # LOGIN_REDIRECT_URL = '/app/' # 기본값 /accounts/profile/
 # LOGOUT_REDIRECT_URL = '/app/'  # 기본값 /
 ACCOUNT_LOGOUT_ON_GET = True # 기본값 False
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # allauth가 리디렉션 URL을 https로 생성
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # HTTPS 프록시 신뢰
+SECURE_SSL_REDIRECT = True  # 모든 HTTP 요청을 HTTPS로 자동 리디렉션
+
 
 # 환경 구분을 위한 설정 (조건문 사용)
 if DEBUG:
