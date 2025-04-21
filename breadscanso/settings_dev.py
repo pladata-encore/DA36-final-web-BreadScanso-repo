@@ -6,7 +6,7 @@ load_dotenv()
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '3.34.46.30', '127.0.0.1', 'www.dev.devbreadscanso.shop', 'dev.devbreadscanso.shop']
+ALLOWED_HOSTS = ['localhost', '3.34.46.30', '127.0.0.1', 'www.devbreadscanso.shop', 'devbreadscanso.shop']
 
 # 개발 db
 DATABASES = {
@@ -58,8 +58,8 @@ LOGGING = {
 
 # CSRF 설정
 CSRF_TRUSTED_ORIGINS = [
-    "https://dev.devbreadscanso.shop",
-    "https://www.dev.devbreadscanso.shop",
-    "http://dev.devbreadscanso.shop",
-    "http://www.dev.devbreadscanso.shop"
+    "https://devbreadscanso.shop",
+    "https://www.devbreadscanso.shop",
+    "http://devbreadscanso.shop",
+    "http://www.devbreadscanso.shop"
 ]
