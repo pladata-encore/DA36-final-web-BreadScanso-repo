@@ -20,6 +20,16 @@
                 <!-- 첫 번째 줄: 날짜 선택 영역 (처음엔 숨겨져 있음) -->
                 <div id="date-picker" style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px;">
                     <div>
+                        <label for="date-range">기간 :</label>
+                        <select id="date-range" onchange="handleDateRangeChange()">
+                            <option value="">-- 직접 선택 --</option>
+                            <option value="7">최근 7일</option>
+                            <option value="30">최근 30일</option>
+                            <option value="this">이번 달</option>
+                            <option value="last">저번 달</option>
+                        </select>
+                    </div>
+                    <div>
                         <label for="start-date">시작 날짜:</label>
                         <input type="date" id="start-date">
                     </div>
@@ -27,18 +37,12 @@
                         <label for="end-date">종료 날짜:</label>
                         <input type="date" id="end-date">
                     </div>
-                    <div>
-                        <button onclick="setRecent7Days()">최근 7일</button>
-                        <button onclick="setRecent30Days()">최근 30일</button>
-                        <button onclick="setThisMonth()">이번 달</button>
-                        <button onclick="setLastMonth()">저번 달</button>
-                    </div>
                 </div>
 
                 <!-- 두 번째 줄: 제품 선택과 그래프 업데이트 버튼 -->
                 <div style="display: flex; gap: 20px;">
                     <div>
-                        <label for="product-select">제품 선택:</label>
+                        <label for="product-select">제품 :</label>
                         <select id="product-select">
                             <option value="전체">전체</option>
                             {% for product in product_list %}
@@ -91,7 +95,20 @@
         let countsData = {{ top_5_filtered_sales|safe }};
         let ctx = document.getElementById('salesChart').getContext('2d');
 
-        // 최근 7일 버튼 눌렀을 경우
+        function handleDateRangeChange() {
+            const selected = document.getElementById('date-range').value;
+            if (selected === '7') setRecent7Days();
+            else if (selected === '30') setRecent30Days();
+            else if (selected === 'this') setThisMonth();
+            else if (selected === 'last') setLastMonth();
+            else {
+                // 기본 옵션 선택 시 날짜 리셋
+                document.getElementById('start-date').value = '';
+                document.getElementById('end-date').value = '';
+            }
+        }
+
+        // 드롭박스에서 [최근 7일] 눌렀을 경우
         function setRecent7Days() {
             const endDateInput = document.getElementById('end-date');
             const startDateInput = document.getElementById('start-date');
@@ -115,7 +132,7 @@
             endDateInput.value = formatDate(yesterday);
         }
 
-        // 최근 30일 버튼 눌렀을 경우
+        // 드롭박스에서 [최근 30일] 버튼 눌렀을 경우
         function setRecent30Days() {
             const endDateInput = document.getElementById('end-date');
             const startDateInput = document.getElementById('start-date');
@@ -138,7 +155,7 @@
             startDateInput.value = formatDate(sevenDaysAgo);
             endDateInput.value = formatDate(yesterday);
         }
-        // 이번달 버튼 눌렀을 경우
+        // 드롭박스에서 [이번달] 버튼 눌렀을 경우
         function setThisMonth() {
             const endDateInput = document.getElementById('end-date');
             const startDateInput = document.getElementById('start-date');
@@ -160,7 +177,7 @@
             endDateInput.value = formatDate(yesterday);
         }
 
-        // 저번달 버튼 눌렀을 경우
+        // 드롭박스에서 [저번달] 버튼 눌렀을 경우
         function setLastMonth() {
             const endDateInput = document.getElementById('end-date');
             const startDateInput = document.getElementById('start-date');
