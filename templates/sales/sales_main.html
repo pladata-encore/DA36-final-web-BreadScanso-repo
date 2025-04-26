@@ -56,6 +56,12 @@
                 </div>
             </div>
             <canvas id="salesChart"></canvas>
+            <div style="text-align: left; margin-left: 10%">
+                <br><br><br>
+                <h5 id="total-sales" style="margin-bottom: 20px;">총 매출 : </h5>
+                <h5 id="total-cost" style="margin-bottom: 20px;">총 원가 : </h5>
+                <h5 id="total-profit">총 순수익 : </h5>
+            </div>
         </div>
 
         <!-- 표 영역 -->
@@ -198,11 +204,9 @@
             endDateInput.value = formatDate(lastDayOfLastMonth);
         }
 
-
-
         // 날짜 범위에 맞는 매출 데이터 필터링
         let salesDataFiltered = salesData.map(date_total_sales => date_total_sales.order_date);
-        
+
         // 차트 유형 결정 (10개 이하일 경우 'bar', 그 이상이면 'line')
         let chartType = salesDataFiltered.length > 10 ? 'line' : 'bar';
 
@@ -224,6 +228,15 @@
                 }
             }
         });
+
+        let totalSalesInit = salesData.reduce((acc, val) => acc + val.total_sales, 0);
+        let totalCostInit = salesData.reduce((acc, val) => acc + val.total_cost, 0);
+        let totalProfitInit = salesData.reduce((acc, val) => acc + val.profit, 0);
+
+        document.getElementById("total-sales").textContent = `총 매출 : ${totalSalesInit.toLocaleString()} 원`;
+        document.getElementById("total-cost").textContent = `총 원가 : ${totalCostInit.toLocaleString()} 원`;
+        document.getElementById("total-profit").textContent = `총 순수익 : ${totalProfitInit.toLocaleString()} 원`;
+
 
         // 페이지 로드 후 버튼 클릭 이벤트 추가
         document.addEventListener("DOMContentLoaded", function () {
@@ -287,6 +300,27 @@
                 return sale ? sale.total_sales : 0;  // 매출이 없으면 0 반환
             });
 
+            let costAmounts = dateRange.map(date => {
+                let sale = salesDataFiltered.find(s => s.order_date.split(" ")[0] === date);
+                return sale ? sale.total_cost : 0;  // 매출이 없으면 0 반환
+            });
+
+            let profitAmounts = dateRange.map(date => {
+                let sale = salesDataFiltered.find(s => s.order_date.split(" ")[0] === date);
+                return sale ? sale.profit : 0;  // 매출이 없으면 0 반환
+            });
+
+            // ✅ 총 매출 / 총 원가 / 총 순수익  계산
+            let totalSales = salesAmounts.reduce((acc, val) => acc + val, 0);
+            let totalCost = costAmounts.reduce((acc, val) => acc + val, 0);
+            let totalProfit = profitAmounts.reduce((acc, val) => acc + val, 0);
+
+            // ✅ HTML에 출력
+            document.getElementById("total-sales").textContent = `총 매출 : ${totalSales.toLocaleString()} 원`;
+            document.getElementById("total-cost").textContent = `총 원가 : ${totalCost.toLocaleString()} 원`;
+            document.getElementById("total-profit").textContent = `총 순수익 : ${totalProfit.toLocaleString()} 원`;
+
+
             // 차트 유형 결정 (10개 이하일 경우 'bar', 그 이상이면 'line')
             let chartType = dateRange.length > 10 ? 'line' : 'bar';
 
@@ -327,15 +361,36 @@
                 sale.item_id === Number(selectedProduct)
             );
 
-            let resultData = dateRange.map(date => {
+            let resultPriceData = dateRange.map(date => {
                 let sale = filteredData.find(s => s.order_date === date);
                 return sale ? sale.item_total_amount : 0;  // 데이터가 없으면 0 반환
             });
 
+            let resultCostData = dateRange.map(date => {
+                let sale = filteredData.find(s => s.order_date === date);
+                return sale ? sale.item_total_cost : 0;  // 데이터가 없으면 0 반환
+            });
+
+            let resultProfitData = dateRange.map(date => {
+                let sale = filteredData.find(s => s.order_date === date);
+                return sale ? sale.item_profit : 0;  // 데이터가 없으면 0 반환
+            });
+
+
+            // ✅ 총 매출 계산
+            let totalSales = resultPriceData.reduce((acc, val) => acc + val, 0);
+            let totalCost = resultCostData.reduce((acc, val) => acc + val, 0);
+            let totalProfit = resultProfitData.reduce((acc, val) => acc + val, 0);
+
+            // ✅ HTML에 출력
+            document.getElementById("total-sales").textContent = `총 매출 : ${totalSales.toLocaleString()} 원`;
+            document.getElementById("total-cost").textContent = `총 원가 : ${totalCost.toLocaleString()} 원`;
+            document.getElementById("total-profit").textContent = `총 순수익 : ${totalProfit.toLocaleString()} 원`;
+
             // 필터링된 데이터를 확인
             console.log("itemsalesData :", itemsalesData);
             console.log("filteredData :", filteredData);
-            console.log("resultData :", resultData);
+            console.log("resultPriceData :", resultPriceData);
             console.log("선택된 제품에 대한 매출 업데이트");
 
             // 차트 유형 결정 (10개 이하일 경우 'bar', 그 이상이면 'line')
@@ -353,7 +408,7 @@
                     labels: dateRange,  // 날짜는 그대로 유지
                     datasets: [{
                         label: '매출 금액',
-                        data: resultData,
+                        data: resultPriceData,
                         borderWidth: 2,
                         backgroundColor: chartType === 'bar' ? 'rgba(75, 192, 192, 0.2)' : 'transparent',
                         borderColor: 'rgba(75, 192, 192, 1)',
@@ -372,7 +427,7 @@
                                 label: function(tooltipItem) {
                                     let date = tooltipItem.label;  // 날짜
                                     let salesAmount = tooltipItem.raw;  // 매출 금액
-                                    // 제품 수량을 찾아야 합니다. (여기서는 `quantityData`를 예로 들었습니다)
+                                    // 제품 수량을 찾아야 합니다.
                                     let productCount = 0;
                                     // 날짜에 해당하는 제품 수량을 가져오는 로직 (예시)
                                     const selectedDate = date; // 툴팁에서 나온 날짜
