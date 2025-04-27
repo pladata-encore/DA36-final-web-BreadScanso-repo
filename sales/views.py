@@ -28,9 +28,9 @@ def sales_main(request):
         )
     )
 
-    # ✅ item_id → 상품명, 가격 매핑용 딕셔너리 생성
+    # ✅ item_id → 상품명, 판매가, 원가 매핑용 딕셔너리 생성
     item_map = {
-        item.item_id: {"name": item.item_name, "price": item.sale_price}
+        item.item_id: {"name": item.item_name, "price": item.sale_price, "cost_price" : item.cost_price }
         for item in Item.objects.all()
     }
 
@@ -57,12 +57,16 @@ def sales_main(request):
                     continue
 
         item_id = sale["item_id"]
-        item_info = item_map.get(item_id, {"name": "알 수 없음", "price": 0})
+        item_info = item_map.get(item_id, {"name": "알 수 없음", "price": 0, "cost_price": 0})
+        # cost_price = item_info.get("cost_price", 0)
+        item_total_cost = item_info["cost_price"] * sale["item_total_count"] # 원가 * 수량
+
 
         # ⛔ 특정 제품만 필터링
         if selectedProduct and selectedProduct != "전체":
             if item_info["name"] != selectedProduct:
                 continue
+
 
         date_item_amounts.append(
             {
@@ -71,12 +75,13 @@ def sales_main(request):
                 "item_name": item_info["name"],
                 "item_total_count": sale["item_total_count"],
                 "item_total_amount": sale["item_total_amount"],
+                "item_total_cost": item_total_cost,
             }
         )
 
     # ✅ (날짜, 제품)별 데이터 통합
     grouped_sales = defaultdict(
-        lambda: {"order_date": None, "item_id": None, "item_name": None, "item_total_count": 0, "item_total_amount": 0}
+        lambda: {"order_date": None, "item_id": None, "item_name": None, "item_total_count": 0, "item_total_amount": 0, "item_total_cost": 0, "item_profit": 0}
     )
 
     for sale in date_item_amounts:
@@ -86,17 +91,25 @@ def sales_main(request):
         grouped_sales[key]["item_name"] = sale["item_name"]
         grouped_sales[key]["item_total_count"] += sale["item_total_count"]
         grouped_sales[key]["item_total_amount"] += sale["item_total_amount"]
+        grouped_sales[key]["item_total_cost"] += sale["item_total_cost"]
+        grouped_sales[key]["item_profit"] = (
+                grouped_sales[key]["item_total_amount"] - grouped_sales[key]["item_total_cost"]
+        )
 
     # ✅ 날짜 + 제품별 정리된 매출 데이터
     final_sales = list(grouped_sales.values())
 
     # ✅ 날짜별 전체 매출액 계산
-    date_total_sales = defaultdict(lambda: {"order_date": None, "total_sales": 0})
+    date_total_sales = defaultdict(lambda: {"order_date": None, "total_sales": 0, "total_cost": 0, "profit": 0})
 
     for sale in final_sales:
         date = sale["order_date"]
         date_total_sales[date]["order_date"] = date
         date_total_sales[date]["total_sales"] += sale["item_total_amount"]
+        date_total_sales[date]["total_cost"] += sale.get("item_total_cost", 0)
+        date_total_sales[date]["profit"] = (
+                date_total_sales[date]["total_sales"] - date_total_sales[date]["total_cost"]
+        )
 
     date_total_sales = list(date_total_sales.values())
 
