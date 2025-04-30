@@ -1,5 +1,6 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}Sales{% endblock title %}
 
@@ -60,7 +61,7 @@
                 <br><br><br>
                 <h5 id="total-sales" style="margin-bottom: 20px;">총 매출 : </h5>
                 <h5 id="total-cost" style="margin-bottom: 20px;">총 원가 : </h5>
-                <h5 id="total-profit">총 순수익 : </h5>
+                <h5 id="total-profit">매출 총 이익 : </h5>
             </div>
         </div>
 
@@ -82,8 +83,8 @@
                     <tr>
                         <td>{{ sale.item_id }}</td>
                         <td>{{ sale.item_name }}</td>
-                        <td>{{ sale.item_total_count }}</td>
-                        <td>₩{{ sale.item_total_amount }}</td>
+                        <td>{{ sale.item_total_count|intcomma }}</td>
+                        <td>₩ {{ sale.item_total_amount|intcomma }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -204,8 +205,9 @@
             endDateInput.value = formatDate(lastDayOfLastMonth);
         }
 
-        // 날짜 범위에 맞는 매출 데이터 필터링
-        let salesDataFiltered = salesData.map(date_total_sales => date_total_sales.order_date);
+        // 매출이 0이 아닌 날짜만 필터링
+        let salesDataFiltered = salesData.filter(date_total_sales => date_total_sales.total_sales > 0);
+
 
         // 차트 유형 결정 (10개 이하일 경우 'bar', 그 이상이면 'line')
         let chartType = salesDataFiltered.length > 10 ? 'line' : 'bar';
@@ -214,10 +216,10 @@
         let salesChart = new Chart(ctx, {
             type: chartType,
             data: {
-                labels: salesDataFiltered,
+                labels: salesDataFiltered.map(date_total_sales => date_total_sales.order_date),  // 매출이 0이 아닌 날짜들만 라벨로
                 datasets: [{
                     label: '매출 금액',
-                    data: salesData.map(date_total_sales => date_total_sales.total_sales), // total_sales가 숫자라면 그대로 사용
+                    data: salesData.map(date_total_sales => date_total_sales.total_sales), // 매출 금액
                     borderWidth: 1
                 }]
             },
@@ -225,9 +227,26 @@
                 responsive: true,
                 scales: {
                     y: { beginAtZero: true }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                let date = tooltipItem.label;  // 날짜
+                                let salesAmount = tooltipItem.raw;  // 매출 금액
+                                // 해당 날짜의 원가와 매출총이익을 찾는 로직
+                                let costAmount = salesDataFiltered.find(s => s.order_date === date)?.total_cost || 0; // 원가
+                                let profitAmount = salesAmount - costAmount;  // 매출총이익
+
+                                // 툴팁 내용 수정
+                                return `매출: ${salesAmount.toLocaleString()}원, 원가: ${costAmount.toLocaleString()}원, 매출총이익: ${profitAmount.toLocaleString()}원`;
+                            }
+                        }
+                    }
                 }
             }
         });
+
 
         let totalSalesInit = salesData.reduce((acc, val) => acc + val.total_sales, 0);
         let totalCostInit = salesData.reduce((acc, val) => acc + val.total_cost, 0);
@@ -235,7 +254,8 @@
 
         document.getElementById("total-sales").textContent = `총 매출 : ${totalSalesInit.toLocaleString()} 원`;
         document.getElementById("total-cost").textContent = `총 원가 : ${totalCostInit.toLocaleString()} 원`;
-        document.getElementById("total-profit").textContent = `총 순수익 : ${totalProfitInit.toLocaleString()} 원`;
+        document.getElementById("total-profit").textContent = `매출 총 이익 : ${totalProfitInit.toLocaleString()} 원`;
+
 
 
         // 페이지 로드 후 버튼 클릭 이벤트 추가
@@ -310,7 +330,7 @@
                 return sale ? sale.profit : 0;  // 매출이 없으면 0 반환
             });
 
-            // ✅ 총 매출 / 총 원가 / 총 순수익  계산
+            // ✅ 총 매출 / 총 원가 / 매출 총 이익  계산
             let totalSales = salesAmounts.reduce((acc, val) => acc + val, 0);
             let totalCost = costAmounts.reduce((acc, val) => acc + val, 0);
             let totalProfit = profitAmounts.reduce((acc, val) => acc + val, 0);
@@ -318,7 +338,7 @@
             // ✅ HTML에 출력
             document.getElementById("total-sales").textContent = `총 매출 : ${totalSales.toLocaleString()} 원`;
             document.getElementById("total-cost").textContent = `총 원가 : ${totalCost.toLocaleString()} 원`;
-            document.getElementById("total-profit").textContent = `총 순수익 : ${totalProfit.toLocaleString()} 원`;
+            document.getElementById("total-profit").textContent = `매출 총 이익 : ${totalProfit.toLocaleString()} 원`;
 
 
             // 차트 유형 결정 (10개 이하일 경우 'bar', 그 이상이면 'line')
@@ -349,6 +369,25 @@
                     responsive: true,
                     scales: {
                         y: { beginAtZero: true }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    let date = tooltipItem.label;  // 날짜
+                                    let salesAmount = tooltipItem.raw;  // 매출 금액
+
+                                    let selectedDate = date;  // 툴팁의 날짜
+
+                                    let sale = salesDataFiltered.find(s => s.order_date.split(" ")[0] === selectedDate);
+
+                                    let cost = sale ? sale.total_cost : 0;
+                                    let profit = sale ? sale.profit : 0;
+
+                                    return `매출: ${salesAmount.toLocaleString()}원, 원가: ${cost.toLocaleString()}원, 매출 총 이익: ${profit.toLocaleString()}원`;
+                                }
+                            }
+                        }
                     }
                 }
             });
@@ -385,7 +424,7 @@
             // ✅ HTML에 출력
             document.getElementById("total-sales").textContent = `총 매출 : ${totalSales.toLocaleString()} 원`;
             document.getElementById("total-cost").textContent = `총 원가 : ${totalCost.toLocaleString()} 원`;
-            document.getElementById("total-profit").textContent = `총 순수익 : ${totalProfit.toLocaleString()} 원`;
+            document.getElementById("total-profit").textContent = `매출 총 이익 : ${totalProfit.toLocaleString()} 원`;
 
             // 필터링된 데이터를 확인
             console.log("itemsalesData :", itemsalesData);
@@ -435,10 +474,12 @@
                                     itemsalesData.forEach(sale => {
                                         if (sale.order_date === selectedDate && sale.item_id === Number(selectedProduct)) {
                                             productCount = sale.item_total_count; // 수량
+                                            productCost = sale.item_total_cost; // 원가
+                                            productProfit = sale.item_profit; // 매출 총 이익
                                         }
                                     });
-                                    // 날짜, 매출 금액, 제품 수량을 반환
-                                    return `매출 금액: ${salesAmount} 원, 수량: ${productCount} 개`;
+                                    // 날짜, 수량, 매출, 원가, 매출 총 이익을 반환
+                                    return `수량: ${productCount.toLocaleString()}개, 매출: ${salesAmount.toLocaleString()}원, 원가: ${productCost.toLocaleString()}원, 매출 총 이익: ${productProfit.toLocaleString()}원`;
                                 }
                             }
                         }
@@ -505,8 +546,8 @@
 
                 cellItemID.textContent = sale.item_id;
                 cellItemName.textContent = sale.item_name;
-                cellItemCount.textContent = sale.item_total_count;
-                cellTotalAmount.textContent = sale.item_total_amount;
+                cellItemCount.textContent = sale.item_total_count.toLocaleString();
+                cellTotalAmount.textContent = '₩ ' + sale.item_total_amount.toLocaleString();
             });
          }
     </script>
