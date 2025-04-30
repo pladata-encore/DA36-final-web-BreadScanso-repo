@@ -17,8 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
+    // 추론서버 url 설정
     const NGROK_URL = "https://6a2e-175-121-129-72.ngrok-free.app/predict/";
-    const EC2_URL = "http://3.38.150.51:8001/predict/"
+    const EC2_URL = "http://54.180.116.248:8001/predict/"
     let productDictionary = {};
 
     // 한글명 매핑 함수
