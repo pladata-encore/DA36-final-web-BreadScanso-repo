@@ -12,5 +12,5 @@ urlpatterns = [
     path('store/menu_edit/<int:item_id>/', views.menu_store_menu_edit, name='menu_store_menu_edit'),  # 제품별 수정 페이지
     path('store/new_menu_guide/<int:item_id>/', views.menu_store_new_menu_guide, name='menu_store_new_menu_guide'),  # 신규 메뉴 학습 가이드 페이지
     path('store/new_menu_learn/<int:item_id>/', views.menu_store_new_menu_learn, name='menu_store_new_menu_learn'),  # 신규 메뉴 학습 페이지
-
+    path('store/upload_learning_materials/<int:item_id>/', views.upload_learning_materials, name='upload_learning_materials'), # 점주 메뉴 학습 자료 업로드 api
 ]

@@ -74,11 +74,37 @@
     overflow-y: auto;
 }
 
-.image-preview-container img {
+.preview-item {
+    position: relative;
+    display: inline-block;
+}
+
+.preview-image {
     width: 80px;
     height: 80px;
     object-fit: cover;
     border-radius: 4px;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+    transition: background 0.2s;
+}
+
+.remove-btn:hover {
+    background: darkred;
 }
 
 h5 {
@@ -87,14 +113,12 @@ h5 {
     align-self: flex-start;
 }
 
-/* 상태 표시 컨테이너 */
 .status-container {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
 }
 
-/* 상태 태그들 (Best, New, 노출중) */
 .status-left {
     display: flex;
     gap: 5px;
@@ -110,15 +134,15 @@ h5 {
 }
 
 .best-tag {
-    background-color: #00FFFF; /* 밝은 하늘색 */
+    background-color: #00FFFF;
 }
 
 .new-tag {
-    background-color: #FFEE8C; /* 연한 노란색 */
+    background-color: #FFEE8C;
 }
 
 .show-tag {
-    padding: 5px 10px; /* Best, New와 스타일 통일 */
+    padding: 5px 10px;
     font-size: 20px;
     font-weight: bold;
     border-radius: 10px;
@@ -126,28 +150,26 @@ h5 {
     background-color: transparent;
 }
 
-/* 제품 정보 영역 */
 .product-content {
-    flex: 1; /* 나머지 공간 채우기 */
+    flex: 1;
     display: flex;
     flex-direction: column;
-    text-align: left; /* 텍스트 왼쪽 정렬 */
+    text-align: left;
 }
 
 .nutrition-row {
     display: flex;
-    flex-wrap: wrap;  /* 화면 크기에 따라 줄바꿈 */
-    gap: 10px;  
-    align-items: flex-start;  
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-start;
 }
 
 .nutrition-row p {
     margin: 0;
-    white-space: nowrap; /* 너무 좁을 때만 줄바꿈 */
-    flex-shrink: 0; /* 화면 줄어들어도 글자 크기 유지 */
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-/* 버튼 컨테이너 전체 */
 .button-container {
     display: flex;
     justify-content: space-between;
@@ -159,10 +181,31 @@ h5 {
     padding: 8px 20px;
 }
 
+.upload-zip-container {
+    position: relative;
+}
 
+#clear-zip-btn {
+    display: none;
+    margin-top: 10px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+    transition: background 0.2s;
+}
+
+#clear-zip-btn:hover {
+    background: darkred;
+}
 </style>
 
-    
 <form id="menu-form" method="POST" action="{% url 'menu_store_menu_edit' item.item_id %}" enctype="multipart/form-data">
     {% csrf_token %}
     {% if error %}
@@ -171,10 +214,8 @@ h5 {
     </div>
     {% endif %}
     
-    <!-- 이미지 -->
     <div class="content-wrapper">
         <div class="image-area">
-            <!-- 1. 메뉴 정보 이미지 표시 영역 -->
             <div class="current-image-container">
                 <h5>현재 이미지</h5>
                 {% if item.item_image %}
@@ -184,24 +225,21 @@ h5 {
                 {% endif %}
             </div>
             
-            <!-- 2. 이미지 여러장 업로드 영역 -->
             <div class="upload-images-container">
                 <h5>제품사진 (여러 장 선택 가능)</h5>
                 <input type="file" id="file-input" name="item_images" accept="image/*" multiple>
                 <div class="image-preview-container" id="preview-container"></div>
             </div>
             
-            <!-- 3. ZIP 파일 업로드 영역 -->
             <div class="upload-zip-container">
                 <h5>ZIP 파일 업로드</h5>
                 <input type="file" id="zip-input" name="item_zip" accept=".zip">
+                <button type="button" id="clear-zip-btn" title="ZIP 파일 취소">X</button>
             </div>
         </div>
 
-        <!-- 제품 콘텐츠 -->
         <div class="product-content">
             {% csrf_token %}
-            <!-- 상태 표시 (Best, New, 노출중) -->
             <div class="status-container">
                 <div class="status-left">
                     {% if item.best %}
@@ -216,7 +254,6 @@ h5 {
                 </div>
             </div>
         
-            <!-- 제품명 및 기본 정보 -->
             <h1>{{ item.item_name }}</h1>
             <div class="mb-3 d-flex align-items-center">
                 <label for="ItemName" class="form-label" style="min-width: 100px; margin-bottom: 0;"><strong>제품 영문명:</strong></label>
@@ -230,7 +267,6 @@ h5 {
                 <label class="form-label mb-3"><strong>카테고리:</strong> {{ item.category|category_to_korean }}</label>
             {% endif %}
 
-            <!-- 제품 메타 정보 -->
             <div class="product-meta">
                 <hr>
                 <h4><strong>영양정보:</strong></h4>
@@ -270,13 +306,11 @@ h5 {
         </div>
     </div>
 
-    <!-- 학습, 취소 버튼 -->
     <div class="button-container">
         <button type="button" class="btn btn-warning" id="cancel-btn">취소</button>
         <button type="button" class="btn btn-success" id="learn-btn" data-bs-toggle="modal" data-bs-target="#learnConfirmModal">학습</button>
     </div>
     
-    <!-- 학습 확인 모달 -->
     <div class="modal fade" id="learnConfirmModal" tabindex="-1" aria-labelledby="learnConfirmModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -299,4 +333,6 @@ h5 {
 {% block script %}
     {{ block.super }} {# 부모 js script 유지 하기 위한 코드 #}
     <script src="{% static 'js/menu_new_menu_learn.js' %}"></script>
+        <!-- JSZip 라이브러리 추가 -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 {% endblock script %}
