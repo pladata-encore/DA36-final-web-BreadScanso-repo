@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Item, NutritionInfo, Allergy
 import json
-from .utils import upload_product_image_to_s3
+from .utils import upload_product_image_to_s3, upload_multiple_images_to_s3, upload_zip_to_s3
 from django.utils import timezone
 from django.core.serializers import serialize
 from json import dumps
@@ -519,3 +519,58 @@ def menu_store_new_menu_learn(request, item_id):
     }
 
     return render(request, "menu/new_menu_learn.html", context)
+# ---------------------------------------------------------------------------- #
+# 신규 메뉴 학습 업로드 기능
+@csrf_exempt
+@require_http_methods(["POST"])
+def upload_learning_materials(request, item_id):
+    """제품 학습 자료(여러 이미지, ZIP파일)를 S3에 업로드"""
+    try:
+        item = get_object_or_404(Item, pk=item_id)
+        uploaded_urls = []
+        
+        # 여러 이미지 파일 업로드
+        if 'item_images' in request.FILES:
+            image_files = request.FILES.getlist('item_images')
+            if image_files:
+                image_urls = upload_multiple_images_to_s3(image_files, item_id)
+                uploaded_urls.extend(image_urls)
+        
+        # ZIP 파일 업로드 및 처리
+        if 'item_zip' in request.FILES:
+            zip_file = request.FILES['item_zip']
+            if zip_file:
+                # ZIP 파일 확장자 검증
+                if not zip_file.name.lower().endswith('.zip'):
+                    return JsonResponse({
+                        "success": False,
+                        "message": "올바른 ZIP 파일을 업로드해주세요."
+                    })
+                
+                try:
+                    zip_urls = upload_zip_to_s3(zip_file, item_id)
+                    uploaded_urls.extend(zip_urls)
+                except Exception as zip_error:
+                    return JsonResponse({
+                        "success": False,
+                        "message": str(zip_error)
+                    })
+        
+        if not uploaded_urls:
+            return JsonResponse({
+                "success": False,
+                "message": "업로드된 파일이 없거나 유효한 이미지/동영상 파일이 아닙니다."
+            })
+        
+        return JsonResponse({
+            "success": True,
+            "message": "학습 자료 업로드 완료",
+            "uploaded_count": len(uploaded_urls),
+            "item_id": item_id
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            "success": False,
+            "message": f"업로드 중 오류 발생: {str(e)}"
+        })
