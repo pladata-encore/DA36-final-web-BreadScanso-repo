@@ -26,6 +26,7 @@ def sales_main(request):
             item_total_amount=Sum("item_total"),
             item_total_count=Sum("item_count"),
         )
+        .order_by("order__order_at")  # ✅ 주문일 기준 내림차순 정렬
     )
 
     # ✅ item_id → 상품명, 판매가, 원가 매핑용 딕셔너리 생성
@@ -39,6 +40,8 @@ def sales_main(request):
         order.order_id: {"name": order.order_at}
         for order in OrderInfo.objects.all()
     }
+
+
 
     # ✅ 날짜별 상품 판매 내역 저장 리스트
     date_item_amounts = []
