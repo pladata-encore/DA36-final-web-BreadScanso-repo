@@ -1,5 +1,6 @@
 {% extends 'layout/store/base_store.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}메뉴관리{% endblock title %}
 
@@ -68,13 +69,12 @@
 
     <!-- 검색창 및 버튼 컨테이너 -->
     <div class="d-flex justify-content-between align-items-center mt-3 mb-4" style="width: 100%;">
-      <div style="flex-grow: 1; display: flex; justify-content: flex-start;">
-        <form method="post" class="d-flex" role="search" id="search-form">
-          {% csrf_token %}
-          <input class="form-control me-2 search-input" type="search" id="search-input" placeholder="제품명을 입력하세요" aria-label="Search" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
-          <button type="submit" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
-        </form>
-      </div>
+        <div style="flex-grow: 1; display: flex; justify-content: flex-start;">
+            <form method="get" class="d-flex" role="search" id="search-form">
+                <input class="form-control me-2 search-input" type="search" name="search-input" id="search-input" placeholder="제품명을 입력하세요" aria-label="Search" value="{{ search_query|escape }}" style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+                <button type="submit" style="background-color: lightgoldenrodyellow; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">검색</button>
+            </form>
+        </div>
     </div>
 
     <!-- 테이블 -->
@@ -86,23 +86,23 @@
                 <th scope="col">
                     제품명
                     <span class="sort-container">
-                        <a href="{% if sort_by == 'item_name' and sort_order == 'asc' %}?sort_by=none{% else %}?sort_by=item_name&sort_order=asc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'item_name' and sort_order == 'asc' %}active{% endif %}">▲</a>
-                        <a href="{% if sort_by == 'item_name' and sort_order == 'desc' %}?sort_by=none{% else %}?sort_by=item_name&sort_order=desc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'item_name' and sort_order == 'desc' %}active{% endif %}">▼</a>
+                        <a href="{% if sort_by == 'item_name' and sort_order == 'asc' %}?sort_by=none{% else %}?sort_by=item_name&sort_order=asc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}{% if search_query %}&search-input={{ search_query|urlencode }}{% endif %}" class="sort-btn {% if sort_by == 'item_name' and sort_order == 'asc' %}active{% endif %}">▲</a>
+                        <a href="{% if sort_by == 'item_name' and sort_order == 'desc' %}?sort_by=none{% else %}?sort_by=item_name&sort_order=desc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}{% if search_query %}&search-input={{ search_query|urlencode }}{% endif %}" class="sort-btn {% if sort_by == 'item_name' and sort_order == 'desc' %}active{% endif %}">▼</a>
                     </span>
                 </th>
                 <th scope="col">매장</th>
                 <th scope="col">
                     판매가
                     <span class="sort-container">
-                        <a href="{% if sort_by == 'sale_price' and sort_order == 'asc' %}?sort_by=none{% else %}?sort_by=sale_price&sort_order=asc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'sale_price' and sort_order == 'asc' %}active{% endif %}">▲</a>
-                        <a href="{% if sort_by == 'sale_price' and sort_order == 'desc' %}?sort_by=none{% else %}?sort_by=sale_price&sort_order=desc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'sale_price' and sort_order == 'desc' %}active{% endif %}">▼</a>
+                        <a href="{% if sort_by == 'sale_price' and sort_order == 'asc' %}?sort_by=none{% else %}?sort_by=sale_price&sort_order=asc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}{% if search_query %}&search-input={{ search_query|urlencode }}{% endif %}" class="sort-btn {% if sort_by == 'sale_price' and sort_order == 'asc' %}active{% endif %}">▲</a>
+                        <a href="{% if sort_by == 'sale_price' and sort_order == 'desc' %}?sort_by=none{% else %}?sort_by=sale_price&sort_order=desc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}{% if search_query %}&search-input={{ search_query|urlencode }}{% endif %}" class="sort-btn {% if sort_by == 'sale_price' and sort_order == 'desc' %}active{% endif %}">▼</a>
                     </span>
                 </th>
                 <th scope="col">
                     원가
                     <span class="sort-container">
-                        <a href="{% if sort_by == 'cost_price' and sort_order == 'asc' %}?sort_by=none{% else %}?sort_by=cost_price&sort_order=asc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'cost_price' and sort_order == 'asc' %}active{% endif %}">▲</a>
-                        <a href="{% if sort_by == 'cost_price' and sort_order == 'desc' %}?sort_by=none{% else %}?sort_by=cost_price&sort_order=desc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" class="sort-btn {% if sort_by == 'cost_price' and sort_order == 'desc' %}active{% endif %}">▼</a>
+                        <a href="{% if sort_by == 'cost_price' and sort_order == 'asc' %}?sort_by=none{% else %}?sort_by=cost_price&sort_order=asc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}{% if search_query %}&search-input={{ search_query|urlencode }}{% endif %}" class="sort-btn {% if sort_by == 'cost_price' and sort_order == 'asc' %}active{% endif %}">▲</a>
+                        <a href="{% if sort_by == 'cost_price' and sort_order == 'desc' %}?sort_by=none{% else %}?sort_by=cost_price&sort_order=desc{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}{% if search_query %}&search-input={{ search_query|urlencode }}{% endif %}" class="sort-btn {% if sort_by == 'cost_price' and sort_order == 'desc' %}active{% endif %}">▼</a>
                     </span>
                 </th>
                 <th scope="col">제품 설명</th>
@@ -138,23 +138,19 @@
         </thead>
         <tbody>
             {% for item in page_obj %}
-                {% if member.store == item.store %}
-                    {% if forloop.counter <= 10 %}
-                        <tr>
-                            <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
-                            <td>{{ item.item_id }}</td>
-                            <td>{{ item.item_name }}</td>
-                            <td>{{ item.store }}</td>
-                            <td>{{ item.sale_price }}</td>
-                            <td>{{ item.cost_price }}</td>
-                            <td>{{ item.description }}</td>
-                            <td>{{ item.category }}</td>
-                            <td>{% if item.show %}✅{% else %}❌{% endif %}</td>
-                            <td>{% if item.best %}✅{% else %}❌{% endif %}</td>
-                            <td>{% if item.new %}✅{% else %}❌{% endif %}</td>
-                        </tr>
-                    {% endif %}
-                 {% endif %}
+                <tr>
+                    <td class="checkbox-column"><input type="checkbox" class="row-checkbox"></td>
+                    <td>{{ item.item_id }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.store }}</td>
+                    <td>{{ item.sale_price|intcomma }}</td>
+                    <td>{{ item.cost_price|intcomma }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{% if item.show %}✅{% else %}❌{% endif %}</td>
+                    <td>{% if item.best %}✅{% else %}❌{% endif %}</td>
+                    <td>{% if item.new %}✅{% else %}❌{% endif %}</td>
+                </tr>
             {% empty %}
                 <tr>
                     <td colspan="11">등록된 제품이 없습니다.</td>
@@ -176,7 +172,7 @@
                 <!-- 이전 버튼 -->
                 <li class="page-product {% if page_obj.has_previous %}enabled{% else %}disabled{% endif %}">
                     {% if page_obj.has_previous %}
-                        <a class="page-link rounded-start-2" href="?page={{ page_obj.previous_page_number }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" aria-label="Previous">
+                        <a class="page-link rounded-start-2" href="?page={{ page_obj.previous_page_number }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}{% if search_query %}&search-input={{ search_query|urlencode }}{% endif %}" aria-label="Previous">
                             <span aria-hidden="true">« 이전</span>
                         </a>
                     {% else %}
@@ -188,13 +184,13 @@
                 <!-- 페이지 번호들 -->
                 {% for num in page_range %}
                     <li class="page-product {% if page_obj.number == num %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}">{{ num }}</a>
+                        <a class="page-link" href="?page={{ num }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}{% if search_query %}&search-input={{ search_query|urlencode }}{% endif %}">{{ num }}</a>
                     </li>
                 {% endfor %}
                 <!-- 다음 버튼 -->
                 <li class="page-product {% if page_obj.has_next %}enabled{% else %}disabled{% endif %}">
                     {% if page_obj.has_next %}
-                        <a class="page-link rounded-end-2" href="?page={{ page_obj.next_page_number }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}" aria-label="Next">
+                        <a class="page-link rounded-end-2" href="?page={{ page_obj.next_page_number }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if show_filter %}&show={{ show_filter }}{% endif %}{% if best_filter %}&best={{ best_filter }}{% endif %}{% if new_filter %}&new={{ new_filter }}{% endif %}{% if search_query %}&search-input={{ search_query|urlencode }}{% endif %}" aria-label="Next">
                             <span aria-hidden="true">다음 »</span>
                         </a>
                     {% else %}
