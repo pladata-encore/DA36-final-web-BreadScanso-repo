@@ -1,23 +1,10 @@
 // 검색창
 document.addEventListener("DOMContentLoaded", function () {
     const searchForm = document.getElementById("search-form");
-    const searchInput = document.getElementById("search-input");
-    const rows = document.querySelectorAll(".table tbody tr");
-
-
-    searchForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        const searchTerm = searchInput.value.toLowerCase();
-
-        rows.forEach(row => {
-            const cells = row.querySelectorAll("td");
-            let rowText = "";
-            cells.forEach(cell => {
-                rowText += cell.textContent.toLowerCase();
-            });
-            row.style.display = rowText.includes(searchTerm) ? "" : "none";
-        });
+    searchForm.addEventListener("submit", function () {
+        // 아무것도 하지 않음: 기본 폼 제출 허용
     });
+});
 
 // 전체 선택/해제 체크박스 이벤트 처리
     document.getElementById('select-all').addEventListener('change', function () {
@@ -162,47 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("서버 오류가 발생했습니다: " + error.message);
             });
     }
-});
 
-// function updateMember_store(memberID, newName, newPhoneNum, newEmail) {
-//     fetch('/store/update_member_store/', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-CSRFToken': getCSRFToken(),
-//         },
-//         body: JSON.stringify({
-//             member_id: memberID,
-//             new_name: newName,
-//             new_phone_num: newPhoneNum,
-//             new_email: newEmail,
-//             sex: sex,
-//             age_group: ageGroup,
-//             visit_count: visitCount,
-//             total_spent: totalSpent,
-//             membership_date: membershipDate,
-//             last_visited: lastVisited,
-//             points: points,
-//             profile_image: profileImage
-//         })
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         if (data.success) {
-//             // 클릭된 버튼의 부모 <tr> 요소 찾기
-//             const row = event.target.closest('tr');
-//             row.querySelector('td:nth-child(2)').innerText = newName;
-//             row.querySelector('td:nth-child(4)').innerText = newPhoneNum;
-//             row.querySelector('td:nth-child(7)').innerText = newEmail;
-//             alert('회원 정보가 변경되었습니다.');
-//         } else {
-//             alert('회원 정보 변경에 실패했습니다.');
-//         }
-//     })
-//     .catch(error => {
-//         console.error("Fetch 에러:", error);
-//         alert("서버 오류가 발생했습니다.");
-//     });
-// }
 
 
