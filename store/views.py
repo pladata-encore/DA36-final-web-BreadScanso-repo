@@ -24,9 +24,14 @@ from event.utils import upload_content_to_s3
 #     return render(request, 'store/store_main_map.html' )
 
 # 매장페이지 - 회원관리
+from django.core.paginator import Paginator, EmptyPage
+
 def member_store(request):
+    # GET 요청 처리 (member 데이터 가져오기)
+    member = request.user.member
+
     # 검색 기능 처리
-    search_query = request.POST.get('search_input', '')
+    search_query = request.GET.get('search', '')
 
     if search_query:
         # 검색어가 있을 경우 회원명 기준으로 필터링
@@ -37,6 +42,7 @@ def member_store(request):
 
     # 페이지네이션 처리 (10개씩)
     paginator = Paginator(members, 10)
+
     # 페이지 번호 가져오기, 유효하지 않으면 1 페이지로 설정
     page_number = request.GET.get('page', 1)
     try:
@@ -45,22 +51,81 @@ def member_store(request):
             page_number = 1
     except ValueError:
         page_number = 1
+
     try:
         page_obj = paginator.get_page(page_number)
     except EmptyPage:
-        # 페이지 번호가 범위를 벗어난 경우 마지막 페이지로 설정
         page_obj = paginator.get_page(paginator.num_pages)
 
-    # GET 요청 처리 (member 데이터 가져오기)
-    member = request.user.member
+    # 페이지네이션 관련 변수 계산
+    max_pages = 5
+    current_page = page_obj.number
+    total_pages = paginator.num_pages
+
+    start_page = max(1, current_page - 2)
+    end_page = min(total_pages, start_page + max_pages - 1)
+
+    if end_page - start_page + 1 < max_pages and start_page > 1:
+        start_page = max(1, end_page - max_pages + 1)
 
     # 하나의 딕셔너리로 합쳐서 전달
     context = {
         'page_obj': page_obj,
-        'member': member
+        'member': member,
+        'search_query': search_query,  # 검색어를 템플릿으로 전달
     }
 
     return render(request, 'member/member_store.html', context)
+
+
+# def member_store(request):
+#     # GET 요청 처리 (member 데이터 가져오기)
+#     member = request.user.member
+#
+#     # 검색 기능 처리
+#     search_query = request.GET.get('search', '')
+#
+#     if search_query:
+#         # 검색어가 있을 경우 회원명 기준으로 필터링
+#         members = Member.objects.filter(name__icontains=search_query)
+#     else:
+#         # 검색어가 없을 경우 모든 회원 정보 가져오기
+#         members = Member.objects.all()
+#
+#     # 페이지네이션 처리 (10개씩)
+#     paginator = Paginator(members, 10)
+#     # 페이지 번호 가져오기, 유효하지 않으면 1 페이지로 설정
+#     page_number = request.GET.get('page', 1)
+#     try:
+#         page_number = int(page_number)
+#         if page_number < 1:
+#             page_number = 1
+#     except ValueError:
+#         page_number = 1
+#     try:
+#         page_obj = paginator.get_page(page_number)
+#     except EmptyPage:
+#         page_obj = paginator.get_page(paginator.num_pages)
+#
+#     max_pages = 5
+#     current_page = page_obj.number
+#     total_pages = paginator.num_pages
+#
+#     start_page = max(1, current_page - 2)
+#     end_page = min(total_pages, start_page + max_pages - 1)
+#
+#     if end_page - start_page + 1 < max_pages and start_page > 1:
+#         start_page = max(1, end_page - max_pages + 1)
+#
+#
+#     # 하나의 딕셔너리로 합쳐서 전달
+#     context = {
+#         'page_obj': page_obj,
+#         'member': member,
+#         'search_query': search_query,
+#     }
+#
+#     return render(request, 'member/member_store.html', context)
 
 
 # 회원 정보 업데이트
