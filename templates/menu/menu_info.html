@@ -1,6 +1,7 @@
 {% extends 'layout/store/base_store.html' %}
 {% load menu_tags %} {# menu_tags.py 파일의 custom template tag를 사용하기 위한 코드 #}
 {% load static %}
+{% load humanize %}
 
 {% block title %}메뉴관리{% endblock title %}
 
@@ -168,7 +169,7 @@
                 <hr>
                 <h4><strong>영양정보:</strong></h4>
                 {% if nutrition %}
-                    <p>● 총 내용량: {{ nutrition.nutrition_weight }}g</p>
+                    <p>● 총 내용량: {{ nutrition.nutrition_weight|intcomma }}g</p>
                     <p>● 총 내용량당 칼로리(kcal): {{ nutrition.nutrition_calories }}</p>
                     <div class="nutrition-row">
                         <p>● 총 내용량당:</p>
@@ -197,8 +198,8 @@
                     <p>정보 없음</p>
                 {% endif %}
                 <hr>
-                <p class="cost-price"><strong>원가:</strong> {{ item.cost_price|default:"가격 미정" }}원</p>
-                <p class="product-price"><strong>판매가:</strong> {{ item.sale_price|default:"가격 미정" }}원</p>
+                <p class="cost-price"><strong>원가:</strong> {{ item.cost_price|intcomma|default:"가격 미정" }}원</p>
+                <p class="product-price"><strong>판매가:</strong> {{ item.sale_price|intcomma|default:"가격 미정" }}원</p>
             </div>
 
             <!-- 수정, 삭제 버튼 -->

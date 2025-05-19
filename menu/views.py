@@ -13,6 +13,9 @@ from django.utils import timezone
 from django.core.serializers import serialize
 from json import dumps
 from .templatetags.menu_tags import get_category_map # 카테고리 매핑 가져오기
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from .models import Item
 
 # 소비자 화면 메뉴 정보 페이지
 def menu_main(request):
@@ -97,13 +100,29 @@ def product_detail(request, item_id):
 
 # ---------------------------------------------------------------------------- #
 # 점주의 메뉴관리 메인 페이지
+@login_required
 def menu_store(request):
     # 현재 로그인한 멤버의 가게 정보 가져오기
     member = request.user.member
     store = member.store
 
-    # 해당 가게의 아이템만 필터링하여 가져오기 및 item_id 로 오름차순으로 정렬
-    items = Item.objects.filter(store=store).order_by("item_id")
+    # 검색 쿼리 가져오기
+    search_query = request.GET.get('search-input', '').strip()
+
+    # 해당 가게의 아이템만 필터링하여 가져오기
+    items = Item.objects.filter(store=store)
+
+    # 검색 쿼리 적용 (빈 문자열이 아닌 경우에만)
+    if search_query:
+        items = items.filter(
+            Q(item_name__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+
+    # 디버깅 로그
+    print(f"Search query: '{search_query}'")
+    print(f"Filtered items count: {items.count()}")
+    print(f"Filtered items: {[item.item_name for item in items]}")
 
     # 필터링
     category_filter = request.GET.get('category', '')
@@ -130,10 +149,10 @@ def menu_store(request):
     else:
         valid_fields = ['item_id', 'item_name', 'sale_price', 'cost_price']
         if sort_by in valid_fields:
-            order_field = f'-{sort_by}' if sort_order == 'desc' else sort_by  # order_by에 사용할 값
+            order_field = f'-{sort_by}' if sort_order == 'desc' else sort_by
             items = items.order_by(order_field)
         else:
-            items = items.order_by('item_id')  # 유효하지 않은 경우 기본 정렬
+            items = items.order_by('item_id')
 
     # 페이지당 항목 수 (고정)
     items_per_page = 10
@@ -141,8 +160,10 @@ def menu_store(request):
     # 페이지네이션 처리
     paginator = Paginator(items, items_per_page)
 
-    # 페이지 번호 가져오기
+    # 페이지 번호 가져오기: 검색 시 페이지 1로 강제 설정
     page_number = request.GET.get("page", 1)
+    if search_query:
+        page_number = 1
     try:
         page_number = int(page_number)
         if page_number < 1:
@@ -155,6 +176,10 @@ def menu_store(request):
         page_obj = paginator.page(page_number)
     except EmptyPage:
         page_obj = paginator.page(paginator.num_pages)
+
+    # 디버깅 로그
+    print(f"Page number: {page_number}")
+    print(f"Page obj items: {[item.item_name for item in page_obj]}")
 
     # 페이지 범위 계산
     max_pages = 5
@@ -170,7 +195,6 @@ def menu_store(request):
     page_range = range(start_page, end_page + 1)
 
     context = {
-        'items': page_obj,
         'page_obj': page_obj,
         'page_range': page_range,
         'member': member,
@@ -178,9 +202,10 @@ def menu_store(request):
         'show_filter': show_filter,
         'best_filter': best_filter,
         'new_filter': new_filter,
-        'total_items': items.count(),  # 총 아이템 수
-        'sort_by': sort_by,  # 변환 전 값 유지 (예: 'item_name')
-        'sort_order': sort_order,  # 'asc' 또는 'desc' 그대로 전달
+        'total_items': items.count(),
+        'sort_by': sort_by,
+        'sort_order': sort_order,
+        'search_query': search_query,
     }
 
     return render(request, 'menu/menu_store.html', context)
