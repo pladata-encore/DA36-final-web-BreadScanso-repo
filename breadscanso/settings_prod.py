@@ -10,6 +10,7 @@ ALLOWED_HOSTS = [
   '172.31.33.23', # ec2 private ip
   'breadscanso.shop',
   'www.breadscanso.shop',
+  "13.209.132.161"
 ]
 
 DATABASES = {
