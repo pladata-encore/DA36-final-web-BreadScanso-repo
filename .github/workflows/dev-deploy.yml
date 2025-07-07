@@ -32,7 +32,7 @@ jobs:
         uses: appleboy/scp-action@master
         with:
           host: 13.209.132.161
-          username: ubuntu
+          username: ec2-user
           key: ${{ secrets.DEV_SSH_KEY }}
           source: "deploy.sh"
           target: "~/breadscanso-dev"
@@ -41,7 +41,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: 13.209.132.161
-          username: ubuntu
+          username: ec2-user
           key: ${{ secrets.DEV_SSH_KEY }}
           envs: DOCKER_DEV_IMAGE
           script: |
