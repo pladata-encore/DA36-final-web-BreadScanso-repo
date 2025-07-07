@@ -1,5 +1,6 @@
 {% extends 'layout/main/main_base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}메뉴상세정보{% endblock title %}
 
@@ -41,7 +42,7 @@
                     <h4><strong>영양정보:</strong></h4>
                 
                     {% if nutrition %}
-                            <p>● 총 내용량: {{ nutrition.nutrition_weight }}g</p>
+                            <p>● 총 내용량: {{ nutrition.nutrition_weight|intcomma }}g</p>
                             <p>● 총 내용량당 칼로리(kcal): {{ nutrition.nutrition_calories }}</p>
                         
                         <div class="nutrition-row">
@@ -75,7 +76,7 @@
                 </div>
                 
                 <hr>
-                <p class="product-price"><strong>판매가:</strong> {{ item.sale_price|default:"가격 미정" }}원</p>
+                <p class="product-price"><strong>판매가:</strong> {{ item.sale_price|intcomma|default:"가격 미정" }}원</p>
             </div>
         </div>
         <!-- 목록 버튼 하단 왼쪽에 위치 (이전 페이지로 이동) -->
