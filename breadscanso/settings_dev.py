@@ -6,7 +6,7 @@ load_dotenv()
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '3.34.46.30', '127.0.0.1', 'www.devbreadscanso.shop', 'devbreadscanso.shop']
+ALLOWED_HOSTS = ['localhost', '3.34.46.30', '127.0.0.1', 'www.devbreadscanso.shop', 'devbreadscanso.shop', "13.209.132.161"]
 
 # 개발 db
 DATABASES = {
